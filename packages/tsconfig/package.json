@@ -1,0 +1,12 @@
+{
+  "name": "@school-erp/tsconfig",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    "./base.json": "./base.json",
+    "./nestjs.json": "./nestjs.json",
+    "./nextjs.json": "./nextjs.json",
+    "./react-library.json": "./react-library.json"
+  },
+  "files": ["base.json", "nestjs.json", "nextjs.json", "react-library.json"]
+}

@@ -1,7 +1,53 @@
-# Graphify temp files (safe to delete, recreated on next run)
-.graphify_*.json
-.graphify_uncached.txt
+# Dependencies
+node_modules/
+.pnpm-store/
 
-# Obsidian workspace state (machine-specific, don't share)
+# Build outputs
+dist/
+build/
+.next/
+out/
+.turbo/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Prisma
+prisma/migrations/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker
+*.override.yml
+
+# Misc
+*.tsbuildinfo
+.eslintcache
+
+# Obsidian
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
+
+# Graphify
+.graphify_*.json
+.graphify_uncached.txt

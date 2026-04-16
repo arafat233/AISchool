@@ -1,0 +1,94 @@
+version: "3.9"
+
+# Development override — mounts source code, enables hot reload
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  postgres:
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+
+  redis:
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+
+  # ─── Auth Service ────────────────────────────────────────────────────────
+  auth-service:
+    build:
+      context: .
+      dockerfile: apps/auth-service/Dockerfile
+      target: development
+    container_name: erp_auth_dev
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN}
+      AUTH_SERVICE_PORT: ${AUTH_SERVICE_PORT:-3001}
+    ports:
+      - "${AUTH_SERVICE_PORT:-3001}:3001"
+    volumes:
+      - ./apps/auth-service:/app/apps/auth-service
+      - ./packages:/app/packages
+      - /app/node_modules
+      - /app/apps/auth-service/node_modules
+    command: pnpm --filter @school-erp/auth-service dev
+
+  # ─── User Service ─────────────────────────────────────────────────────────
+  user-service:
+    build:
+      context: .
+      dockerfile: apps/user-service/Dockerfile
+      target: development
+    container_name: erp_user_dev
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      USER_SERVICE_PORT: ${USER_SERVICE_PORT:-3002}
+    ports:
+      - "${USER_SERVICE_PORT:-3002}:3002"
+    volumes:
+      - ./apps/user-service:/app/apps/user-service
+      - ./packages:/app/packages
+      - /app/node_modules
+    command: pnpm --filter @school-erp/user-service dev
+
+  # ─── API Gateway ──────────────────────────────────────────────────────────
+  api-gateway:
+    build:
+      context: .
+      dockerfile: apps/api-gateway/Dockerfile
+      target: development
+    container_name: erp_gateway_dev
+    restart: unless-stopped
+    depends_on:
+      - auth-service
+      - user-service
+    environment:
+      NODE_ENV: development
+      API_GATEWAY_PORT: ${API_GATEWAY_PORT:-3000}
+      AUTH_SERVICE_URL: http://auth-service:3001
+      USER_SERVICE_URL: http://user-service:3002
+    ports:
+      - "${API_GATEWAY_PORT:-3000}:3000"
+    volumes:
+      - ./apps/api-gateway:/app/apps/api-gateway
+      - ./packages:/app/packages
+      - /app/node_modules
+    command: pnpm --filter @school-erp/api-gateway dev

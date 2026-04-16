@@ -1,0 +1,16 @@
+{
+  "name": "@school-erp/utils",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "date-fns": "^3.6.0"
+  },
+  "devDependencies": {
+    "@school-erp/tsconfig": "workspace:*",
+    "typescript": "^5.6.3"
+  }
+}

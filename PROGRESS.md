@@ -2,7 +2,7 @@
 
 > **Auto-Resume Instructions for Claude:**
 > On every new session start, read this file, find the first `[ ]` item, and begin work from there.
-> Code lives at: `/Users/Najeeb-CapOne/Desktop/school-erp/`
+> Code lives at: `/Users/Najeeb-CapOne/Desktop/AISchool/` (code + vault merged into one folder)
 > Before token expiry: commit all work, update checkboxes below, recalculate %.
 
 ---
