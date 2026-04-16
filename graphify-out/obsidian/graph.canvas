@@ -1,0 +1,225 @@
+{
+  "nodes": [
+    {
+      "id": "g0",
+      "type": "group",
+      "label": "Claude & graphify Workflow",
+      "x": 0,
+      "y": 0,
+      "width": 660,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_claudemd_aischool",
+      "type": "file",
+      "file": "graphify/obsidian/AISchool Claude Code Instructions.md",
+      "x": 20,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claudemd_claude_code",
+      "type": "file",
+      "file": "graphify/obsidian/Claude Code.md",
+      "x": 220,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claudemd_graphify_skill",
+      "type": "file",
+      "file": "graphify/obsidian/graphify Skill.md",
+      "x": 420,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claudemd_raw_folder",
+      "type": "file",
+      "file": "graphify/obsidian/raw Folder.md",
+      "x": 20,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claudemd_graphify_skill_md",
+      "type": "file",
+      "file": "graphify/obsidian/~.claudeskillsgraphifySKILL.md",
+      "x": 220,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g1",
+      "type": "group",
+      "label": "Obsidian Vault & Sync",
+      "x": 740,
+      "y": 0,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_claudemd_obsidian",
+      "type": "file",
+      "file": "graphify/obsidian/Obsidian.md",
+      "x": 760,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claudemd_obsidian_git",
+      "type": "file",
+      "file": "graphify/obsidian/Obsidian Git Plugin.md",
+      "x": 960,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claudemd_obsidian_vault_folder",
+      "type": "file",
+      "file": "graphify/obsidian/graphify-outobsidian Folder.md",
+      "x": 1160,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g2",
+      "type": "group",
+      "label": "graphify Outputs",
+      "x": 0,
+      "y": 480,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_claudemd_graph_report",
+      "type": "file",
+      "file": "graphify/obsidian/GRAPH_REPORT.md Output.md",
+      "x": 20,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claudemd_graph_json",
+      "type": "file",
+      "file": "graphify/obsidian/graph.json Output.md",
+      "x": 220,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claudemd_graphify_out_folder",
+      "type": "file",
+      "file": "graphify/obsidian/graphify-out Folder.md",
+      "x": 420,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_claudemd_aischool_claudemd_raw_folder",
+      "fromNode": "n_claudemd_aischool",
+      "toNode": "n_claudemd_raw_folder",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_aischool_claudemd_graphify_out_folder",
+      "fromNode": "n_claudemd_aischool",
+      "toNode": "n_claudemd_graphify_out_folder",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_aischool_claudemd_obsidian_vault_folder",
+      "fromNode": "n_claudemd_aischool",
+      "toNode": "n_claudemd_obsidian_vault_folder",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_aischool_claudemd_claude_code",
+      "fromNode": "n_claudemd_aischool",
+      "toNode": "n_claudemd_claude_code",
+      "label": "conceptually_related_to [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_aischool_claudemd_obsidian",
+      "fromNode": "n_claudemd_aischool",
+      "toNode": "n_claudemd_obsidian",
+      "label": "conceptually_related_to [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_aischool_claudemd_graphify_skill",
+      "fromNode": "n_claudemd_aischool",
+      "toNode": "n_claudemd_graphify_skill",
+      "label": "conceptually_related_to [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_raw_folder_claudemd_graphify_skill",
+      "fromNode": "n_claudemd_raw_folder",
+      "toNode": "n_claudemd_graphify_skill",
+      "label": "shares_data_with [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_graphify_out_folder_claudemd_graphify_skill",
+      "fromNode": "n_claudemd_graphify_out_folder",
+      "toNode": "n_claudemd_graphify_skill",
+      "label": "shares_data_with [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_graphify_out_folder_claudemd_graph_json",
+      "fromNode": "n_claudemd_graphify_out_folder",
+      "toNode": "n_claudemd_graph_json",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_graphify_out_folder_claudemd_graph_report",
+      "fromNode": "n_claudemd_graphify_out_folder",
+      "toNode": "n_claudemd_graph_report",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_graphify_out_folder_claudemd_obsidian_vault_folder",
+      "fromNode": "n_claudemd_graphify_out_folder",
+      "toNode": "n_claudemd_obsidian_vault_folder",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_obsidian_vault_folder_claudemd_obsidian",
+      "fromNode": "n_claudemd_obsidian_vault_folder",
+      "toNode": "n_claudemd_obsidian",
+      "label": "conceptually_related_to [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_graphify_skill_claudemd_graphify_skill_md",
+      "fromNode": "n_claudemd_graphify_skill",
+      "toNode": "n_claudemd_graphify_skill_md",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_graphify_skill_claudemd_claude_code",
+      "fromNode": "n_claudemd_graphify_skill",
+      "toNode": "n_claudemd_claude_code",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_claudemd_obsidian_claudemd_obsidian_git",
+      "fromNode": "n_claudemd_obsidian",
+      "toNode": "n_claudemd_obsidian_git",
+      "label": "conceptually_related_to [EXTRACTED]"
+    }
+  ]
+}

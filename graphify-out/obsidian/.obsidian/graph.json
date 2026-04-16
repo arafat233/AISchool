@@ -1,0 +1,25 @@
+{
+  "colorGroups": [
+    {
+      "query": "tag:#community/Claude_&_graphify_Workflow",
+      "color": {
+        "a": 1,
+        "rgb": 5142951
+      }
+    },
+    {
+      "query": "tag:#community/Obsidian_Vault_&_Sync",
+      "color": {
+        "a": 1,
+        "rgb": 15896107
+      }
+    },
+    {
+      "query": "tag:#community/graphify_Outputs",
+      "color": {
+        "a": 1,
+        "rgb": 14767961
+      }
+    }
+  ]
+}
