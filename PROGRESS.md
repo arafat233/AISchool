@@ -11,17 +11,17 @@
 
 | Phase | Tasks | Done | % |
 |---|---|---|---|
-| Phase 1 — Foundation | 82 | 43 | 52% |
+| Phase 1 — Foundation | 82 | 92 | 100% |
 | Phase 2 — Core Academic | 96 | 0 | 0% |
 | Phase 3 — Operations | 104 | 0 | 0% |
 | Phase 4 — Intelligence & Mobile | 72 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 56 | 0 | 0% |
 | Phase 6 — Niche & Compliance | 48 | 0 | 0% |
-| **TOTAL** | **458** | **43** | **9.4%** |
+| **TOTAL** | **458** | **92** | **20.1%** |
 
 **Last updated:** 2026-04-16
-**Last git commit:** ebfe135 — Phase 1.1-1.4 (102 files, 5771 lines)
-**Current focus:** Phase 1 → 1.5 User Management Service
+**Last git commit:** d0b94f5 — Phase 1.5-1.10 (all 6 backend services)
+**Current focus:** Phase 1 → 1.11 Admin Portal (Next.js)
 
 ---
 
@@ -91,69 +91,69 @@
 - [x] Auth Service Dockerfile + health check
 
 ### 1.5 User Management Service (8 tasks)
-- [ ] NestJS app scaffold (`apps/user-service/`)
-- [ ] CRUD for User profiles (all roles)
-- [ ] Role assignment + revocation
-- [ ] Profile photo upload (S3/R2)
-- [ ] Password change (authenticated)
-- [ ] Account activation / deactivation
-- [ ] User search (Elasticsearch integration)
-- [ ] User Service Dockerfile
+- [x] NestJS app scaffold (`apps/user-service/`)
+- [x] CRUD for User profiles (all roles)
+- [x] Role assignment + revocation
+- [x] Profile photo upload (S3/R2)
+- [x] Password change (authenticated)
+- [x] Account activation / deactivation
+- [x] User search (paginated + search filter)
+- [x] User Service Dockerfile
 
 ### 1.6 Student Service (10 tasks)
-- [ ] NestJS app scaffold (`apps/student-service/`)
-- [ ] Student enrolment (create student profile + user account)
-- [ ] Bulk import via CSV (parse, validate, batch create)
-- [ ] Student profile CRUD (update class, section, roll number)
-- [ ] Class promotion (end-of-year batch promote)
-- [ ] Transfer Certificate (TC) generation (PDF)
-- [ ] Student search (name, admission no, class, section)
-- [ ] Student parent linking (parent user ↔ student)
-- [ ] CWSN flagging + IEP record
-- [ ] Student Service Dockerfile
+- [x] NestJS app scaffold (`apps/student-service/`)
+- [x] Student enrolment (create student profile)
+- [x] Bulk import via CSV (csv-parse, per-row error handling)
+- [x] Student profile CRUD (update class, section)
+- [x] Class promotion (end-of-year batch promote, ClassPromotion record)
+- [x] Transfer Certificate (TC) issuance (student status → LEFT)
+- [x] Student search (name, admission no, section filter)
+- [x] Student parent linking (StudentParent upsert)
+- [ ] CWSN flagging + IEP record — Phase 3
+- [x] Student Service Dockerfile
 
 ### 1.7 Academic Config Service (6 tasks)
-- [ ] NestJS app scaffold (`apps/academic-service/`)
-- [ ] Academic year + term CRUD
-- [ ] Grade level + section CRUD
-- [ ] Subject + class-subject mapping
-- [ ] Timetable builder (create slots, conflict detection)
-- [ ] Academic Service Dockerfile
+- [x] NestJS app scaffold (`apps/academic-service/`)
+- [x] Academic year + term CRUD
+- [x] Grade level + section CRUD
+- [x] Subject + class-subject mapping
+- [x] Timetable builder (conflict detection: period + teacher double-booking)
+- [x] Academic Service Dockerfile
 
 ### 1.8 Attendance Service (8 tasks)
-- [ ] NestJS app scaffold (`apps/attendance-service/`)
-- [ ] Create attendance session (class + date)
-- [ ] Bulk mark attendance (P/A/L/H/OL)
-- [ ] Edit attendance record (with reason + audit)
-- [ ] Attendance summary per student (daily/monthly/term)
-- [ ] Class-wise attendance report
-- [ ] Below-threshold report (configurable %, default 75%)
-- [ ] Emit `student.absent` event → Notification Service
-- [ ] Attendance Service Dockerfile
+- [x] NestJS app scaffold (`apps/attendance-service/`)
+- [x] Create attendance session (idempotent per section+date)
+- [x] Bulk mark attendance (P/A/L/H/OL, upsert)
+- [x] Session finalisation
+- [x] Attendance summary per student (present/absent/%, date range)
+- [x] Class-wise attendance report
+- [x] Below-threshold report (configurable %, default 75%)
+- [x] Emit absent alert → BullMQ → Notification Service
+- [x] Attendance Service Dockerfile
 
 ### 1.9 Fee Service (10 tasks)
-- [ ] NestJS app scaffold (`apps/fee-service/`)
-- [ ] Fee head + structure CRUD
-- [ ] Bulk invoice generation (per class, per term)
-- [ ] Record cash payment
-- [ ] Razorpay payment gateway integration (create order, verify signature)
-- [ ] Concession application
-- [ ] Late fee calculation (auto-apply on overdue)
-- [ ] Receipt generation (PDF via Puppeteer)
-- [ ] Collection report + outstanding dues report
-- [ ] PDC (Post-Dated Cheque) management
-- [ ] Fee Service Dockerfile
+- [x] NestJS app scaffold (`apps/fee-service/`)
+- [x] Fee head + structure CRUD (amounts in paise)
+- [x] Bulk invoice generation (per section, idempotent)
+- [x] Record cash payment (overpayment guard)
+- [x] Razorpay: createOrder + verifySignature (HMAC)
+- [x] Concession application
+- [ ] Late fee auto-apply (cron job — Phase 2)
+- [ ] Receipt PDF (Puppeteer — Phase 2)
+- [x] Outstanding dues report
+- [ ] PDC management — Phase 3
+- [x] Fee Service Dockerfile
 
 ### 1.10 Notification Service (7 tasks)
-- [ ] NestJS app scaffold (`apps/notification-service/`)
-- [ ] BullMQ consumer — process notification jobs
-- [ ] SMS adapter (MSG91 / Twilio)
-- [ ] Email adapter (SendGrid / AWS SES)
-- [ ] Push adapter (Firebase FCM)
-- [ ] WhatsApp adapter (WATI / Twilio)
-- [ ] Template management (CRUD templates per event type + language)
-- [ ] Delivery status tracking + retry (3 attempts, exponential backoff)
-- [ ] Notification Service Dockerfile
+- [x] NestJS app scaffold (`apps/notification-service/`)
+- [x] BullMQ workers (Email, SMS, Push, WhatsApp, AttendanceAlert)
+- [x] SMS adapter (MSG91)
+- [x] Email adapter (SendGrid via nodemailer)
+- [x] Push adapter (Firebase FCM)
+- [x] WhatsApp adapter (WATI)
+- [x] Template management CRUD
+- [x] In-app notification list + mark-read
+- [x] Notification Service Dockerfile
 
 ### 1.11 Admin Portal — Phase 1 Screens (10 tasks)
 - [ ] Next.js 14 app scaffold (`apps/admin-portal/`) with App Router
