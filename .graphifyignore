@@ -1,0 +1,2 @@
+# Exclude graphify's own outputs to prevent feedback loops
+graphify-out/
