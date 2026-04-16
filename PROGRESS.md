@@ -11,17 +11,17 @@
 
 | Phase | Tasks | Done | % |
 |---|---|---|---|
-| Phase 1 — Foundation | 82 | 0 | 0% |
+| Phase 1 — Foundation | 82 | 43 | 52% |
 | Phase 2 — Core Academic | 96 | 0 | 0% |
 | Phase 3 — Operations | 104 | 0 | 0% |
 | Phase 4 — Intelligence & Mobile | 72 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 56 | 0 | 0% |
 | Phase 6 — Niche & Compliance | 48 | 0 | 0% |
-| **TOTAL** | **458** | **0** | **0%** |
+| **TOTAL** | **458** | **43** | **9.4%** |
 
 **Last updated:** 2026-04-16
-**Last git commit:** (none yet)
-**Current focus:** Phase 1 → 1.1 Project Scaffold
+**Last git commit:** ebfe135 — Phase 1.1-1.4 (102 files, 5771 lines)
+**Current focus:** Phase 1 → 1.5 User Management Service
 
 ---
 
@@ -29,66 +29,66 @@
 **Target:** Admin Portal (basic) + Teacher Portal (basic) + Auth + Attendance + Fee + Notifications
 
 ### 1.1 Project Scaffold & DevOps (12 tasks)
-- [ ] Monorepo init — Turborepo + pnpm workspaces
-- [ ] Root `package.json` with all workspace scripts
-- [ ] `turbo.json` pipeline (build, test, lint, dev)
-- [ ] `pnpm-workspace.yaml` defining all packages
-- [ ] `.env.example` with all environment variables documented
-- [ ] `docker-compose.yml` (PostgreSQL, Redis, Kafka, Zookeeper, Elasticsearch)
-- [ ] `docker-compose.dev.yml` with hot reload + volume mounts
-- [ ] Nginx reverse proxy config (`infrastructure/nginx/nginx.conf`)
-- [ ] GitHub Actions CI workflow (lint + test on PR)
-- [ ] GitHub Actions CD workflow (build + push image on merge)
-- [ ] Shared ESLint config (`packages/eslint-config/`)
-- [ ] Shared TypeScript base config (`packages/tsconfig/`)
+- [x] Monorepo init — Turborepo + pnpm workspaces
+- [x] Root `package.json` with all workspace scripts
+- [x] `turbo.json` pipeline (build, test, lint, dev)
+- [x] `pnpm-workspace.yaml` defining all packages
+- [x] `.env.example` with all environment variables documented
+- [x] `docker-compose.yml` (PostgreSQL, Redis, Kafka, Zookeeper, Elasticsearch)
+- [x] `docker-compose.dev.yml` with hot reload + volume mounts
+- [x] Nginx reverse proxy config (`infrastructure/nginx/nginx.conf`)
+- [x] GitHub Actions CI workflow (lint + test on PR)
+- [x] GitHub Actions CD workflow (build + push image on merge)
+- [x] Shared ESLint config (`packages/eslint-config/`)
+- [x] Shared TypeScript base config (`packages/tsconfig/`)
 
 ### 1.2 Database Foundation — Prisma Schema (15 tasks)
-- [ ] `packages/database/` package setup (package.json, tsconfig)
-- [ ] Prisma schema — Auth & Tenancy (`Tenant`, `User`, `UserProfile`, `RefreshToken`, `AuditLog`)
-- [ ] Prisma schema — School & Academic Core (`School`, `AcademicYear`, `Term`, `GradeLevel`, `Section`, `Subject`, `ClassSubject`, `TimetableSlot`)
-- [ ] Prisma schema — Admission (`Enquiry`, `EnquiryFollowUp`, `AdmissionApplication`, `ApplicationDocument`)
-- [ ] Prisma schema — Students (`Student`, `StudentDocument`, `StudentParent`, `ClassPromotion`, `TransferCertificate`)
-- [ ] Prisma schema — Staff & HR (`Department`, `Designation`, `Staff`, `TeacherSubject`, `ClassTeacher`)
-- [ ] Prisma schema — Payroll (`SalaryStructureComponent`, `PayrollRun`, `Payslip`, `LeavePolicy`, `LeaveBalance`, `LeaveApplication`)
-- [ ] Prisma schema — Attendance (`AttendanceSession`, `AttendanceRecord`, `StaffAttendance`)
-- [ ] Prisma schema — Fee (`FeeHead`, `FeeStructure`, `FeeInvoice`, `FeeInvoiceItem`, `FeePayment`, `Concession`, `LateFeeRule`, `PostDatedCheque`)
-- [ ] Prisma schema — Exam & Results (`Exam`, `ExamSchedule`, `HallTicket`, `MarksEntry`, `Result`, `QuestionBank`, `OnlineTest`, `OnlineTestAttempt`)
-- [ ] Prisma schema — Transport (`Route`, `Stop`, `Vehicle`, `Driver`, `StudentTransport`, `Trip`)
-- [ ] Prisma schema — Library (`BookCatalogue`, `BookIssue`, `OverdueFine`)
-- [ ] Prisma schema — Health (`StudentMedicalProfile`, `NurseVisitLog`, `MedicationSchedule`, `HealthIncident`)
-- [ ] Prisma schema — Notifications, LMS, Finance Extended, Compliance, Events, Certificates
-- [ ] Initial migration + seed scripts
+- [x] `packages/database/` package setup (package.json, tsconfig)
+- [x] Prisma schema — Auth & Tenancy (`Tenant`, `User`, `UserProfile`, `RefreshToken`, `AuditLog`)
+- [x] Prisma schema — School & Academic Core (`School`, `AcademicYear`, `Term`, `GradeLevel`, `Section`, `Subject`, `ClassSubject`, `TimetableSlot`)
+- [x] Prisma schema — Admission (`Enquiry`, `EnquiryFollowUp`, `AdmissionApplication`, `ApplicationDocument`)
+- [x] Prisma schema — Students (`Student`, `StudentDocument`, `StudentParent`, `ClassPromotion`, `TransferCertificate`)
+- [x] Prisma schema — Staff & HR (`Department`, `Designation`, `Staff`, `TeacherSubject`, `ClassTeacher`)
+- [x] Prisma schema — Payroll (`SalaryStructureComponent`, `PayrollRun`, `Payslip`, `LeavePolicy`, `LeaveBalance`, `LeaveApplication`)
+- [x] Prisma schema — Attendance (`AttendanceSession`, `AttendanceRecord`, `StaffAttendance`)
+- [x] Prisma schema — Fee (`FeeHead`, `FeeStructure`, `FeeInvoice`, `FeeInvoiceItem`, `FeePayment`, `Concession`, `LateFeeRule`, `PostDatedCheque`)
+- [x] Prisma schema — Exam & Results (`Exam`, `ExamSchedule`, `HallTicket`, `MarksEntry`, `Result`, `QuestionBank`, `OnlineTest`, `OnlineTestAttempt`)
+- [x] Prisma schema — Transport (`Route`, `Stop`, `Vehicle`, `Driver`, `StudentTransport`, `Trip`)
+- [x] Prisma schema — Library (`BookCatalogue`, `BookIssue`, `OverdueFine`)
+- [x] Prisma schema — Health (`StudentMedicalProfile`, `NurseVisitLog`, `MedicationSchedule`, `HealthIncident`)
+- [x] Prisma schema — Notifications, LMS, Finance Extended, Compliance, Events, Certificates
+- [x] Initial migration + seed scripts
 
 ### 1.3 Shared Packages (8 tasks)
-- [ ] `@school-erp/types` — all shared TypeScript interfaces + enums
-- [ ] `@school-erp/config` — env config with Zod validation schema
-- [ ] `@school-erp/utils` — pagination, dates, slugify, currency formatting
-- [ ] `@school-erp/testing` — shared test factories and DB setup helpers
-- [ ] `@school-erp/logger` — structured logging (Winston + request context)
-- [ ] `@school-erp/errors` — custom exception hierarchy
-- [ ] `@school-erp/events` — event bus types and BullMQ queue definitions
-- [ ] `@school-erp/ui` — shared Next.js component library (design tokens, base components)
+- [x] `@school-erp/types` — all shared TypeScript interfaces + enums
+- [x] `@school-erp/config` — env config with Zod validation schema
+- [x] `@school-erp/utils` — pagination, dates, slugify, currency formatting
+- [x] `@school-erp/testing` — shared test factories and DB setup helpers
+- [x] `@school-erp/logger` — structured logging (Winston + request context)
+- [x] `@school-erp/errors` — custom exception hierarchy
+- [x] `@school-erp/events` — event bus types and BullMQ queue definitions
+- [x] `@school-erp/ui` — shared Next.js component library (design tokens, base components)
 
 ### 1.4 Auth Service — Complete (18 tasks)
-- [ ] NestJS app scaffold (`apps/auth-service/`)
-- [ ] Prisma service integration
-- [ ] Environment config module (typed, validated)
-- [ ] JWT strategy (access token validation)
-- [ ] Local strategy (email + password login)
-- [ ] OTP strategy (phone number + OTP login)
-- [ ] Google OAuth strategy
-- [ ] Microsoft OAuth strategy
-- [ ] 2FA-TOTP (speakeasy — generate secret, verify code)
-- [ ] Login endpoint (email/password) — returns access + refresh tokens
-- [ ] OTP request endpoint (rate limited — 5/hr per phone)
-- [ ] OTP verify endpoint
-- [ ] Refresh token endpoint (rotation on every use)
-- [ ] Logout endpoint (revoke refresh token)
-- [ ] Forgot password + reset password flow
-- [ ] RBAC guard + `@Roles()` decorator
-- [ ] Plan guard + `@RequiresPlan()` decorator
-- [ ] Global JWT auth guard (except public routes)
-- [ ] Auth Service Dockerfile + health check
+- [x] NestJS app scaffold (`apps/auth-service/`)
+- [x] Prisma service integration
+- [x] Environment config module (typed, validated)
+- [x] JWT strategy (access token validation)
+- [x] Local strategy (email + password login)
+- [ ] OTP strategy (phone number + OTP login) — deferred to 1.5
+- [x] Google OAuth strategy
+- [x] Microsoft OAuth strategy
+- [x] 2FA-TOTP (speakeasy — generate secret, verify code)
+- [x] Login endpoint (email/password) — returns access + refresh tokens
+- [ ] OTP request endpoint (rate limited — 5/hr per phone) — deferred to 1.5
+- [ ] OTP verify endpoint — deferred to 1.5
+- [x] Refresh token endpoint (rotation on every use)
+- [x] Logout endpoint (revoke refresh token)
+- [x] Forgot password + reset password flow
+- [x] RBAC guard + `@Roles()` decorator
+- [x] Plan guard + `@RequiresPlan()` decorator
+- [x] Global JWT auth guard (except public routes)
+- [x] Auth Service Dockerfile + health check
 
 ### 1.5 User Management Service (8 tasks)
 - [ ] NestJS app scaffold (`apps/user-service/`)
