@@ -11,17 +11,17 @@
 
 | Phase | Tasks | Done | % |
 |---|---|---|---|
-| Phase 1 — Foundation | 82 | 92 | 100% |
+| Phase 1 — Foundation | 82 | 102 | 100% |
 | Phase 2 — Core Academic | 96 | 0 | 0% |
 | Phase 3 — Operations | 104 | 0 | 0% |
 | Phase 4 — Intelligence & Mobile | 72 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 56 | 0 | 0% |
 | Phase 6 — Niche & Compliance | 48 | 0 | 0% |
-| **TOTAL** | **458** | **92** | **20.1%** |
+| **TOTAL** | **458** | **102** | **22.3%** |
 
 **Last updated:** 2026-04-16
-**Last git commit:** d0b94f5 — Phase 1.5-1.10 (all 6 backend services)
-**Current focus:** Phase 1 → 1.11 Admin Portal (Next.js)
+**Last git commit:** Phase 1.11 — Admin Portal complete (10/10 screens)
+**Current focus:** Phase 1 → 1.12 Teacher Portal (Next.js)
 
 ---
 
@@ -156,16 +156,16 @@
 - [x] Notification Service Dockerfile
 
 ### 1.11 Admin Portal — Phase 1 Screens (10 tasks)
-- [ ] Next.js 14 app scaffold (`apps/admin-portal/`) with App Router
-- [ ] Auth pages (login, forgot password, 2FA verify)
-- [ ] Dashboard layout (sidebar, header, breadcrumb)
-- [ ] Student Management (list, add, edit, bulk import, promote)
-- [ ] Class & Section Management
-- [ ] Timetable Builder UI (drag-and-drop slots)
-- [ ] Fee Structure setup UI
-- [ ] Attendance overview screen (class-wise daily summary)
-- [ ] Staff list (basic)
-- [ ] Announcements management
+- [x] Next.js 14 app scaffold (`apps/admin-portal/`) with App Router
+- [x] Auth pages (login, forgot password, 2FA verify)
+- [x] Dashboard layout (sidebar, header, breadcrumb)
+- [x] Student Management (list, add, edit, bulk import, promote)
+- [x] Class & Section Management
+- [x] Timetable Builder UI (drag-and-drop slots)
+- [x] Fee Structure setup UI
+- [x] Attendance overview screen (class-wise daily summary)
+- [x] Staff list (basic)
+- [x] Announcements management
 
 ### 1.12 Teacher Portal — Phase 1 Screens (6 tasks)
 - [ ] Next.js 14 app scaffold (`apps/teacher-portal/`)
