@@ -1,0 +1,7 @@
+# Graphify temp files (safe to delete, recreated on next run)
+.graphify_*.json
+.graphify_uncached.txt
+
+# Obsidian workspace state (machine-specific, don't share)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
