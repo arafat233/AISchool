@@ -1,5 +1,15 @@
 # AISchool — Claude Code Instructions
 
+## 🚨 SESSION RESUME — READ THIS FIRST ON EVERY NEW SESSION
+
+1. Read `/Users/Najeeb-CapOne/Desktop/AISchool/PROGRESS.md` — find first `[ ]` unchecked task
+2. Read `/Users/Najeeb-CapOne/Desktop/AISchool/progress.json` — get current phase/module/task
+3. `cd /Users/Najeeb-CapOne/Desktop/school-erp/` — all code lives here
+4. Continue building from the first unchecked task — **no permission needed, full admin granted**
+5. Before context runs out: commit all work, update checkboxes in PROGRESS.md, update progress.json, recalculate %
+
+**pnpm path:** `export PNPM_HOME="/Users/Najeeb-CapOne/Library/pnpm" && export PATH="$PNPM_HOME:$PATH"`
+
 This is a personal AI learning vault combining Obsidian (notes), Claude Code, and graphify (knowledge graphs).
 
 ## Vault Layout
