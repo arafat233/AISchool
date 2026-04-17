@@ -863,6 +863,7 @@ model Department {
 
   designations Designation[]
   staff        Staff[]
+  vacancies    JobVacancy[]
 
   @@unique([schoolId, name])
   @@map("departments")
@@ -878,6 +879,7 @@ model Designation {
 
   staff              Staff[]
   salaryComponents   SalaryStructureComponent[]
+  vacancies          JobVacancy[]
 
   @@map("designations")
 }
@@ -909,16 +911,21 @@ model Staff {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
-  teacherSubjects  TeacherSubject[]
-  classTeachers    ClassTeacher[]
-  timetableSlots   TimetableSlot[]
-  leaveBalances    LeaveBalance[]
-  leaveApplications LeaveApplication[]
-  payslips         Payslip[]
-  staffAttendance  StaffAttendance[]
-  appraisals       StaffAppraisal[]
-  cpd              CpdTraining[]
-  syllabusProgress SyllabusProgress[]
+  teacherSubjects     TeacherSubject[]
+  classTeachers       ClassTeacher[]
+  timetableSlots      TimetableSlot[]
+  leaveBalances       LeaveBalance[]
+  leaveApplications   LeaveApplication[]
+  payslips            Payslip[]
+  staffAttendance     StaffAttendance[]
+  appraisals          StaffAppraisal[]
+  syllabusProgress    SyllabusProgress[]
+  documents           StaffDocument[]
+  trainingAttendances TrainingAttendance[]
+  trainingFeedbacks   TrainingFeedback[]
+  exits               StaffExit[]
+  grievances          StaffGrievance[]
+  freeSlots           FreeSlot[]
 
   @@unique([schoolId, employeeCode])
   @@map("staff")
@@ -930,11 +937,11 @@ model TeacherSubject {
   staff          Staff      @relation(fields: [staffId], references: [id])
   subjectId      String
   subject        Subject    @relation(fields: [subjectId], references: [id])
-  gradeLevelId   String?
-  academicYearId String?
+  gradeLevelId   String
+  sectionId      String?
   createdAt      DateTime   @default(now())
 
-  @@unique([staffId, subjectId, gradeLevelId, academicYearId])
+  @@unique([staffId, subjectId, gradeLevelId])
   @@map("teacher_subjects")
 }
 
@@ -1001,89 +1008,375 @@ model Payslip {
 }
 
 model LeavePolicy {
-  id            String     @id @default(cuid())
-  schoolId      String
-  leaveType     LeaveType
-  annualDays    Int
-  carryForward  Boolean    @default(false)
-  maxCarryForward Int      @default(0)
-  isEncashable  Boolean    @default(false)
-  applicableTo  UserRole[] // roles this policy applies to
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  id                 String   @id @default(cuid())
+  schoolId           String
+  leaveType          String   // CL, SL, EL, Maternity, Paternity, Comp-off, LOP, etc.
+  annualDays         Int
+  carryForward       Boolean  @default(false)
+  maxCarryForward    Int      @default(0)
+  encashmentAllowed  Boolean  @default(false)
+  applicableTo       String?  // "TEACHER", "NON_TEACHING", null = all
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   @@unique([schoolId, leaveType])
   @@map("leave_policies")
 }
 
 model LeaveBalance {
-  id             String    @id @default(cuid())
+  id             String   @id @default(cuid())
   staffId        String
-  staff          Staff     @relation(fields: [staffId], references: [id])
-  leaveType      LeaveType
-  academicYearId String?
-  totalDays      Decimal   @db.Decimal(5, 1) @default(0)
-  usedDays       Decimal   @db.Decimal(5, 1) @default(0)
-  pendingDays    Decimal   @db.Decimal(5, 1) @default(0)
-  updatedAt      DateTime  @updatedAt
+  staff          Staff    @relation(fields: [staffId], references: [id])
+  leaveType      String
+  academicYearId String
+  totalDays      Int      @default(0)
+  usedDays       Int      @default(0)
+  remainingDays  Int      @default(0)
+  updatedAt      DateTime @updatedAt @default(now())
 
   @@unique([staffId, leaveType, academicYearId])
   @@map("leave_balances")
 }
 
 model LeaveApplication {
-  id          String      @id @default(cuid())
-  staffId     String
-  staff       Staff       @relation(fields: [staffId], references: [id])
-  leaveType   LeaveType
-  fromDate    DateTime
-  toDate      DateTime
-  days        Decimal     @db.Decimal(5, 1)
-  reason      String
-  documentUrl String?
-  status      LeaveStatus @default(PENDING)
-  approvedBy  String?     // staff id
-  approvedAt  DateTime?
-  remarks     String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id                String   @id @default(cuid())
+  staffId           String
+  staff             Staff    @relation(fields: [staffId], references: [id])
+  leaveType         String
+  fromDate          DateTime
+  toDate            DateTime
+  days              Int
+  reason            String
+  documentUrl       String?
+  academicYearId    String?
+  substituteStaffId String?
+  status            String   @default("PENDING") // PENDING, HOD_APPROVED, PRINCIPAL_APPROVED, APPROVED, REJECTED, CANCELLED
+  reviewedBy        String?
+  reviewedAt        DateTime?
+  remarks           String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   @@map("leave_applications")
 }
 
 model StaffAppraisal {
-  id             String   @id @default(cuid())
-  staffId        String
-  staff          Staff    @relation(fields: [staffId], references: [id])
-  academicYearId String?
-  selfScore      Decimal? @db.Decimal(5, 2)
-  hodScore       Decimal? @db.Decimal(5, 2)
-  principalScore Decimal? @db.Decimal(5, 2)
-  finalScore     Decimal? @db.Decimal(5, 2)
-  kpiBreakdown   Json     @default("{}")
-  status         String   @default("DRAFT") // DRAFT, SUBMITTED, REVIEWED, FINALISED
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id               String   @id @default(cuid())
+  staffId          String
+  staff            Staff    @relation(fields: [staffId], references: [id])
+  academicYearId   String?
+  kras             Json     @default("[]")          // Array of {title, weightage, description}
+  selfAssessment   Json?                              // Array of {kraTitle, score, remarks}
+  selfSubmittedAt  DateTime?
+  hodId            String?
+  hodReview        Json?                              // Array of {kraTitle, score, remarks}
+  hodComments      String?
+  hodReviewedAt    DateTime?
+  principalId      String?
+  principalComments String?
+  finalScore       Float?
+  incrementEligible Boolean @default(false)
+  signedOffAt      DateTime?
+  stage            String   @default("SELF_ASSESSMENT") // SELF_ASSESSMENT, HOD_REVIEW, PRINCIPAL_SIGNOFF, FINALISED
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   @@map("staff_appraisals")
 }
 
 model CpdTraining {
+  id              String   @id @default(cuid())
+  schoolId        String
+  title           String
+  description     String?
+  trainerName     String?
+  trainerOrg      String?
+  startDate       DateTime
+  endDate         DateTime
+  venue           String?
+  mode            String   @default("IN_PERSON")  // IN_PERSON, ONLINE, HYBRID
+  maxParticipants Int?
+  cpdHours        Float?
+  category        String?
+  status          String   @default("SCHEDULED")  // SCHEDULED, ONGOING, COMPLETED, CANCELLED
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  attendances  TrainingAttendance[]
+  feedback     TrainingFeedback[]
+
+  @@map("cpd_training")
+}
+
+model StaffDocument {
+  id                 String   @id @default(cuid())
+  staffId            String
+  staff              Staff    @relation(fields: [staffId], references: [id])
+  type               String   // CERTIFICATE, ID_PROOF, POLICE_VERIFICATION, DEGREE, EXPERIENCE_LETTER
+  fileUrl            String
+  verificationStatus String   @default("PENDING")  // PENDING, VERIFIED, REJECTED
+  expiryDate         DateTime?
+  createdAt          DateTime @default(now())
+
+  @@map("staff_documents")
+}
+
+model TrainingAttendance {
+  id              String      @id @default(cuid())
+  trainingId      String
+  training        CpdTraining @relation(fields: [trainingId], references: [id])
+  staffId         String
+  staff           Staff       @relation(fields: [staffId], references: [id])
+  attended        Boolean     @default(false)
+  cpdHoursEarned  Float?
+
+  @@unique([trainingId, staffId])
+  @@map("training_attendance")
+}
+
+model TrainingFeedback {
+  id          String      @id @default(cuid())
+  trainingId  String
+  training    CpdTraining @relation(fields: [trainingId], references: [id])
+  staffId     String
+  staff       Staff       @relation(fields: [staffId], references: [id])
+  rating      Int         // 1-5
+  comments    String?
+  createdAt   DateTime    @default(now())
+
+  @@unique([trainingId, staffId])
+  @@map("training_feedback")
+}
+
+model JobVacancy {
+  id                String      @id @default(cuid())
+  schoolId          String
+  title             String
+  designationId     String
+  designation       Designation @relation(fields: [designationId], references: [id])
+  departmentId      String?
+  department        Department? @relation(fields: [departmentId], references: [id])
+  description       String?
+  requiredCount     Int         @default(1)
+  closingDate       DateTime?
+  minQualification  String?
+  minExperience     Int?
+  status            String      @default("OPEN")  // OPEN, CLOSED, ON_HOLD
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  applications JobApplication[]
+
+  @@map("job_vacancies")
+}
+
+model JobApplication {
+  id              String     @id @default(cuid())
+  vacancyId       String
+  vacancy         JobVacancy @relation(fields: [vacancyId], references: [id])
+  applicantName   String
+  email           String
+  phone           String
+  resumeUrl       String?
+  coverLetter     String?
+  referredBy      String?
+  stage           String     @default("APPLIED")  // APPLIED, SHORTLISTED, INTERVIEW_SCHEDULED, OFFERED, HIRED, REJECTED
+  stageNotes      String?
+  stageUpdatedAt  DateTime?
+  appliedAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  interviews   InterviewSchedule[]
+  offerLetters OfferLetter[]
+
+  @@map("job_applications")
+}
+
+model InterviewSchedule {
+  id            String         @id @default(cuid())
+  applicationId String
+  application   JobApplication @relation(fields: [applicationId], references: [id])
+  scheduledAt   DateTime
+  interviewers  String[]
+  mode          String         @default("IN_PERSON")
+  location      String?
+  meetingLink   String?
+  status        String         @default("SCHEDULED")  // SCHEDULED, COMPLETED, CANCELLED
+
+  feedbacks InterviewFeedback[]
+
+  @@map("interview_schedules")
+}
+
+model InterviewFeedback {
+  id             String            @id @default(cuid())
+  interviewId    String
+  interview      InterviewSchedule @relation(fields: [interviewId], references: [id])
+  interviewerId  String
+  rating         Int               // 1-5
+  strengths      String?
+  weaknesses     String?
+  recommendation String            @default("HOLD")  // HIRE, HOLD, REJECT
+  submittedAt    DateTime
+
+  @@map("interview_feedback")
+}
+
+model OfferLetter {
+  id            String         @id @default(cuid())
+  applicationId String
+  application   JobApplication @relation(fields: [applicationId], references: [id])
+  ctc           Float
+  joiningDate   DateTime
+  offerExpiry   DateTime
+  remarks       String?
+  status        String         @default("ISSUED")  // ISSUED, ACCEPTED, DECLINED, EXPIRED
+  createdAt     DateTime       @default(now())
+
+  @@map("offer_letters")
+}
+
+model StaffExit {
+  id               String   @id @default(cuid())
+  staffId          String
+  staff            Staff    @relation(fields: [staffId], references: [id])
+  exitType         String   @default("RESIGNATION")  // RESIGNATION, TERMINATION, RETIREMENT, DEATH
+  reason           String
+  lastWorkingDate  DateTime
+  noticePeriodDays Int      @default(30)
+  remarks          String?
+  status           String   @default("RESIGNATION_SUBMITTED")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  handoverItems   HandoverItem[]
+  noDueClearances NoDueClearance[]
+  fnfSettlement   FnFSettlement?
+  exitInterview   ExitInterview?
+
+  @@map("staff_exits")
+}
+
+model HandoverItem {
+  id          String    @id @default(cuid())
+  exitId      String
+  exit        StaffExit @relation(fields: [exitId], references: [id])
+  task        String
+  assignedTo  String?
+  dueDate     DateTime?
+  isDone      Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@map("handover_items")
+}
+
+model NoDueClearance {
+  id          String    @id @default(cuid())
+  exitId      String
+  exit        StaffExit @relation(fields: [exitId], references: [id])
+  department  String
+  clearedBy   String?
+  status      String    @default("PENDING")  // PENDING, CLEARED, FLAGGED
+  remarks     String?
+  clearedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@unique([exitId, department])
+  @@map("no_due_clearances")
+}
+
+model FnFSettlement {
+  id              String    @id @default(cuid())
+  exitId          String    @unique
+  exit            StaffExit @relation(fields: [exitId], references: [id])
+  salaryDue       Float
+  leavencashment  Float     @default(0)
+  gratuity        Float?
+  otherDeductions Float     @default(0)
+  netSettlement   Float
+  settledOn       DateTime
+  createdAt       DateTime  @default(now())
+
+  @@map("fnf_settlements")
+}
+
+model ExitInterview {
+  id            String    @id @default(cuid())
+  exitId        String    @unique
+  exit          StaffExit @relation(fields: [exitId], references: [id])
+  interviewerId String
+  scheduledAt   DateTime
+  completedAt   DateTime?
+  responses     Json?
+  overallRating Int?
+  status        String    @default("SCHEDULED")  // SCHEDULED, COMPLETED, CANCELLED
+
+  @@map("exit_interviews")
+}
+
+model StaffGrievance {
+  id                  String   @id @default(cuid())
+  schoolId            String
+  staffId             String?
+  staff               Staff?   @relation(fields: [staffId], references: [id])
+  category            String
+  description         String   @db.Text
+  isAnonymous         Boolean  @default(false)
+  priority            String   @default("MEDIUM")  // LOW, MEDIUM, HIGH, CRITICAL
+  status              String   @default("OPEN")    // OPEN, IN_PROGRESS, RESOLVED, ESCALATED, CLOSED
+  assignedTo          String?
+  resolutionDeadline  DateTime?
+  resolution          String?
+  resolvedAt          DateTime?
+  escalatedAt         DateTime?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("staff_grievances")
+}
+
+model FreeSlot {
   id          String   @id @default(cuid())
   staffId     String
   staff       Staff    @relation(fields: [staffId], references: [id])
-  title       String
-  provider    String?
-  startDate   DateTime
-  endDate     DateTime?
-  hours       Decimal  @db.Decimal(5, 1) @default(0)
-  mode        String   @default("INTERNAL") // INTERNAL, EXTERNAL, ONLINE
-  certificateUrl String?
-  cost        Decimal? @db.Decimal(10, 2)
-  isCompleted Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  date        DateTime @db.Date
+  periodNo    Int
+  isAvailable Boolean  @default(true)
 
-  @@map("cpd_training")
+  @@unique([staffId, date, periodNo])
+  @@map("free_slots")
+}
+
+model SubstituteBooking {
+  id                   String  @id @default(cuid())
+  schoolId             String
+  absentStaffId        String
+  substituteStaffId    String?
+  externalSubstituteId String?
+  date                 DateTime @db.Date
+  periodNo             Int
+  gradeLevelId         String
+  sectionId            String
+  subjectId            String
+  status               String  @default("CONFIRMED")  // CONFIRMED, CANCELLED
+
+  @@map("substitute_bookings")
+}
+
+model ExternalSubstitute {
+  id            String   @id @default(cuid())
+  schoolId      String
+  name          String
+  phone         String
+  email         String?
+  subjects      String[] // subject IDs this person can teach
+  qualification String?
+  dailyRate     Float?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  @@map("external_substitutes")
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

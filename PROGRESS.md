@@ -15,16 +15,16 @@
 | Phase | Tasks | Done | % |
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 102 | 100% |
-| Phase 2 — Core Academic | 130 | 40 | 31% |
+| Phase 2 — Core Academic | 130 | 55 | 42% |
 | Phase 3 — Operations | 172 | 0 | 0% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **142** | **21.6%** |
+| **TOTAL** | **657** | **157** | **23.9%** |
 
 **Last updated:** 2026-04-17
-**Last git commit:** Phase 2.3 + 2.4 — LMS Service + Homework Tracker complete (17/17 tasks)
-**Current focus:** Phase 2 → 2.5 HR Service
+**Last git commit:** Phase 2.5 — HR Service complete (15/15 tasks)
+**Current focus:** Phase 2 → 2.6 Payroll Service
 
 ---
 
@@ -236,22 +236,22 @@
 - [x] Parent acknowledgement (optional per school config)
 - [x] Homework load analytics (avg homework per class per day — flag overloaded classes)
 
-### 2.5 HR Service (14 tasks)
-- [ ] NestJS app scaffold (`apps/hr-service/`)
-- [ ] Staff onboarding CRUD (personal, contact, employment, bank details — PAN/Aadhaar encrypted)
-- [ ] Department + designation management
-- [ ] Subject-teacher + class-teacher mapping
-- [ ] Staff document upload (certificates, ID proof, police verification status)
-- [ ] Probation tracking (end date alert + confirmation letter auto-generation)
-- [ ] **Staff Recruitment Pipeline** — job vacancy CRUD, application collection, shortlisting, interview scheduling, panel feedback, offer letter generation
-- [ ] **Staff Training & CPD** — training calendar, attendance records, CPD hours tracking, effectiveness report
-- [ ] **Staff Exit Management** — resignation, notice period, handover checklist, no-dues clearance, F&F settlement, experience letter, relieving letter, exit interview trigger
-- [ ] **Staff Grievance** — submission (anonymous option), category, assignment, resolution timeline, escalation
-- [ ] Leave policy CRUD (types: CL/SL/EL/Maternity/Paternity/Comp-off; annual days, carry-forward, encashment rules)
-- [ ] Leave balance calculation + leave application + approval workflow (HOD → Principal, multi-level)
-- [ ] **Teacher Substitute Marketplace** — internal pool (teacher marks free periods), auto-suggest on leave, external substitute pool (qualified retired teachers), external daily rate → payroll
-- [ ] Staff appraisal CRUD (KRA/KPI definitions, self-assessment, HOD review, Principal sign-off, final score → increment eligibility)
-- [ ] HR Service Dockerfile
+### 2.5 HR Service (14 tasks) ✅
+- [x] NestJS app scaffold (`apps/hr-service/`)
+- [x] Staff onboarding CRUD (personal, contact, employment, bank details — PAN/Aadhaar encrypted)
+- [x] Department + designation management
+- [x] Subject-teacher + class-teacher mapping
+- [x] Staff document upload (certificates, ID proof, police verification status)
+- [x] Probation tracking (end date alert + confirmation letter auto-generation)
+- [x] **Staff Recruitment Pipeline** — job vacancy CRUD, application collection, shortlisting, interview scheduling, panel feedback, offer letter generation
+- [x] **Staff Training & CPD** — training calendar, attendance records, CPD hours tracking, effectiveness report
+- [x] **Staff Exit Management** — resignation, notice period, handover checklist, no-dues clearance, F&F settlement, experience letter, relieving letter, exit interview trigger
+- [x] **Staff Grievance** — submission (anonymous option), category, assignment, resolution timeline, escalation
+- [x] Leave policy CRUD (types: CL/SL/EL/Maternity/Paternity/Comp-off; annual days, carry-forward, encashment rules)
+- [x] Leave balance calculation + leave application + approval workflow (HOD → Principal, multi-level)
+- [x] **Teacher Substitute Marketplace** — internal pool (teacher marks free periods), auto-suggest on leave, external substitute pool (qualified retired teachers), external daily rate → payroll
+- [x] Staff appraisal CRUD (KRA/KPI definitions, self-assessment, HOD review, Principal sign-off, final score → increment eligibility)
+- [x] HR Service Dockerfile
 
 ### 2.6 Payroll Service (14 tasks)
 - [ ] NestJS app scaffold (`apps/payroll-service/`)
