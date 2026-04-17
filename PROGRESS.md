@@ -23,8 +23,8 @@
 | **TOTAL** | **657** | **102** | **15.5%** |
 
 **Last updated:** 2026-04-17
-**Last git commit:** Phase 1.12 — Teacher Portal complete (6/6 screens)
-**Current focus:** Phase 1 → 1.13 Student Portal (Next.js)
+**Last git commit:** Phase 1.13 — Student Portal complete (4/4 screens)
+**Current focus:** Phase 2 → 2.1 Exam & Result Service (NestJS)
 
 ---
 
@@ -177,11 +177,11 @@
 - [x] My classes + subjects view
 - [x] Leave application form
 
-### 1.13 Student Portal — Phase 1 Screens (4 tasks)
-- [ ] Next.js 14 app scaffold (`apps/student-portal/`)
-- [ ] Auth + dashboard (attendance %, pending fees, upcoming exams, today's homework)
-- [ ] Timetable view
-- [ ] Fee view (invoices + Razorpay payment button)
+### 1.13 Student Portal — Phase 1 Screens (4 tasks) ✅
+- [x] Next.js 14 app scaffold (`apps/student-portal/`)
+- [x] Auth + dashboard (attendance %, pending fees, upcoming exams, today's homework)
+- [x] Timetable view
+- [x] Fee view (invoices + Razorpay payment button)
 
 ---
 
