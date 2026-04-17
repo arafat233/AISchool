@@ -15,16 +15,16 @@
 | Phase | Tasks | Done | % |
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 102 | 100% |
-| Phase 2 — Core Academic | 130 | 13 | 10% |
+| Phase 2 — Core Academic | 130 | 23 | 18% |
 | Phase 3 — Operations | 172 | 0 | 0% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **115** | **17.5%** |
+| **TOTAL** | **657** | **125** | **19.0%** |
 
 **Last updated:** 2026-04-17
-**Last git commit:** Phase 2.1 — Exam & Result Service complete (13/13 tasks)
-**Current focus:** Phase 2 → 2.2 Online Exam Engine
+**Last git commit:** Phase 2.2 — Online Exam Engine complete (10/10 tasks)
+**Current focus:** Phase 2 → 2.3 LMS Service
 
 ---
 
@@ -203,17 +203,17 @@
 - [x] Board exam registration — compile student data in board format (CBSE XML / Excel)
 - [x] Exam Service Dockerfile
 
-### 2.2 Online Exam Engine (10 tasks)
-- [ ] Question bank CRUD (MCQ single/multi, True/False, Fill-in-blank, Match, Short, Long, Image-MCQ)
-- [ ] Question tagging (subject, class, difficulty Easy/Medium/Hard, topic, Bloom's taxonomy level)
-- [ ] Bulk question import via Excel template
-- [ ] Online test builder (select questions manually or auto-pick by difficulty ratio)
-- [ ] Test delivery — timer, randomise question order, randomise option order per student
-- [ ] Anti-cheating: anti-tab-switch detection (warn on 1st, auto-submit on 2nd), fullscreen enforcement
-- [ ] Auto-grading for all objective question types on submission
-- [ ] Subjective answer storage + teacher manual review queue with AI grading suggestion
-- [ ] Per-question performance analytics (pass rate, common wrong answers, difficulty calibration)
-- [ ] Bloom's taxonomy distribution report per test
+### 2.2 Online Exam Engine (10 tasks) ✅
+- [x] Question bank CRUD (MCQ single/multi, True/False, Fill-in-blank, Match, Short, Long, Image-MCQ)
+- [x] Question tagging (subject, class, difficulty Easy/Medium/Hard, topic, Bloom's taxonomy level)
+- [x] Bulk question import via Excel template
+- [x] Online test builder (select questions manually or auto-pick by difficulty ratio)
+- [x] Test delivery — timer, randomise question order, randomise option order per student
+- [x] Anti-cheating: anti-tab-switch detection (warn on 1st, auto-submit on 2nd), fullscreen enforcement
+- [x] Auto-grading for all objective question types on submission
+- [x] Subjective answer storage + teacher manual review queue with AI grading suggestion
+- [x] Per-question performance analytics (pass rate, common wrong answers, difficulty calibration)
+- [x] Bloom's taxonomy distribution report per test
 
 ### 2.3 LMS Service (12 tasks)
 - [ ] NestJS app scaffold (`apps/lms-service/`)
