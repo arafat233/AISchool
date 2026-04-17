@@ -22,9 +22,9 @@
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
 | **TOTAL** | **657** | **102** | **15.5%** |
 
-**Last updated:** 2026-04-16
-**Last git commit:** Phase 1.11 — Admin Portal complete (10/10 screens)
-**Current focus:** Phase 1 → 1.12 Teacher Portal (Next.js)
+**Last updated:** 2026-04-17
+**Last git commit:** Phase 1.12 — Teacher Portal complete (6/6 screens)
+**Current focus:** Phase 1 → 1.13 Student Portal (Next.js)
 
 ---
 
@@ -169,13 +169,13 @@
 - [x] Staff list (basic)
 - [x] Announcements management
 
-### 1.12 Teacher Portal — Phase 1 Screens (6 tasks) ← CURRENT
-- [ ] Next.js 14 app scaffold (`apps/teacher-portal/`)
-- [ ] Auth + dashboard (my classes, pending tasks, leave status)
-- [ ] Attendance marking screen (class roster + status toggle, offline-capable PWA)
-- [ ] Timetable view (weekly + substitute duty alerts)
-- [ ] My classes + subjects view
-- [ ] Leave application form
+### 1.12 Teacher Portal — Phase 1 Screens (6 tasks) ✅
+- [x] Next.js 14 app scaffold (`apps/teacher-portal/`)
+- [x] Auth + dashboard (my classes, pending tasks, leave status)
+- [x] Attendance marking screen (class roster + status toggle, offline-capable PWA)
+- [x] Timetable view (weekly + substitute duty alerts)
+- [x] My classes + subjects view
+- [x] Leave application form
 
 ### 1.13 Student Portal — Phase 1 Screens (4 tasks)
 - [ ] Next.js 14 app scaffold (`apps/student-portal/`)
