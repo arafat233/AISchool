@@ -769,6 +769,7 @@ model Student {
   homeworkAcknowledgements HomeworkAcknowledgement[]
   certificateRequests CertificateRequest[] @relation("CertificateRequests")
   ptmBookings         PtmBooking[]
+  routeAssignment     StudentRouteAssignment?
 
   @@unique([schoolId, admissionNo])
   @@index([schoolId, gradeLevelId, sectionId])
@@ -2931,4 +2932,151 @@ model StaffDirectMessage {
 
   @@index([schoolId, senderId, receiverId])
   @@map("staff_direct_messages")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TRANSPORT SERVICE
+// ═══════════════════════════════════════════════════════════════════════════
+
+model TransportRoute {
+  id           String   @id @default(cuid())
+  schoolId     String
+  name         String
+  description  String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  stops        RouteStop[]
+  assignments  StudentRouteAssignment[]
+  trips        Trip[]
+
+  @@index([schoolId])
+  @@map("transport_routes")
+}
+
+model RouteStop {
+  id              String         @id @default(cuid())
+  routeId         String
+  route           TransportRoute @relation(fields: [routeId], references: [id])
+  name            String
+  lat             Float
+  lng             Float
+  sequence        Int
+  expectedArrivalTime String?    // "07:45"
+  createdAt       DateTime       @default(now())
+
+  assignments     StudentRouteAssignment[]
+
+  @@index([routeId, sequence])
+  @@map("route_stops")
+}
+
+model Vehicle {
+  id             String   @id @default(cuid())
+  schoolId       String
+  regNo          String   @unique
+  make           String?
+  model          String?
+  capacity       Int
+  gpsDeviceId    String?
+  insuranceExpiry DateTime?
+  fitnessExpiry  DateTime?
+  pucExpiry      DateTime?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+
+  maintenanceLogs VehicleMaintenanceLog[]
+  trips           Trip[]
+
+  @@index([schoolId])
+  @@map("vehicles")
+}
+
+model Driver {
+  id           String   @id @default(cuid())
+  schoolId     String
+  staffId      String?  // linked to Staff if applicable
+  name         String
+  phone        String
+  licenceNo    String
+  licenceExpiry DateTime?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  trips        Trip[]
+
+  @@index([schoolId])
+  @@map("drivers")
+}
+
+model StudentRouteAssignment {
+  id           String         @id @default(cuid())
+  studentId    String
+  student      Student        @relation(fields: [studentId], references: [id])
+  routeId      String
+  route        TransportRoute @relation(fields: [routeId], references: [id])
+  stopId       String
+  stop         RouteStop      @relation(fields: [stopId], references: [id])
+  direction    String         @default("BOTH") // BOTH | PICKUP | DROP
+  academicYear String
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+
+  @@unique([studentId, academicYear])
+  @@map("student_route_assignments")
+}
+
+model Trip {
+  id          String         @id @default(cuid())
+  schoolId    String
+  routeId     String
+  route       TransportRoute @relation(fields: [routeId], references: [id])
+  vehicleId   String
+  vehicle     Vehicle        @relation(fields: [vehicleId], references: [id])
+  driverId    String
+  driver      Driver         @relation(fields: [driverId], references: [id])
+  tripType    String         @default("MORNING") // MORNING | AFTERNOON | SPECIAL
+  status      String         @default("SCHEDULED") // SCHEDULED | IN_PROGRESS | COMPLETED | CANCELLED
+  startedAt   DateTime?
+  completedAt DateTime?
+  incidentNotes String?
+  checklist   Json?          // pre-trip checklist result
+  date        DateTime       @default(now())
+  createdAt   DateTime       @default(now())
+
+  locationLogs TripLocationLog[]
+
+  @@index([schoolId, date])
+  @@map("trips")
+}
+
+model TripLocationLog {
+  id        String   @id @default(cuid())
+  tripId    String
+  trip      Trip     @relation(fields: [tripId], references: [id])
+  lat       Float
+  lng       Float
+  speedKmh  Float?
+  heading   Float?
+  timestamp DateTime @default(now())
+
+  @@index([tripId, timestamp])
+  @@map("trip_location_logs")
+}
+
+model VehicleMaintenanceLog {
+  id           String   @id @default(cuid())
+  vehicleId    String
+  vehicle      Vehicle  @relation(fields: [vehicleId], references: [id])
+  serviceType  String   // OIL_CHANGE | TYRE | BRAKE | GENERAL | INSURANCE | FITNESS | PUC
+  description  String?
+  cost         Float?
+  serviceDate  DateTime
+  nextDueDate  DateTime?
+  odometer     Int?
+  vendorName   String?
+  createdAt    DateTime @default(now())
+
+  @@index([vehicleId])
+  @@map("vehicle_maintenance_logs")
 }
