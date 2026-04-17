@@ -1,11 +1,29 @@
 version: "3.9"
 
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  networks:
+    - erp_net
+  env_file:
+    - .env
+
+x-backend-healthcheck: &backend-healthcheck
+  healthcheck:
+    test: ["CMD-SHELL", "wget -qO- http://localhost:$${PORT}/health || exit 1"]
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 30s
+
 services:
-  # ─── PostgreSQL ─────────────────────────────────────────────────────────
+  # ═══════════════════════════════════════════════════════════════════════════
+  # INFRASTRUCTURE
+  # ═══════════════════════════════════════════════════════════════════════════
+
   postgres:
     image: postgres:16-alpine
     container_name: erp_postgres
-    restart: unless-stopped
+    <<: *service-defaults
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-school_erp}
       POSTGRES_USER: ${POSTGRES_USER:-school_erp}
@@ -21,11 +39,10 @@ services:
       timeout: 5s
       retries: 5
 
-  # ─── Redis ──────────────────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
     container_name: erp_redis
-    restart: unless-stopped
+    <<: *service-defaults
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
     ports:
       - "${REDIS_PORT:-6379}:6379"
@@ -37,65 +54,10 @@ services:
       timeout: 5s
       retries: 5
 
-  # ─── Zookeeper (Kafka dependency) ───────────────────────────────────────
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.6.0
-    container_name: erp_zookeeper
-    restart: unless-stopped
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    volumes:
-      - zookeeper_data:/var/lib/zookeeper/data
-      - zookeeper_log:/var/lib/zookeeper/log
-
-  # ─── Kafka ──────────────────────────────────────────────────────────────
-  kafka:
-    image: confluentinc/cp-kafka:7.6.0
-    container_name: erp_kafka
-    restart: unless-stopped
-    depends_on:
-      - zookeeper
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-    volumes:
-      - kafka_data:/var/lib/kafka/data
-    healthcheck:
-      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
-  # ─── Elasticsearch ──────────────────────────────────────────────────────
-  elasticsearch:
-    image: elasticsearch:8.13.0
-    container_name: erp_elasticsearch
-    restart: unless-stopped
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ports:
-      - "9200:9200"
-    volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
-    healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
-  # ─── MQTT Broker (for GPS/IoT) ──────────────────────────────────────────
   mosquitto:
     image: eclipse-mosquitto:2
     container_name: erp_mqtt
-    restart: unless-stopped
+    <<: *service-defaults
     ports:
       - "1883:1883"
       - "9001:9001"
@@ -104,11 +66,10 @@ services:
       - mosquitto_data:/mosquitto/data
       - mosquitto_log:/mosquitto/log
 
-  # ─── InfluxDB (time-series: GPS, sensors, analytics) ───────────────────
   influxdb:
     image: influxdb:2.7-alpine
     container_name: erp_influxdb
-    restart: unless-stopped
+    <<: *service-defaults
     ports:
       - "8086:8086"
     environment:
@@ -120,25 +81,347 @@ services:
     volumes:
       - influxdb_data:/var/lib/influxdb2
 
-  # ─── Kibana (log visualisation) ─────────────────────────────────────────
-  kibana:
-    image: kibana:8.13.0
-    container_name: erp_kibana
-    restart: unless-stopped
+  # DB migrations (runs once then exits)
+  migrate:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/migrate.Dockerfile
+    container_name: erp_migrate
+    <<: *service-defaults
     depends_on:
-      - elasticsearch
-    ports:
-      - "5601:5601"
+      postgres:
+        condition: service_healthy
     environment:
-      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+    restart: "no"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # BACKEND MICROSERVICES
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: apps/auth-service/Dockerfile
+    container_name: erp_auth
+    <<: *service-defaults
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-}@redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  user-service:
+    build:
+      context: .
+      dockerfile: apps/user-service/Dockerfile
+    container_name: erp_user
+    <<: *service-defaults
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  student-service:
+    build:
+      context: .
+      dockerfile: apps/student-service/Dockerfile
+    container_name: erp_student
+    <<: *service-defaults
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  academic-service:
+    build:
+      context: .
+      dockerfile: apps/academic-service/Dockerfile
+    container_name: erp_academic
+    <<: *service-defaults
+    ports:
+      - "3004:3004"
+    environment:
+      PORT: 3004
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  attendance-service:
+    build:
+      context: .
+      dockerfile: apps/attendance-service/Dockerfile
+    container_name: erp_attendance
+    <<: *service-defaults
+    ports:
+      - "3005:3005"
+    environment:
+      PORT: 3005
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  fee-service:
+    build:
+      context: .
+      dockerfile: apps/fee-service/Dockerfile
+    container_name: erp_fee
+    <<: *service-defaults
+    ports:
+      - "3006:3006"
+    environment:
+      PORT: 3006
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: apps/notification-service/Dockerfile
+    container_name: erp_notification
+    <<: *service-defaults
+    ports:
+      - "3007:3007"
+    environment:
+      PORT: 3007
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-}@redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  exam-service:
+    build:
+      context: .
+      dockerfile: apps/exam-service/Dockerfile
+    container_name: erp_exam
+    <<: *service-defaults
+    ports:
+      - "3008:3008"
+    environment:
+      PORT: 3008
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  lms-service:
+    build:
+      context: .
+      dockerfile: apps/lms-service/Dockerfile
+    container_name: erp_lms
+    <<: *service-defaults
+    ports:
+      - "3009:3009"
+    environment:
+      PORT: 3009
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  hr-service:
+    build:
+      context: .
+      dockerfile: apps/hr-service/Dockerfile
+    container_name: erp_hr
+    <<: *service-defaults
+    ports:
+      - "3010:3010"
+    environment:
+      PORT: 3010
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  payroll-service:
+    build:
+      context: .
+      dockerfile: apps/payroll-service/Dockerfile
+    container_name: erp_payroll
+    <<: *service-defaults
+    ports:
+      - "3011:3011"
+    environment:
+      PORT: 3011
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  certificate-service:
+    build:
+      context: .
+      dockerfile: apps/certificate-service/Dockerfile
+    container_name: erp_certificate
+    <<: *service-defaults
+    ports:
+      - "3012:3012"
+    environment:
+      PORT: 3012
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      CERTIFICATE_SERVICE_PORT: 3012
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  admission-service:
+    build:
+      context: .
+      dockerfile: apps/admission-service/Dockerfile
+    container_name: erp_admission
+    <<: *service-defaults
+    ports:
+      - "3013:3013"
+    environment:
+      PORT: 3013
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      ADMISSION_SERVICE_PORT: 3013
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  transport-service:
+    build:
+      context: .
+      dockerfile: apps/transport-service/Dockerfile
+    container_name: erp_transport
+    <<: *service-defaults
+    ports:
+      - "3014:3014"
+    environment:
+      PORT: 3014
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      TRANSPORT_SERVICE_PORT: 3014
+      MQTT_BROKER_URL: mqtt://mosquitto:1883
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      mosquitto:
+        condition: service_started
+
+  health-service:
+    build:
+      context: .
+      dockerfile: apps/health-service/Dockerfile
+    container_name: erp_health
+    <<: *service-defaults
+    ports:
+      - "3015:3015"
+    environment:
+      PORT: 3015
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      HEALTH_SERVICE_PORT: 3015
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # FRONTEND PORTALS
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  admin-portal:
+    build:
+      context: .
+      dockerfile: apps/admin-portal/Dockerfile
+    container_name: erp_admin_portal
+    <<: *service-defaults
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+
+  teacher-portal:
+    build:
+      context: .
+      dockerfile: apps/teacher-portal/Dockerfile
+    container_name: erp_teacher_portal
+    <<: *service-defaults
+    ports:
+      - "4001:4001"
+    environment:
+      PORT: 4001
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+
+  student-portal:
+    build:
+      context: .
+      dockerfile: apps/student-portal/Dockerfile
+    container_name: erp_student_portal
+    <<: *service-defaults
+    ports:
+      - "4002:4002"
+    environment:
+      PORT: 4002
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+
+  parent-portal:
+    build:
+      context: .
+      dockerfile: apps/parent-portal/Dockerfile
+    container_name: erp_parent_portal
+    <<: *service-defaults
+    ports:
+      - "4003:4003"
+    environment:
+      PORT: 4003
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+
+networks:
+  erp_net:
+    driver: bridge
 
 volumes:
   postgres_data:
   redis_data:
-  zookeeper_data:
-  zookeeper_log:
-  kafka_data:
-  elasticsearch_data:
   mosquitto_data:
   mosquitto_log:
   influxdb_data:
