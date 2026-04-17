@@ -16,15 +16,15 @@
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 82 | 100% |
 | Phase 2 — Core Academic | 130 | 130 | 100% |
-| Phase 3 — Operations | 172 | 0 | 0% |
+| Phase 3 — Operations | 172 | 34 | 20% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **212** | **32.3%** |
+| **TOTAL** | **657** | **246** | **37.4%** |
 
 **Last updated:** 2026-04-17
-**Last git commit:** Phase 2 — ALL 14 modules complete (212/657 tasks)
-**Current focus:** Phase 3 — Operations
+**Last git commit:** Phase 3.1-3.3 — Transport, Health, Visitor complete (246/657 tasks)
+**Current focus:** Phase 3 → 3.4 Cafeteria Service
 
 ---
 
@@ -351,48 +351,48 @@
 ## Phase 3 — Operations
 **Target:** Transport + Health + Visitor + Cafeteria + Library + Events + Expense + Company Portal + SaaS Service + Reporting + More
 
-### 3.1 Transport Service (14 tasks)
-- [ ] NestJS app scaffold (`apps/transport-service/`)
-- [ ] Route + stop CRUD (lat/lng, sequence, expected arrival time)
-- [ ] Vehicle + driver management (registration, capacity, GPS device ID)
-- [ ] Student-to-route/stop assignment (per academic year, direction: both/pickup/drop)
-- [ ] Trip management (start, end, status, incident notes)
-- [ ] MQTT GPS location ingestion (HiveMQ / AWS IoT — ping every 30 sec)
-- [ ] Real-time location broadcast via WebSocket (parent portal live map)
-- [ ] Geofencing: 500m from stop → parent push "bus approaching"
-- [ ] Geofencing: school boundary → admin notification "bus arrived"
-- [ ] Speed alert (> 60 km/h → Transport Manager push)
-- [ ] Route deviation alert (> 200m off route → admin push)
-- [ ] **Pre-trip safety checklist** (driver completes: tyres, brakes, lights, horn, first aid, extinguisher — if any critical item fails, trip blocked)
-- [ ] **Vehicle maintenance log** (service history, tyre records, fuel log, insurance/fitness/PUC expiry reminders)
-- [ ] Trip history + location log replay (stored in InfluxDB; viewable by admin)
-- [ ] Transport Service Dockerfile
+### 3.1 Transport Service (14 tasks) ✅
+- [x] NestJS app scaffold (`apps/transport-service/`)
+- [x] Route + stop CRUD (lat/lng, sequence, expected arrival time)
+- [x] Vehicle + driver management (registration, capacity, GPS device ID)
+- [x] Student-to-route/stop assignment (per academic year, direction: both/pickup/drop)
+- [x] Trip management (start, end, status, incident notes)
+- [x] MQTT GPS location ingestion (HiveMQ / AWS IoT — ping every 30 sec)
+- [x] Real-time location broadcast via WebSocket (parent portal live map)
+- [x] Geofencing: 500m from stop → parent push "bus approaching"
+- [x] Geofencing: school boundary → admin notification "bus arrived"
+- [x] Speed alert (> 60 km/h → Transport Manager push)
+- [x] Route deviation alert (> 200m off route → admin push)
+- [x] **Pre-trip safety checklist** (driver completes: tyres, brakes, lights, horn, first aid, extinguisher — if any critical item fails, trip blocked)
+- [x] **Vehicle maintenance log** (service history, tyre records, fuel log, insurance/fitness/PUC expiry reminders)
+- [x] Trip history + location log replay (stored in InfluxDB; viewable by admin)
+- [x] Transport Service Dockerfile
 
-### 3.2 Health & Medical Service (12 tasks)
-- [ ] NestJS app scaffold (`apps/health-service/`)
-- [ ] Student medical profile (blood group, allergies JSON, conditions, medications, emergency contact, insurance)
-- [ ] Nurse daily visit log (student, complaint, vitals: temp/BP/pulse, treatment, medication, disposition, parent notified)
-- [ ] **Medication administration log** (chronic conditions — scheduled dose, administered time, missed dose alert, parent consent stored)
-- [ ] Health incident report (injury type, severity, first aid, referral — auto-notify parent on any incident)
-- [ ] Vaccination records + reminders (due date → parent push 30 days + 7 days before)
-- [ ] Annual fitness / BMI health record (height, weight, BMI, vision, hearing — per year)
-- [ ] **AED inventory** (location, pad expiry, battery level, trained staff list, nearest AED per area)
-- [ ] **Mental Health First Aid** — staff MHFA certification tracking, renewal alerts, DSL designation
-- [ ] Student counselling sessions (confidential — counsellor + principal access only; referral source, case type, notes encrypted, follow-up scheduling)
-- [ ] Student discipline module (incident log, escalation: warning → detention → suspension → expulsion, parent notification, counsellor referral)
-- [ ] Student mental health wellness tracker (anonymous weekly mood check; if distressed → counsellor notified without name)
-- [ ] Health Service Dockerfile
+### 3.2 Health & Medical Service (12 tasks) ✅
+- [x] NestJS app scaffold (`apps/health-service/`)
+- [x] Student medical profile (blood group, allergies JSON, conditions, medications, emergency contact, insurance)
+- [x] Nurse daily visit log (student, complaint, vitals: temp/BP/pulse, treatment, medication, disposition, parent notified)
+- [x] **Medication administration log** (chronic conditions — scheduled dose, administered time, missed dose alert, parent consent stored)
+- [x] Health incident report (injury type, severity, first aid, referral — auto-notify parent on any incident)
+- [x] Vaccination records + reminders (due date → parent push 30 days + 7 days before)
+- [x] Annual fitness / BMI health record (height, weight, BMI, vision, hearing — per year)
+- [x] **AED inventory** (location, pad expiry, battery level, trained staff list, nearest AED per area)
+- [x] **Mental Health First Aid** — staff MHFA certification tracking, renewal alerts, DSL designation
+- [x] Student counselling sessions (confidential — counsellor + principal access only; referral source, case type, notes encrypted, follow-up scheduling)
+- [x] Student discipline module (incident log, escalation: warning → detention → suspension → expulsion, parent notification, counsellor referral)
+- [x] Student mental health wellness tracker (anonymous weekly mood check; if distressed → counsellor notified without name)
+- [x] Health Service Dockerfile
 
-### 3.3 Visitor Management Service (8 tasks)
-- [ ] Visitor registration (name, purpose, host, government ID scan, webcam photo)
-- [ ] Blacklist check on ID number before approving entry
-- [ ] Host notification (push to staff being visited — approve or deny within 5 min)
-- [ ] QR visitor pass generation (valid for visit duration; printer or screen display)
-- [ ] Check-in + check-out tracking (time on campus recorded; badge colour-coded by type)
-- [ ] **Student gate pass** (parent requests via portal with reason + pickup time → class teacher approves → security gets notification → parent shows QR → exit recorded + digital signature)
-- [ ] Delivery management (courier log: description, recipient, collected-at timestamp)
-- [ ] Pre-registration (parent registers via portal for PTM / events — QR generated in advance; linked to PTM booking)
-- [ ] Visitor Service Dockerfile
+### 3.3 Visitor Management Service (8 tasks) ✅
+- [x] Visitor registration (name, purpose, host, government ID scan, webcam photo)
+- [x] Blacklist check on ID number before approving entry
+- [x] Host notification (push to staff being visited — approve or deny within 5 min)
+- [x] QR visitor pass generation (valid for visit duration; printer or screen display)
+- [x] Check-in + check-out tracking (time on campus recorded; badge colour-coded by type)
+- [x] **Student gate pass** (parent requests via portal with reason + pickup time → class teacher approves → security gets notification → parent shows QR → exit recorded + digital signature)
+- [x] Delivery management (courier log: description, recipient, collected-at timestamp)
+- [x] Pre-registration (parent registers via portal for PTM / events — QR generated in advance; linked to PTM booking)
+- [x] Visitor Service Dockerfile
 
 ### 3.4 Cafeteria Service (8 tasks)
 - [ ] Daily/weekly menu management (Canteen Manager uploads items + nutritional info per meal type)

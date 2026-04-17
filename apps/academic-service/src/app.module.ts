@@ -8,6 +8,7 @@ import { PtmModule } from "./ptm/ptm.module";
 import { CalendarModule } from "./calendar/calendar.module";
 import { AlertModule } from "./alert/alert.module";
 import { StaffCommsModule } from "./staff-comms/staff-comms.module";
+import { VisitorModule } from "./visitor/visitor.module";
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { StaffCommsModule } from "./staff-comms/staff-comms.module";
     CalendarModule,
     AlertModule,
     StaffCommsModule,
+    VisitorModule,
   ],
 })
 export class AppModule {}

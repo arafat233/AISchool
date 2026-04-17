@@ -770,6 +770,14 @@ model Student {
   certificateRequests CertificateRequest[] @relation("CertificateRequests")
   ptmBookings         PtmBooking[]
   routeAssignment     StudentRouteAssignment?
+  medicalProfile      StudentMedicalProfile?
+  nurseVisits         NurseVisitLog[]
+  medicationLogs      MedicationAdminLog[]
+  healthIncidents     HealthIncident[]
+  vaccinations        VaccinationRecord[]
+  fitnessRecords      StudentFitnessRecord[]
+  counsellingSessions CounsellingSession[]
+  disciplineIncidents DisciplineIncident[]
 
   @@unique([schoolId, admissionNo])
   @@index([schoolId, gradeLevelId, sectionId])
@@ -3079,4 +3087,185 @@ model VehicleMaintenanceLog {
 
   @@index([vehicleId])
   @@map("vehicle_maintenance_logs")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HEALTH & MEDICAL SERVICE
+// ═══════════════════════════════════════════════════════════════════════════
+
+model StudentMedicalProfile {
+  id               String   @id @default(cuid())
+  studentId        String   @unique
+  student          Student  @relation(fields: [studentId], references: [id])
+  bloodGroup       String?
+  allergies        Json     @default("[]") // [{allergen, severity, reaction}]
+  chronicConditions Json    @default("[]")
+  medications      Json     @default("[]") // [{name, dose, frequency, prescribedBy}]
+  emergencyContact String?
+  emergencyPhone   String?
+  insuranceProvider String?
+  insurancePolicyNo String?
+  doctorName       String?
+  doctorPhone      String?
+  updatedAt        DateTime @updatedAt
+  createdAt        DateTime @default(now())
+
+  @@map("student_medical_profiles")
+}
+
+model NurseVisitLog {
+  id              String   @id @default(cuid())
+  schoolId        String
+  studentId       String
+  student         Student  @relation(fields: [studentId], references: [id])
+  complaint       String
+  temperature     Float?
+  bpSystolic      Int?
+  bpDiastolic     Int?
+  pulse           Int?
+  treatment       String?
+  medicationGiven String?
+  disposition     String   @default("RETURNED_TO_CLASS") // RETURNED_TO_CLASS | SENT_HOME | REFERRED | CALLED_PARENT
+  parentNotified  Boolean  @default(false)
+  parentNotifiedAt DateTime?
+  attendedBy      String   // nurse staff id
+  visitedAt       DateTime @default(now())
+
+  @@index([schoolId, visitedAt])
+  @@map("nurse_visit_logs")
+}
+
+model MedicationAdminLog {
+  id              String   @id @default(cuid())
+  schoolId        String
+  studentId       String
+  student         Student  @relation(fields: [studentId], references: [id])
+  medicationName  String
+  dose            String
+  scheduledTime   DateTime
+  administeredAt  DateTime?
+  administeredBy  String?
+  missed          Boolean  @default(false)
+  parentConsentId String?
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  @@index([schoolId, scheduledTime])
+  @@map("medication_admin_logs")
+}
+
+model HealthIncident {
+  id              String   @id @default(cuid())
+  schoolId        String
+  studentId       String
+  student         Student  @relation(fields: [studentId], references: [id])
+  injuryType      String
+  severity        String   @default("MINOR") // MINOR | MODERATE | SEVERE
+  description     String
+  firstAidGiven   String?
+  referredTo      String?  // hospital/doctor
+  parentNotified  Boolean  @default(false)
+  parentNotifiedAt DateTime?
+  reportedBy      String
+  occurredAt      DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  @@index([schoolId, occurredAt])
+  @@map("health_incidents")
+}
+
+model VaccinationRecord {
+  id              String   @id @default(cuid())
+  studentId       String
+  student         Student  @relation(fields: [studentId], references: [id])
+  vaccineName     String
+  doseNumber      Int      @default(1)
+  administeredOn  DateTime?
+  dueDate         DateTime?
+  reminder30Sent  Boolean  @default(false)
+  reminder7Sent   Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  @@map("vaccination_records")
+}
+
+model StudentFitnessRecord {
+  id            String   @id @default(cuid())
+  studentId     String
+  student       Student  @relation(fields: [studentId], references: [id])
+  academicYear  String
+  heightCm      Float?
+  weightKg      Float?
+  bmi           Float?
+  visionLeft    String?
+  visionRight   String?
+  hearingLeft   String?
+  hearingRight  String?
+  recordedBy    String
+  recordedAt    DateTime @default(now())
+
+  @@unique([studentId, academicYear])
+  @@map("student_fitness_records")
+}
+
+model AedInventory {
+  id              String   @id @default(cuid())
+  schoolId        String
+  location        String
+  deviceModel     String?
+  serialNo        String?
+  padExpiryDate   DateTime?
+  batteryLevel    Int?     // percent
+  lastInspectedAt DateTime?
+  trainedStaff    String[] @default([]) // staff ids
+  createdAt       DateTime @default(now())
+
+  @@map("aed_inventory")
+}
+
+model CounsellingSession {
+  id            String   @id @default(cuid())
+  schoolId      String
+  studentId     String
+  student       Student  @relation(fields: [studentId], references: [id])
+  caseType      String   // ACADEMIC | BEHAVIOURAL | EMOTIONAL | FAMILY | PEER | CAREER
+  referralSource String?
+  notesEncrypted String? // encrypted in production (AES-256)
+  nextSession   DateTime?
+  counsellorId  String
+  sessionDate   DateTime @default(now())
+  isConfidential Boolean @default(true)
+
+  @@index([schoolId])
+  @@map("counselling_sessions")
+}
+
+model DisciplineIncident {
+  id              String   @id @default(cuid())
+  schoolId        String
+  studentId       String
+  student         Student  @relation(fields: [studentId], references: [id])
+  description     String
+  action          String   @default("WARNING") // WARNING | DETENTION | SUSPENSION | EXPULSION
+  parentNotified  Boolean  @default(false)
+  counsellorReferred Boolean @default(false)
+  recordedBy      String
+  occurredAt      DateTime @default(now())
+
+  @@index([schoolId, occurredAt])
+  @@map("discipline_incidents")
+}
+
+model MoodCheckIn {
+  id          String   @id @default(cuid())
+  schoolId    String
+  weekStart   DateTime // Monday of the week
+  moodScore   Int      // 1-5
+  note        String?
+  flaggedForCounsellor Boolean @default(false)
+  createdAt   DateTime @default(now())
+  // No studentId stored — fully anonymous
+
+  @@index([schoolId, weekStart])
+  @@map("mood_check_ins")
 }
