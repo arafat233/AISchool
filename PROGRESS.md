@@ -15,16 +15,16 @@
 | Phase | Tasks | Done | % |
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 102 | 100% |
-| Phase 2 — Core Academic | 130 | 23 | 18% |
+| Phase 2 — Core Academic | 130 | 40 | 31% |
 | Phase 3 — Operations | 172 | 0 | 0% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **125** | **19.0%** |
+| **TOTAL** | **657** | **142** | **21.6%** |
 
 **Last updated:** 2026-04-17
-**Last git commit:** Phase 2.2 — Online Exam Engine complete (10/10 tasks)
-**Current focus:** Phase 2 → 2.3 LMS Service
+**Last git commit:** Phase 2.3 + 2.4 — LMS Service + Homework Tracker complete (17/17 tasks)
+**Current focus:** Phase 2 → 2.5 HR Service
 
 ---
 
@@ -215,26 +215,26 @@
 - [x] Per-question performance analytics (pass rate, common wrong answers, difficulty calibration)
 - [x] Bloom's taxonomy distribution report per test
 
-### 2.3 LMS Service (12 tasks)
-- [ ] NestJS app scaffold (`apps/lms-service/`)
-- [ ] Course + unit + lesson CRUD (video URL, PDF, article, audio, live class, AR content)
-- [ ] Video lesson progress tracking (watched > 80% = complete; PDF scrolled to end = complete)
-- [ ] Quiz builder (linked to question bank, configurable attempts + pass score)
-- [ ] Student progress tracking (% complete per subject, learning streak, time-on-task)
-- [ ] Live class scheduling — Zoom / Google Meet / BBB link auto-generated; FCM reminder
-- [ ] Recording saved to lesson after live class ends
-- [ ] Auto-attendance for students who join live class (threshold: joined within first 10 min)
-- [ ] Discussion threads per lesson (threaded replies, teacher moderation)
-- [ ] Syllabus coverage tracker — teacher marks topic status; % coverage vs pace alert
-- [ ] Course completion heatmap for teacher dashboard (class-level, lesson-level drop-off)
-- [ ] eTextbook / NCERT digital content embed (iframe + chapter link)
-- [ ] LMS Service Dockerfile
+### 2.3 LMS Service (12 tasks) ✅
+- [x] NestJS app scaffold (`apps/lms-service/`)
+- [x] Course + unit + lesson CRUD (video URL, PDF, article, audio, live class, AR content)
+- [x] Video lesson progress tracking (watched > 80% = complete; PDF scrolled to end = complete)
+- [x] Quiz builder (linked to question bank, configurable attempts + pass score)
+- [x] Student progress tracking (% complete per subject, learning streak, time-on-task)
+- [x] Live class scheduling — Zoom / Google Meet / BBB link auto-generated; FCM reminder
+- [x] Recording saved to lesson after live class ends
+- [x] Auto-attendance for students who join live class (threshold: joined within first 10 min)
+- [x] Discussion threads per lesson (threaded replies, teacher moderation)
+- [x] Syllabus coverage tracker — teacher marks topic status; % coverage vs pace alert
+- [x] Course completion heatmap for teacher dashboard (class-level, lesson-level drop-off)
+- [x] eTextbook / NCERT digital content embed (iframe + chapter link)
+- [x] LMS Service Dockerfile
 
-### 2.4 Homework Tracker (4 tasks)
-- [ ] Daily homework post endpoint (teacher → class + subject + description + date, quick entry)
-- [ ] Student/parent view (today's homework checklist per subject)
-- [ ] Parent acknowledgement (optional per school config)
-- [ ] Homework load analytics (avg homework per class per day — flag overloaded classes)
+### 2.4 Homework Tracker (4 tasks) ✅
+- [x] Daily homework post endpoint (teacher → class + subject + description + date, quick entry)
+- [x] Student/parent view (today's homework checklist per subject)
+- [x] Parent acknowledgement (optional per school config)
+- [x] Homework load analytics (avg homework per class per day — flag overloaded classes)
 
 ### 2.5 HR Service (14 tasks)
 - [ ] NestJS app scaffold (`apps/hr-service/`)

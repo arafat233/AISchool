@@ -289,7 +289,7 @@ model Tenant {
   id               String           @id @default(cuid())
   name             String
   type             TenantType       @default(COMPANY)
-  plan             SubscriptionPlan @default(TRIAL)
+  plan             SubscriptionPlan @default(BASIC)
   status           TenantStatus     @default(TRIAL)
   trialEndsAt      DateTime?
   subscriptionEndsAt DateTime?
@@ -344,13 +344,14 @@ model User {
   updatedAt    DateTime   @updatedAt
   deletedAt    DateTime?
 
-  profile        UserProfile?
-  refreshTokens  RefreshToken[]
-  auditLogs      AuditLog[]
-  staff          Staff?
-  student        Student?
-  parentStudents StudentParent[]
-  twoFactorAuth  TwoFactorAuth?
+  profile            UserProfile?
+  refreshTokens      RefreshToken[]
+  auditLogs          AuditLog[]
+  staff              Staff?
+  student            Student?
+  parentStudents     StudentParent[]
+  twoFactorAuth      TwoFactorAuth?
+  lessonDiscussions  LessonDiscussion[]
 
   @@unique([tenantId, email])
   @@unique([tenantId, phone])
@@ -527,6 +528,9 @@ model GradeLevel {
   classSubjects   ClassSubject[]
   feeStructures   FeeStructure[]
   timetableSlots  TimetableSlot[]
+  courses         Course[]
+  syllabicTopics  SyllabicTopic[]
+  homework        Homework[]
 
   @@unique([schoolId, name])
   @@map("grade_levels")
@@ -545,6 +549,8 @@ model Section {
   attendanceSessions AttendanceSession[]
   timetableSlots    TimetableSlot[]
   classTeachers     ClassTeacher[]
+  liveClasses       LiveClass[]
+  homework          Homework[]   @relation("HomeworkSection")
 
   @@unique([gradeLevelId, name])
   @@map("sections")
@@ -564,6 +570,9 @@ model Subject {
   teacherSubjects  TeacherSubject[]
   timetableSlots   TimetableSlot[]
   examSchedules    ExamSchedule[]
+  courses          Course[]
+  syllabicTopics   SyllabicTopic[]
+  homework         Homework[]
 
   @@unique([schoolId, code])
   @@map("subjects")
@@ -754,8 +763,10 @@ model Student {
   scholarshipApps     ScholarshipApplication[]
   iepProfile          IepProfile?
   readingLogs         ReadingLog[]
-  courseProgress      StudentCourseProgress[]
   portfolioItems      PortfolioItem[]
+  lessonProgress      LessonProgress[]
+  liveClassAttendance LiveClassAttendance[]
+  homeworkAcknowledgements HomeworkAcknowledgement[]
 
   @@unique([schoolId, admissionNo])
   @@index([schoolId, gradeLevelId, sectionId])
@@ -907,6 +918,7 @@ model Staff {
   staffAttendance  StaffAttendance[]
   appraisals       StaffAppraisal[]
   cpd              CpdTraining[]
+  syllabusProgress SyllabusProgress[]
 
   @@unique([schoolId, employeeCode])
   @@map("staff")
@@ -1785,21 +1797,23 @@ model NotificationPreference {
 // ═══════════════════════════════════════════════════════════════════════════
 
 model Course {
-  id           String  @id @default(cuid())
-  schoolId     String
-  subjectId    String
-  gradeLevelId String
+  id             String      @id @default(cuid())
+  schoolId       String
+  subjectId      String
+  subject        Subject     @relation(fields: [subjectId], references: [id])
+  gradeLevelId   String
+  gradeLevel     GradeLevel  @relation(fields: [gradeLevelId], references: [id])
   academicYearId String?
-  title        String
-  description  String?
-  thumbnailUrl String?
-  isPublished  Boolean @default(false)
-  createdBy    String  // staff id
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  title          String
+  description    String?
+  thumbnailUrl   String?
+  teacherStaffId String?     // primary teacher
+  isPublished    Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 
-  units    CourseUnit[]
-  progress StudentCourseProgress[]
+  units      CourseUnit[]
+  liveClasses LiveClass[]
 
   @@map("courses")
 }
@@ -1809,47 +1823,190 @@ model CourseUnit {
   courseId    String
   course      Course   @relation(fields: [courseId], references: [id])
   title       String
-  sequence    Int
+  description String?
+  orderIndex  Int      @default(0)
   createdAt   DateTime @default(now())
 
   lessons Lesson[]
 
-  @@unique([courseId, sequence])
   @@map("course_units")
 }
 
 model Lesson {
-  id            String     @id @default(cuid())
-  unitId        String
-  unit          CourseUnit @relation(fields: [unitId], references: [id])
-  title         String
-  sequence      Int
-  contentType   String     @default("VIDEO") // VIDEO, PDF, TEXT, QUIZ, EXTERNAL_LINK
-  contentUrl    String?
-  textContent   String?    @db.Text
-  durationMins  Int?
-  syllabusTopics String[]  // mapped to official syllabus topics
-  isPublished   Boolean    @default(false)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  id             String     @id @default(cuid())
+  unitId         String
+  unit           CourseUnit @relation(fields: [unitId], references: [id])
+  title          String
+  description    String?
+  type           String     @default("VIDEO")  // VIDEO, PDF, ARTICLE, AUDIO, LIVE_CLASS, AR_CONTENT
+  contentUrl     String?
+  articleHtml    String?    @db.Text
+  durationSeconds Int       @default(0)
+  recordingUrl   String?
+  isFreePreview  Boolean    @default(false)
+  isPublished    Boolean    @default(false)
+  orderIndex     Int        @default(0)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
-  @@unique([unitId, sequence])
+  lessonProgress LessonProgress[]
+  lessonQuiz     LessonQuiz?
+  discussions    LessonDiscussion[]
+  liveClasses    LiveClass[]
+
   @@map("lessons")
 }
 
-model StudentCourseProgress {
+model LessonProgress {
+  id             String    @id @default(cuid())
+  studentId      String
+  student        Student   @relation(fields: [studentId], references: [id])
+  lessonId       String
+  lesson         Lesson    @relation(fields: [lessonId], references: [id])
+  watchedSeconds Int       @default(0)
+  scrollPercent  Float     @default(0)
+  isCompleted    Boolean   @default(false)
+  completedAt    DateTime?
+  updatedAt      DateTime  @updatedAt @default(now())
+
+  @@unique([studentId, lessonId])
+  @@map("lesson_progress")
+}
+
+model LessonQuiz {
+  id           String  @id @default(cuid())
+  lessonId     String  @unique
+  lesson       Lesson  @relation(fields: [lessonId], references: [id])
+  onlineTestId String
+  maxAttempts  Int     @default(3)
+  passScore    Int     @default(60)
+  createdAt    DateTime @default(now())
+
+  @@map("lesson_quizzes")
+}
+
+model LessonDiscussion {
+  id               String   @id @default(cuid())
+  lessonId         String
+  lesson           Lesson   @relation(fields: [lessonId], references: [id])
+  authorId         String
+  author           User     @relation(fields: [authorId], references: [id])
+  content          String   @db.Text
+  parentId         String?
+  parent           LessonDiscussion?  @relation("DiscussionReplies", fields: [parentId], references: [id])
+  replies          LessonDiscussion[] @relation("DiscussionReplies")
+  moderationStatus String   @default("PENDING")  // PENDING, APPROVE, REMOVE
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("lesson_discussions")
+}
+
+model LiveClass {
   id              String   @id @default(cuid())
-  studentId       String
-  student         Student  @relation(fields: [studentId], references: [id])
-  courseId        String
-  course          Course   @relation(fields: [courseId], references: [id])
-  completedLessons String[] // lesson ids
-  percentComplete Decimal  @db.Decimal(5, 2) @default(0)
-  lastAccessedAt  DateTime?
+  lessonId        String
+  lesson          Lesson   @relation(fields: [lessonId], references: [id])
+  courseId        String?
+  course          Course?  @relation(fields: [courseId], references: [id])
+  sectionId       String?
+  section         Section? @relation(fields: [sectionId], references: [id])
+  hostStaffId     String
+  title           String
+  description     String?
+  provider        String   @default("ZOOM")  // ZOOM, GOOGLE_MEET, BBB
+  meetingLink     String
+  roomId          String
+  scheduledAt     DateTime
+  durationMinutes Int      @default(60)
+  status          String   @default("SCHEDULED")  // SCHEDULED, LIVE, ENDED, CANCELLED
+  recordingUrl    String?
+  createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  @@unique([studentId, courseId])
-  @@map("student_course_progress")
+  attendance LiveClassAttendance[]
+
+  @@map("live_classes")
+}
+
+model LiveClassAttendance {
+  id           String    @id @default(cuid())
+  liveClassId  String
+  liveClass    LiveClass @relation(fields: [liveClassId], references: [id])
+  studentId    String
+  student      Student   @relation(fields: [studentId], references: [id])
+  joinedAt     DateTime
+  markedPresent Boolean  @default(false)
+
+  @@unique([liveClassId, studentId])
+  @@map("live_class_attendance")
+}
+
+model SyllabicTopic {
+  id          String   @id @default(cuid())
+  subjectId   String
+  subject     Subject  @relation(fields: [subjectId], references: [id])
+  gradeLevelId String
+  gradeLevel  GradeLevel @relation(fields: [gradeLevelId], references: [id])
+  title       String
+  description String?
+  orderIndex  Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  syllabusProgress SyllabusProgress[]
+
+  @@map("syllabic_topics")
+}
+
+model SyllabusProgress {
+  id               String        @id @default(cuid())
+  syllabicTopicId  String
+  syllabicTopic    SyllabicTopic @relation(fields: [syllabicTopicId], references: [id])
+  staffId          String
+  staff            Staff         @relation(fields: [staffId], references: [id])
+  status           String        @default("NOT_STARTED") // NOT_STARTED, IN_PROGRESS, COMPLETED, REVISED
+  completedDate    DateTime?
+  remarks          String?
+  updatedAt        DateTime      @updatedAt @default(now())
+
+  @@unique([syllabicTopicId, staffId])
+  @@map("syllabus_progress")
+}
+
+model Homework {
+  id                    String   @id @default(cuid())
+  schoolId              String
+  teacherStaffId        String
+  gradeLevelId          String
+  gradeLevel            GradeLevel @relation(fields: [gradeLevelId], references: [id])
+  sectionId             String?
+  section               Section?   @relation("HomeworkSection", fields: [sectionId], references: [id])
+  subjectId             String
+  subject               Subject    @relation(fields: [subjectId], references: [id])
+  description           String   @db.Text
+  dueDate               DateTime
+  assignedDate          DateTime @default(now())
+  attachmentUrl         String?
+  requiresAcknowledgement Boolean @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  acknowledgements HomeworkAcknowledgement[]
+
+  @@index([schoolId, gradeLevelId])
+  @@map("homework")
+}
+
+model HomeworkAcknowledgement {
+  id             String   @id @default(cuid())
+  homeworkId     String
+  homework       Homework @relation(fields: [homeworkId], references: [id])
+  studentId      String
+  student        Student  @relation(fields: [studentId], references: [id])
+  acknowledgedBy String
+  acknowledgedAt DateTime @default(now())
+
+  @@unique([homeworkId, studentId])
+  @@map("homework_acknowledgements")
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
