@@ -3673,3 +3673,453 @@ model ReadingLog {
   @@index([programId, studentId])
   @@map("reading_logs")
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// EVENT & ACTIVITY SERVICE
+// ═══════════════════════════════════════════════════════════════════════════
+
+model SchoolEvent {
+  id           String   @id @default(cuid())
+  schoolId     String
+  title        String
+  type         String   // SPORTS_DAY | ANNUAL_DAY | FIELD_TRIP | PTM | WORKSHOP | COMPETITION | DRAMA | DEBATE | QUIZ | CULTURAL | OTHER
+  description  String?
+  startDate    DateTime
+  endDate      DateTime
+  venue        String?
+  budgetRs     Decimal? @db.Decimal(12, 2)
+  status       String   @default("PLANNED") // PLANNED | ONGOING | COMPLETED | CANCELLED
+  createdBy    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  participants EventParticipant[]
+  sportsDayConfig SportsDayConfig?
+  dramaConfig     DramaProductionConfig?
+  competitionConfig CompetitionConfig?
+  photoGallery    EventPhoto[]
+
+  @@index([schoolId, startDate])
+  @@map("school_events")
+}
+
+model EventParticipant {
+  id           String      @id @default(cuid())
+  eventId      String
+  event        SchoolEvent @relation(fields: [eventId], references: [id])
+  memberId     String      // studentId | staffId | parentId
+  memberRole   String      // STUDENT | STAFF | PARENT
+  consentGiven Boolean     @default(false)
+  consentDocUrl String?
+  checkedIn    Boolean     @default(false)
+  checkedInAt  DateTime?
+  qrCode       String?
+  createdAt    DateTime    @default(now())
+
+  @@unique([eventId, memberId])
+  @@map("event_participants")
+}
+
+// ─── Sports Day ────────────────────────────────────────────────────────────
+
+model SportsDayConfig {
+  id       String      @id @default(cuid())
+  eventId  String      @unique
+  event    SchoolEvent @relation(fields: [eventId], references: [id])
+  championHouseId String?
+
+  tracks   SportsDayTrack[]
+  housePoints HousePoints[]
+}
+
+model SportsDayTrack {
+  id         String          @id @default(cuid())
+  configId   String
+  config     SportsDayConfig @relation(fields: [configId], references: [id])
+  name       String          // "100m sprint", "Long Jump"
+  category   String          // "track" | "field"
+  ageGroup   String?
+  gender     String?         // MALE | FEMALE | MIXED
+
+  heats      SportsHeat[]
+  medals     SportsMedal[]
+}
+
+model SportsHeat {
+  id        String         @id @default(cuid())
+  trackId   String
+  track     SportsDayTrack @relation(fields: [trackId], references: [id])
+  round     String         // HEAT | SEMIFINAL | FINAL
+  heatNo    Int
+  status    String         @default("PENDING")
+
+  entries   SportsEntry[]
+}
+
+model SportsEntry {
+  id           String     @id @default(cuid())
+  heatId       String
+  heat         SportsHeat @relation(fields: [heatId], references: [id])
+  studentId    String
+  houseId      String?
+  timing       String?    // "10.45s" or "6.32m" for field
+  position     Int?
+  points       Int        @default(0)
+}
+
+model SportsMedal {
+  id           String         @id @default(cuid())
+  trackId      String
+  track        SportsDayTrack @relation(fields: [trackId], references: [id])
+  studentId    String
+  medal        String         // GOLD | SILVER | BRONZE
+  houseId      String?
+}
+
+// ─── House system ─────────────────────────────────────────────────────────
+
+model House {
+  id           String   @id @default(cuid())
+  schoolId     String
+  name         String
+  colour       String?
+  motto        String?
+  houseMasterId String? // staffId
+  createdAt    DateTime @default(now())
+
+  memberships  HouseMembership[]
+  housePoints  HousePoints[]
+  medalTallies SportsMedal[]     @ignore  // navigation via houseId string field
+
+  @@unique([schoolId, name])
+  @@map("houses")
+}
+
+model HouseMembership {
+  id         String   @id @default(cuid())
+  houseId    String
+  house      House    @relation(fields: [houseId], references: [id])
+  studentId  String
+  academicYear String
+  createdAt  DateTime @default(now())
+
+  @@unique([studentId, academicYear])
+  @@map("house_memberships")
+}
+
+model HousePoints {
+  id         String          @id @default(cuid())
+  houseId    String
+  house      House           @relation(fields: [houseId], references: [id])
+  configId   String?
+  config     SportsDayConfig? @relation(fields: [configId], references: [id])
+  category   String          // SPORTS | ACADEMICS | DISCIPLINE | CULTURE
+  points     Int
+  awardedBy  String
+  reason     String?
+  awardedAt  DateTime        @default(now())
+
+  @@map("house_points")
+}
+
+// ─── Drama / Production ───────────────────────────────────────────────────
+
+model DramaProductionConfig {
+  id          String      @id @default(cuid())
+  eventId     String      @unique
+  event       SchoolEvent @relation(fields: [eventId], references: [id])
+  productionTitle String
+  totalSeats  Int?
+
+  auditions   DramaAudition[]
+  castings    DramaCasting[]
+  rehearsals  DramaRehearsal[]
+  props       DramaProp[]
+  tickets     DramaTicket[]
+}
+
+model DramaAudition {
+  id         String                @id @default(cuid())
+  configId   String
+  config     DramaProductionConfig @relation(fields: [configId], references: [id])
+  studentId  String
+  role       String
+  scheduledAt DateTime
+  result     String?               // SELECTED | WAITLISTED | REJECTED
+  notes      String?
+}
+
+model DramaCasting {
+  id         String                @id @default(cuid())
+  configId   String
+  config     DramaProductionConfig @relation(fields: [configId], references: [id])
+  studentId  String
+  role       String
+  isLead     Boolean               @default(false)
+}
+
+model DramaRehearsal {
+  id         String                @id @default(cuid())
+  configId   String
+  config     DramaProductionConfig @relation(fields: [configId], references: [id])
+  scheduledAt DateTime
+  venue      String?
+  notes      String?
+  attendees  String[]
+}
+
+model DramaProp {
+  id         String                @id @default(cuid())
+  configId   String
+  config     DramaProductionConfig @relation(fields: [configId], references: [id])
+  name       String
+  category   String                // COSTUME | PROP | SET
+  quantity   Int                   @default(1)
+  assignedTo String?
+  status     String                @default("AVAILABLE")
+}
+
+model DramaTicket {
+  id         String                @id @default(cuid())
+  configId   String
+  config     DramaProductionConfig @relation(fields: [configId], references: [id])
+  bookedBy   String                // parentId or studentId
+  seatNo     String?
+  qrCode     String                @unique
+  checkedIn  Boolean               @default(false)
+  checkedInAt DateTime?
+  priceRs    Decimal?              @db.Decimal(10, 2)
+  createdAt  DateTime              @default(now())
+}
+
+// ─── Debate / Quiz / Academic Competition ─────────────────────────────────
+
+model CompetitionConfig {
+  id           String      @id @default(cuid())
+  eventId      String      @unique
+  event        SchoolEvent @relation(fields: [eventId], references: [id])
+  compType     String      // DEBATE | QUIZ | SCIENCE_FAIR | SPELLING_BEE | MATH_OLYMPIAD | OTHER
+  isTeamBased  Boolean     @default(false)
+  teamSize     Int?
+  scoringRubric Json?
+
+  participants CompParticipant[]
+  judges       CompJudge[]
+  rounds       CompRound[]
+}
+
+model CompParticipant {
+  id           String            @id @default(cuid())
+  configId     String
+  config       CompetitionConfig @relation(fields: [configId], references: [id])
+  memberId     String
+  memberRole   String
+  teamName     String?
+  teamMembers  String[]
+  isEliminated Boolean           @default(false)
+}
+
+model CompJudge {
+  id       String            @id @default(cuid())
+  configId String
+  config   CompetitionConfig @relation(fields: [configId], references: [id])
+  staffId  String
+  role     String?           // HEAD_JUDGE | JUDGE
+}
+
+model CompRound {
+  id           String            @id @default(cuid())
+  configId     String
+  config       CompetitionConfig @relation(fields: [configId], references: [id])
+  roundName    String            // PRELIM | SEMIFINAL | FINAL
+  roundNo      Int
+  status       String            @default("PENDING")
+  scheduledAt  DateTime?
+
+  scores       CompScore[]
+}
+
+model CompScore {
+  id            String    @id @default(cuid())
+  roundId       String
+  round         CompRound @relation(fields: [roundId], references: [id])
+  participantId String
+  judgeId       String
+  score         Decimal   @db.Decimal(10, 2)
+  notes         String?
+}
+
+// ─── Club management ──────────────────────────────────────────────────────
+
+model Club {
+  id            String   @id @default(cuid())
+  schoolId      String
+  name          String
+  description   String?
+  advisorId     String   // staffId
+  meetingSchedule String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  memberships   ClubMembership[]
+  sessions      ClubSession[]
+
+  @@unique([schoolId, name])
+  @@map("clubs")
+}
+
+model ClubMembership {
+  id          String   @id @default(cuid())
+  clubId      String
+  club        Club     @relation(fields: [clubId], references: [id])
+  studentId   String
+  status      String   @default("PENDING") // PENDING | APPROVED | REJECTED
+  approvedBy  String?
+  achievements String[]
+  joinedAt    DateTime @default(now())
+
+  @@unique([clubId, studentId])
+  @@map("club_memberships")
+}
+
+model ClubSession {
+  id          String   @id @default(cuid())
+  clubId      String
+  club        Club     @relation(fields: [clubId], references: [id])
+  sessionDate DateTime
+  topic       String?
+  attendees   String[]
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  @@map("club_sessions")
+}
+
+// ─── NCC / NSS / Scouts ────────────────────────────────────────────────────
+
+model YouthOrganizationUnit {
+  id          String   @id @default(cuid())
+  schoolId    String
+  orgType     String   // NCC | NSS | SCOUTS | GUIDES | CUBS
+  unitName    String
+  officerId   String   // staffId
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  members     YouthOrgMember[]
+  camps       YouthCamp[]
+
+  @@unique([schoolId, orgType])
+  @@map("youth_org_units")
+}
+
+model YouthOrgMember {
+  id            String                @id @default(cuid())
+  unitId        String
+  unit          YouthOrganizationUnit @relation(fields: [unitId], references: [id])
+  studentId     String
+  enrolledAt    DateTime              @default(now())
+  rank          String?
+  hoursLogged   Int                   @default(0)
+  badgeLevel    String?               // NCC: A/B/C | Scouts: badge name
+  isEligible    Boolean               @default(false) // cert exam eligibility
+
+  @@unique([unitId, studentId])
+  @@map("youth_org_members")
+}
+
+model YouthCamp {
+  id          String                @id @default(cuid())
+  unitId      String
+  unit        YouthOrganizationUnit @relation(fields: [unitId], references: [id])
+  campName    String
+  startDate   DateTime
+  endDate     DateTime
+  location    String?
+  participants String[]
+  createdAt   DateTime              @default(now())
+
+  @@map("youth_camps")
+}
+
+// ─── Student Council ──────────────────────────────────────────────────────
+
+model StudentCouncilElection {
+  id           String   @id @default(cuid())
+  schoolId     String
+  academicYear String
+  status       String   @default("NOMINATION") // NOMINATION | VOTING | COMPLETE
+  createdAt    DateTime @default(now())
+
+  nominations  CouncilNomination[]
+  roles        CouncilRole[]
+  minutes      CouncilMeeting[]
+
+  @@unique([schoolId, academicYear])
+  @@map("student_council_elections")
+}
+
+model CouncilNomination {
+  id           String                 @id @default(cuid())
+  electionId   String
+  election     StudentCouncilElection @relation(fields: [electionId], references: [id])
+  studentId    String
+  role         String                 // PRESIDENT | VP | SECRETARY | HOUSE_CAPTAIN | MEMBER
+  voteCount    Int                    @default(0)
+  isElected    Boolean                @default(false)
+  createdAt    DateTime               @default(now())
+
+  votes        CouncilVote[]
+
+  @@map("council_nominations")
+}
+
+model CouncilVote {
+  id             String            @id @default(cuid())
+  nominationId   String
+  nomination     CouncilNomination @relation(fields: [nominationId], references: [id])
+  voterId        String            // studentId
+  createdAt      DateTime          @default(now())
+
+  @@unique([nominationId, voterId])
+  @@map("council_votes")
+}
+
+model CouncilRole {
+  id           String                 @id @default(cuid())
+  electionId   String
+  election     StudentCouncilElection @relation(fields: [electionId], references: [id])
+  studentId    String
+  role         String
+  appointedAt  DateTime               @default(now())
+
+  @@map("council_roles")
+}
+
+model CouncilMeeting {
+  id           String                 @id @default(cuid())
+  electionId   String
+  election     StudentCouncilElection @relation(fields: [electionId], references: [id])
+  meetingDate  DateTime
+  agenda       String?
+  minutes      String?
+  proposals    Json?                  // [{title, description, status}]
+  budgetUsedRs Decimal?               @db.Decimal(10, 2)
+  createdAt    DateTime               @default(now())
+
+  @@map("council_meetings")
+}
+
+// ─── Event photo gallery ──────────────────────────────────────────────────
+
+model EventPhoto {
+  id        String      @id @default(cuid())
+  eventId   String
+  event     SchoolEvent @relation(fields: [eventId], references: [id])
+  url       String
+  caption   String?
+  uploadedBy String
+  createdAt DateTime    @default(now())
+
+  @@map("event_photos")
+}
