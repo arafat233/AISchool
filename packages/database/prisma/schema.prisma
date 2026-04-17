@@ -767,6 +767,7 @@ model Student {
   lessonProgress      LessonProgress[]
   liveClassAttendance LiveClassAttendance[]
   homeworkAcknowledgements HomeworkAcknowledgement[]
+  certificateRequests CertificateRequest[] @relation("CertificateRequests")
 
   @@unique([schoolId, admissionNo])
   @@index([schoolId, gradeLevelId, sectionId])
@@ -2363,6 +2364,47 @@ model Event {
   @@map("events")
 }
 
+model CertificateTemplate {
+  id               String   @id @default(cuid())
+  schoolId         String
+  name             String
+  certificateType  String
+  htmlTemplate     String   @db.Text
+  fieldMap         String[] // list of {{variable}} names
+  logoUrl          String?
+  signatureLabel   String?
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  requests IssuedCertificate[]
+
+  @@map("certificate_templates")
+}
+
+model CertificateRequest {
+  id                   String    @id @default(cuid())
+  schoolId             String
+  requestedBy          String
+  studentId            String?
+  student              Student?  @relation("CertificateRequests", fields: [studentId], references: [id])
+  staffId              String?
+  certificateType      String
+  purpose              String?
+  templateId           String?
+  slaDeadline          DateTime
+  status               String    @default("PENDING")  // PENDING, APPROVED, REJECTED, ISSUED
+  reviewedBy           String?
+  reviewedAt           DateTime?
+  rejectionReason      String?
+  issuedCertificateId  String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@index([schoolId, status])
+  @@map("certificate_requests")
+}
+
 model IssuedCertificate {
   id              String          @id @default(cuid())
   schoolId        String
@@ -2375,6 +2417,8 @@ model IssuedCertificate {
   data            Json            // dynamic fields for the certificate
   pdfUrl          String?
   qrCode          String?
+  templateId      String?
+  template        CertificateTemplate? @relation(fields: [templateId], references: [id])
   blockchainHash  String?
   blockchainTxId  String?
   issuedBy        String

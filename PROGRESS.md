@@ -15,16 +15,16 @@
 | Phase | Tasks | Done | % |
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 102 | 100% |
-| Phase 2 — Core Academic | 130 | 70 | 54% |
+| Phase 2 — Core Academic | 130 | 81 | 62% |
 | Phase 3 — Operations | 172 | 0 | 0% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **172** | **26.2%** |
+| **TOTAL** | **657** | **183** | **27.9%** |
 
 **Last updated:** 2026-04-17
-**Last git commit:** Phase 2.6 — Payroll Service complete (15/15 tasks)
-**Current focus:** Phase 2 → 2.7 Certificate Service
+**Last git commit:** Phase 2.7 — Certificate Service complete (11/11 tasks)
+**Current focus:** Phase 2 → 2.8 Survey & Feedback Service
 
 ---
 
@@ -270,18 +270,18 @@
 - [x] **Form 16** — annual TDS certificate per staff, auto-generated from payroll data
 - [x] Payroll Service Dockerfile
 
-### 2.7 Certificate Service (10 tasks)
-- [ ] NestJS app scaffold (`apps/certificate-service/`)
-- [ ] Certificate template management (Bonafide, Character, Migration, Sports, Attendance, Participation, Conduct, Experience, Relieving)
-- [ ] Certificate request workflow — student/parent requests → admin reviews → SLA 2 working days → approved
-- [ ] Dynamic field injection (student name, class, DOB, dates, purpose, principal name)
-- [ ] PDF generation with school letterhead + branding (Puppeteer)
-- [ ] Digital signature (DSC upload by Principal; applied to every issued certificate — IT Act 2000 valid)
-- [ ] QR code per certificate (unique, links to public verification page)
-- [ ] Public verification endpoint (`/verify/:qr` — shows name, cert type, date, school; no sensitive PII)
-- [ ] Certificate revocation (admin revokes → QR invalidated instantly)
-- [ ] DigiLocker push (India — push issued certificate to student's DigiLocker account)
-- [ ] Certificate Service Dockerfile
+### 2.7 Certificate Service (10 tasks) ✅
+- [x] NestJS app scaffold (`apps/certificate-service/`)
+- [x] Certificate template management (Bonafide, Character, Migration, Sports, Attendance, Participation, Conduct, Experience, Relieving)
+- [x] Certificate request workflow — student/parent requests → admin reviews → SLA 2 working days → approved
+- [x] Dynamic field injection (student name, class, DOB, dates, purpose, principal name)
+- [x] PDF generation with school letterhead + branding (Puppeteer)
+- [x] Digital signature (DSC upload by Principal; applied to every issued certificate — IT Act 2000 valid)
+- [x] QR code per certificate (unique, links to public verification page)
+- [x] Public verification endpoint (`/verify/:qr` — shows name, cert type, date, school; no sensitive PII)
+- [x] Certificate revocation (admin revokes → QR invalidated instantly)
+- [x] DigiLocker push (India — push issued certificate to student's DigiLocker account)
+- [x] Certificate Service Dockerfile
 
 ### 2.8 Survey & Feedback Service (8 tasks)
 - [ ] Survey builder — drag-drop question types: Rating (1–5 / 1–10), MCQ, Checkbox, Text, NPS
