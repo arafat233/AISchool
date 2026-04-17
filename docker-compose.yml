@@ -363,6 +363,24 @@ services:
       migrate:
         condition: service_completed_successfully
 
+  library-service:
+    build:
+      context: .
+      dockerfile: apps/library-service/Dockerfile
+    container_name: erp_library
+    <<: *service-defaults
+    ports:
+      - "3016:3016"
+    environment:
+      PORT: 3016
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      LIBRARY_SERVICE_PORT: 3016
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
   # ═══════════════════════════════════════════════════════════════════════════
   # FRONTEND PORTALS
   # ═══════════════════════════════════════════════════════════════════════════

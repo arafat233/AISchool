@@ -3442,3 +3442,234 @@ model FoodSampleLog {
 
   @@map("food_sample_logs")
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// LIBRARY SERVICE
+// ═══════════════════════════════════════════════════════════════════════════
+
+model Book {
+  id            String   @id @default(cuid())
+  schoolId      String
+  isbn          String?
+  title         String
+  author        String
+  publisher     String?
+  category      String?
+  shelfLocation String?
+  barcode       String?
+  rfidTag       String?
+  totalCopies   Int      @default(1)
+  availableCopies Int    @default(1)
+  language      String?  @default("English")
+  publishedYear Int?
+  description   String?
+  coverUrl      String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  issues         BookIssue[]
+  reservations   BookReservation[]
+  recommendations BookRecommendation[]
+  readingLogs    ReadingLog[]
+
+  @@index([schoolId])
+  @@map("books")
+}
+
+model BookIssue {
+  id            String    @id @default(cuid())
+  schoolId      String
+  bookId        String
+  book          Book      @relation(fields: [bookId], references: [id])
+  memberId      String    // studentId or staffId
+  memberRole    String    // "STUDENT" | "STAFF"
+  issuedAt      DateTime  @default(now())
+  dueDate       DateTime
+  returnedAt    DateTime?
+  renewalCount  Int       @default(0)
+  fineAmountRs  Decimal?  @db.Decimal(10, 2)
+  finePaid      Boolean   @default(false)
+  notes         String?
+  // For inter-library loans
+  isInterLibrary Boolean  @default(false)
+  partnerSchoolId String?
+
+  @@index([schoolId, memberId])
+  @@map("book_issues")
+}
+
+model BookReservation {
+  id         String   @id @default(cuid())
+  schoolId   String
+  bookId     String
+  book       Book     @relation(fields: [bookId], references: [id])
+  memberId   String
+  memberRole String
+  reservedAt DateTime @default(now())
+  expiresAt  DateTime // 48 hrs from notification
+  status     String   @default("PENDING") // PENDING | NOTIFIED | FULFILLED | EXPIRED | CANCELLED
+  notifiedAt DateTime?
+
+  @@index([schoolId, bookId, status])
+  @@map("book_reservations")
+}
+
+model LibraryFineConfig {
+  id            String  @id @default(cuid())
+  schoolId      String  @unique
+  dailyRateRs   Decimal @db.Decimal(10, 2) @default(1.00)
+  graceDays     Int     @default(0)
+  maxFineRs     Decimal? @db.Decimal(10, 2)
+  updatedAt     DateTime @updatedAt
+
+  @@map("library_fine_configs")
+}
+
+model EBook {
+  id          String   @id @default(cuid())
+  schoolId    String
+  title       String
+  author      String?
+  subject     String?
+  gradeLevel  String?
+  url         String
+  source      String?  // NCERT, custom, etc.
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  readingLogs EBookReadLog[]
+
+  @@index([schoolId])
+  @@map("ebooks")
+}
+
+model EBookReadLog {
+  id          String   @id @default(cuid())
+  ebookId     String
+  ebook       EBook    @relation(fields: [ebookId], references: [id])
+  studentId   String
+  openedAt    DateTime @default(now())
+  minutesRead Int      @default(0)
+
+  @@map("ebook_read_logs")
+}
+
+model Periodical {
+  id           String   @id @default(cuid())
+  schoolId     String
+  name         String   // "The Hindu", "Science Reporter"
+  type         String   // NEWSPAPER | MAGAZINE | JOURNAL
+  publisher    String?
+  frequency    String?  // DAILY | WEEKLY | MONTHLY
+  subscriptionStartDate DateTime?
+  subscriptionEndDate   DateTime?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  issueRecords PeriodicalIssueRecord[]
+
+  @@index([schoolId])
+  @@map("periodicals")
+}
+
+model PeriodicalIssueRecord {
+  id           String     @id @default(cuid())
+  periodicalId String
+  periodical   Periodical @relation(fields: [periodicalId], references: [id])
+  issueDate    DateTime
+  issueNo      String?
+  volumeNo     String?
+  receivedAt   DateTime   @default(now())
+  notes        String?
+
+  @@map("periodical_issue_records")
+}
+
+model StockAudit {
+  id           String   @id @default(cuid())
+  schoolId     String
+  auditDate    DateTime
+  conductedBy  String   // staffId
+  status       String   @default("IN_PROGRESS") // IN_PROGRESS | COMPLETE
+  totalBooks   Int?
+  discrepancies Json?   // [{bookId, systemCount, physicalCount, diff}]
+  notes        String?
+  completedAt  DateTime?
+  createdAt    DateTime @default(now())
+
+  entries StockAuditEntry[]
+
+  @@map("stock_audits")
+}
+
+model StockAuditEntry {
+  id           String     @id @default(cuid())
+  auditId      String
+  audit        StockAudit @relation(fields: [auditId], references: [id])
+  bookId       String
+  bookTitle    String
+  systemCount  Int
+  physicalCount Int
+  discrepancy  Int        // physicalCount - systemCount
+  notes        String?
+
+  @@map("stock_audit_entries")
+}
+
+model BookRecommendation {
+  id          String   @id @default(cuid())
+  schoolId    String
+  bookId      String?
+  book        Book?    @relation(fields: [bookId], references: [id])
+  // If book doesn't exist yet
+  suggestedTitle  String?
+  suggestedAuthor String?
+  suggestedIsbn   String?
+  suggestedBy     String  // memberId
+  suggestedByRole String  // STUDENT | STAFF
+  reason      String?
+  status      String  @default("PENDING") // PENDING | APPROVED | REJECTED | ORDERED
+  approvedBy  String?
+  purchaseOrderRef String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("book_recommendations")
+}
+
+model ReadingProgram {
+  id            String   @id @default(cuid())
+  schoolId      String
+  academicYear  String
+  targetBooks   Int      // annual target per student
+  startDate     DateTime
+  endDate       DateTime
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  logs ReadingLog[]
+
+  @@unique([schoolId, academicYear])
+  @@map("reading_programs")
+}
+
+model ReadingLog {
+  id              String         @id @default(cuid())
+  programId       String
+  program         ReadingProgram @relation(fields: [programId], references: [id])
+  studentId       String
+  bookId          String?
+  book            Book?          @relation(fields: [bookId], references: [id])
+  bookTitle       String         // denormalised
+  bookAuthor      String?
+  completedAt     DateTime?
+  validatedBy     String?        // staffId
+  isValidated     Boolean        @default(false)
+  rating          Int?           // 1-5
+  review          String?
+  createdAt       DateTime       @default(now())
+
+  @@index([programId, studentId])
+  @@map("reading_logs")
+}

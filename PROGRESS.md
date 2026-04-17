@@ -16,15 +16,15 @@
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 82 | 100% |
 | Phase 2 — Core Academic | 130 | 130 | 100% |
-| Phase 3 — Operations | 172 | 34 | 20% |
+| Phase 3 — Operations | 172 | 55 | 32% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **246** | **37.4%** |
+| **TOTAL** | **657** | **267** | **40.6%** |
 
 **Last updated:** 2026-04-17
-**Last git commit:** Phase 3.1-3.3 — Transport, Health, Visitor complete (246/657 tasks)
-**Current focus:** Phase 3 → 3.4 Cafeteria Service
+**Last git commit:** Phase 3.5 — Library Service complete (267/657 tasks)
+**Current focus:** Phase 3 → 3.6 Event & Activity Service
 
 ---
 
@@ -394,30 +394,30 @@
 - [x] Pre-registration (parent registers via portal for PTM / events — QR generated in advance; linked to PTM booking)
 - [x] Visitor Service Dockerfile
 
-### 3.4 Cafeteria Service (8 tasks)
-- [ ] Daily/weekly menu management (Canteen Manager uploads items + nutritional info per meal type)
-- [ ] Pre-order system (students/parents order by 8 PM previous day; kitchen gets summary by 8 AM)
-- [ ] Allergen filtering at POS (student's allergen profile checked — warning if incompatible meal scanned)
-- [ ] Student wallet (balance, low-balance threshold alert to parent, top-up via Parent Portal payment gateway)
-- [ ] POS billing (scan student QR/ID → wallet deducted; receipt generated)
-- [ ] Daily order summary for kitchen (total quantities per item)
-- [ ] Monthly nutritional analysis per student (excess sugar/sodium flagged)
-- [ ] **FSSAI compliance tracking** (license number + expiry, canteen staff health certificates, monthly food safety checklist, water testing records, food sample retention log)
+### 3.4 Cafeteria Service (8 tasks) ✅
+- [x] Daily/weekly menu management (Canteen Manager uploads items + nutritional info per meal type)
+- [x] Pre-order system (students/parents order by 8 PM previous day; kitchen gets summary by 8 AM)
+- [x] Allergen filtering at POS (student's allergen profile checked — warning if incompatible meal scanned)
+- [x] Student wallet (balance, low-balance threshold alert to parent, top-up via Parent Portal payment gateway)
+- [x] POS billing (scan student QR/ID → wallet deducted; receipt generated)
+- [x] Daily order summary for kitchen (total quantities per item)
+- [x] Monthly nutritional analysis per student (excess sugar/sodium flagged)
+- [x] **FSSAI compliance tracking** (license number + expiry, canteen staff health certificates, monthly food safety checklist, water testing records, food sample retention log)
 
-### 3.5 Library Service (12 tasks)
-- [ ] NestJS app scaffold (`apps/library-service/`)
-- [ ] Book catalogue CRUD (ISBN, title, author, publisher, category, total copies, shelf location, RFID/barcode)
-- [ ] RFID/barcode issue and return (scan → auto-update available copies; student ID scan)
-- [ ] Member management (borrowing limits per role: student max 2 books, staff max 5)
-- [ ] Reservation/hold request for checked-out books (notified when returned, 48-hr hold)
-- [ ] Overdue fine calculation (daily rate, configurable per school; fine added to fee invoice)
-- [ ] Digital library catalogue (eBook links, reading tracking; NCERT digital content links)
-- [ ] Periodicals register (newspaper/magazine subscription log; daily issue record)
-- [ ] Annual stock audit (physical count entry → discrepancy report vs system)
-- [ ] Book purchase recommendation workflow (student/teacher suggests → admin approves → PO auto-raised via Expense module)
-- [ ] Inter-library loan request (borrow from partner school; loan tracking)
-- [ ] **Reading program** (school sets annual reading target; student logs books read; teacher validates; reading leaderboard opt-in; certificate on target completion; auto-linked to library issue/return)
-- [ ] Library Service Dockerfile
+### 3.5 Library Service (12 tasks) ✅
+- [x] NestJS app scaffold (`apps/library-service/`)
+- [x] Book catalogue CRUD (ISBN, title, author, publisher, category, total copies, shelf location, RFID/barcode)
+- [x] RFID/barcode issue and return (scan → auto-update available copies; student ID scan)
+- [x] Member management (borrowing limits per role: student max 2 books, staff max 5)
+- [x] Reservation/hold request for checked-out books (notified when returned, 48-hr hold)
+- [x] Overdue fine calculation (daily rate, configurable per school; fine added to fee invoice)
+- [x] Digital library catalogue (eBook links, reading tracking; NCERT digital content links)
+- [x] Periodicals register (newspaper/magazine subscription log; daily issue record)
+- [x] Annual stock audit (physical count entry → discrepancy report vs system)
+- [x] Book purchase recommendation workflow (student/teacher suggests → admin approves → PO auto-raised via Expense module)
+- [x] Inter-library loan request (borrow from partner school; loan tracking)
+- [x] **Reading program** (school sets annual reading target; student logs books read; teacher validates; reading leaderboard opt-in; certificate on target completion; auto-linked to library issue/return)
+- [x] Library Service Dockerfile
 
 ### 3.6 Event & Activity Service (10 tasks)
 - [ ] Event CRUD (Sports Day, Annual Day, Field Trip, PTM, Workshop, Competition — with budget)
