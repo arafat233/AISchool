@@ -778,6 +778,8 @@ model Student {
   fitnessRecords      StudentFitnessRecord[]
   counsellingSessions CounsellingSession[]
   disciplineIncidents DisciplineIncident[]
+  cafeteriaOrders     CafeteriaOrder[]
+  wallet              StudentWallet?
 
   @@unique([schoolId, admissionNo])
   @@index([schoolId, gradeLevelId, sectionId])
@@ -3268,4 +3270,175 @@ model MoodCheckIn {
 
   @@index([schoolId, weekStart])
   @@map("mood_check_ins")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CAFETERIA SERVICE
+// ═══════════════════════════════════════════════════════════════════════════
+
+model MenuItem {
+  id               String   @id @default(cuid())
+  schoolId         String
+  name             String
+  description      String?
+  mealType         String   @default("LUNCH") // BREAKFAST | LUNCH | SNACK | DINNER
+  category         String?  // VEG | NON_VEG | VEGAN | JAIN
+  priceRs          Float
+  calories         Float?
+  proteinG         Float?
+  carbsG           Float?
+  fatG             Float?
+  sugarG           Float?
+  sodiumMg         Float?
+  allergens        String[] @default([]) // GLUTEN | DAIRY | NUTS | EGGS | SOY | SHELLFISH
+  isAvailable      Boolean  @default(true)
+  imageUrl         String?
+  createdAt        DateTime @default(now())
+
+  menuDayItems     MenuDayItem[]
+  orderItems       CafeteriaOrderItem[]
+
+  @@index([schoolId])
+  @@map("menu_items")
+}
+
+model MenuDay {
+  id          String   @id @default(cuid())
+  schoolId    String
+  date        DateTime
+  publishedAt DateTime?
+  createdBy   String
+  createdAt   DateTime @default(now())
+
+  items       MenuDayItem[]
+
+  @@unique([schoolId, date])
+  @@map("menu_days")
+}
+
+model MenuDayItem {
+  id         String   @id @default(cuid())
+  menuDayId  String
+  menuDay    MenuDay  @relation(fields: [menuDayId], references: [id])
+  menuItemId String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  quantity   Int?     // max available
+
+  @@map("menu_day_items")
+}
+
+model CafeteriaOrder {
+  id          String   @id @default(cuid())
+  schoolId    String
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id])
+  orderDate   DateTime // the date the meal is FOR
+  status      String   @default("PENDING") // PENDING | CONFIRMED | PREPARED | DELIVERED | CANCELLED
+  totalAmount Float
+  paidFromWallet Boolean @default(false)
+  receiptNo   String?
+  placedAt    DateTime @default(now())
+
+  items       CafeteriaOrderItem[]
+
+  @@index([schoolId, orderDate])
+  @@map("cafeteria_orders")
+}
+
+model CafeteriaOrderItem {
+  id         String         @id @default(cuid())
+  orderId    String
+  order      CafeteriaOrder @relation(fields: [orderId], references: [id])
+  menuItemId String
+  menuItem   MenuItem       @relation(fields: [menuItemId], references: [id])
+  quantity   Int
+  unitPrice  Float
+
+  @@map("cafeteria_order_items")
+}
+
+model StudentWallet {
+  id            String   @id @default(cuid())
+  studentId     String   @unique
+  student       Student  @relation(fields: [studentId], references: [id])
+  balanceRs     Float    @default(0)
+  lowBalanceThreshold Float @default(100)
+  updatedAt     DateTime @updatedAt
+
+  transactions  WalletTransaction[]
+
+  @@map("student_wallets")
+}
+
+model WalletTransaction {
+  id          String        @id @default(cuid())
+  walletId    String
+  wallet      StudentWallet @relation(fields: [walletId], references: [id])
+  type        String        // CREDIT | DEBIT
+  amountRs    Float
+  description String
+  referenceId String?       // orderId or payment gateway txn id
+  createdAt   DateTime      @default(now())
+
+  @@map("wallet_transactions")
+}
+
+model FssaiRecord {
+  id               String   @id @default(cuid())
+  schoolId         String
+  licenseNo        String
+  licenseExpiry    DateTime
+  operatorName     String?
+  lastInspectionAt DateTime?
+  waterTestDate    DateTime?
+  waterTestResult  String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  staffCertificates FssaiStaffCertificate[]
+  safetyChecklists  FoodSafetyChecklist[]
+  sampleLogs        FoodSampleLog[]
+
+  @@unique([schoolId])
+  @@map("fssai_records")
+}
+
+model FssaiStaffCertificate {
+  id          String      @id @default(cuid())
+  fssaiId     String
+  fssai       FssaiRecord @relation(fields: [fssaiId], references: [id])
+  staffName   String
+  certNo      String?
+  issuedOn    DateTime?
+  expiresOn   DateTime?
+  createdAt   DateTime    @default(now())
+
+  @@map("fssai_staff_certificates")
+}
+
+model FoodSafetyChecklist {
+  id          String      @id @default(cuid())
+  fssaiId     String
+  fssai       FssaiRecord @relation(fields: [fssaiId], references: [id])
+  month       String      // "2026-04"
+  items       Json        // [{check, passed, notes}]
+  completedBy String
+  completedAt DateTime    @default(now())
+
+  @@unique([fssaiId, month])
+  @@map("food_safety_checklists")
+}
+
+model FoodSampleLog {
+  id          String      @id @default(cuid())
+  fssaiId     String
+  fssai       FssaiRecord @relation(fields: [fssaiId], references: [id])
+  sampleDate  DateTime
+  mealType    String
+  items       String[]
+  retainedUntil DateTime
+  notes       String?
+  createdAt   DateTime    @default(now())
+
+  @@map("food_sample_logs")
 }
