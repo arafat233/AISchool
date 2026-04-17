@@ -926,6 +926,8 @@ model Staff {
   exits               StaffExit[]
   grievances          StaffGrievance[]
   freeSlots           FreeSlot[]
+  salaryAdvances      SalaryAdvance[]
+  gratuityProvisions  GratuityProvision[]
 
   @@unique([schoolId, employeeCode])
   @@map("staff")
@@ -1005,6 +1007,40 @@ model Payslip {
 
   @@unique([payrollRunId, staffId])
   @@map("payslips")
+}
+
+model SalaryAdvance {
+  id                String   @id @default(cuid())
+  staffId           String
+  staff             Staff    @relation(fields: [staffId], references: [id])
+  amount            Float
+  reason            String
+  repaymentMonths   Int
+  emiAmount         Float
+  outstandingAmount Float
+  status            String   @default("PENDING")  // PENDING, ACTIVE, CLOSED, REJECTED
+  approvedBy        String?
+  approvedAt        DateTime?
+  remarks           String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("salary_advances")
+}
+
+model GratuityProvision {
+  id               String   @id @default(cuid())
+  staffId          String
+  staff            Staff    @relation(fields: [staffId], references: [id])
+  month            Int
+  year             Int
+  basicPlusDA      Float
+  yearsOfService   Float
+  monthlyProvision Float
+  createdAt        DateTime @default(now())
+
+  @@unique([staffId, month, year])
+  @@map("gratuity_provisions")
 }
 
 model LeavePolicy {

@@ -4,24 +4,24 @@
   "checklistPath": "/Users/Najeeb-CapOne/Desktop/AISchool/PROGRESS.md",
   "lastUpdated": "2026-04-17",
   "lastCommit": "pending",
-  "lastCommitMessage": "Phase 2.5 — HR Service complete (15/15 tasks)",
+  "lastCommitMessage": "Phase 2.6 — Payroll Service complete (15/15 tasks)",
   "totalTasks": 657,
-  "completedTasks": 157,
-  "percentComplete": 23.9,
+  "completedTasks": 172,
+  "percentComplete": 26.2,
   "currentPhase": "2",
-  "currentModule": "2.6",
-  "currentTask": "Payroll Service — NestJS scaffold",
+  "currentModule": "2.7",
+  "currentTask": "Certificate Service — NestJS scaffold",
   "phases": {
     "1": { "name": "Foundation", "total": 82, "completed": 82, "percent": 100, "status": "complete" },
-    "2": { "name": "Core Academic", "total": 130, "completed": 55, "percent": 42, "status": "in_progress" },
+    "2": { "name": "Core Academic", "total": 130, "completed": 70, "percent": 54, "status": "in_progress" },
     "3": { "name": "Operations", "total": 172, "completed": 0, "percent": 0, "status": "not_started" },
     "4": { "name": "Intelligence & Mobile", "total": 88, "completed": 0, "percent": 0, "status": "not_started" },
     "5": { "name": "Platform & DevOps", "total": 72, "completed": 0, "percent": 0, "status": "not_started" },
     "6": { "name": "Niche, Compliance & Community", "total": 113, "completed": 0, "percent": 0, "status": "not_started" }
   },
-  "completedModules": ["1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "2.5"],
+  "completedModules": ["1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6"],
   "partialModules": [],
-  "pendingModules": ["2.6", "2.7", "2.8", "2.9", "2.10", "2.11", "2.12", "2.13", "2.14", "3.x", "4.x", "5.x", "6.x"],
+  "pendingModules": ["2.7", "2.8", "2.9", "2.10", "2.11", "2.12", "2.13", "2.14", "3.x", "4.x", "5.x", "6.x"],
   "services": {
     "auth-service": { "port": 3001, "status": "complete" },
     "user-service": { "port": 3002, "status": "complete" },
@@ -32,15 +32,17 @@
     "notification-service": { "port": 3007, "status": "complete" },
     "exam-service": { "port": 3008, "status": "complete" },
     "lms-service": { "port": 3009, "status": "complete" },
-    "hr-service": { "port": 3010, "status": "complete" }
+    "hr-service": { "port": 3010, "status": "complete" },
+    "payroll-service": { "port": 3011, "status": "complete" }
   },
   "sessionLog": [
     { "date": "2026-04-16", "session": 1, "tasksCompleted": 0, "commitHash": null, "notes": "Initial checklist + project setup" },
     { "date": "2026-04-16", "session": 2, "tasksCompleted": 43, "commitHash": "ebfe135", "notes": "Phase 1.1-1.4: monorepo, docker, CI/CD, shared packages, auth service" },
     { "date": "2026-04-16", "session": 3, "tasksCompleted": 49, "commitHash": "d0b94f5", "notes": "Phase 1.5-1.10: user, student, academic, attendance, fee, notification services" },
     { "date": "2026-04-16", "session": 4, "tasksCompleted": 10, "commitHash": "pending", "notes": "Phase 1.11: Admin Portal — 10/10 screens" },
-    { "date": "2026-04-17", "session": 5, "tasksCompleted": 13, "commitHash": "pending", "notes": "Phase 2.1: Exam & Result Service — NestJS scaffold, CRUD, schedule, hall tickets, marks, grading, results, report cards, board export, Dockerfile" },
-    { "date": "2026-04-17", "session": 6, "tasksCompleted": 17, "commitHash": "8474abd", "notes": "Phase 2.3 + 2.4: LMS Service (13 tasks) + Homework Tracker (4 tasks); Prisma schema updated with LMS/Homework models" },
-    { "date": "2026-04-17", "session": 7, "tasksCompleted": 15, "commitHash": "pending", "notes": "Phase 2.5: HR Service — staff onboarding, recruitment pipeline, leave management, CPD training, exit management, grievance, appraisals, substitute marketplace; Prisma schema updated" }
+    { "date": "2026-04-17", "session": 5, "tasksCompleted": 13, "commitHash": "pending", "notes": "Phase 2.1: Exam & Result Service" },
+    { "date": "2026-04-17", "session": 6, "tasksCompleted": 17, "commitHash": "8474abd", "notes": "Phase 2.3 + 2.4: LMS Service + Homework Tracker" },
+    { "date": "2026-04-17", "session": 7, "tasksCompleted": 15, "commitHash": "10bc14a", "notes": "Phase 2.5: HR Service complete" },
+    { "date": "2026-04-17", "session": 8, "tasksCompleted": 15, "commitHash": "pending", "notes": "Phase 2.6: Payroll Service — salary structures, payroll run engine, statutory calculations (PF/ESI/TDS/PT/LWF), gratuity, advances, EPF ECR, Form 16, payslip HTML" }
   ]
 }

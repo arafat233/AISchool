@@ -15,16 +15,16 @@
 | Phase | Tasks | Done | % |
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 102 | 100% |
-| Phase 2 — Core Academic | 130 | 55 | 42% |
+| Phase 2 — Core Academic | 130 | 70 | 54% |
 | Phase 3 — Operations | 172 | 0 | 0% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **157** | **23.9%** |
+| **TOTAL** | **657** | **172** | **26.2%** |
 
 **Last updated:** 2026-04-17
-**Last git commit:** Phase 2.5 — HR Service complete (15/15 tasks)
-**Current focus:** Phase 2 → 2.6 Payroll Service
+**Last git commit:** Phase 2.6 — Payroll Service complete (15/15 tasks)
+**Current focus:** Phase 2 → 2.7 Certificate Service
 
 ---
 
@@ -253,22 +253,22 @@
 - [x] Staff appraisal CRUD (KRA/KPI definitions, self-assessment, HOD review, Principal sign-off, final score → increment eligibility)
 - [x] HR Service Dockerfile
 
-### 2.6 Payroll Service (14 tasks)
-- [ ] NestJS app scaffold (`apps/payroll-service/`)
-- [ ] Salary structure CRUD (earnings: Basic, HRA, DA, Special, Transport; deductions: PF, ESI, TDS, PT, LOP)
-- [ ] Monthly payroll run (fetch attendance → calculate working days → LOP → gross → deductions → net)
-- [ ] PF calculation (employee 12% + employer 12% of Basic)
-- [ ] ESI calculation (employee 0.75% + employer 3.25% — applicable if gross ≤ ₹21,000)
-- [ ] TDS calculation (per income tax slab — annual computation / 12, configurable slabs)
-- [ ] Professional Tax (state-wise slab, monthly deduction + remittance challan)
-- [ ] Labour Welfare Fund (state-wise, bi-annual remittance)
-- [ ] LOP calculation (LOP days / working days × gross)
-- [ ] **Gratuity provision** — monthly provision accrual: (Basic+DA) × years × 15/26; disbursement on exit ≥ 5 years
-- [ ] **Salary advance & loan** — request, approval, EMI auto-deduction from payslip, outstanding balance tracking
-- [ ] Payslip generation (PDF, password-protected with DOB)
-- [ ] EPF ECR format data export (for EPFO portal upload)
-- [ ] **Form 16** — annual TDS certificate per staff, auto-generated from payroll data
-- [ ] Payroll Service Dockerfile
+### 2.6 Payroll Service (14 tasks) ✅
+- [x] NestJS app scaffold (`apps/payroll-service/`)
+- [x] Salary structure CRUD (earnings: Basic, HRA, DA, Special, Transport; deductions: PF, ESI, TDS, PT, LOP)
+- [x] Monthly payroll run (fetch attendance → calculate working days → LOP → gross → deductions → net)
+- [x] PF calculation (employee 12% + employer 12% of Basic)
+- [x] ESI calculation (employee 0.75% + employer 3.25% — applicable if gross ≤ ₹21,000)
+- [x] TDS calculation (per income tax slab — annual computation / 12, configurable slabs)
+- [x] Professional Tax (state-wise slab, monthly deduction + remittance challan)
+- [x] Labour Welfare Fund (state-wise, bi-annual remittance)
+- [x] LOP calculation (LOP days / working days × gross)
+- [x] **Gratuity provision** — monthly provision accrual: (Basic+DA) × years × 15/26; disbursement on exit ≥ 5 years
+- [x] **Salary advance & loan** — request, approval, EMI auto-deduction from payslip, outstanding balance tracking
+- [x] Payslip generation (PDF, password-protected with DOB)
+- [x] EPF ECR format data export (for EPFO portal upload)
+- [x] **Form 16** — annual TDS certificate per staff, auto-generated from payroll data
+- [x] Payroll Service Dockerfile
 
 ### 2.7 Certificate Service (10 tasks)
 - [ ] NestJS app scaffold (`apps/certificate-service/`)
