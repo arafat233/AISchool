@@ -15,16 +15,16 @@
 | Phase | Tasks | Done | % |
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 102 | 100% |
-| Phase 2 — Core Academic | 130 | 0 | 0% |
+| Phase 2 — Core Academic | 130 | 13 | 10% |
 | Phase 3 — Operations | 172 | 0 | 0% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **102** | **15.5%** |
+| **TOTAL** | **657** | **115** | **17.5%** |
 
 **Last updated:** 2026-04-17
-**Last git commit:** Phase 1.13 — Student Portal complete (4/4 screens)
-**Current focus:** Phase 2 → 2.1 Exam & Result Service (NestJS)
+**Last git commit:** Phase 2.1 — Exam & Result Service complete (13/13 tasks)
+**Current focus:** Phase 2 → 2.2 Online Exam Engine
 
 ---
 
@@ -188,20 +188,20 @@
 ## Phase 2 — Core Academic
 **Target:** Exam + Results + Online Exam + LMS + HR + Payroll + Certificates + PTM + Survey + Parent Portal + Admission + Emergency Alert
 
-### 2.1 Exam & Result Service (12 tasks)
-- [ ] NestJS app scaffold (`apps/exam-service/`)
-- [ ] Exam CRUD (type, academic year, term, status lifecycle)
-- [ ] Exam schedule (class × subject × date × max marks × venue × online flag)
-- [ ] Hall ticket generation (PDF with QR code, bulk zip download)
-- [ ] Bulk marks entry — theory + practical + internal marks separately
-- [ ] Marks validation (≤ max marks, all subjects check before publish)
-- [ ] Grading engine (configurable scales: A1/A2/B1… or Distinction/Pass; weightage support)
-- [ ] Grace marks policy (configurable per school, logged)
-- [ ] Result calculation (total, %, overall grade, class rank, section rank, pass/fail)
-- [ ] Publish results → emit `result.published` → Notification Service
-- [ ] Report card PDF (school-branded, student photo, all subjects, rank — Puppeteer)
-- [ ] Board exam registration — compile student data in board format (CBSE XML / Excel)
-- [ ] Exam Service Dockerfile
+### 2.1 Exam & Result Service (12 tasks) ✅
+- [x] NestJS app scaffold (`apps/exam-service/`)
+- [x] Exam CRUD (type, academic year, term, status lifecycle)
+- [x] Exam schedule (class × subject × date × max marks × venue × online flag)
+- [x] Hall ticket generation (PDF with QR code, bulk zip download)
+- [x] Bulk marks entry — theory + practical + internal marks separately
+- [x] Marks validation (≤ max marks, all subjects check before publish)
+- [x] Grading engine (configurable scales: A1/A2/B1… or Distinction/Pass; weightage support)
+- [x] Grace marks policy (configurable per school, logged)
+- [x] Result calculation (total, %, overall grade, class rank, section rank, pass/fail)
+- [x] Publish results → emit `result.published` → Notification Service
+- [x] Report card PDF (school-branded, student photo, all subjects, rank — Puppeteer)
+- [x] Board exam registration — compile student data in board format (CBSE XML / Excel)
+- [x] Exam Service Dockerfile
 
 ### 2.2 Online Exam Engine (10 tasks)
 - [ ] Question bank CRUD (MCQ single/multi, True/False, Fill-in-blank, Match, Short, Long, Image-MCQ)
