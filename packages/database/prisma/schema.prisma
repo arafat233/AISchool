@@ -768,6 +768,7 @@ model Student {
   liveClassAttendance LiveClassAttendance[]
   homeworkAcknowledgements HomeworkAcknowledgement[]
   certificateRequests CertificateRequest[] @relation("CertificateRequests")
+  ptmBookings         PtmBooking[]
 
   @@unique([schoolId, admissionNo])
   @@index([schoolId, gradeLevelId, sectionId])
@@ -929,6 +930,7 @@ model Staff {
   freeSlots           FreeSlot[]
   salaryAdvances      SalaryAdvance[]
   gratuityProvisions  GratuityProvision[]
+  ptmSlots            PtmSlot[]
 
   @@unique([schoolId, employeeCode])
   @@map("staff")
@@ -2474,6 +2476,63 @@ model SurveyResponse {
   @@map("survey_responses")
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// PTM (PARENT-TEACHER MEETING)
+// ═══════════════════════════════════════════════════════════════════════════
+
+model PtmEvent {
+  id                   String     @id @default(cuid())
+  schoolId             String
+  title                String
+  eventDate            DateTime
+  slotDurationMinutes  Int        @default(15)
+  isVirtual            Boolean    @default(false)
+  meetingPlatform      String?    // "Google Meet", "Zoom", etc.
+  venue                String?
+  status               String     @default("SCHEDULED") // SCHEDULED | ONGOING | COMPLETED | CANCELLED
+  createdBy            String
+  createdAt            DateTime   @default(now())
+
+  slots                PtmSlot[]
+
+  @@index([schoolId, eventDate])
+  @@map("ptm_events")
+}
+
+model PtmSlot {
+  id          String      @id @default(cuid())
+  ptmEventId  String
+  ptmEvent    PtmEvent    @relation(fields: [ptmEventId], references: [id])
+  staffId     String
+  staff       StaffMember @relation(fields: [staffId], references: [id])
+  startTime   DateTime
+  endTime     DateTime
+  isBooked    Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+
+  booking     PtmBooking?
+
+  @@index([ptmEventId, staffId])
+  @@map("ptm_slots")
+}
+
+model PtmBooking {
+  id              String    @id @default(cuid())
+  slotId          String    @unique
+  slot            PtmSlot   @relation(fields: [slotId], references: [id])
+  parentId        String
+  studentId       String
+  student         Student   @relation(fields: [studentId], references: [id])
+  notes           String?
+  status          String    @default("CONFIRMED") // CONFIRMED | CANCELLED
+  teacherRemarks  String?
+  remarksAddedBy  String?
+  remarksAddedAt  DateTime?
+  createdAt       DateTime  @default(now())
+
+  @@map("ptm_bookings")
+}
+
 model ComplianceCalendarItem {
   id              String   @id @default(cuid())
   schoolId        String
@@ -2681,4 +2740,195 @@ model StudentGatePass {
   createdAt   DateTime @default(now())
 
   @@map("student_gate_passes")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ADMISSION & ENQUIRY
+// ═══════════════════════════════════════════════════════════════════════════
+
+model Enquiry {
+  id               String    @id @default(cuid())
+  schoolId         String
+  studentName      String
+  parentName       String
+  parentPhone      String
+  parentEmail      String?
+  dateOfBirth      DateTime?
+  applyingForGrade String?   // "Class 5", "KG", etc.
+  source           String    @default("WALK_IN") // GOOGLE_ADS | REFERRAL | BANNER | WEBSITE | WALK_IN | SOCIAL | WHATSAPP
+  referredBy       String?
+  notes            String?
+  status           String    @default("OPEN") // OPEN | FOLLOW_UP | CONVERTED | LOST
+  assignedTo       String?   // staff id
+  nextFollowUpDate DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  followUpLogs    EnquiryFollowUp[]
+  application     AdmissionApplication?
+
+  @@index([schoolId, status])
+  @@map("enquiries")
+}
+
+model EnquiryFollowUp {
+  id         String   @id @default(cuid())
+  enquiryId  String
+  enquiry    Enquiry  @relation(fields: [enquiryId], references: [id])
+  channel    String   // CALL | EMAIL | VISIT | WHATSAPP
+  outcome    String
+  nextAction String?
+  nextDate   DateTime?
+  loggedBy   String
+  createdAt  DateTime @default(now())
+
+  @@map("enquiry_follow_ups")
+}
+
+model AdmissionApplication {
+  id             String    @id @default(cuid())
+  schoolId       String
+  enquiryId      String?   @unique
+  enquiry        Enquiry?  @relation(fields: [enquiryId], references: [id])
+  applicationNo  String    @unique
+  studentName    String
+  parentName     String
+  parentPhone    String
+  parentEmail    String?
+  dateOfBirth    DateTime?
+  applyingForGrade String
+  isRteQuota     Boolean   @default(false)
+  rteIncome      Float?    // annual family income for EWS verification
+  status         String    @default("SUBMITTED") // SUBMITTED | DOCS_PENDING | INTERVIEW_SCHEDULED | OFFERED | CONFIRMED | REJECTED | WAITLISTED
+  interviewDate  DateTime?
+  offerDate      DateTime?
+  rejectionReason String?
+  documents      Json      @default("[]") // [{type, url, verified}]
+  ocrExtracted   Json?     // AWS Textract output
+  reviewedBy     String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([schoolId, status])
+  @@map("admission_applications")
+}
+
+model RteQuotaAllocation {
+  id            String   @id @default(cuid())
+  schoolId      String
+  academicYear  String
+  totalSeats    Int
+  allocatedSeats Int     @default(0)
+  lotteryDone   Boolean  @default(false)
+  lotteryDate   DateTime?
+  createdAt     DateTime @default(now())
+
+  @@unique([schoolId, academicYear])
+  @@map("rte_quota_allocations")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ACADEMIC CALENDAR
+// ═══════════════════════════════════════════════════════════════════════════
+
+model AcademicCalendarEvent {
+  id          String   @id @default(cuid())
+  schoolId    String
+  title       String
+  description String?
+  date        DateTime
+  endDate     DateTime?
+  type        String   // HOLIDAY | EXAM | EVENT | PTM | RESULTS_DAY | SCHOOL_CLOSURE | OTHER
+  isHoliday   Boolean  @default(false)
+  targetRoles String[] @default([]) // empty = all; ["STUDENT","PARENT","STAFF"]
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([schoolId, date])
+  @@map("academic_calendar_events")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// EMERGENCY ALERT SYSTEM
+// ═══════════════════════════════════════════════════════════════════════════
+
+model EmergencyAlert {
+  id              String   @id @default(cuid())
+  schoolId        String
+  alertType       String   // SCHOOL_CLOSURE | NATURAL_DISASTER | MEDICAL | SECURITY_LOCKDOWN | EARLY_DISMISSAL | ALL_CLEAR
+  title           String
+  message         String
+  severity        String   @default("HIGH") // LOW | MEDIUM | HIGH | CRITICAL
+  status          String   @default("SENT") // SENT | ALL_CLEAR
+  totalRecipients Int      @default(0)
+  acknowledgedCount Int    @default(0)
+  sentBy          String
+  sentAt          DateTime @default(now())
+  allClearAt      DateTime?
+  allClearMessage String?
+
+  acknowledgements AlertAcknowledgement[]
+
+  @@index([schoolId, sentAt])
+  @@map("emergency_alerts")
+}
+
+model AlertAcknowledgement {
+  id        String         @id @default(cuid())
+  alertId   String
+  alert     EmergencyAlert @relation(fields: [alertId], references: [id])
+  userId    String
+  ackAt     DateTime       @default(now())
+
+  @@unique([alertId, userId])
+  @@map("alert_acknowledgements")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INTERNAL STAFF COMMUNICATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+model StaffCircular {
+  id               String   @id @default(cuid())
+  schoolId         String
+  title            String
+  body             String
+  attachmentUrl    String?
+  targetDepartment String?  // null = all staff
+  targetGradeLevel String?
+  isManadatoryRead Boolean  @default(true)
+  publishedBy      String
+  publishedAt      DateTime @default(now())
+
+  readReceipts     CircularReadReceipt[]
+
+  @@index([schoolId, publishedAt])
+  @@map("staff_circulars")
+}
+
+model CircularReadReceipt {
+  id         String        @id @default(cuid())
+  circularId String
+  circular   StaffCircular @relation(fields: [circularId], references: [id])
+  staffId    String
+  readAt     DateTime      @default(now())
+
+  @@unique([circularId, staffId])
+  @@map("circular_read_receipts")
+}
+
+model StaffDirectMessage {
+  id          String   @id @default(cuid())
+  schoolId    String
+  senderId    String
+  receiverId  String
+  message     String
+  isRead      Boolean  @default(false)
+  readAt      DateTime?
+  flaggedByAdmin Boolean @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([schoolId, senderId, receiverId])
+  @@map("staff_direct_messages")
 }

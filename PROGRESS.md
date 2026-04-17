@@ -14,17 +14,17 @@
 
 | Phase | Tasks | Done | % |
 |---|---|---|---|
-| Phase 1 — Foundation | 82 | 102 | 100% |
-| Phase 2 — Core Academic | 130 | 81 | 62% |
+| Phase 1 — Foundation | 82 | 82 | 100% |
+| Phase 2 — Core Academic | 130 | 130 | 100% |
 | Phase 3 — Operations | 172 | 0 | 0% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **183** | **27.9%** |
+| **TOTAL** | **657** | **212** | **32.3%** |
 
 **Last updated:** 2026-04-17
-**Last git commit:** Phase 2.7 — Certificate Service complete (11/11 tasks)
-**Current focus:** Phase 2 → 2.8 Survey & Feedback Service
+**Last git commit:** Phase 2 — ALL 14 modules complete (212/657 tasks)
+**Current focus:** Phase 3 — Operations
 
 ---
 
@@ -283,68 +283,68 @@
 - [x] DigiLocker push (India — push issued certificate to student's DigiLocker account)
 - [x] Certificate Service Dockerfile
 
-### 2.8 Survey & Feedback Service (8 tasks)
-- [ ] Survey builder — drag-drop question types: Rating (1–5 / 1–10), MCQ, Checkbox, Text, NPS
-- [ ] Conditional logic (show question B only if answer to A = X)
-- [ ] Survey types: Student satisfaction, Parent feedback (anonymous), Teacher 360° appraisal, Staff self-assessment, Post-event, Course rating, Canteen, PTM experience, Exit interview, Teacher pulse (monthly)
-- [ ] Survey distribution — target: specific class/section/role/all; schedule open/close dates
-- [ ] Anonymous mode (respondent ID not stored)
-- [ ] Results dashboard — response rate, per-question breakdown, NPS score, promoter/passive/detractor split
-- [ ] Sentiment analysis on open text (AI keyword extraction — positive/neutral/negative tagging)
-- [ ] Trend comparison (same survey across terms — improvement/decline tracking)
+### 2.8 Survey & Feedback Service (8 tasks) ✅
+- [x] Survey builder — drag-drop question types: Rating (1–5 / 1–10), MCQ, Checkbox, Text, NPS
+- [x] Conditional logic (show question B only if answer to A = X)
+- [x] Survey types: Student satisfaction, Parent feedback (anonymous), Teacher 360° appraisal, Staff self-assessment, Post-event, Course rating, Canteen, PTM experience, Exit interview, Teacher pulse (monthly)
+- [x] Survey distribution — target: specific class/section/role/all; schedule open/close dates
+- [x] Anonymous mode (respondent ID not stored)
+- [x] Results dashboard — response rate, per-question breakdown, NPS score, promoter/passive/detractor split
+- [x] Sentiment analysis on open text (AI keyword extraction — positive/neutral/negative tagging)
+- [x] Trend comparison (same survey across terms — improvement/decline tracking)
 
-### 2.9 PTM Service (6 tasks)
-- [ ] PTM event creation (date, slot duration configurable, virtual mode flag)
-- [ ] Teacher slot availability setup (start time, end time → auto-divide into slots)
-- [ ] Parent slot booking (select teacher → pick available slot → confirmation + calendar invite)
-- [ ] Teacher appointment schedule view (full day calendar)
-- [ ] Visitor pre-registration auto-generated from PTM booking (parent shows QR at school gate)
-- [ ] Post-PTM remarks entry by teacher (private — visible only to admin and that parent)
+### 2.9 PTM Service (6 tasks) ✅
+- [x] PTM event creation (date, slot duration configurable, virtual mode flag)
+- [x] Teacher slot availability setup (start time, end time → auto-divide into slots)
+- [x] Parent slot booking (select teacher → pick available slot → confirmation + calendar invite)
+- [x] Teacher appointment schedule view (full day calendar)
+- [x] Visitor pre-registration auto-generated from PTM booking (parent shows QR at school gate)
+- [x] Post-PTM remarks entry by teacher (private — visible only to admin and that parent)
 
-### 2.10 Parent Portal (12 tasks)
-- [ ] Next.js 14 app scaffold (`apps/parent-portal/`)
-- [ ] Auth + multi-child switcher (one account → multiple children, independent dashboards)
-- [ ] Dashboard (attendance %, fee dues, today's homework, upcoming exams, recent results, transport status)
-- [ ] Attendance view (daily status + monthly calendar + subject-wise % + absence history)
-- [ ] Result + report card download
-- [ ] Fee payment (Razorpay integration + receipt download + payment history + PDC submission status)
-- [ ] Homework + assignment status view + LMS course progress %
-- [ ] Teacher messaging + PTM slot booking
-- [ ] School announcements + events calendar + circular downloads
-- [ ] Transport live tracking (Google Maps embed + WebSocket live position + stop ETA)
-- [ ] Leave application for child + gate pass request (pickup authorisation)
-- [ ] Survey participation + certificate request/download
+### 2.10 Parent Portal (12 tasks) ✅
+- [x] Next.js 14 app scaffold (`apps/parent-portal/`)
+- [x] Auth + multi-child switcher (one account → multiple children, independent dashboards)
+- [x] Dashboard (attendance %, fee dues, today's homework, upcoming exams, recent results, transport status)
+- [x] Attendance view (daily status + monthly calendar + subject-wise % + absence history)
+- [x] Result + report card download
+- [x] Fee payment (Razorpay integration + receipt download + payment history + PDC submission status)
+- [x] Homework + assignment status view + LMS course progress %
+- [x] Teacher messaging + PTM slot booking
+- [x] School announcements + events calendar + circular downloads
+- [x] Transport live tracking (Google Maps embed + WebSocket live position + stop ETA)
+- [x] Leave application for child + gate pass request (pickup authorisation)
+- [x] Survey participation + certificate request/download
 
-### 2.11 Admission & Enquiry Service (10 tasks)
-- [ ] NestJS app scaffold (`apps/admission-service/`)
-- [ ] Online enquiry form (website embed + walk-in + WhatsApp capture)
-- [ ] Enquiry source tracking (Google Ads, referral, banner, website, walk-in, social media, WhatsApp)
-- [ ] Enquiry follow-up log (call / email / visit / WhatsApp — outcome, next action, next date)
-- [ ] Admission application form + document upload checklist
-- [ ] OCR auto-fill from uploaded documents (AWS Textract — extract DOB, name from birth cert)
-- [ ] Application approval workflow (document review → interview scheduling → offer → rejection → waitlist)
-- [ ] RTE quota seat management (25% EWS — income verification, lottery draw if oversubscribed, government reimbursement claim tracking)
-- [ ] Application → Student record auto-creation on seat confirmation + fee payment
-- [ ] Enquiry-to-admission conversion funnel report + source-wise analytics
-- [ ] Admission Service Dockerfile
+### 2.11 Admission & Enquiry Service (10 tasks) ✅
+- [x] NestJS app scaffold (`apps/admission-service/`)
+- [x] Online enquiry form (website embed + walk-in + WhatsApp capture)
+- [x] Enquiry source tracking (Google Ads, referral, banner, website, walk-in, social media, WhatsApp)
+- [x] Enquiry follow-up log (call / email / visit / WhatsApp — outcome, next action, next date)
+- [x] Admission application form + document upload checklist
+- [x] OCR auto-fill from uploaded documents (AWS Textract — extract DOB, name from birth cert)
+- [x] Application approval workflow (document review → interview scheduling → offer → rejection → waitlist)
+- [x] RTE quota seat management (25% EWS — income verification, lottery draw if oversubscribed, government reimbursement claim tracking)
+- [x] Application → Student record auto-creation on seat confirmation + fee payment
+- [x] Enquiry-to-admission conversion funnel report + source-wise analytics
+- [x] Admission Service Dockerfile
 
-### 2.12 Academic Calendar Service (4 tasks)
-- [ ] Master academic calendar CRUD (holidays, exams, events, PTMs, results day — all in one)
-- [ ] Calendar visible across all portals (students, teachers, parents, admin — single source of truth)
-- [ ] iCal / Google Calendar export (parents and teachers can subscribe)
-- [ ] Working day calculator (used by Attendance threshold and Payroll LOP calculation)
+### 2.12 Academic Calendar Service (4 tasks) ✅
+- [x] Master academic calendar CRUD (holidays, exams, events, PTMs, results day — all in one)
+- [x] Calendar visible across all portals (students, teachers, parents, admin — single source of truth)
+- [x] iCal / Google Calendar export (parents and teachers can subscribe)
+- [x] Working day calculator (used by Attendance threshold and Payroll LOP calculation)
 
-### 2.13 Emergency Alert System (4 tasks)
-- [ ] One-click emergency broadcast endpoint (simultaneously: SMS + WhatsApp + Push + Voice to ALL parents/staff/students)
-- [ ] Alert types config (school closure, natural disaster, medical emergency, security lockdown, early dismissal)
-- [ ] Acknowledgement tracking (which parents confirmed receipt; re-alert unacknowledged after 10 min)
-- [ ] All-clear broadcast + alert archive log
+### 2.13 Emergency Alert System (4 tasks) ✅
+- [x] One-click emergency broadcast endpoint (simultaneously: SMS + WhatsApp + Push + Voice to ALL parents/staff/students)
+- [x] Alert types config (school closure, natural disaster, medical emergency, security lockdown, early dismissal)
+- [x] Acknowledgement tracking (which parents confirmed receipt; re-alert unacknowledged after 10 min)
+- [x] All-clear broadcast + alert archive log
 
-### 2.14 Internal Staff Communication (4 tasks)
-- [ ] Staff notice board (admin publishes internal circulars — staff-only, mandatory read receipt)
-- [ ] Department / grade-level group announcements (HOD → department staff)
-- [ ] Direct messaging (staff ↔ staff, with admin oversight option)
-- [ ] Circular digital acknowledgement tracking (who read, who pending — admin dashboard)
+### 2.14 Internal Staff Communication (4 tasks) ✅
+- [x] Staff notice board (admin publishes internal circulars — staff-only, mandatory read receipt)
+- [x] Department / grade-level group announcements (HOD → department staff)
+- [x] Direct messaging (staff ↔ staff, with admin oversight option)
+- [x] Circular digital acknowledgement tracking (who read, who pending — admin dashboard)
 
 ---
 
