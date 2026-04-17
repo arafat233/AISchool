@@ -1,0 +1,17 @@
+---
+source_file: "apps/student-service/src/dto/promote-student.dto.ts"
+type: "code"
+community: "Student Promotion DTO"
+location: "L10"
+tags:
+  - graphify/code
+  - graphify/EXTRACTED
+  - community/Student_Promotion_DTO
+---
+
+# PromoteStudentDto
+
+## Connections
+- [[promote-student.dto.ts]] - `contains` [EXTRACTED]
+
+#graphify/code #graphify/EXTRACTED #community/Student_Promotion_DTO

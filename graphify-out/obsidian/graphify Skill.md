@@ -1,21 +1,17 @@
 ---
 source_file: "CLAUDE.md"
 type: "document"
-community: "Claude & graphify Workflow"
-location: "Skills"
+community: "Monorepo & Infra Docs"
 tags:
   - graphify/document
   - graphify/EXTRACTED
-  - community/Claude_&_graphify_Workflow
+  - community/Monorepo_&_Infra_Docs
 ---
 
 # graphify Skill
 
 ## Connections
-- [[AISchool Claude Code Instructions]] - `conceptually_related_to` [EXTRACTED]
-- [[Claude Code]] - `references` [EXTRACTED]
-- [[graphify-out Folder]] - `shares_data_with` [EXTRACTED]
-- [[raw Folder]] - `shares_data_with` [EXTRACTED]
-- [[~.claudeskillsgraphifySKILL]] - `references` [EXTRACTED]
+- [[graphify-out — Knowledge Graph Outputs]] - `references` [EXTRACTED]
+- [[raw — Drop Zone for Papers, Notes, Tweets]] - `references` [EXTRACTED]
 
-#graphify/document #graphify/EXTRACTED #community/Claude_&_graphify_Workflow
+#graphify/document #graphify/EXTRACTED #community/Monorepo_&_Infra_Docs

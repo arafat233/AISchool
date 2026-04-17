@@ -3,223 +3,6785 @@
     {
       "id": "g0",
       "type": "group",
-      "label": "Claude & graphify Workflow",
+      "label": "Auth & Admin Dashboard",
       "x": 0,
       "y": 0,
-      "width": 660,
-      "height": 400,
+      "width": 1540,
+      "height": 1520,
       "color": "1"
     },
     {
-      "id": "n_claudemd_aischool",
+      "id": "n_auth_controller_authcontroller_constructor",
       "type": "file",
-      "file": "graphify/obsidian/AISchool Claude Code Instructions.md",
+      "file": "graphify/obsidian/.constructor()_35.md",
       "x": 20,
       "y": 80,
       "width": 180,
       "height": 60
     },
     {
-      "id": "n_claudemd_claude_code",
+      "id": "n_auth_service_authservice_constructor",
       "type": "file",
-      "file": "graphify/obsidian/Claude Code.md",
+      "file": "graphify/obsidian/.constructor()_36.md",
       "x": 220,
       "y": 80,
       "width": 180,
       "height": 60
     },
     {
-      "id": "n_claudemd_graphify_skill",
+      "id": "n_local_strategy_localstrategy_constructor",
       "type": "file",
-      "file": "graphify/obsidian/graphify Skill.md",
+      "file": "graphify/obsidian/.constructor()_38.md",
       "x": 420,
       "y": 80,
       "width": 180,
       "height": 60
     },
     {
-      "id": "n_claudemd_raw_folder",
+      "id": "n_auth_controller_authcontroller_forgotpassword",
       "type": "file",
-      "file": "graphify/obsidian/raw Folder.md",
+      "file": "graphify/obsidian/.forgotPassword().md",
       "x": 20,
       "y": 160,
       "width": 180,
       "height": 60
     },
     {
-      "id": "n_claudemd_graphify_skill_md",
+      "id": "n_auth_service_authservice_forgotpassword",
       "type": "file",
-      "file": "graphify/obsidian/~.claudeskillsgraphifySKILL.md",
+      "file": "graphify/obsidian/.forgotPassword()_1.md",
       "x": 220,
       "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_totp_service_totpservice_generatecurrenttoken",
+      "type": "file",
+      "file": "graphify/obsidian/.generateCurrentToken().md",
+      "x": 420,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_totp_service_totpservice_generatesecret",
+      "type": "file",
+      "file": "graphify/obsidian/.generateSecret().md",
+      "x": 20,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller_getme",
+      "type": "file",
+      "file": "graphify/obsidian/.getMe()_1.md",
+      "x": 220,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller_googleauth",
+      "type": "file",
+      "file": "graphify/obsidian/.googleAuth().md",
+      "x": 420,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller_googlecallback",
+      "type": "file",
+      "file": "graphify/obsidian/.googleCallback().md",
+      "x": 20,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_service_authservice_handleoauthlogin",
+      "type": "file",
+      "file": "graphify/obsidian/.handleOAuthLogin().md",
+      "x": 220,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_totp_service_totpservice_issuer",
+      "type": "file",
+      "file": "graphify/obsidian/.issuer().md",
+      "x": 420,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller_login",
+      "type": "file",
+      "file": "graphify/obsidian/.login().md",
+      "x": 20,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_service_authservice_login",
+      "type": "file",
+      "file": "graphify/obsidian/.login()_1.md",
+      "x": 220,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller_logout",
+      "type": "file",
+      "file": "graphify/obsidian/.logout().md",
+      "x": 420,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_service_authservice_logout",
+      "type": "file",
+      "file": "graphify/obsidian/.logout()_1.md",
+      "x": 20,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller_microsoftauth",
+      "type": "file",
+      "file": "graphify/obsidian/.microsoftAuth().md",
+      "x": 220,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller_microsoftcallback",
+      "type": "file",
+      "file": "graphify/obsidian/.microsoftCallback().md",
+      "x": 420,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller_refresh",
+      "type": "file",
+      "file": "graphify/obsidian/.refresh().md",
+      "x": 20,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_service_authservice_refreshtokens",
+      "type": "file",
+      "file": "graphify/obsidian/.refreshTokens().md",
+      "x": 220,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller_register",
+      "type": "file",
+      "file": "graphify/obsidian/.register().md",
+      "x": 420,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_service_authservice_register",
+      "type": "file",
+      "file": "graphify/obsidian/.register()_1.md",
+      "x": 20,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller_resetpassword",
+      "type": "file",
+      "file": "graphify/obsidian/.resetPassword().md",
+      "x": 220,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_service_authservice_resetpassword",
+      "type": "file",
+      "file": "graphify/obsidian/.resetPassword()_1.md",
+      "x": 420,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller_setuptotp",
+      "type": "file",
+      "file": "graphify/obsidian/.setupTotp().md",
+      "x": 20,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_service_authservice_setuptotp",
+      "type": "file",
+      "file": "graphify/obsidian/.setupTotp()_1.md",
+      "x": 220,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_local_strategy_localstrategy_validate",
+      "type": "file",
+      "file": "graphify/obsidian/.validate()_2.md",
+      "x": 420,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_service_authservice_validatelocaluser",
+      "type": "file",
+      "file": "graphify/obsidian/.validateLocalUser().md",
+      "x": 20,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_totp_service_totpservice_verify",
+      "type": "file",
+      "file": "graphify/obsidian/.verify().md",
+      "x": 220,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_service_authservice_verifyandenabletotp",
+      "type": "file",
+      "file": "graphify/obsidian/.verifyAndEnableTotp().md",
+      "x": 420,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller_verifytotp",
+      "type": "file",
+      "file": "graphify/obsidian/.verifyTotp().md",
+      "x": 20,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_page_addstudentmodal",
+      "type": "file",
+      "file": "graphify/obsidian/AddStudentModal().md",
+      "x": 220,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_controller_authcontroller",
+      "type": "file",
+      "file": "graphify/obsidian/AuthController.md",
+      "x": 420,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_service_authservice",
+      "type": "file",
+      "file": "graphify/obsidian/AuthService.md",
+      "x": 20,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_local_strategy_localstrategy",
+      "type": "file",
+      "file": "graphify/obsidian/LocalStrategy.md",
+      "x": 220,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_totp_service_totpservice",
+      "type": "file",
+      "file": "graphify/obsidian/TotpService.md",
+      "x": 420,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_auth_auth_controller_ts",
+      "type": "file",
+      "file": "graphify/obsidian/auth.controller.ts.md",
+      "x": 20,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_auth_auth_service_ts",
+      "type": "file",
+      "file": "graphify/obsidian/auth.service.ts.md",
+      "x": 220,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_page_handlebulkupload",
+      "type": "file",
+      "file": "graphify/obsidian/handleBulkUpload().md",
+      "x": 420,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_strategies_local_strategy_ts",
+      "type": "file",
+      "file": "graphify/obsidian/local.strategy.ts.md",
+      "x": 20,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_dashboard_students_page_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/page.tsx_6.md",
+      "x": 220,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_auth_totp_service_ts",
+      "type": "file",
+      "file": "graphify/obsidian/totp.service.ts.md",
+      "x": 420,
+      "y": 1120,
       "width": 180,
       "height": 60
     },
     {
       "id": "g1",
       "type": "group",
-      "label": "Obsidian Vault & Sync",
-      "x": 740,
+      "label": "Fee & Payment Service",
+      "x": 1620,
       "y": 0,
-      "width": 600,
-      "height": 400,
+      "width": 1540,
+      "height": 1420,
       "color": "2"
     },
     {
-      "id": "n_claudemd_obsidian",
+      "id": "n_fee_controller_feecontroller_applyconcession",
       "type": "file",
-      "file": "graphify/obsidian/Obsidian.md",
-      "x": 760,
+      "file": "graphify/obsidian/.applyConcession().md",
+      "x": 1640,
       "y": 80,
       "width": 180,
       "height": 60
     },
     {
-      "id": "n_claudemd_obsidian_git",
+      "id": "n_fee_service_feeservice_applyconcession",
       "type": "file",
-      "file": "graphify/obsidian/Obsidian Git Plugin.md",
-      "x": 960,
+      "file": "graphify/obsidian/.applyConcession()_1.md",
+      "x": 1840,
       "y": 80,
       "width": 180,
       "height": 60
     },
     {
-      "id": "n_claudemd_obsidian_vault_folder",
+      "id": "n_fee_controller_feecontroller_constructor",
       "type": "file",
-      "file": "graphify/obsidian/graphify-outobsidian Folder.md",
-      "x": 1160,
+      "file": "graphify/obsidian/.constructor()_28.md",
+      "x": 2040,
       "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_service_feeservice_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_29.md",
+      "x": 1640,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_razorpay_service_razorpayservice_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_30.md",
+      "x": 1840,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_service_feeservice_createfeehead",
+      "type": "file",
+      "file": "graphify/obsidian/.createFeeHead().md",
+      "x": 2040,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_service_feeservice_createfeestructure",
+      "type": "file",
+      "file": "graphify/obsidian/.createFeeStructure().md",
+      "x": 1640,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_controller_feecontroller_createhead",
+      "type": "file",
+      "file": "graphify/obsidian/.createHead().md",
+      "x": 1840,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_razorpay_service_razorpayservice_createorder",
+      "type": "file",
+      "file": "graphify/obsidian/.createOrder().md",
+      "x": 2040,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_service_feeservice_createrazorpayorder",
+      "type": "file",
+      "file": "graphify/obsidian/.createRazorpayOrder().md",
+      "x": 1640,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_controller_feecontroller_createstructure",
+      "type": "file",
+      "file": "graphify/obsidian/.createStructure().md",
+      "x": 1840,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_controller_feecontroller_generate",
+      "type": "file",
+      "file": "graphify/obsidian/.generate().md",
+      "x": 2040,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_service_feeservice_generateinvoicesforsection",
+      "type": "file",
+      "file": "graphify/obsidian/.generateInvoicesForSection().md",
+      "x": 1640,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_service_feeservice_getfeeheads",
+      "type": "file",
+      "file": "graphify/obsidian/.getFeeHeads().md",
+      "x": 1840,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_controller_feecontroller_getheads",
+      "type": "file",
+      "file": "graphify/obsidian/.getHeads().md",
+      "x": 2040,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_service_feeservice_getoutstandingreport",
+      "type": "file",
+      "file": "graphify/obsidian/.getOutstandingReport().md",
+      "x": 1640,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_service_feeservice_getstudentinvoices",
+      "type": "file",
+      "file": "graphify/obsidian/.getStudentInvoices().md",
+      "x": 1840,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_controller_feecontroller_health",
+      "type": "file",
+      "file": "graphify/obsidian/.health()_2.md",
+      "x": 2040,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_controller_feecontroller_outstanding",
+      "type": "file",
+      "file": "graphify/obsidian/.outstanding().md",
+      "x": 1640,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_controller_feecontroller_paycash",
+      "type": "file",
+      "file": "graphify/obsidian/.payCash().md",
+      "x": 1840,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_controller_feecontroller_razorpayorder",
+      "type": "file",
+      "file": "graphify/obsidian/.razorpayOrder().md",
+      "x": 2040,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_service_feeservice_recordcashpayment",
+      "type": "file",
+      "file": "graphify/obsidian/.recordCashPayment().md",
+      "x": 1640,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_controller_feecontroller_studentinvoices",
+      "type": "file",
+      "file": "graphify/obsidian/.studentInvoices().md",
+      "x": 1840,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_service_feeservice_verifyonlinepayment",
+      "type": "file",
+      "file": "graphify/obsidian/.verifyOnlinePayment().md",
+      "x": 2040,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_controller_feecontroller_verifypayment",
+      "type": "file",
+      "file": "graphify/obsidian/.verifyPayment().md",
+      "x": 1640,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_razorpay_service_razorpayservice_verifysignature",
+      "type": "file",
+      "file": "graphify/obsidian/.verifySignature().md",
+      "x": 1840,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_controller_feecontroller",
+      "type": "file",
+      "file": "graphify/obsidian/FeeController.md",
+      "x": 2040,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_fee_service_feeservice",
+      "type": "file",
+      "file": "graphify/obsidian/FeeService.md",
+      "x": 1640,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_razorpay_service_razorpayservice",
+      "type": "file",
+      "file": "graphify/obsidian/RazorpayService.md",
+      "x": 1840,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_currency_calculategst",
+      "type": "file",
+      "file": "graphify/obsidian/calculateGst().md",
+      "x": 2040,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_currency_calculatelatefee",
+      "type": "file",
+      "file": "graphify/obsidian/calculateLateFee().md",
+      "x": 1640,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_utils_src_currency_ts",
+      "type": "file",
+      "file": "graphify/obsidian/currency.ts.md",
+      "x": 1840,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_fee_service_src_fee_fee_controller_ts",
+      "type": "file",
+      "file": "graphify/obsidian/fee.controller.ts.md",
+      "x": 2040,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_fee_service_src_fee_fee_service_ts",
+      "type": "file",
+      "file": "graphify/obsidian/fee.service.ts.md",
+      "x": 1640,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_currency_formatinr",
+      "type": "file",
+      "file": "graphify/obsidian/formatINR().md",
+      "x": 1840,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_currency_paisetorupees",
+      "type": "file",
+      "file": "graphify/obsidian/paiseToRupees().md",
+      "x": 2040,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_fee_service_src_payment_razorpay_service_ts",
+      "type": "file",
+      "file": "graphify/obsidian/razorpay.service.ts.md",
+      "x": 1640,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_currency_rupeestopaise",
+      "type": "file",
+      "file": "graphify/obsidian/rupeesToPaise().md",
+      "x": 1840,
+      "y": 1040,
       "width": 180,
       "height": 60
     },
     {
       "id": "g2",
       "type": "group",
-      "label": "graphify Outputs",
-      "x": 0,
+      "label": "Academic Service",
+      "x": 3240,
+      "y": 0,
+      "width": 1320,
+      "height": 1220,
+      "color": "3"
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_assignsubject",
+      "type": "file",
+      "file": "graphify/obsidian/.assignSubject().md",
+      "x": 3260,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_assignsubjecttoclass",
+      "type": "file",
+      "file": "graphify/obsidian/.assignSubjectToClass().md",
+      "x": 3460,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_45.md",
+      "x": 3660,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_44.md",
+      "x": 3260,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_createacademicyear",
+      "type": "file",
+      "file": "graphify/obsidian/.createAcademicYear().md",
+      "x": 3460,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_creategrade",
+      "type": "file",
+      "file": "graphify/obsidian/.createGrade().md",
+      "x": 3660,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_creategradelevel",
+      "type": "file",
+      "file": "graphify/obsidian/.createGradeLevel().md",
+      "x": 3260,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_createsection",
+      "type": "file",
+      "file": "graphify/obsidian/.createSection()_1.md",
+      "x": 3460,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_createsection",
+      "type": "file",
+      "file": "graphify/obsidian/.createSection().md",
+      "x": 3660,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_createslot",
+      "type": "file",
+      "file": "graphify/obsidian/.createSlot().md",
+      "x": 3260,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_createsubject",
+      "type": "file",
+      "file": "graphify/obsidian/.createSubject()_1.md",
+      "x": 3460,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_createsubject",
+      "type": "file",
+      "file": "graphify/obsidian/.createSubject().md",
+      "x": 3660,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_createtimetableslot",
+      "type": "file",
+      "file": "graphify/obsidian/.createTimetableSlot().md",
+      "x": 3260,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_createyear",
+      "type": "file",
+      "file": "graphify/obsidian/.createYear().md",
+      "x": 3460,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_deleteslot",
+      "type": "file",
+      "file": "graphify/obsidian/.deleteSlot().md",
+      "x": 3660,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_deletetimetableslot",
+      "type": "file",
+      "file": "graphify/obsidian/.deleteTimetableSlot().md",
+      "x": 3260,
       "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_getacademicyears",
+      "type": "file",
+      "file": "graphify/obsidian/.getAcademicYears().md",
+      "x": 3460,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_getgradelevels",
+      "type": "file",
+      "file": "graphify/obsidian/.getGradeLevels().md",
+      "x": 3660,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_getgrades",
+      "type": "file",
+      "file": "graphify/obsidian/.getGrades().md",
+      "x": 3260,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_getsections",
+      "type": "file",
+      "file": "graphify/obsidian/.getSections()_1.md",
+      "x": 3460,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_getsections",
+      "type": "file",
+      "file": "graphify/obsidian/.getSections().md",
+      "x": 3660,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_getsubjects",
+      "type": "file",
+      "file": "graphify/obsidian/.getSubjects()_1.md",
+      "x": 3260,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_getsubjects",
+      "type": "file",
+      "file": "graphify/obsidian/.getSubjects().md",
+      "x": 3460,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_gettimetable",
+      "type": "file",
+      "file": "graphify/obsidian/.getTimetable()_1.md",
+      "x": 3660,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice_gettimetable",
+      "type": "file",
+      "file": "graphify/obsidian/.getTimetable().md",
+      "x": 3260,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_getyears",
+      "type": "file",
+      "file": "graphify/obsidian/.getYears().md",
+      "x": 3460,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller_health",
+      "type": "file",
+      "file": "graphify/obsidian/.health()_5.md",
+      "x": 3660,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_controller_academiccontroller",
+      "type": "file",
+      "file": "graphify/obsidian/AcademicController.md",
+      "x": 3260,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_academic_service_academicservice",
+      "type": "file",
+      "file": "graphify/obsidian/AcademicService.md",
+      "x": 3460,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_academic_service_src_academic_academic_controller_ts",
+      "type": "file",
+      "file": "graphify/obsidian/academic.controller.ts.md",
+      "x": 3660,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_academic_service_src_academic_academic_service_ts",
+      "type": "file",
+      "file": "graphify/obsidian/academic.service.ts.md",
+      "x": 3260,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g3",
+      "type": "group",
+      "label": "Monorepo & Infra Docs",
+      "x": 4640,
+      "y": 0,
+      "width": 1320,
+      "height": 1120,
+      "color": "4"
+    },
+    {
+      "id": "n_claude_github_workflows",
+      "type": "file",
+      "file": "graphify/obsidian/.githubworkflows \u2014 CICD Pipelines.md",
+      "x": 4660,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_progress_458_tasks",
+      "type": "file",
+      "file": "graphify/obsidian/458-Task Build Checklist.md",
+      "x": 4860,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_aischool_monorepo",
+      "type": "file",
+      "file": "graphify/obsidian/AISchool Monorepo.md",
+      "x": 5060,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_progress_adminportal",
+      "type": "file",
+      "file": "graphify/obsidian/Admin Portal (1010 screens complete).md",
+      "x": 4660,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_docker",
+      "type": "file",
+      "file": "graphify/obsidian/Docker (build+push CD).md",
+      "x": 4860,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_mosquitto",
+      "type": "file",
+      "file": "graphify/obsidian/Mosquitto MQTT Broker.md",
+      "x": 5060,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_nestjs",
+      "type": "file",
+      "file": "graphify/obsidian/NestJS Framework.md",
+      "x": 4660,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_progress_nestjs_microservices",
+      "type": "file",
+      "file": "graphify/obsidian/NestJS Microservices (6 complete).md",
+      "x": 4860,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_nextjs",
+      "type": "file",
+      "file": "graphify/obsidian/Next.js Framework.md",
+      "x": 5060,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_progress_nextjs_portals",
+      "type": "file",
+      "file": "graphify/obsidian/Next.js Portals.md",
+      "x": 4660,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_nginx",
+      "type": "file",
+      "file": "graphify/obsidian/Nginx.md",
+      "x": 4860,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_obsidian_git",
+      "type": "file",
+      "file": "graphify/obsidian/Obsidian Git Auto-Commit Plugin.md",
+      "x": 5060,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_obsidian_vault",
+      "type": "file",
+      "file": "graphify/obsidian/Obsidian Vault (graphify-outobsidian).md",
+      "x": 4660,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_progress_md",
+      "type": "file",
+      "file": "graphify/obsidian/PROGRESS.md \u2014 458-Task Checklist.md",
+      "x": 4860,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_progress_phase1",
+      "type": "file",
+      "file": "graphify/obsidian/Phase 1 \u2014 Foundation & Infrastructure.md",
+      "x": 5060,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_progress_phase2",
+      "type": "file",
+      "file": "graphify/obsidian/Phase 2 \u2014 Academic Core.md",
+      "x": 4660,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_progress_phase3",
+      "type": "file",
+      "file": "graphify/obsidian/Phase 3 \u2014 Finance & Payments.md",
+      "x": 4860,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_progress_phase4",
+      "type": "file",
+      "file": "graphify/obsidian/Phase 4 \u2014 Communication & Notifications.md",
+      "x": 5060,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_progress_phase5",
+      "type": "file",
+      "file": "graphify/obsidian/Phase 5 \u2014 Analytics & Reporting.md",
+      "x": 4660,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_progress_phase6",
+      "type": "file",
+      "file": "graphify/obsidian/Phase 6 \u2014 Mobile & PWA.md",
+      "x": 4860,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_postgres",
+      "type": "file",
+      "file": "graphify/obsidian/PostgreSQL.md",
+      "x": 5060,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_school_erp",
+      "type": "file",
+      "file": "graphify/obsidian/School ERP System.md",
+      "x": 4660,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_apps_dir",
+      "type": "file",
+      "file": "graphify/obsidian/apps \u2014 NestJS & Next.js Apps.md",
+      "x": 4860,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_graphify_skill",
+      "type": "file",
+      "file": "graphify/obsidian/graphify Skill.md",
+      "x": 5060,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_graphify_out",
+      "type": "file",
+      "file": "graphify/obsidian/graphify-out \u2014 Knowledge Graph Outputs.md",
+      "x": 4660,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_infrastructure_dir",
+      "type": "file",
+      "file": "graphify/obsidian/infrastructure \u2014 Nginx, Postgres, Mosquitto.md",
+      "x": 4860,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_packages_dir",
+      "type": "file",
+      "file": "graphify/obsidian/packages \u2014 Shared Packages.md",
+      "x": 5060,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_pnpm",
+      "type": "file",
+      "file": "graphify/obsidian/pnpm Package Manager.md",
+      "x": 4660,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_progress_json",
+      "type": "file",
+      "file": "graphify/obsidian/progress.json \u2014 Machine-Readable Tracker.md",
+      "x": 4860,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claude_raw_dir",
+      "type": "file",
+      "file": "graphify/obsidian/raw \u2014 Drop Zone for Papers, Notes, Tweets.md",
+      "x": 5060,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g4",
+      "type": "group",
+      "label": "Notification Adapters",
+      "x": 6040,
+      "y": 0,
+      "width": 1320,
+      "height": 1020,
+      "color": "5"
+    },
+    {
+      "id": "n_email_adapter_emailadapter_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_23.md",
+      "x": 6060,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_logger_service_loggerservice_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_1.md",
+      "x": 6260,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_logger_service_loggerservice_debug",
+      "type": "file",
+      "file": "graphify/obsidian/.debug().md",
+      "x": 6460,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_logger_service_loggerservice_error",
+      "type": "file",
+      "file": "graphify/obsidian/.error().md",
+      "x": 6060,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_push_adapter_pushadapter_init",
+      "type": "file",
+      "file": "graphify/obsidian/.init().md",
+      "x": 6260,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_email_adapter_emailadapter_send",
+      "type": "file",
+      "file": "graphify/obsidian/.send()_2.md",
+      "x": 6460,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_push_adapter_pushadapter_send",
+      "type": "file",
+      "file": "graphify/obsidian/.send()_1.md",
+      "x": 6060,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sms_adapter_smsadapter_send",
+      "type": "file",
+      "file": "graphify/obsidian/.send().md",
+      "x": 6260,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_whatsapp_adapter_whatsappadapter_send",
+      "type": "file",
+      "file": "graphify/obsidian/.send()_3.md",
+      "x": 6460,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_logger_service_loggerservice_verbose",
+      "type": "file",
+      "file": "graphify/obsidian/.verbose().md",
+      "x": 6060,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_logger_service_loggerservice_warn",
+      "type": "file",
+      "file": "graphify/obsidian/.warn().md",
+      "x": 6260,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_email_adapter_emailadapter",
+      "type": "file",
+      "file": "graphify/obsidian/EmailAdapter.md",
+      "x": 6460,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_logger_service_loggerservice",
+      "type": "file",
+      "file": "graphify/obsidian/LoggerService.md",
+      "x": 6060,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_push_adapter_pushadapter",
+      "type": "file",
+      "file": "graphify/obsidian/PushAdapter.md",
+      "x": 6260,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sms_adapter_smsadapter",
+      "type": "file",
+      "file": "graphify/obsidian/SmsAdapter.md",
+      "x": 6460,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_whatsapp_adapter_whatsappadapter",
+      "type": "file",
+      "file": "graphify/obsidian/WhatsappAdapter.md",
+      "x": 6060,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_logger_createlogger",
+      "type": "file",
+      "file": "graphify/obsidian/createLogger().md",
+      "x": 6260,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_nest_test_utils_createtestapp",
+      "type": "file",
+      "file": "graphify/obsidian/createTestApp().md",
+      "x": 6460,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_notification_service_src_adapters_email_adapter_ts",
+      "type": "file",
+      "file": "graphify/obsidian/email.adapter.ts.md",
+      "x": 6060,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_logger_src_logger_service_ts",
+      "type": "file",
+      "file": "graphify/obsidian/logger.service.ts.md",
+      "x": 6260,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_logger_src_logger_ts",
+      "type": "file",
+      "file": "graphify/obsidian/logger.ts.md",
+      "x": 6460,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_nest_test_utils_mockjwtpayload",
+      "type": "file",
+      "file": "graphify/obsidian/mockJwtPayload().md",
+      "x": 6060,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_testing_src_nest_test_utils_ts",
+      "type": "file",
+      "file": "graphify/obsidian/nest-test-utils.ts.md",
+      "x": 6260,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_notification_service_src_adapters_push_adapter_ts",
+      "type": "file",
+      "file": "graphify/obsidian/push.adapter.ts.md",
+      "x": 6460,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_notification_service_src_adapters_sms_adapter_ts",
+      "type": "file",
+      "file": "graphify/obsidian/sms.adapter.ts.md",
+      "x": 6060,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_notification_service_src_adapters_whatsapp_adapter_ts",
+      "type": "file",
+      "file": "graphify/obsidian/whatsapp.adapter.ts.md",
+      "x": 6260,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g5",
+      "type": "group",
+      "label": "Student Service & Crypto",
+      "x": 7440,
+      "y": 0,
+      "width": 1100,
+      "height": 1020,
+      "color": "6"
+    },
+    {
+      "id": "n_student_service_studentservice_bulkimport",
+      "type": "file",
+      "file": "graphify/obsidian/.bulkImport()_1.md",
+      "x": 7460,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_service_studentservice_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_32.md",
+      "x": 7660,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_service_studentservice_create",
+      "type": "file",
+      "file": "graphify/obsidian/.create()_1.md",
+      "x": 7860,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_service_studentservice_findall",
+      "type": "file",
+      "file": "graphify/obsidian/.findAll()_1.md",
+      "x": 7460,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_service_userservice_findall",
+      "type": "file",
+      "file": "graphify/obsidian/.findAll()_3.md",
+      "x": 7660,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_service_studentservice_findone",
+      "type": "file",
+      "file": "graphify/obsidian/.findOne()_1.md",
+      "x": 7860,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_service_studentservice_issuetc",
+      "type": "file",
+      "file": "graphify/obsidian/.issueTC()_1.md",
+      "x": 7460,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_service_studentservice_linkparent",
+      "type": "file",
+      "file": "graphify/obsidian/.linkParent()_1.md",
+      "x": 7660,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_service_studentservice_promote",
+      "type": "file",
+      "file": "graphify/obsidian/.promote()_1.md",
+      "x": 7860,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_service_studentservice_update",
+      "type": "file",
+      "file": "graphify/obsidian/.update()_1.md",
+      "x": 7460,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_service_studentservice",
+      "type": "file",
+      "file": "graphify/obsidian/StudentService.md",
+      "x": 7660,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_pagination_buildpaginatedresult",
+      "type": "file",
+      "file": "graphify/obsidian/buildPaginatedResult().md",
+      "x": 7860,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_pagination_buildprismaorderby",
+      "type": "file",
+      "file": "graphify/obsidian/buildPrismaOrderBy().md",
+      "x": 7460,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_factories_createtestschool",
+      "type": "file",
+      "file": "graphify/obsidian/createTestSchool().md",
+      "x": 7660,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_factories_createtesttenant",
+      "type": "file",
+      "file": "graphify/obsidian/createTestTenant().md",
+      "x": 7860,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_factories_createtestuser",
+      "type": "file",
+      "file": "graphify/obsidian/createTestUser().md",
+      "x": 7460,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_utils_src_crypto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/crypto.ts.md",
+      "x": 7660,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_testing_src_factories_ts",
+      "type": "file",
+      "file": "graphify/obsidian/factories.ts.md",
+      "x": 7860,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_crypto_generateotp",
+      "type": "file",
+      "file": "graphify/obsidian/generateOtp().md",
+      "x": 7460,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_crypto_generatesecuretoken",
+      "type": "file",
+      "file": "graphify/obsidian/generateSecureToken().md",
+      "x": 7660,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_crypto_hashotp",
+      "type": "file",
+      "file": "graphify/obsidian/hashOtp().md",
+      "x": 7860,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_utils_src_pagination_ts",
+      "type": "file",
+      "file": "graphify/obsidian/pagination.ts_1.md",
+      "x": 7460,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_pagination_parsepagination",
+      "type": "file",
+      "file": "graphify/obsidian/parsePagination().md",
+      "x": 7660,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_crypto_sha256",
+      "type": "file",
+      "file": "graphify/obsidian/sha256().md",
+      "x": 7860,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_student_service_src_student_student_service_ts",
+      "type": "file",
+      "file": "graphify/obsidian/student.service.ts.md",
+      "x": 7460,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g6",
+      "type": "group",
+      "label": "User Management Service",
+      "x": 8620,
+      "y": 0,
+      "width": 1100,
+      "height": 920,
+      "color": "1"
+    },
+    {
+      "id": "n_user_controller_usercontroller_activate",
+      "type": "file",
+      "file": "graphify/obsidian/.activate().md",
+      "x": 8640,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_controller_usercontroller_assignrole",
+      "type": "file",
+      "file": "graphify/obsidian/.assignRole().md",
+      "x": 8840,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_service_userservice_assignrole",
+      "type": "file",
+      "file": "graphify/obsidian/.assignRole()_1.md",
+      "x": 9040,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_controller_usercontroller_changepassword",
+      "type": "file",
+      "file": "graphify/obsidian/.changePassword().md",
+      "x": 8640,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_service_userservice_changepassword",
+      "type": "file",
+      "file": "graphify/obsidian/.changePassword()_1.md",
+      "x": 8840,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_controller_usercontroller_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_33.md",
+      "x": 9040,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_service_userservice_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_34.md",
+      "x": 8640,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_controller_usercontroller_deactivate",
+      "type": "file",
+      "file": "graphify/obsidian/.deactivate().md",
+      "x": 8840,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_controller_usercontroller_findall",
+      "type": "file",
+      "file": "graphify/obsidian/.findAll()_2.md",
+      "x": 9040,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_controller_usercontroller_findone",
+      "type": "file",
+      "file": "graphify/obsidian/.findOne()_2.md",
+      "x": 8640,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_service_userservice_findone",
+      "type": "file",
+      "file": "graphify/obsidian/.findOne()_3.md",
+      "x": 8840,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_controller_usercontroller_getme",
+      "type": "file",
+      "file": "graphify/obsidian/.getMe().md",
+      "x": 9040,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_controller_usercontroller_health",
+      "type": "file",
+      "file": "graphify/obsidian/.health()_4.md",
+      "x": 8640,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_service_userservice_sanitize",
+      "type": "file",
+      "file": "graphify/obsidian/.sanitize().md",
+      "x": 8840,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_service_userservice_setactive",
+      "type": "file",
+      "file": "graphify/obsidian/.setActive().md",
+      "x": 9040,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_controller_usercontroller_update",
+      "type": "file",
+      "file": "graphify/obsidian/.update()_2.md",
+      "x": 8640,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_service_userservice_update",
+      "type": "file",
+      "file": "graphify/obsidian/.update()_3.md",
+      "x": 8840,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_service_userservice_updateavatar",
+      "type": "file",
+      "file": "graphify/obsidian/.updateAvatar().md",
+      "x": 9040,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_controller_usercontroller_uploadavatar",
+      "type": "file",
+      "file": "graphify/obsidian/.uploadAvatar().md",
+      "x": 8640,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_controller_usercontroller",
+      "type": "file",
+      "file": "graphify/obsidian/UserController.md",
+      "x": 8840,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_user_service_userservice",
+      "type": "file",
+      "file": "graphify/obsidian/UserService.md",
+      "x": 9040,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_user_service_src_user_user_controller_ts",
+      "type": "file",
+      "file": "graphify/obsidian/user.controller.ts.md",
+      "x": 8640,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_user_service_src_user_user_service_ts",
+      "type": "file",
+      "file": "graphify/obsidian/user.service.ts.md",
+      "x": 8840,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g7",
+      "type": "group",
+      "label": "Notification Service Core",
+      "x": 9800,
+      "y": 0,
+      "width": 1100,
+      "height": 820,
+      "color": "2"
+    },
+    {
+      "id": "n_notification_controller_notificationcontroller_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_20.md",
+      "x": 9820,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_service_notificationservice_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_21.md",
+      "x": 10020,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_controller_notificationcontroller_createtemplate",
+      "type": "file",
+      "file": "graphify/obsidian/.createTemplate().md",
+      "x": 10220,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_service_notificationservice_createtemplate",
+      "type": "file",
+      "file": "graphify/obsidian/.createTemplate()_1.md",
+      "x": 9820,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_controller_notificationcontroller_getmynotifications",
+      "type": "file",
+      "file": "graphify/obsidian/.getMyNotifications().md",
+      "x": 10020,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_service_notificationservice_getnotifications",
+      "type": "file",
+      "file": "graphify/obsidian/.getNotifications().md",
+      "x": 10220,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_controller_notificationcontroller_gettemplates",
+      "type": "file",
+      "file": "graphify/obsidian/.getTemplates().md",
+      "x": 9820,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_service_notificationservice_gettemplates",
+      "type": "file",
+      "file": "graphify/obsidian/.getTemplates()_1.md",
+      "x": 10020,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_controller_notificationcontroller_health",
+      "type": "file",
+      "file": "graphify/obsidian/.health().md",
+      "x": 10220,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_controller_notificationcontroller_markread",
+      "type": "file",
+      "file": "graphify/obsidian/.markRead().md",
+      "x": 9820,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_service_notificationservice_markread",
+      "type": "file",
+      "file": "graphify/obsidian/.markRead()_1.md",
+      "x": 10020,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_controller_notificationcontroller_sendemail",
+      "type": "file",
+      "file": "graphify/obsidian/.sendEmail().md",
+      "x": 10220,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_service_notificationservice_sendemail",
+      "type": "file",
+      "file": "graphify/obsidian/.sendEmail()_1.md",
+      "x": 9820,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_service_notificationservice_sendpush",
+      "type": "file",
+      "file": "graphify/obsidian/.sendPush().md",
+      "x": 10020,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_controller_notificationcontroller_sendsms",
+      "type": "file",
+      "file": "graphify/obsidian/.sendSms().md",
+      "x": 10220,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_service_notificationservice_sendsms",
+      "type": "file",
+      "file": "graphify/obsidian/.sendSms()_1.md",
+      "x": 9820,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_controller_notificationcontroller",
+      "type": "file",
+      "file": "graphify/obsidian/NotificationController.md",
+      "x": 10020,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_service_notificationservice",
+      "type": "file",
+      "file": "graphify/obsidian/NotificationService.md",
+      "x": 10220,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_notification_service_src_notification_notification_controller_ts",
+      "type": "file",
+      "file": "graphify/obsidian/notification.controller.ts.md",
+      "x": 9820,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_notification_service_src_notification_notification_service_ts",
+      "type": "file",
+      "file": "graphify/obsidian/notification.service.ts.md",
+      "x": 10020,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g8",
+      "type": "group",
+      "label": "Microservice Entrypoints",
+      "x": 10980,
+      "y": 0,
+      "width": 1100,
+      "height": 820,
+      "color": "3"
+    },
+    {
+      "id": "n_notification_module_notificationmodule_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_22.md",
+      "x": 11000,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_processor_notificationprocessor_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_24.md",
+      "x": 11200,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_logger_service_loggerservice_log",
+      "type": "file",
+      "file": "graphify/obsidian/.log().md",
+      "x": 11400,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_module_notificationmodule_onmoduleinit",
+      "type": "file",
+      "file": "graphify/obsidian/.onModuleInit()_1.md",
+      "x": 11000,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_processor_notificationprocessor_startworker",
+      "type": "file",
+      "file": "graphify/obsidian/.startWorker().md",
+      "x": 11200,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_module_notificationmodule",
+      "type": "file",
+      "file": "graphify/obsidian/NotificationModule.md",
+      "x": 11400,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_notification_processor_notificationprocessor",
+      "type": "file",
+      "file": "graphify/obsidian/NotificationProcessor.md",
+      "x": 11000,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_main_bootstrap",
+      "type": "file",
+      "file": "graphify/obsidian/bootstrap().md",
+      "x": 11200,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_seed_main",
+      "type": "file",
+      "file": "graphify/obsidian/main().md",
+      "x": 11400,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_academic_service_src_main_ts",
+      "type": "file",
+      "file": "graphify/obsidian/main.ts_6.md",
+      "x": 11000,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_attendance_service_src_main_ts",
+      "type": "file",
+      "file": "graphify/obsidian/main.ts_1.md",
+      "x": 11200,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_main_ts",
+      "type": "file",
+      "file": "graphify/obsidian/main.ts_5.md",
+      "x": 11400,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_fee_service_src_main_ts",
+      "type": "file",
+      "file": "graphify/obsidian/main.ts_2.md",
+      "x": 11000,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_notification_service_src_main_ts",
+      "type": "file",
+      "file": "graphify/obsidian/main.ts.md",
+      "x": 11200,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_student_service_src_main_ts",
+      "type": "file",
+      "file": "graphify/obsidian/main.ts_3.md",
+      "x": 11400,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_user_service_src_main_ts",
+      "type": "file",
+      "file": "graphify/obsidian/main.ts_4.md",
+      "x": 11000,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_notification_service_src_notification_notification_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/notification.module.ts.md",
+      "x": 11200,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_notification_service_src_processors_notification_processor_ts",
+      "type": "file",
+      "file": "graphify/obsidian/notification.processor.ts.md",
+      "x": 11400,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_database_prisma_seed_ts",
+      "type": "file",
+      "file": "graphify/obsidian/seed.ts.md",
+      "x": 11000,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g9",
+      "type": "group",
+      "label": "Auth Error Types",
+      "x": 12160,
+      "y": 0,
+      "width": 1100,
+      "height": 820,
+      "color": "4"
+    },
+    {
+      "id": "n_auth_errors_accountdisablederror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_17.md",
+      "x": 12180,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_forbiddenerror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_11.md",
+      "x": 12380,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_invalidcredentialserror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_12.md",
+      "x": 12580,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_invalidotperror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_16.md",
+      "x": 12180,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_invalidtokenerror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_14.md",
+      "x": 12380,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_planupgraderequirederror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_18.md",
+      "x": 12580,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_tokenexpirederror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_13.md",
+      "x": 12180,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_twofactorrequirederror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_15.md",
+      "x": 12380,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_unauthorizederror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_10.md",
+      "x": 12580,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_accountdisablederror",
+      "type": "file",
+      "file": "graphify/obsidian/AccountDisabledError.md",
+      "x": 12180,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_forbiddenerror",
+      "type": "file",
+      "file": "graphify/obsidian/ForbiddenError.md",
+      "x": 12380,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_invalidcredentialserror",
+      "type": "file",
+      "file": "graphify/obsidian/InvalidCredentialsError.md",
+      "x": 12580,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_invalidotperror",
+      "type": "file",
+      "file": "graphify/obsidian/InvalidOtpError.md",
+      "x": 12180,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_invalidtokenerror",
+      "type": "file",
+      "file": "graphify/obsidian/InvalidTokenError.md",
+      "x": 12380,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_planupgraderequirederror",
+      "type": "file",
+      "file": "graphify/obsidian/PlanUpgradeRequiredError.md",
+      "x": 12580,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_tokenexpirederror",
+      "type": "file",
+      "file": "graphify/obsidian/TokenExpiredError.md",
+      "x": 12180,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_twofactorrequirederror",
+      "type": "file",
+      "file": "graphify/obsidian/TwoFactorRequiredError.md",
+      "x": 12380,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auth_errors_unauthorizederror",
+      "type": "file",
+      "file": "graphify/obsidian/UnauthorizedError.md",
+      "x": 12580,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_errors_src_auth_errors_ts",
+      "type": "file",
+      "file": "graphify/obsidian/auth.errors.ts.md",
+      "x": 12180,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g10",
+      "type": "group",
+      "label": "Attendance Service",
+      "x": 0,
+      "y": 1600,
+      "width": 1100,
+      "height": 820,
+      "color": "5"
+    },
+    {
+      "id": "n_attendance_controller_attendancecontroller_belowthreshold",
+      "type": "file",
+      "file": "graphify/obsidian/.belowThreshold().md",
+      "x": 20,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_controller_attendancecontroller_bulkmark",
+      "type": "file",
+      "file": "graphify/obsidian/.bulkMark().md",
+      "x": 220,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_service_attendanceservice_bulkmark",
+      "type": "file",
+      "file": "graphify/obsidian/.bulkMark()_1.md",
+      "x": 420,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_controller_attendancecontroller_classsummary",
+      "type": "file",
+      "file": "graphify/obsidian/.classSummary().md",
+      "x": 20,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_controller_attendancecontroller_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_26.md",
+      "x": 220,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_service_attendanceservice_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_27.md",
+      "x": 420,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_controller_attendancecontroller_createsession",
+      "type": "file",
+      "file": "graphify/obsidian/.createSession().md",
+      "x": 20,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_service_attendanceservice_createsession",
+      "type": "file",
+      "file": "graphify/obsidian/.createSession()_1.md",
+      "x": 220,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_service_attendanceservice_getbelowthreshold",
+      "type": "file",
+      "file": "graphify/obsidian/.getBelowThreshold().md",
+      "x": 420,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_service_attendanceservice_getclasssummary",
+      "type": "file",
+      "file": "graphify/obsidian/.getClassSummary().md",
+      "x": 20,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_controller_attendancecontroller_getrecords",
+      "type": "file",
+      "file": "graphify/obsidian/.getRecords().md",
+      "x": 220,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_service_attendanceservice_getsessionrecords",
+      "type": "file",
+      "file": "graphify/obsidian/.getSessionRecords().md",
+      "x": 420,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_service_attendanceservice_getstudentsummary",
+      "type": "file",
+      "file": "graphify/obsidian/.getStudentSummary().md",
+      "x": 20,
+      "y": 2000,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_controller_attendancecontroller_health",
+      "type": "file",
+      "file": "graphify/obsidian/.health()_1.md",
+      "x": 220,
+      "y": 2000,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_controller_attendancecontroller_studentsummary",
+      "type": "file",
+      "file": "graphify/obsidian/.studentSummary().md",
+      "x": 420,
+      "y": 2000,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_controller_attendancecontroller",
+      "type": "file",
+      "file": "graphify/obsidian/AttendanceController.md",
+      "x": 20,
+      "y": 2080,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_attendance_service_attendanceservice",
+      "type": "file",
+      "file": "graphify/obsidian/AttendanceService.md",
+      "x": 220,
+      "y": 2080,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_attendance_service_src_attendance_attendance_controller_ts",
+      "type": "file",
+      "file": "graphify/obsidian/attendance.controller.ts.md",
+      "x": 420,
+      "y": 2080,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_attendance_service_src_attendance_attendance_service_ts",
+      "type": "file",
+      "file": "graphify/obsidian/attendance.service.ts.md",
+      "x": 20,
+      "y": 2160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g11",
+      "type": "group",
+      "label": "Student Controller",
+      "x": 1620,
+      "y": 1600,
+      "width": 880,
+      "height": 520,
+      "color": "6"
+    },
+    {
+      "id": "n_student_controller_studentcontroller_bulkimport",
+      "type": "file",
+      "file": "graphify/obsidian/.bulkImport().md",
+      "x": 1640,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_controller_studentcontroller_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_31.md",
+      "x": 1840,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_controller_studentcontroller_create",
+      "type": "file",
+      "file": "graphify/obsidian/.create().md",
+      "x": 2040,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_controller_studentcontroller_findall",
+      "type": "file",
+      "file": "graphify/obsidian/.findAll().md",
+      "x": 1640,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_controller_studentcontroller_findone",
+      "type": "file",
+      "file": "graphify/obsidian/.findOne().md",
+      "x": 1840,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_controller_studentcontroller_health",
+      "type": "file",
+      "file": "graphify/obsidian/.health()_3.md",
+      "x": 2040,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_controller_studentcontroller_issuetc",
+      "type": "file",
+      "file": "graphify/obsidian/.issueTC().md",
+      "x": 1640,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_controller_studentcontroller_linkparent",
+      "type": "file",
+      "file": "graphify/obsidian/.linkParent().md",
+      "x": 1840,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_controller_studentcontroller_promote",
+      "type": "file",
+      "file": "graphify/obsidian/.promote().md",
+      "x": 2040,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_controller_studentcontroller_update",
+      "type": "file",
+      "file": "graphify/obsidian/.update().md",
+      "x": 1640,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_student_controller_studentcontroller",
+      "type": "file",
+      "file": "graphify/obsidian/StudentController.md",
+      "x": 1840,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_student_service_src_student_student_controller_ts",
+      "type": "file",
+      "file": "graphify/obsidian/student.controller.ts.md",
+      "x": 2040,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g12",
+      "type": "group",
+      "label": "Domain Error Types",
+      "x": 3240,
+      "y": 1600,
+      "width": 880,
+      "height": 520,
+      "color": "1"
+    },
+    {
+      "id": "n_domain_errors_businessruleerror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_5.md",
+      "x": 3260,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_domain_errors_conflicterror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_3.md",
+      "x": 3460,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_domain_errors_notfounderror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_2.md",
+      "x": 3660,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_domain_errors_tenantmismatcherror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_6.md",
+      "x": 3260,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_domain_errors_validationerror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_4.md",
+      "x": 3460,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_domain_errors_businessruleerror",
+      "type": "file",
+      "file": "graphify/obsidian/BusinessRuleError.md",
+      "x": 3660,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_domain_errors_conflicterror",
+      "type": "file",
+      "file": "graphify/obsidian/ConflictError.md",
+      "x": 3260,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_domain_errors_notfounderror",
+      "type": "file",
+      "file": "graphify/obsidian/NotFoundError.md",
+      "x": 3460,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_domain_errors_tenantmismatcherror",
+      "type": "file",
+      "file": "graphify/obsidian/TenantMismatchError.md",
+      "x": 3660,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_domain_errors_validationerror",
+      "type": "file",
+      "file": "graphify/obsidian/ValidationError.md",
+      "x": 3260,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_errors_src_domain_errors_ts",
+      "type": "file",
+      "file": "graphify/obsidian/domain.errors.ts.md",
+      "x": 3460,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g13",
+      "type": "group",
+      "label": "JWT Auth Strategies",
+      "x": 4640,
+      "y": 1600,
+      "width": 880,
+      "height": 520,
+      "color": "2"
+    },
+    {
+      "id": "n_jwt_strategy_jwtstrategy_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_25.md",
+      "x": 4660,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_jwt_strategy_jwtstrategy_validate",
+      "type": "file",
+      "file": "graphify/obsidian/.validate().md",
+      "x": 4860,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_jwt_strategy_jwtstrategy",
+      "type": "file",
+      "file": "graphify/obsidian/JwtStrategy.md",
+      "x": 5060,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_academic_service_src_guards_jwt_strategy_ts",
+      "type": "file",
+      "file": "graphify/obsidian/jwt.strategy.ts_6.md",
+      "x": 4660,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_attendance_service_src_guards_jwt_strategy_ts",
+      "type": "file",
+      "file": "graphify/obsidian/jwt.strategy.ts_1.md",
+      "x": 4860,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_strategies_jwt_strategy_ts",
+      "type": "file",
+      "file": "graphify/obsidian/jwt.strategy.ts_5.md",
+      "x": 5060,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_fee_service_src_guards_jwt_strategy_ts",
+      "type": "file",
+      "file": "graphify/obsidian/jwt.strategy.ts_2.md",
+      "x": 4660,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_notification_service_src_guards_jwt_strategy_ts",
+      "type": "file",
+      "file": "graphify/obsidian/jwt.strategy.ts.md",
+      "x": 4860,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_student_service_src_guards_jwt_strategy_ts",
+      "type": "file",
+      "file": "graphify/obsidian/jwt.strategy.ts_3.md",
+      "x": 5060,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_user_service_src_guards_jwt_strategy_ts",
+      "type": "file",
+      "file": "graphify/obsidian/jwt.strategy.ts_4.md",
+      "x": 4660,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g14",
+      "type": "group",
+      "label": "String Utilities",
+      "x": 6040,
+      "y": 1600,
+      "width": 660,
+      "height": 420,
+      "color": "3"
+    },
+    {
+      "id": "n_string_capitalizefirst",
+      "type": "file",
+      "file": "graphify/obsidian/capitalizeFirst().md",
+      "x": 6060,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_string_generateadmissionnumber",
+      "type": "file",
+      "file": "graphify/obsidian/generateAdmissionNumber().md",
+      "x": 6260,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_string_generatereceiptnumber",
+      "type": "file",
+      "file": "graphify/obsidian/generateReceiptNumber().md",
+      "x": 6460,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_string_maskemail",
+      "type": "file",
+      "file": "graphify/obsidian/maskEmail().md",
+      "x": 6060,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_string_maskphone",
+      "type": "file",
+      "file": "graphify/obsidian/maskPhone().md",
+      "x": 6260,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_string_slugify",
+      "type": "file",
+      "file": "graphify/obsidian/slugify().md",
+      "x": 6460,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_utils_src_string_ts",
+      "type": "file",
+      "file": "graphify/obsidian/string.ts.md",
+      "x": 6060,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_string_titlecase",
+      "type": "file",
+      "file": "graphify/obsidian/titleCase().md",
+      "x": 6260,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_string_truncate",
+      "type": "file",
+      "file": "graphify/obsidian/truncate().md",
+      "x": 6460,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g15",
+      "type": "group",
+      "label": "NestJS App Modules",
+      "x": 7440,
+      "y": 1600,
+      "width": 660,
+      "height": 420,
+      "color": "4"
+    },
+    {
+      "id": "n_app_module_appmodule",
+      "type": "file",
+      "file": "graphify/obsidian/AppModule.md",
+      "x": 7460,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_academic_service_src_app_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/app.module.ts_6.md",
+      "x": 7660,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_attendance_service_src_app_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/app.module.ts_1.md",
+      "x": 7860,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_app_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/app.module.ts_5.md",
+      "x": 7460,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_fee_service_src_app_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/app.module.ts_2.md",
+      "x": 7660,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_notification_service_src_app_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/app.module.ts.md",
+      "x": 7860,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_student_service_src_app_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/app.module.ts_3.md",
+      "x": 7460,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_user_service_src_app_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/app.module.ts_4.md",
+      "x": 7660,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g16",
+      "type": "group",
+      "label": "HTTP Error Types",
+      "x": 8620,
+      "y": 1600,
+      "width": 660,
+      "height": 420,
+      "color": "5"
+    },
+    {
+      "id": "n_http_errors_badrequesterror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_7.md",
+      "x": 8640,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_http_errors_serviceunavailableerror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_9.md",
+      "x": 8840,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_http_errors_toomanyrequestserror_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_8.md",
+      "x": 9040,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_http_errors_badrequesterror",
+      "type": "file",
+      "file": "graphify/obsidian/BadRequestError.md",
+      "x": 8640,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_http_errors_serviceunavailableerror",
+      "type": "file",
+      "file": "graphify/obsidian/ServiceUnavailableError.md",
+      "x": 8840,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_http_errors_toomanyrequestserror",
+      "type": "file",
+      "file": "graphify/obsidian/TooManyRequestsError.md",
+      "x": 9040,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_errors_src_http_errors_ts",
+      "type": "file",
+      "file": "graphify/obsidian/http.errors.ts.md",
+      "x": 8640,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g17",
+      "type": "group",
+      "label": "Prisma Database Layer",
+      "x": 9800,
+      "y": 1600,
+      "width": 660,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_prisma_service_prismaservice_cleandatabase",
+      "type": "file",
+      "file": "graphify/obsidian/.cleanDatabase().md",
+      "x": 9820,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_prisma_service_prismaservice_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor().md",
+      "x": 10020,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_prisma_service_prismaservice_onmoduledestroy",
+      "type": "file",
+      "file": "graphify/obsidian/.onModuleDestroy().md",
+      "x": 10220,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_prisma_service_prismaservice_onmoduleinit",
+      "type": "file",
+      "file": "graphify/obsidian/.onModuleInit().md",
+      "x": 9820,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_prisma_service_prismaservice",
+      "type": "file",
+      "file": "graphify/obsidian/PrismaService.md",
+      "x": 10020,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_database_src_prisma_service_ts",
+      "type": "file",
+      "file": "graphify/obsidian/prisma.service.ts.md",
+      "x": 10220,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g18",
+      "type": "group",
+      "label": "Date Utilities",
+      "x": 10980,
+      "y": 1600,
+      "width": 660,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_date_calculateage",
+      "type": "file",
+      "file": "graphify/obsidian/calculateAge().md",
+      "x": 11000,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_utils_src_date_ts",
+      "type": "file",
+      "file": "graphify/obsidian/date.ts.md",
+      "x": 11200,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_date_formatdate",
+      "type": "file",
+      "file": "graphify/obsidian/formatDate().md",
+      "x": 11400,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_date_formatdatetime",
+      "type": "file",
+      "file": "graphify/obsidian/formatDateTime().md",
+      "x": 11000,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_date_getcurrentacademicyear",
+      "type": "file",
+      "file": "graphify/obsidian/getCurrentAcademicYear().md",
+      "x": 11200,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_date_getworkingdayscount",
+      "type": "file",
+      "file": "graphify/obsidian/getWorkingDaysCount().md",
+      "x": 11400,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g19",
+      "type": "group",
+      "label": "Test Database Setup",
+      "x": 12160,
+      "y": 1600,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_db_setup_cleanuptestdb",
+      "type": "file",
+      "file": "graphify/obsidian/cleanupTestDb().md",
+      "x": 12180,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_testing_src_db_setup_ts",
+      "type": "file",
+      "file": "graphify/obsidian/db-setup.ts.md",
+      "x": 12380,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_db_setup_disconnecttestdb",
+      "type": "file",
+      "file": "graphify/obsidian/disconnectTestDb().md",
+      "x": 12580,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_db_setup_gettestprisma",
+      "type": "file",
+      "file": "graphify/obsidian/getTestPrisma().md",
+      "x": 12180,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g20",
+      "type": "group",
+      "label": "Base Error Class",
+      "x": 0,
+      "y": 2500,
       "width": 600,
       "height": 400,
       "color": "3"
     },
     {
-      "id": "n_claudemd_graph_report",
+      "id": "n_base_error_apperror_constructor",
       "type": "file",
-      "file": "graphify/obsidian/GRAPH_REPORT.md Output.md",
+      "file": "graphify/obsidian/.constructor()_19.md",
       "x": 20,
-      "y": 560,
+      "y": 2580,
       "width": 180,
       "height": 60
     },
     {
-      "id": "n_claudemd_graph_json",
+      "id": "n_base_error_apperror_tojson",
       "type": "file",
-      "file": "graphify/obsidian/graph.json Output.md",
+      "file": "graphify/obsidian/.toJSON().md",
       "x": 220,
-      "y": 560,
+      "y": 2580,
       "width": 180,
       "height": 60
     },
     {
-      "id": "n_claudemd_graphify_out_folder",
+      "id": "n_base_error_apperror",
       "type": "file",
-      "file": "graphify/obsidian/graphify-out Folder.md",
+      "file": "graphify/obsidian/AppError.md",
       "x": 420,
-      "y": 560,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_errors_src_base_error_ts",
+      "type": "file",
+      "file": "graphify/obsidian/base.error.ts.md",
+      "x": 20,
+      "y": 2660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g21",
+      "type": "group",
+      "label": "Admin Auth Hooks",
+      "x": 1620,
+      "y": 2500,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_apps_admin_portal_src_hooks_use_auth_ts",
+      "type": "file",
+      "file": "graphify/obsidian/use-auth.ts.md",
+      "x": 1640,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_use_auth_useforgotpassword",
+      "type": "file",
+      "file": "graphify/obsidian/useForgotPassword().md",
+      "x": 1840,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_use_auth_uselogin",
+      "type": "file",
+      "file": "graphify/obsidian/useLogin().md",
+      "x": 2040,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_use_auth_uselogout",
+      "type": "file",
+      "file": "graphify/obsidian/useLogout().md",
+      "x": 1640,
+      "y": 2660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g22",
+      "type": "group",
+      "label": "Admin Portal Utils",
+      "x": 3240,
+      "y": 2500,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_utils_cn",
+      "type": "file",
+      "file": "graphify/obsidian/cn()_1.md",
+      "x": 3260,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_formatcurrency",
+      "type": "file",
+      "file": "graphify/obsidian/formatCurrency().md",
+      "x": 3460,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_formatdate",
+      "type": "file",
+      "file": "graphify/obsidian/formatDate()_1.md",
+      "x": 3660,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_admin_portal_src_lib_utils_ts",
+      "type": "file",
+      "file": "graphify/obsidian/utils.ts.md",
+      "x": 3260,
+      "y": 2660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g23",
+      "type": "group",
+      "label": "Google OAuth Strategy",
+      "x": 4640,
+      "y": 2500,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_google_strategy_googlestrategy_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_37.md",
+      "x": 4660,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_google_strategy_googlestrategy_validate",
+      "type": "file",
+      "file": "graphify/obsidian/.validate()_1.md",
+      "x": 4860,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_google_strategy_googlestrategy",
+      "type": "file",
+      "file": "graphify/obsidian/GoogleStrategy.md",
+      "x": 5060,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_strategies_google_strategy_ts",
+      "type": "file",
+      "file": "graphify/obsidian/google.strategy.ts.md",
+      "x": 4660,
+      "y": 2660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g24",
+      "type": "group",
+      "label": "Microsoft OAuth Strategy",
+      "x": 6040,
+      "y": 2500,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_microsoft_strategy_microsoftstrategy_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_39.md",
+      "x": 6060,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_microsoft_strategy_microsoftstrategy_validate",
+      "type": "file",
+      "file": "graphify/obsidian/.validate()_3.md",
+      "x": 6260,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_microsoft_strategy_microsoftstrategy",
+      "type": "file",
+      "file": "graphify/obsidian/MicrosoftStrategy.md",
+      "x": 6460,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_strategies_microsoft_strategy_ts",
+      "type": "file",
+      "file": "graphify/obsidian/microsoft.strategy.ts.md",
+      "x": 6060,
+      "y": 2660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g25",
+      "type": "group",
+      "label": "Health Check",
+      "x": 7440,
+      "y": 2500,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_health_controller_healthcontroller_check",
+      "type": "file",
+      "file": "graphify/obsidian/.check().md",
+      "x": 7460,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_health_controller_healthcontroller_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_40.md",
+      "x": 7660,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_health_controller_healthcontroller",
+      "type": "file",
+      "file": "graphify/obsidian/HealthController.md",
+      "x": 7860,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_health_health_controller_ts",
+      "type": "file",
+      "file": "graphify/obsidian/health.controller.ts.md",
+      "x": 7460,
+      "y": 2660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g26",
+      "type": "group",
+      "label": "Roles Auth Guard",
+      "x": 8620,
+      "y": 2500,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_roles_guard_rolesguard_canactivate",
+      "type": "file",
+      "file": "graphify/obsidian/.canActivate().md",
+      "x": 8640,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_roles_guard_rolesguard_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_41.md",
+      "x": 8840,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_roles_guard_rolesguard",
+      "type": "file",
+      "file": "graphify/obsidian/RolesGuard.md",
+      "x": 9040,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_guards_roles_guard_ts",
+      "type": "file",
+      "file": "graphify/obsidian/roles.guard.ts.md",
+      "x": 8640,
+      "y": 2660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g27",
+      "type": "group",
+      "label": "JWT Auth Guard",
+      "x": 9800,
+      "y": 2500,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_jwt_auth_guard_jwtauthguard_canactivate",
+      "type": "file",
+      "file": "graphify/obsidian/.canActivate()_1.md",
+      "x": 9820,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_jwt_auth_guard_jwtauthguard_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_42.md",
+      "x": 10020,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_jwt_auth_guard_jwtauthguard",
+      "type": "file",
+      "file": "graphify/obsidian/JwtAuthGuard.md",
+      "x": 10220,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_guards_jwt_auth_guard_ts",
+      "type": "file",
+      "file": "graphify/obsidian/jwt-auth.guard.ts.md",
+      "x": 9820,
+      "y": 2660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g28",
+      "type": "group",
+      "label": "Plan Auth Guard",
+      "x": 10980,
+      "y": 2500,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_plan_guard_planguard_canactivate",
+      "type": "file",
+      "file": "graphify/obsidian/.canActivate()_2.md",
+      "x": 11000,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plan_guard_planguard_constructor",
+      "type": "file",
+      "file": "graphify/obsidian/.constructor()_43.md",
+      "x": 11200,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plan_guard_planguard",
+      "type": "file",
+      "file": "graphify/obsidian/PlanGuard.md",
+      "x": 11400,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_guards_plan_guard_ts",
+      "type": "file",
+      "file": "graphify/obsidian/plan.guard.ts.md",
+      "x": 11000,
+      "y": 2660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g29",
+      "type": "group",
+      "label": "Bulk Attendance DTO",
+      "x": 12160,
+      "y": 2500,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_bulk_attendance_dto_attendancerecorddto",
+      "type": "file",
+      "file": "graphify/obsidian/AttendanceRecordDto.md",
+      "x": 12180,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_bulk_attendance_dto_bulkattendancedto",
+      "type": "file",
+      "file": "graphify/obsidian/BulkAttendanceDto.md",
+      "x": 12380,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_attendance_service_src_dto_bulk_attendance_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/bulk-attendance.dto.ts.md",
+      "x": 12580,
+      "y": 2580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g30",
+      "type": "group",
+      "label": "Student Promotion DTO",
+      "x": 0,
+      "y": 2980,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_promote_student_dto_promotestudentdto",
+      "type": "file",
+      "file": "graphify/obsidian/PromoteStudentDto.md",
+      "x": 20,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_promote_student_dto_promotionitem",
+      "type": "file",
+      "file": "graphify/obsidian/PromotionItem.md",
+      "x": 220,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_student_service_src_dto_promote_student_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/promote-student.dto.ts.md",
+      "x": 420,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g31",
+      "type": "group",
+      "label": "UI Spinner Component",
+      "x": 1620,
+      "y": 2980,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_spinner_spinner",
+      "type": "file",
+      "file": "graphify/obsidian/Spinner().md",
+      "x": 1640,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_ui_src_components_spinner_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/spinner.tsx.md",
+      "x": 1840,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g32",
+      "type": "group",
+      "label": "CN Utility",
+      "x": 3240,
+      "y": 2980,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_cn_cn",
+      "type": "file",
+      "file": "graphify/obsidian/cn().md",
+      "x": 3260,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_ui_src_lib_cn_ts",
+      "type": "file",
+      "file": "graphify/obsidian/cn.ts.md",
+      "x": 3460,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g33",
+      "type": "group",
+      "label": "Prisma Module",
+      "x": 4640,
+      "y": 2980,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_prisma_module_prismamodule",
+      "type": "file",
+      "file": "graphify/obsidian/PrismaModule.md",
+      "x": 4660,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_packages_database_src_prisma_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/prisma.module.ts.md",
+      "x": 4860,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g34",
+      "type": "group",
+      "label": "Base Config",
+      "x": 6040,
+      "y": 2980,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_packages_config_src_base_config_ts",
+      "type": "file",
+      "file": "graphify/obsidian/base.config.ts.md",
+      "x": 6060,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_base_config_validateenv",
+      "type": "file",
+      "file": "graphify/obsidian/validateEnv().md",
+      "x": 6260,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g35",
+      "type": "group",
+      "label": "Attendance Module",
+      "x": 7440,
+      "y": 2980,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_attendance_module_attendancemodule",
+      "type": "file",
+      "file": "graphify/obsidian/AttendanceModule.md",
+      "x": 7460,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_attendance_service_src_attendance_attendance_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/attendance.module.ts.md",
+      "x": 7660,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g36",
+      "type": "group",
+      "label": "Session Creation DTO",
+      "x": 8620,
+      "y": 2980,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_create_session_dto_createsessiondto",
+      "type": "file",
+      "file": "graphify/obsidian/CreateSessionDto.md",
+      "x": 8640,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_attendance_service_src_dto_create_session_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/create-session.dto.ts.md",
+      "x": 8840,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g37",
+      "type": "group",
+      "label": "Admin Root Layout",
+      "x": 9800,
+      "y": 2980,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_layout_rootlayout",
+      "type": "file",
+      "file": "graphify/obsidian/RootLayout().md",
+      "x": 9820,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_layout_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/layout.tsx.md",
+      "x": 10020,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g38",
+      "type": "group",
+      "label": "Admin Home Page",
+      "x": 10980,
+      "y": 2980,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_page_home",
+      "type": "file",
+      "file": "graphify/obsidian/Home().md",
+      "x": 11000,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_page_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/page.tsx.md",
+      "x": 11200,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g39",
+      "type": "group",
+      "label": "Admin Providers",
+      "x": 12160,
+      "y": 2980,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_providers_providers",
+      "type": "file",
+      "file": "graphify/obsidian/Providers().md",
+      "x": 12180,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_providers_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/providers.tsx.md",
+      "x": 12380,
+      "y": 3060,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g40",
+      "type": "group",
+      "label": "Dashboard Layout",
+      "x": 0,
+      "y": 3460,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_layout_dashboardlayout",
+      "type": "file",
+      "file": "graphify/obsidian/DashboardLayout().md",
+      "x": 20,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_dashboard_layout_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/layout.tsx_1.md",
+      "x": 220,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g41",
+      "type": "group",
+      "label": "Classes Page",
+      "x": 1620,
+      "y": 3460,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_dashboard_classes_page_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/page.tsx_3.md",
+      "x": 1640,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_page_toggle",
+      "type": "file",
+      "file": "graphify/obsidian/toggle().md",
+      "x": 1840,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g42",
+      "type": "group",
+      "label": "Dashboard Page",
+      "x": 3240,
+      "y": 3460,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_page_statcard",
+      "type": "file",
+      "file": "graphify/obsidian/StatCard().md",
+      "x": 3260,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_dashboard_dashboard_page_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/page.tsx_5.md",
+      "x": 3460,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g43",
+      "type": "group",
+      "label": "Login Page",
+      "x": 4640,
+      "y": 3460,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_page_onsubmit",
+      "type": "file",
+      "file": "graphify/obsidian/onSubmit().md",
+      "x": 4660,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_login_page_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/page.tsx_9.md",
+      "x": 4860,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g44",
+      "type": "group",
+      "label": "Admin Header",
+      "x": 6040,
+      "y": 3460,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_header_header",
+      "type": "file",
+      "file": "graphify/obsidian/Header().md",
+      "x": 6060,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_admin_portal_src_components_layout_header_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/header.tsx.md",
+      "x": 6260,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g45",
+      "type": "group",
+      "label": "Admin API Client",
+      "x": 7440,
+      "y": 3460,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_apps_admin_portal_src_lib_api_ts",
+      "type": "file",
+      "file": "graphify/obsidian/api.ts_1.md",
+      "x": 7460,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_api_processqueue",
+      "type": "file",
+      "file": "graphify/obsidian/processQueue().md",
+      "x": 7660,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g46",
+      "type": "group",
+      "label": "Fee Module",
+      "x": 8620,
+      "y": 3460,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_fee_module_feemodule",
+      "type": "file",
+      "file": "graphify/obsidian/FeeModule.md",
+      "x": 8640,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_fee_service_src_fee_fee_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/fee.module.ts.md",
+      "x": 8840,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g47",
+      "type": "group",
+      "label": "Create Student DTO",
+      "x": 9800,
+      "y": 3460,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_create_student_dto_createstudentdto",
+      "type": "file",
+      "file": "graphify/obsidian/CreateStudentDto.md",
+      "x": 9820,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_student_service_src_dto_create_student_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/create-student.dto.ts.md",
+      "x": 10020,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g48",
+      "type": "group",
+      "label": "Link Parent DTO",
+      "x": 10980,
+      "y": 3460,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_link_parent_dto_linkparentdto",
+      "type": "file",
+      "file": "graphify/obsidian/LinkParentDto.md",
+      "x": 11000,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_student_service_src_dto_link_parent_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/link-parent.dto.ts.md",
+      "x": 11200,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g49",
+      "type": "group",
+      "label": "List Students Query DTO",
+      "x": 12160,
+      "y": 3460,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_list_students_query_dto_liststudentsquerydto",
+      "type": "file",
+      "file": "graphify/obsidian/ListStudentsQueryDto.md",
+      "x": 12180,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_student_service_src_dto_list_students_query_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/list-students-query.dto.ts.md",
+      "x": 12380,
+      "y": 3540,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g50",
+      "type": "group",
+      "label": "Update Student DTO",
+      "x": 0,
+      "y": 3940,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_update_student_dto_updatestudentdto",
+      "type": "file",
+      "file": "graphify/obsidian/UpdateStudentDto.md",
+      "x": 20,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_student_service_src_dto_update_student_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/update-student.dto.ts.md",
+      "x": 220,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g51",
+      "type": "group",
+      "label": "Student Module",
+      "x": 1620,
+      "y": 3940,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_student_module_studentmodule",
+      "type": "file",
+      "file": "graphify/obsidian/StudentModule.md",
+      "x": 1640,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_student_service_src_student_student_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/student.module.ts.md",
+      "x": 1840,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g52",
+      "type": "group",
+      "label": "List Users Query DTO",
+      "x": 3240,
+      "y": 3940,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_list_users_query_dto_listusersquerydto",
+      "type": "file",
+      "file": "graphify/obsidian/ListUsersQueryDto.md",
+      "x": 3260,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_user_service_src_dto_list_users_query_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/list-users-query.dto.ts.md",
+      "x": 3460,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g53",
+      "type": "group",
+      "label": "Update User DTO",
+      "x": 4640,
+      "y": 3940,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_update_user_dto_updateuserdto",
+      "type": "file",
+      "file": "graphify/obsidian/UpdateUserDto.md",
+      "x": 4660,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_user_service_src_dto_update_user_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/update-user.dto.ts.md",
+      "x": 4860,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g54",
+      "type": "group",
+      "label": "Assign Role DTO",
+      "x": 6040,
+      "y": 3940,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_assign_role_dto_assignroledto",
+      "type": "file",
+      "file": "graphify/obsidian/AssignRoleDto.md",
+      "x": 6060,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_user_service_src_dto_assign_role_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/assign-role.dto.ts.md",
+      "x": 6260,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g55",
+      "type": "group",
+      "label": "User Module",
+      "x": 7440,
+      "y": 3940,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_user_module_usermodule",
+      "type": "file",
+      "file": "graphify/obsidian/UserModule.md",
+      "x": 7460,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_user_service_src_user_user_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/user.module.ts.md",
+      "x": 7660,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g56",
+      "type": "group",
+      "label": "TOTP Verify DTO",
+      "x": 8620,
+      "y": 3940,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_setup_totp_verify_dto_setuptotpverifydto",
+      "type": "file",
+      "file": "graphify/obsidian/SetupTotpVerifyDto.md",
+      "x": 8640,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_dto_setup_totp_verify_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/setup-totp-verify.dto.ts.md",
+      "x": 8840,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g57",
+      "type": "group",
+      "label": "Login DTO",
+      "x": 9800,
+      "y": 3940,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_login_dto_logindto",
+      "type": "file",
+      "file": "graphify/obsidian/LoginDto.md",
+      "x": 9820,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_dto_login_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/login.dto.ts.md",
+      "x": 10020,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g58",
+      "type": "group",
+      "label": "Register DTO",
+      "x": 10980,
+      "y": 3940,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_register_dto_registerdto",
+      "type": "file",
+      "file": "graphify/obsidian/RegisterDto.md",
+      "x": 11000,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_dto_register_dto_ts",
+      "type": "file",
+      "file": "graphify/obsidian/register.dto.ts.md",
+      "x": 11200,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g59",
+      "type": "group",
+      "label": "Roles Decorator",
+      "x": 12160,
+      "y": 3940,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_roles_decorator_roles",
+      "type": "file",
+      "file": "graphify/obsidian/Roles().md",
+      "x": 12180,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_decorators_roles_decorator_ts",
+      "type": "file",
+      "file": "graphify/obsidian/roles.decorator.ts.md",
+      "x": 12380,
+      "y": 4020,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g60",
+      "type": "group",
+      "label": "Module 60",
+      "x": 0,
+      "y": 4420,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_requires_plan_decorator_requiresplan",
+      "type": "file",
+      "file": "graphify/obsidian/RequiresPlan().md",
+      "x": 20,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_decorators_requires_plan_decorator_ts",
+      "type": "file",
+      "file": "graphify/obsidian/requires-plan.decorator.ts.md",
+      "x": 220,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g61",
+      "type": "group",
+      "label": "Module 61",
+      "x": 1620,
+      "y": 4420,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_public_decorator_public",
+      "type": "file",
+      "file": "graphify/obsidian/Public().md",
+      "x": 1640,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_decorators_public_decorator_ts",
+      "type": "file",
+      "file": "graphify/obsidian/public.decorator.ts.md",
+      "x": 1840,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g62",
+      "type": "group",
+      "label": "Module 62",
+      "x": 3240,
+      "y": 4420,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_auth_module_authmodule",
+      "type": "file",
+      "file": "graphify/obsidian/AuthModule.md",
+      "x": 3260,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_auth_service_src_auth_auth_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/auth.module.ts.md",
+      "x": 3460,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g63",
+      "type": "group",
+      "label": "Module 63",
+      "x": 4640,
+      "y": 4420,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_academic_module_academicmodule",
+      "type": "file",
+      "file": "graphify/obsidian/AcademicModule.md",
+      "x": 4660,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_apps_academic_service_src_academic_academic_module_ts",
+      "type": "file",
+      "file": "graphify/obsidian/academic.module.ts.md",
+      "x": 4860,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g64",
+      "type": "group",
+      "label": "Module 64",
+      "x": 6040,
+      "y": 4420,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_packages_ui_src_index_ts",
+      "type": "file",
+      "file": "graphify/obsidian/index.ts.md",
+      "x": 6060,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g65",
+      "type": "group",
+      "label": "Module 65",
+      "x": 7440,
+      "y": 4420,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_packages_ui_src_components_card_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/card.tsx.md",
+      "x": 7460,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g66",
+      "type": "group",
+      "label": "Module 66",
+      "x": 8620,
+      "y": 4420,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_packages_ui_src_components_badge_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/badge.tsx.md",
+      "x": 8640,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g67",
+      "type": "group",
+      "label": "Module 67",
+      "x": 9800,
+      "y": 4420,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_packages_ui_src_components_button_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/button.tsx.md",
+      "x": 9820,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g68",
+      "type": "group",
+      "label": "Module 68",
+      "x": 10980,
+      "y": 4420,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_packages_database_src_index_ts",
+      "type": "file",
+      "file": "graphify/obsidian/index.ts_1.md",
+      "x": 11000,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g69",
+      "type": "group",
+      "label": "Module 69",
+      "x": 12160,
+      "y": 4420,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_packages_types_src_pagination_ts",
+      "type": "file",
+      "file": "graphify/obsidian/pagination.ts.md",
+      "x": 12180,
+      "y": 4500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g70",
+      "type": "group",
+      "label": "Module 70",
+      "x": 0,
+      "y": 4900,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_packages_types_src_api_ts",
+      "type": "file",
+      "file": "graphify/obsidian/api.ts.md",
+      "x": 20,
+      "y": 4980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g71",
+      "type": "group",
+      "label": "Module 71",
+      "x": 1620,
+      "y": 4900,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_packages_types_src_index_ts",
+      "type": "file",
+      "file": "graphify/obsidian/index.ts_2.md",
+      "x": 1640,
+      "y": 4980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g72",
+      "type": "group",
+      "label": "Module 72",
+      "x": 3240,
+      "y": 4900,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_packages_types_src_enums_ts",
+      "type": "file",
+      "file": "graphify/obsidian/enums.ts.md",
+      "x": 3260,
+      "y": 4980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g73",
+      "type": "group",
+      "label": "Module 73",
+      "x": 4640,
+      "y": 4900,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_packages_types_src_auth_ts",
+      "type": "file",
+      "file": "graphify/obsidian/auth.ts.md",
+      "x": 4660,
+      "y": 4980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g74",
+      "type": "group",
+      "label": "Module 74",
+      "x": 6040,
+      "y": 4900,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_packages_logger_src_index_ts",
+      "type": "file",
+      "file": "graphify/obsidian/index.ts_3.md",
+      "x": 6060,
+      "y": 4980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g75",
+      "type": "group",
+      "label": "Module 75",
+      "x": 7440,
+      "y": 4900,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_packages_config_src_kafka_config_ts",
+      "type": "file",
+      "file": "graphify/obsidian/kafka.config.ts.md",
+      "x": 7460,
+      "y": 4980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g76",
+      "type": "group",
+      "label": "Module 76",
+      "x": 8620,
+      "y": 4900,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_packages_config_src_auth_config_ts",
+      "type": "file",
+      "file": "graphify/obsidian/auth.config.ts.md",
+      "x": 8640,
+      "y": 4980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g77",
+      "type": "group",
+      "label": "Module 77",
+      "x": 9800,
+      "y": 4900,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_packages_config_src_database_config_ts",
+      "type": "file",
+      "file": "graphify/obsidian/database.config.ts.md",
+      "x": 9820,
+      "y": 4980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g78",
+      "type": "group",
+      "label": "Module 78",
+      "x": 10980,
+      "y": 4900,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_packages_config_src_redis_config_ts",
+      "type": "file",
+      "file": "graphify/obsidian/redis.config.ts.md",
+      "x": 11000,
+      "y": 4980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g79",
+      "type": "group",
+      "label": "Module 79",
+      "x": 12160,
+      "y": 4900,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_packages_config_src_index_ts",
+      "type": "file",
+      "file": "graphify/obsidian/index.ts_4.md",
+      "x": 12180,
+      "y": 4980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g80",
+      "type": "group",
+      "label": "Module 80",
+      "x": 0,
+      "y": 5380,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_packages_utils_src_index_ts",
+      "type": "file",
+      "file": "graphify/obsidian/index.ts_5.md",
+      "x": 20,
+      "y": 5460,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g81",
+      "type": "group",
+      "label": "Module 81",
+      "x": 1620,
+      "y": 5380,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_packages_testing_src_index_ts",
+      "type": "file",
+      "file": "graphify/obsidian/index.ts_6.md",
+      "x": 1640,
+      "y": 5460,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g82",
+      "type": "group",
+      "label": "Module 82",
+      "x": 3240,
+      "y": 5380,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_packages_eslint_config_index_js",
+      "type": "file",
+      "file": "graphify/obsidian/index.js.md",
+      "x": 3260,
+      "y": 5460,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g83",
+      "type": "group",
+      "label": "Module 83",
+      "x": 4640,
+      "y": 5380,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_packages_errors_src_index_ts",
+      "type": "file",
+      "file": "graphify/obsidian/index.ts_7.md",
+      "x": 4660,
+      "y": 5460,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g84",
+      "type": "group",
+      "label": "Module 84",
+      "x": 6040,
+      "y": 5380,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_packages_events_src_payloads_ts",
+      "type": "file",
+      "file": "graphify/obsidian/payloads.ts.md",
+      "x": 6060,
+      "y": 5460,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g85",
+      "type": "group",
+      "label": "Module 85",
+      "x": 7440,
+      "y": 5380,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_packages_events_src_topics_ts",
+      "type": "file",
+      "file": "graphify/obsidian/topics.ts.md",
+      "x": 7460,
+      "y": 5460,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g86",
+      "type": "group",
+      "label": "Module 86",
+      "x": 8620,
+      "y": 5380,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_packages_events_src_index_ts",
+      "type": "file",
+      "file": "graphify/obsidian/index.ts_8.md",
+      "x": 8640,
+      "y": 5460,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g87",
+      "type": "group",
+      "label": "Module 87",
+      "x": 9800,
+      "y": 5380,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_packages_events_src_queues_ts",
+      "type": "file",
+      "file": "graphify/obsidian/queues.ts.md",
+      "x": 9820,
+      "y": 5460,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g88",
+      "type": "group",
+      "label": "Module 88",
+      "x": 10980,
+      "y": 5380,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_apps_admin_portal_tailwind_config_ts",
+      "type": "file",
+      "file": "graphify/obsidian/tailwind.config.ts.md",
+      "x": 11000,
+      "y": 5460,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g89",
+      "type": "group",
+      "label": "Module 89",
+      "x": 12160,
+      "y": 5380,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_apps_admin_portal_postcss_config_js",
+      "type": "file",
+      "file": "graphify/obsidian/postcss.config.js.md",
+      "x": 12180,
+      "y": 5460,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g90",
+      "type": "group",
+      "label": "Module 90",
+      "x": 0,
+      "y": 5860,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_apps_admin_portal_next_config_ts",
+      "type": "file",
+      "file": "graphify/obsidian/next.config.ts.md",
+      "x": 20,
+      "y": 5940,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g91",
+      "type": "group",
+      "label": "Module 91",
+      "x": 1620,
+      "y": 5860,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_dashboard_attendance_page_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/page.tsx_1.md",
+      "x": 1640,
+      "y": 5940,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g92",
+      "type": "group",
+      "label": "Module 92",
+      "x": 3240,
+      "y": 5860,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_dashboard_fees_page_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/page.tsx_2.md",
+      "x": 3260,
+      "y": 5940,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g93",
+      "type": "group",
+      "label": "Module 93",
+      "x": 4640,
+      "y": 5860,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_dashboard_announcements_page_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/page.tsx_4.md",
+      "x": 4660,
+      "y": 5940,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g94",
+      "type": "group",
+      "label": "Module 94",
+      "x": 6040,
+      "y": 5860,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_dashboard_staff_page_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/page.tsx_7.md",
+      "x": 6060,
+      "y": 5940,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g95",
+      "type": "group",
+      "label": "Module 95",
+      "x": 7440,
+      "y": 5860,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_dashboard_timetable_page_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/page.tsx_8.md",
+      "x": 7460,
+      "y": 5940,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g96",
+      "type": "group",
+      "label": "Module 96",
+      "x": 8620,
+      "y": 5860,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_apps_admin_portal_src_app_verify_2fa_page_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/page.tsx_10.md",
+      "x": 8640,
+      "y": 5940,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g97",
+      "type": "group",
+      "label": "Module 97",
+      "x": 9800,
+      "y": 5860,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_apps_admin_portal_src_components_layout_sidebar_tsx",
+      "type": "file",
+      "file": "graphify/obsidian/sidebar.tsx.md",
+      "x": 9820,
+      "y": 5940,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g98",
+      "type": "group",
+      "label": "Module 98",
+      "x": 10980,
+      "y": 5860,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_apps_admin_portal_src_store_auth_store_ts",
+      "type": "file",
+      "file": "graphify/obsidian/auth.store.ts.md",
+      "x": 11000,
+      "y": 5940,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g99",
+      "type": "group",
+      "label": "Module 99",
+      "x": 12160,
+      "y": 5860,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_apps_auth_service_src_decorators_current_user_decorator_ts",
+      "type": "file",
+      "file": "graphify/obsidian/current-user.decorator.ts.md",
+      "x": 12180,
+      "y": 5940,
       "width": 180,
       "height": 60
     }
   ],
   "edges": [
     {
-      "id": "e_claudemd_aischool_claudemd_raw_folder",
-      "fromNode": "n_claudemd_aischool",
-      "toNode": "n_claudemd_raw_folder",
-      "label": "references [EXTRACTED]"
+      "id": "e_packages_ui_src_components_spinner_tsx_spinner_spinner",
+      "fromNode": "n_packages_ui_src_components_spinner_tsx",
+      "toNode": "n_spinner_spinner",
+      "label": "contains [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_aischool_claudemd_graphify_out_folder",
-      "fromNode": "n_claudemd_aischool",
-      "toNode": "n_claudemd_graphify_out_folder",
-      "label": "references [EXTRACTED]"
+      "id": "e_packages_ui_src_lib_cn_ts_cn_cn",
+      "fromNode": "n_packages_ui_src_lib_cn_ts",
+      "toNode": "n_cn_cn",
+      "label": "contains [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_aischool_claudemd_obsidian_vault_folder",
-      "fromNode": "n_claudemd_aischool",
-      "toNode": "n_claudemd_obsidian_vault_folder",
-      "label": "references [EXTRACTED]"
+      "id": "e_packages_database_prisma_seed_ts_seed_main",
+      "fromNode": "n_packages_database_prisma_seed_ts",
+      "toNode": "n_seed_main",
+      "label": "contains [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_aischool_claudemd_claude_code",
-      "fromNode": "n_claudemd_aischool",
-      "toNode": "n_claudemd_claude_code",
-      "label": "conceptually_related_to [EXTRACTED]"
+      "id": "e_seed_main_logger_service_loggerservice_log",
+      "fromNode": "n_seed_main",
+      "toNode": "n_logger_service_loggerservice_log",
+      "label": "calls [INFERRED]"
     },
     {
-      "id": "e_claudemd_aischool_claudemd_obsidian",
-      "fromNode": "n_claudemd_aischool",
-      "toNode": "n_claudemd_obsidian",
-      "label": "conceptually_related_to [EXTRACTED]"
+      "id": "e_packages_database_src_prisma_service_ts_prisma_service_prismaservice",
+      "fromNode": "n_packages_database_src_prisma_service_ts",
+      "toNode": "n_prisma_service_prismaservice",
+      "label": "contains [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_aischool_claudemd_graphify_skill",
-      "fromNode": "n_claudemd_aischool",
-      "toNode": "n_claudemd_graphify_skill",
-      "label": "conceptually_related_to [EXTRACTED]"
+      "id": "e_prisma_service_prismaservice_prisma_service_prismaservice_constructor",
+      "fromNode": "n_prisma_service_prismaservice",
+      "toNode": "n_prisma_service_prismaservice_constructor",
+      "label": "method [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_raw_folder_claudemd_graphify_skill",
-      "fromNode": "n_claudemd_raw_folder",
-      "toNode": "n_claudemd_graphify_skill",
-      "label": "shares_data_with [EXTRACTED]"
+      "id": "e_prisma_service_prismaservice_prisma_service_prismaservice_onmoduleinit",
+      "fromNode": "n_prisma_service_prismaservice",
+      "toNode": "n_prisma_service_prismaservice_onmoduleinit",
+      "label": "method [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_graphify_out_folder_claudemd_graphify_skill",
-      "fromNode": "n_claudemd_graphify_out_folder",
-      "toNode": "n_claudemd_graphify_skill",
-      "label": "shares_data_with [EXTRACTED]"
+      "id": "e_prisma_service_prismaservice_prisma_service_prismaservice_onmoduledestroy",
+      "fromNode": "n_prisma_service_prismaservice",
+      "toNode": "n_prisma_service_prismaservice_onmoduledestroy",
+      "label": "method [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_graphify_out_folder_claudemd_graph_json",
-      "fromNode": "n_claudemd_graphify_out_folder",
-      "toNode": "n_claudemd_graph_json",
-      "label": "references [EXTRACTED]"
+      "id": "e_prisma_service_prismaservice_prisma_service_prismaservice_cleandatabase",
+      "fromNode": "n_prisma_service_prismaservice",
+      "toNode": "n_prisma_service_prismaservice_cleandatabase",
+      "label": "method [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_graphify_out_folder_claudemd_graph_report",
-      "fromNode": "n_claudemd_graphify_out_folder",
-      "toNode": "n_claudemd_graph_report",
-      "label": "references [EXTRACTED]"
+      "id": "e_packages_database_src_prisma_module_ts_prisma_module_prismamodule",
+      "fromNode": "n_packages_database_src_prisma_module_ts",
+      "toNode": "n_prisma_module_prismamodule",
+      "label": "contains [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_graphify_out_folder_claudemd_obsidian_vault_folder",
-      "fromNode": "n_claudemd_graphify_out_folder",
-      "toNode": "n_claudemd_obsidian_vault_folder",
-      "label": "references [EXTRACTED]"
+      "id": "e_packages_logger_src_logger_service_ts_logger_service_loggerservice",
+      "fromNode": "n_packages_logger_src_logger_service_ts",
+      "toNode": "n_logger_service_loggerservice",
+      "label": "contains [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_obsidian_vault_folder_claudemd_obsidian",
-      "fromNode": "n_claudemd_obsidian_vault_folder",
-      "toNode": "n_claudemd_obsidian",
-      "label": "conceptually_related_to [EXTRACTED]"
+      "id": "e_logger_service_loggerservice_logger_service_loggerservice_constructor",
+      "fromNode": "n_logger_service_loggerservice",
+      "toNode": "n_logger_service_loggerservice_constructor",
+      "label": "method [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_graphify_skill_claudemd_graphify_skill_md",
-      "fromNode": "n_claudemd_graphify_skill",
-      "toNode": "n_claudemd_graphify_skill_md",
-      "label": "references [EXTRACTED]"
+      "id": "e_logger_service_loggerservice_logger_service_loggerservice_log",
+      "fromNode": "n_logger_service_loggerservice",
+      "toNode": "n_logger_service_loggerservice_log",
+      "label": "method [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_graphify_skill_claudemd_claude_code",
-      "fromNode": "n_claudemd_graphify_skill",
-      "toNode": "n_claudemd_claude_code",
-      "label": "references [EXTRACTED]"
+      "id": "e_logger_service_loggerservice_logger_service_loggerservice_error",
+      "fromNode": "n_logger_service_loggerservice",
+      "toNode": "n_logger_service_loggerservice_error",
+      "label": "method [EXTRACTED]"
     },
     {
-      "id": "e_claudemd_obsidian_claudemd_obsidian_git",
-      "fromNode": "n_claudemd_obsidian",
-      "toNode": "n_claudemd_obsidian_git",
-      "label": "conceptually_related_to [EXTRACTED]"
+      "id": "e_logger_service_loggerservice_logger_service_loggerservice_warn",
+      "fromNode": "n_logger_service_loggerservice",
+      "toNode": "n_logger_service_loggerservice_warn",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_logger_service_loggerservice_logger_service_loggerservice_debug",
+      "fromNode": "n_logger_service_loggerservice",
+      "toNode": "n_logger_service_loggerservice_debug",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_logger_service_loggerservice_logger_service_loggerservice_verbose",
+      "fromNode": "n_logger_service_loggerservice",
+      "toNode": "n_logger_service_loggerservice_verbose",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_logger_service_loggerservice_constructor_logger_createlogger",
+      "fromNode": "n_logger_service_loggerservice_constructor",
+      "toNode": "n_logger_createlogger",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_logger_service_loggerservice_log_notification_processor_notificationprocessor_startworker",
+      "fromNode": "n_logger_service_loggerservice_log",
+      "toNode": "n_notification_processor_notificationprocessor_startworker",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_logger_service_loggerservice_log_main_bootstrap",
+      "fromNode": "n_logger_service_loggerservice_log",
+      "toNode": "n_main_bootstrap",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_logger_service_loggerservice_error_sms_adapter_smsadapter_send",
+      "fromNode": "n_logger_service_loggerservice_error",
+      "toNode": "n_sms_adapter_smsadapter_send",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_logger_service_loggerservice_error_push_adapter_pushadapter_send",
+      "fromNode": "n_logger_service_loggerservice_error",
+      "toNode": "n_push_adapter_pushadapter_send",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_logger_service_loggerservice_error_email_adapter_emailadapter_send",
+      "fromNode": "n_logger_service_loggerservice_error",
+      "toNode": "n_email_adapter_emailadapter_send",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_logger_service_loggerservice_error_whatsapp_adapter_whatsappadapter_send",
+      "fromNode": "n_logger_service_loggerservice_error",
+      "toNode": "n_whatsapp_adapter_whatsappadapter_send",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_packages_logger_src_logger_ts_logger_createlogger",
+      "fromNode": "n_packages_logger_src_logger_ts",
+      "toNode": "n_logger_createlogger",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_config_src_base_config_ts_base_config_validateenv",
+      "fromNode": "n_packages_config_src_base_config_ts",
+      "toNode": "n_base_config_validateenv",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_date_ts_date_formatdate",
+      "fromNode": "n_packages_utils_src_date_ts",
+      "toNode": "n_date_formatdate",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_date_ts_date_formatdatetime",
+      "fromNode": "n_packages_utils_src_date_ts",
+      "toNode": "n_date_formatdatetime",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_date_ts_date_calculateage",
+      "fromNode": "n_packages_utils_src_date_ts",
+      "toNode": "n_date_calculateage",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_date_ts_date_getworkingdayscount",
+      "fromNode": "n_packages_utils_src_date_ts",
+      "toNode": "n_date_getworkingdayscount",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_date_ts_date_getcurrentacademicyear",
+      "fromNode": "n_packages_utils_src_date_ts",
+      "toNode": "n_date_getcurrentacademicyear",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_date_formatdate_date_formatdatetime",
+      "fromNode": "n_date_formatdate",
+      "toNode": "n_date_formatdatetime",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_currency_ts_currency_formatinr",
+      "fromNode": "n_packages_utils_src_currency_ts",
+      "toNode": "n_currency_formatinr",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_currency_ts_currency_paisetorupees",
+      "fromNode": "n_packages_utils_src_currency_ts",
+      "toNode": "n_currency_paisetorupees",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_currency_ts_currency_rupeestopaise",
+      "fromNode": "n_packages_utils_src_currency_ts",
+      "toNode": "n_currency_rupeestopaise",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_currency_ts_currency_calculategst",
+      "fromNode": "n_packages_utils_src_currency_ts",
+      "toNode": "n_currency_calculategst",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_currency_ts_currency_calculatelatefee",
+      "fromNode": "n_packages_utils_src_currency_ts",
+      "toNode": "n_currency_calculatelatefee",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_currency_formatinr_fee_service_feeservice_recordcashpayment",
+      "fromNode": "n_currency_formatinr",
+      "toNode": "n_fee_service_feeservice_recordcashpayment",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_currency_formatinr_fee_service_feeservice_createrazorpayorder",
+      "fromNode": "n_currency_formatinr",
+      "toNode": "n_fee_service_feeservice_createrazorpayorder",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_currency_rupeestopaise_fee_service_feeservice_recordcashpayment",
+      "fromNode": "n_currency_rupeestopaise",
+      "toNode": "n_fee_service_feeservice_recordcashpayment",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_currency_rupeestopaise_fee_service_feeservice_applyconcession",
+      "fromNode": "n_currency_rupeestopaise",
+      "toNode": "n_fee_service_feeservice_applyconcession",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_packages_utils_src_string_ts_string_slugify",
+      "fromNode": "n_packages_utils_src_string_ts",
+      "toNode": "n_string_slugify",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_string_ts_string_capitalizefirst",
+      "fromNode": "n_packages_utils_src_string_ts",
+      "toNode": "n_string_capitalizefirst",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_string_ts_string_titlecase",
+      "fromNode": "n_packages_utils_src_string_ts",
+      "toNode": "n_string_titlecase",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_string_ts_string_truncate",
+      "fromNode": "n_packages_utils_src_string_ts",
+      "toNode": "n_string_truncate",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_string_ts_string_maskemail",
+      "fromNode": "n_packages_utils_src_string_ts",
+      "toNode": "n_string_maskemail",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_string_ts_string_maskphone",
+      "fromNode": "n_packages_utils_src_string_ts",
+      "toNode": "n_string_maskphone",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_string_ts_string_generateadmissionnumber",
+      "fromNode": "n_packages_utils_src_string_ts",
+      "toNode": "n_string_generateadmissionnumber",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_string_ts_string_generatereceiptnumber",
+      "fromNode": "n_packages_utils_src_string_ts",
+      "toNode": "n_string_generatereceiptnumber",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_pagination_ts_pagination_parsepagination",
+      "fromNode": "n_packages_utils_src_pagination_ts",
+      "toNode": "n_pagination_parsepagination",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_pagination_ts_pagination_buildpaginatedresult",
+      "fromNode": "n_packages_utils_src_pagination_ts",
+      "toNode": "n_pagination_buildpaginatedresult",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_pagination_ts_pagination_buildprismaorderby",
+      "fromNode": "n_packages_utils_src_pagination_ts",
+      "toNode": "n_pagination_buildprismaorderby",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_pagination_parsepagination_student_service_studentservice_findall",
+      "fromNode": "n_pagination_parsepagination",
+      "toNode": "n_student_service_studentservice_findall",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_pagination_parsepagination_user_service_userservice_findall",
+      "fromNode": "n_pagination_parsepagination",
+      "toNode": "n_user_service_userservice_findall",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_pagination_buildpaginatedresult_student_service_studentservice_findall",
+      "fromNode": "n_pagination_buildpaginatedresult",
+      "toNode": "n_student_service_studentservice_findall",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_pagination_buildpaginatedresult_user_service_userservice_findall",
+      "fromNode": "n_pagination_buildpaginatedresult",
+      "toNode": "n_user_service_userservice_findall",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_packages_utils_src_crypto_ts_crypto_generateotp",
+      "fromNode": "n_packages_utils_src_crypto_ts",
+      "toNode": "n_crypto_generateotp",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_crypto_ts_crypto_generatesecuretoken",
+      "fromNode": "n_packages_utils_src_crypto_ts",
+      "toNode": "n_crypto_generatesecuretoken",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_crypto_ts_crypto_sha256",
+      "fromNode": "n_packages_utils_src_crypto_ts",
+      "toNode": "n_crypto_sha256",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_utils_src_crypto_ts_crypto_hashotp",
+      "fromNode": "n_packages_utils_src_crypto_ts",
+      "toNode": "n_crypto_hashotp",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_crypto_generatesecuretoken_factories_createtesttenant",
+      "fromNode": "n_crypto_generatesecuretoken",
+      "toNode": "n_factories_createtesttenant",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_crypto_generatesecuretoken_factories_createtestuser",
+      "fromNode": "n_crypto_generatesecuretoken",
+      "toNode": "n_factories_createtestuser",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_crypto_generatesecuretoken_auth_service_authservice_forgotpassword",
+      "fromNode": "n_crypto_generatesecuretoken",
+      "toNode": "n_auth_service_authservice_forgotpassword",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_crypto_sha256_crypto_hashotp",
+      "fromNode": "n_crypto_sha256",
+      "toNode": "n_crypto_hashotp",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_crypto_sha256_user_service_userservice_update",
+      "fromNode": "n_crypto_sha256",
+      "toNode": "n_user_service_userservice_update",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_packages_testing_src_factories_ts_factories_createtesttenant",
+      "fromNode": "n_packages_testing_src_factories_ts",
+      "toNode": "n_factories_createtesttenant",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_testing_src_factories_ts_factories_createtestuser",
+      "fromNode": "n_packages_testing_src_factories_ts",
+      "toNode": "n_factories_createtestuser",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_testing_src_factories_ts_factories_createtestschool",
+      "fromNode": "n_packages_testing_src_factories_ts",
+      "toNode": "n_factories_createtestschool",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_factories_createtesttenant_student_service_studentservice_create",
+      "fromNode": "n_factories_createtesttenant",
+      "toNode": "n_student_service_studentservice_create",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_factories_createtestuser_student_service_studentservice_create",
+      "fromNode": "n_factories_createtestuser",
+      "toNode": "n_student_service_studentservice_create",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_factories_createtestschool_student_service_studentservice_create",
+      "fromNode": "n_factories_createtestschool",
+      "toNode": "n_student_service_studentservice_create",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_packages_testing_src_db_setup_ts_db_setup_gettestprisma",
+      "fromNode": "n_packages_testing_src_db_setup_ts",
+      "toNode": "n_db_setup_gettestprisma",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_testing_src_db_setup_ts_db_setup_cleanuptestdb",
+      "fromNode": "n_packages_testing_src_db_setup_ts",
+      "toNode": "n_db_setup_cleanuptestdb",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_testing_src_db_setup_ts_db_setup_disconnecttestdb",
+      "fromNode": "n_packages_testing_src_db_setup_ts",
+      "toNode": "n_db_setup_disconnecttestdb",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_testing_src_nest_test_utils_ts_nest_test_utils_createtestapp",
+      "fromNode": "n_packages_testing_src_nest_test_utils_ts",
+      "toNode": "n_nest_test_utils_createtestapp",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_testing_src_nest_test_utils_ts_nest_test_utils_mockjwtpayload",
+      "fromNode": "n_packages_testing_src_nest_test_utils_ts",
+      "toNode": "n_nest_test_utils_mockjwtpayload",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_nest_test_utils_createtestapp_push_adapter_pushadapter_init",
+      "fromNode": "n_nest_test_utils_createtestapp",
+      "toNode": "n_push_adapter_pushadapter_init",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_packages_errors_src_domain_errors_ts_domain_errors_notfounderror",
+      "fromNode": "n_packages_errors_src_domain_errors_ts",
+      "toNode": "n_domain_errors_notfounderror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_domain_errors_ts_domain_errors_conflicterror",
+      "fromNode": "n_packages_errors_src_domain_errors_ts",
+      "toNode": "n_domain_errors_conflicterror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_domain_errors_ts_domain_errors_validationerror",
+      "fromNode": "n_packages_errors_src_domain_errors_ts",
+      "toNode": "n_domain_errors_validationerror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_domain_errors_ts_domain_errors_businessruleerror",
+      "fromNode": "n_packages_errors_src_domain_errors_ts",
+      "toNode": "n_domain_errors_businessruleerror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_domain_errors_ts_domain_errors_tenantmismatcherror",
+      "fromNode": "n_packages_errors_src_domain_errors_ts",
+      "toNode": "n_domain_errors_tenantmismatcherror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_domain_errors_notfounderror_domain_errors_notfounderror_constructor",
+      "fromNode": "n_domain_errors_notfounderror",
+      "toNode": "n_domain_errors_notfounderror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_domain_errors_conflicterror_domain_errors_conflicterror_constructor",
+      "fromNode": "n_domain_errors_conflicterror",
+      "toNode": "n_domain_errors_conflicterror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_domain_errors_validationerror_domain_errors_validationerror_constructor",
+      "fromNode": "n_domain_errors_validationerror",
+      "toNode": "n_domain_errors_validationerror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_domain_errors_businessruleerror_domain_errors_businessruleerror_constructor",
+      "fromNode": "n_domain_errors_businessruleerror",
+      "toNode": "n_domain_errors_businessruleerror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_domain_errors_tenantmismatcherror_domain_errors_tenantmismatcherror_constructor",
+      "fromNode": "n_domain_errors_tenantmismatcherror",
+      "toNode": "n_domain_errors_tenantmismatcherror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_http_errors_ts_http_errors_badrequesterror",
+      "fromNode": "n_packages_errors_src_http_errors_ts",
+      "toNode": "n_http_errors_badrequesterror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_http_errors_ts_http_errors_toomanyrequestserror",
+      "fromNode": "n_packages_errors_src_http_errors_ts",
+      "toNode": "n_http_errors_toomanyrequestserror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_http_errors_ts_http_errors_serviceunavailableerror",
+      "fromNode": "n_packages_errors_src_http_errors_ts",
+      "toNode": "n_http_errors_serviceunavailableerror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_http_errors_badrequesterror_http_errors_badrequesterror_constructor",
+      "fromNode": "n_http_errors_badrequesterror",
+      "toNode": "n_http_errors_badrequesterror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_http_errors_toomanyrequestserror_http_errors_toomanyrequestserror_constructor",
+      "fromNode": "n_http_errors_toomanyrequestserror",
+      "toNode": "n_http_errors_toomanyrequestserror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_http_errors_serviceunavailableerror_http_errors_serviceunavailableerror_constructor",
+      "fromNode": "n_http_errors_serviceunavailableerror",
+      "toNode": "n_http_errors_serviceunavailableerror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_auth_errors_ts_auth_errors_unauthorizederror",
+      "fromNode": "n_packages_errors_src_auth_errors_ts",
+      "toNode": "n_auth_errors_unauthorizederror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_auth_errors_ts_auth_errors_forbiddenerror",
+      "fromNode": "n_packages_errors_src_auth_errors_ts",
+      "toNode": "n_auth_errors_forbiddenerror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_auth_errors_ts_auth_errors_invalidcredentialserror",
+      "fromNode": "n_packages_errors_src_auth_errors_ts",
+      "toNode": "n_auth_errors_invalidcredentialserror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_auth_errors_ts_auth_errors_tokenexpirederror",
+      "fromNode": "n_packages_errors_src_auth_errors_ts",
+      "toNode": "n_auth_errors_tokenexpirederror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_auth_errors_ts_auth_errors_invalidtokenerror",
+      "fromNode": "n_packages_errors_src_auth_errors_ts",
+      "toNode": "n_auth_errors_invalidtokenerror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_auth_errors_ts_auth_errors_twofactorrequirederror",
+      "fromNode": "n_packages_errors_src_auth_errors_ts",
+      "toNode": "n_auth_errors_twofactorrequirederror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_auth_errors_ts_auth_errors_invalidotperror",
+      "fromNode": "n_packages_errors_src_auth_errors_ts",
+      "toNode": "n_auth_errors_invalidotperror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_auth_errors_ts_auth_errors_accountdisablederror",
+      "fromNode": "n_packages_errors_src_auth_errors_ts",
+      "toNode": "n_auth_errors_accountdisablederror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_auth_errors_ts_auth_errors_planupgraderequirederror",
+      "fromNode": "n_packages_errors_src_auth_errors_ts",
+      "toNode": "n_auth_errors_planupgraderequirederror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_auth_errors_unauthorizederror_auth_errors_unauthorizederror_constructor",
+      "fromNode": "n_auth_errors_unauthorizederror",
+      "toNode": "n_auth_errors_unauthorizederror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_auth_errors_forbiddenerror_auth_errors_forbiddenerror_constructor",
+      "fromNode": "n_auth_errors_forbiddenerror",
+      "toNode": "n_auth_errors_forbiddenerror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_auth_errors_invalidcredentialserror_auth_errors_invalidcredentialserror_constructor",
+      "fromNode": "n_auth_errors_invalidcredentialserror",
+      "toNode": "n_auth_errors_invalidcredentialserror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_auth_errors_tokenexpirederror_auth_errors_tokenexpirederror_constructor",
+      "fromNode": "n_auth_errors_tokenexpirederror",
+      "toNode": "n_auth_errors_tokenexpirederror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_auth_errors_invalidtokenerror_auth_errors_invalidtokenerror_constructor",
+      "fromNode": "n_auth_errors_invalidtokenerror",
+      "toNode": "n_auth_errors_invalidtokenerror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_auth_errors_twofactorrequirederror_auth_errors_twofactorrequirederror_constructor",
+      "fromNode": "n_auth_errors_twofactorrequirederror",
+      "toNode": "n_auth_errors_twofactorrequirederror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_auth_errors_invalidotperror_auth_errors_invalidotperror_constructor",
+      "fromNode": "n_auth_errors_invalidotperror",
+      "toNode": "n_auth_errors_invalidotperror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_auth_errors_accountdisablederror_auth_errors_accountdisablederror_constructor",
+      "fromNode": "n_auth_errors_accountdisablederror",
+      "toNode": "n_auth_errors_accountdisablederror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_auth_errors_planupgraderequirederror_auth_errors_planupgraderequirederror_constructor",
+      "fromNode": "n_auth_errors_planupgraderequirederror",
+      "toNode": "n_auth_errors_planupgraderequirederror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_packages_errors_src_base_error_ts_base_error_apperror",
+      "fromNode": "n_packages_errors_src_base_error_ts",
+      "toNode": "n_base_error_apperror",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_base_error_apperror_base_error_apperror_constructor",
+      "fromNode": "n_base_error_apperror",
+      "toNode": "n_base_error_apperror_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_base_error_apperror_base_error_apperror_tojson",
+      "fromNode": "n_base_error_apperror",
+      "toNode": "n_base_error_apperror_tojson",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_apps_notification_service_src_main_ts_main_bootstrap",
+      "fromNode": "n_apps_notification_service_src_main_ts",
+      "toNode": "n_main_bootstrap",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_main_bootstrap_apps_attendance_service_src_main_ts",
+      "fromNode": "n_main_bootstrap",
+      "toNode": "n_apps_attendance_service_src_main_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_main_bootstrap_apps_fee_service_src_main_ts",
+      "fromNode": "n_main_bootstrap",
+      "toNode": "n_apps_fee_service_src_main_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_main_bootstrap_apps_student_service_src_main_ts",
+      "fromNode": "n_main_bootstrap",
+      "toNode": "n_apps_student_service_src_main_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_main_bootstrap_apps_user_service_src_main_ts",
+      "fromNode": "n_main_bootstrap",
+      "toNode": "n_apps_user_service_src_main_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_main_bootstrap_apps_auth_service_src_main_ts",
+      "fromNode": "n_main_bootstrap",
+      "toNode": "n_apps_auth_service_src_main_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_main_bootstrap_apps_academic_service_src_main_ts",
+      "fromNode": "n_main_bootstrap",
+      "toNode": "n_apps_academic_service_src_main_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_main_bootstrap_student_service_studentservice_create",
+      "fromNode": "n_main_bootstrap",
+      "toNode": "n_student_service_studentservice_create",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_apps_notification_service_src_app_module_ts_app_module_appmodule",
+      "fromNode": "n_apps_notification_service_src_app_module_ts",
+      "toNode": "n_app_module_appmodule",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_app_module_appmodule_apps_attendance_service_src_app_module_ts",
+      "fromNode": "n_app_module_appmodule",
+      "toNode": "n_apps_attendance_service_src_app_module_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_app_module_appmodule_apps_fee_service_src_app_module_ts",
+      "fromNode": "n_app_module_appmodule",
+      "toNode": "n_apps_fee_service_src_app_module_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_app_module_appmodule_apps_student_service_src_app_module_ts",
+      "fromNode": "n_app_module_appmodule",
+      "toNode": "n_apps_student_service_src_app_module_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_app_module_appmodule_apps_user_service_src_app_module_ts",
+      "fromNode": "n_app_module_appmodule",
+      "toNode": "n_apps_user_service_src_app_module_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_app_module_appmodule_apps_auth_service_src_app_module_ts",
+      "fromNode": "n_app_module_appmodule",
+      "toNode": "n_apps_auth_service_src_app_module_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_app_module_appmodule_apps_academic_service_src_app_module_ts",
+      "fromNode": "n_app_module_appmodule",
+      "toNode": "n_apps_academic_service_src_app_module_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_apps_notification_service_src_notification_notification_controller_ts_notification_controller_notificationcontroller",
+      "fromNode": "n_apps_notification_service_src_notification_notification_controller_ts",
+      "toNode": "n_notification_controller_notificationcontroller",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_controller_notificationcontroller_notification_controller_notificationcontroller_constructor",
+      "fromNode": "n_notification_controller_notificationcontroller",
+      "toNode": "n_notification_controller_notificationcontroller_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_controller_notificationcontroller_notification_controller_notificationcontroller_getmynotifications",
+      "fromNode": "n_notification_controller_notificationcontroller",
+      "toNode": "n_notification_controller_notificationcontroller_getmynotifications",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_controller_notificationcontroller_notification_controller_notificationcontroller_markread",
+      "fromNode": "n_notification_controller_notificationcontroller",
+      "toNode": "n_notification_controller_notificationcontroller_markread",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_controller_notificationcontroller_notification_controller_notificationcontroller_createtemplate",
+      "fromNode": "n_notification_controller_notificationcontroller",
+      "toNode": "n_notification_controller_notificationcontroller_createtemplate",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_controller_notificationcontroller_notification_controller_notificationcontroller_gettemplates",
+      "fromNode": "n_notification_controller_notificationcontroller",
+      "toNode": "n_notification_controller_notificationcontroller_gettemplates",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_controller_notificationcontroller_notification_controller_notificationcontroller_sendemail",
+      "fromNode": "n_notification_controller_notificationcontroller",
+      "toNode": "n_notification_controller_notificationcontroller_sendemail",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_controller_notificationcontroller_notification_controller_notificationcontroller_sendsms",
+      "fromNode": "n_notification_controller_notificationcontroller",
+      "toNode": "n_notification_controller_notificationcontroller_sendsms",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_controller_notificationcontroller_notification_controller_notificationcontroller_health",
+      "fromNode": "n_notification_controller_notificationcontroller",
+      "toNode": "n_notification_controller_notificationcontroller_health",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_controller_notificationcontroller_getmynotifications_notification_service_notificationservice_getnotifications",
+      "fromNode": "n_notification_controller_notificationcontroller_getmynotifications",
+      "toNode": "n_notification_service_notificationservice_getnotifications",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_apps_notification_service_src_notification_notification_service_ts_notification_service_notificationservice",
+      "fromNode": "n_apps_notification_service_src_notification_notification_service_ts",
+      "toNode": "n_notification_service_notificationservice",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_service_notificationservice_notification_service_notificationservice_constructor",
+      "fromNode": "n_notification_service_notificationservice",
+      "toNode": "n_notification_service_notificationservice_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_service_notificationservice_notification_service_notificationservice_sendemail",
+      "fromNode": "n_notification_service_notificationservice",
+      "toNode": "n_notification_service_notificationservice_sendemail",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_service_notificationservice_notification_service_notificationservice_sendsms",
+      "fromNode": "n_notification_service_notificationservice",
+      "toNode": "n_notification_service_notificationservice_sendsms",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_service_notificationservice_notification_service_notificationservice_sendpush",
+      "fromNode": "n_notification_service_notificationservice",
+      "toNode": "n_notification_service_notificationservice_sendpush",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_service_notificationservice_notification_service_notificationservice_createtemplate",
+      "fromNode": "n_notification_service_notificationservice",
+      "toNode": "n_notification_service_notificationservice_createtemplate",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_service_notificationservice_notification_service_notificationservice_gettemplates",
+      "fromNode": "n_notification_service_notificationservice",
+      "toNode": "n_notification_service_notificationservice_gettemplates",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_service_notificationservice_notification_service_notificationservice_getnotifications",
+      "fromNode": "n_notification_service_notificationservice",
+      "toNode": "n_notification_service_notificationservice_getnotifications",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_service_notificationservice_notification_service_notificationservice_markread",
+      "fromNode": "n_notification_service_notificationservice",
+      "toNode": "n_notification_service_notificationservice_markread",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_service_notificationservice_createtemplate_student_service_studentservice_create",
+      "fromNode": "n_notification_service_notificationservice_createtemplate",
+      "toNode": "n_student_service_studentservice_create",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_apps_notification_service_src_notification_notification_module_ts_notification_module_notificationmodule",
+      "fromNode": "n_apps_notification_service_src_notification_notification_module_ts",
+      "toNode": "n_notification_module_notificationmodule",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_module_notificationmodule_notification_module_notificationmodule_constructor",
+      "fromNode": "n_notification_module_notificationmodule",
+      "toNode": "n_notification_module_notificationmodule_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_module_notificationmodule_notification_module_notificationmodule_onmoduleinit",
+      "fromNode": "n_notification_module_notificationmodule",
+      "toNode": "n_notification_module_notificationmodule_onmoduleinit",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_module_notificationmodule_onmoduleinit_notification_processor_notificationprocessor_startworker",
+      "fromNode": "n_notification_module_notificationmodule_onmoduleinit",
+      "toNode": "n_notification_processor_notificationprocessor_startworker",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_apps_notification_service_src_adapters_sms_adapter_ts_sms_adapter_smsadapter",
+      "fromNode": "n_apps_notification_service_src_adapters_sms_adapter_ts",
+      "toNode": "n_sms_adapter_smsadapter",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_sms_adapter_smsadapter_sms_adapter_smsadapter_send",
+      "fromNode": "n_sms_adapter_smsadapter",
+      "toNode": "n_sms_adapter_smsadapter_send",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_apps_notification_service_src_adapters_push_adapter_ts_push_adapter_pushadapter",
+      "fromNode": "n_apps_notification_service_src_adapters_push_adapter_ts",
+      "toNode": "n_push_adapter_pushadapter",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_push_adapter_pushadapter_push_adapter_pushadapter_init",
+      "fromNode": "n_push_adapter_pushadapter",
+      "toNode": "n_push_adapter_pushadapter_init",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_push_adapter_pushadapter_push_adapter_pushadapter_send",
+      "fromNode": "n_push_adapter_pushadapter",
+      "toNode": "n_push_adapter_pushadapter_send",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_push_adapter_pushadapter_init_push_adapter_pushadapter_send",
+      "fromNode": "n_push_adapter_pushadapter_init",
+      "toNode": "n_push_adapter_pushadapter_send",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_apps_notification_service_src_adapters_email_adapter_ts_email_adapter_emailadapter",
+      "fromNode": "n_apps_notification_service_src_adapters_email_adapter_ts",
+      "toNode": "n_email_adapter_emailadapter",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_email_adapter_emailadapter_email_adapter_emailadapter_constructor",
+      "fromNode": "n_email_adapter_emailadapter",
+      "toNode": "n_email_adapter_emailadapter_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_email_adapter_emailadapter_email_adapter_emailadapter_send",
+      "fromNode": "n_email_adapter_emailadapter",
+      "toNode": "n_email_adapter_emailadapter_send",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_apps_notification_service_src_adapters_whatsapp_adapter_ts_whatsapp_adapter_whatsappadapter",
+      "fromNode": "n_apps_notification_service_src_adapters_whatsapp_adapter_ts",
+      "toNode": "n_whatsapp_adapter_whatsappadapter",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_whatsapp_adapter_whatsappadapter_whatsapp_adapter_whatsappadapter_send",
+      "fromNode": "n_whatsapp_adapter_whatsappadapter",
+      "toNode": "n_whatsapp_adapter_whatsappadapter_send",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_apps_notification_service_src_processors_notification_processor_ts_notification_processor_notificationprocessor",
+      "fromNode": "n_apps_notification_service_src_processors_notification_processor_ts",
+      "toNode": "n_notification_processor_notificationprocessor",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_processor_notificationprocessor_notification_processor_notificationprocessor_constructor",
+      "fromNode": "n_notification_processor_notificationprocessor",
+      "toNode": "n_notification_processor_notificationprocessor_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_notification_processor_notificationprocessor_notification_processor_notificationprocessor_startworker",
+      "fromNode": "n_notification_processor_notificationprocessor",
+      "toNode": "n_notification_processor_notificationprocessor_startworker",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_apps_notification_service_src_guards_jwt_strategy_ts_jwt_strategy_jwtstrategy",
+      "fromNode": "n_apps_notification_service_src_guards_jwt_strategy_ts",
+      "toNode": "n_jwt_strategy_jwtstrategy",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_jwt_strategy_jwtstrategy_jwt_strategy_jwtstrategy_constructor",
+      "fromNode": "n_jwt_strategy_jwtstrategy",
+      "toNode": "n_jwt_strategy_jwtstrategy_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_jwt_strategy_jwtstrategy_jwt_strategy_jwtstrategy_validate",
+      "fromNode": "n_jwt_strategy_jwtstrategy",
+      "toNode": "n_jwt_strategy_jwtstrategy_validate",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_jwt_strategy_jwtstrategy_apps_attendance_service_src_guards_jwt_strategy_ts",
+      "fromNode": "n_jwt_strategy_jwtstrategy",
+      "toNode": "n_apps_attendance_service_src_guards_jwt_strategy_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_jwt_strategy_jwtstrategy_apps_fee_service_src_guards_jwt_strategy_ts",
+      "fromNode": "n_jwt_strategy_jwtstrategy",
+      "toNode": "n_apps_fee_service_src_guards_jwt_strategy_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_jwt_strategy_jwtstrategy_apps_student_service_src_guards_jwt_strategy_ts",
+      "fromNode": "n_jwt_strategy_jwtstrategy",
+      "toNode": "n_apps_student_service_src_guards_jwt_strategy_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_jwt_strategy_jwtstrategy_apps_user_service_src_guards_jwt_strategy_ts",
+      "fromNode": "n_jwt_strategy_jwtstrategy",
+      "toNode": "n_apps_user_service_src_guards_jwt_strategy_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_jwt_strategy_jwtstrategy_apps_auth_service_src_strategies_jwt_strategy_ts",
+      "fromNode": "n_jwt_strategy_jwtstrategy",
+      "toNode": "n_apps_auth_service_src_strategies_jwt_strategy_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_jwt_strategy_jwtstrategy_apps_academic_service_src_guards_jwt_strategy_ts",
+      "fromNode": "n_jwt_strategy_jwtstrategy",
+      "toNode": "n_apps_academic_service_src_guards_jwt_strategy_ts",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_apps_attendance_service_src_attendance_attendance_controller_ts_attendance_controller_attendancecontroller",
+      "fromNode": "n_apps_attendance_service_src_attendance_attendance_controller_ts",
+      "toNode": "n_attendance_controller_attendancecontroller",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_controller_attendancecontroller_attendance_controller_attendancecontroller_constructor",
+      "fromNode": "n_attendance_controller_attendancecontroller",
+      "toNode": "n_attendance_controller_attendancecontroller_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_controller_attendancecontroller_attendance_controller_attendancecontroller_createsession",
+      "fromNode": "n_attendance_controller_attendancecontroller",
+      "toNode": "n_attendance_controller_attendancecontroller_createsession",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_controller_attendancecontroller_attendance_controller_attendancecontroller_bulkmark",
+      "fromNode": "n_attendance_controller_attendancecontroller",
+      "toNode": "n_attendance_controller_attendancecontroller_bulkmark",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_controller_attendancecontroller_attendance_controller_attendancecontroller_getrecords",
+      "fromNode": "n_attendance_controller_attendancecontroller",
+      "toNode": "n_attendance_controller_attendancecontroller_getrecords",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_controller_attendancecontroller_attendance_controller_attendancecontroller_studentsummary",
+      "fromNode": "n_attendance_controller_attendancecontroller",
+      "toNode": "n_attendance_controller_attendancecontroller_studentsummary",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_controller_attendancecontroller_attendance_controller_attendancecontroller_classsummary",
+      "fromNode": "n_attendance_controller_attendancecontroller",
+      "toNode": "n_attendance_controller_attendancecontroller_classsummary",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_controller_attendancecontroller_attendance_controller_attendancecontroller_belowthreshold",
+      "fromNode": "n_attendance_controller_attendancecontroller",
+      "toNode": "n_attendance_controller_attendancecontroller_belowthreshold",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_controller_attendancecontroller_attendance_controller_attendancecontroller_health",
+      "fromNode": "n_attendance_controller_attendancecontroller",
+      "toNode": "n_attendance_controller_attendancecontroller_health",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_controller_attendancecontroller_getrecords_attendance_service_attendanceservice_getsessionrecords",
+      "fromNode": "n_attendance_controller_attendancecontroller_getrecords",
+      "toNode": "n_attendance_service_attendanceservice_getsessionrecords",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_attendance_controller_attendancecontroller_studentsummary_attendance_service_attendanceservice_getstudentsummary",
+      "fromNode": "n_attendance_controller_attendancecontroller_studentsummary",
+      "toNode": "n_attendance_service_attendanceservice_getstudentsummary",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_attendance_controller_attendancecontroller_classsummary_attendance_service_attendanceservice_getclasssummary",
+      "fromNode": "n_attendance_controller_attendancecontroller_classsummary",
+      "toNode": "n_attendance_service_attendanceservice_getclasssummary",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_attendance_controller_attendancecontroller_belowthreshold_attendance_service_attendanceservice_getbelowthreshold",
+      "fromNode": "n_attendance_controller_attendancecontroller_belowthreshold",
+      "toNode": "n_attendance_service_attendanceservice_getbelowthreshold",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_apps_attendance_service_src_attendance_attendance_module_ts_attendance_module_attendancemodule",
+      "fromNode": "n_apps_attendance_service_src_attendance_attendance_module_ts",
+      "toNode": "n_attendance_module_attendancemodule",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_apps_attendance_service_src_attendance_attendance_service_ts_attendance_service_attendanceservice",
+      "fromNode": "n_apps_attendance_service_src_attendance_attendance_service_ts",
+      "toNode": "n_attendance_service_attendanceservice",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_service_attendanceservice_attendance_service_attendanceservice_constructor",
+      "fromNode": "n_attendance_service_attendanceservice",
+      "toNode": "n_attendance_service_attendanceservice_constructor",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_service_attendanceservice_attendance_service_attendanceservice_createsession",
+      "fromNode": "n_attendance_service_attendanceservice",
+      "toNode": "n_attendance_service_attendanceservice_createsession",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_service_attendanceservice_attendance_service_attendanceservice_bulkmark",
+      "fromNode": "n_attendance_service_attendanceservice",
+      "toNode": "n_attendance_service_attendanceservice_bulkmark",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_service_attendanceservice_attendance_service_attendanceservice_getsessionrecords",
+      "fromNode": "n_attendance_service_attendanceservice",
+      "toNode": "n_attendance_service_attendanceservice_getsessionrecords",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_service_attendanceservice_attendance_service_attendanceservice_getstudentsummary",
+      "fromNode": "n_attendance_service_attendanceservice",
+      "toNode": "n_attendance_service_attendanceservice_getstudentsummary",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_service_attendanceservice_attendance_service_attendanceservice_getclasssummary",
+      "fromNode": "n_attendance_service_attendanceservice",
+      "toNode": "n_attendance_service_attendanceservice_getclasssummary",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_service_attendanceservice_attendance_service_attendanceservice_getbelowthreshold",
+      "fromNode": "n_attendance_service_attendanceservice",
+      "toNode": "n_attendance_service_attendanceservice_getbelowthreshold",
+      "label": "method [EXTRACTED]"
+    },
+    {
+      "id": "e_attendance_service_attendanceservice_createsession_student_service_studentservice_create",
+      "fromNode": "n_attendance_service_attendanceservice_createsession",
+      "toNode": "n_student_service_studentservice_create",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_attendance_service_attendanceservice_bulkmark_user_service_userservice_update",
+      "fromNode": "n_attendance_service_attendanceservice_bulkmark",
+      "toNode": "n_user_service_userservice_update",
+      "label": "calls [INFERRED]"
     }
   ]
 }
