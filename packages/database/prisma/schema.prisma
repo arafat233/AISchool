@@ -2652,42 +2652,68 @@ model BudgetAllocation {
 }
 
 model ScholarshipScheme {
-  id           String   @id @default(cuid())
-  schoolId     String
-  school       School   @relation(fields: [schoolId], references: [id])
-  name         String
-  type         String   @default("MERIT") // MERIT, NEED_BASED, GOVERNMENT
-  description  String?
-  eligibilityCriteria Json @default("{}")
-  discountType ConcessionType @default(PERCENTAGE)
-  discountValue Decimal @db.Decimal(10, 2)
-  feeHeadIds   String[] // which fee heads it applies to
-  maxBeneficiaries Int?
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                  String   @id @default(cuid())
+  schoolId            String
+  school              School   @relation(fields: [schoolId], references: [id])
+  name                String
+  type                String   @default("MERIT") // MERIT | NEED_BASED | SPORTS | GOVERNMENT | DONOR
+  description         String?
+  eligibilityCriteria Json     @default("{}")
+  discountType        ConcessionType @default(PERCENTAGE)
+  discountValue       Decimal  @db.Decimal(10, 2)
+  feeHeadIds          String[]
+  maxBeneficiaries    Int?
+  donorRef            String?  // corporate partner id for DONOR type
+  govtSchemeCode      String?  // PM e-VIDYA, state scheme code for GOVERNMENT type
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
-  applications ScholarshipApplication[]
+  applications        ScholarshipApplication[]
 
   @@map("scholarship_schemes")
 }
 
 model ScholarshipApplication {
-  id           String            @id @default(cuid())
-  schemeId     String
-  scheme       ScholarshipScheme @relation(fields: [schemeId], references: [id])
-  studentId    String
-  student      Student           @relation(fields: [studentId], references: [id])
-  academicYearId String?
-  documents    Json              @default("[]")
-  status       String            @default("PENDING") // PENDING, APPROVED, REJECTED
-  reviewedBy   String?
-  reviewedAt   DateTime?
-  remarks      String?
-  createdAt    DateTime          @default(now())
+  id               String            @id @default(cuid())
+  schemeId         String
+  scheme           ScholarshipScheme @relation(fields: [schemeId], references: [id])
+  studentId        String
+  student          Student           @relation(fields: [studentId], references: [id])
+  academicYearId   String?
+  documents        Json              @default("[]")
+  eligibilityScore Decimal?          @db.Decimal(5, 2) // auto-computed eligibility score
+  isEligible       Boolean?          // auto-check result
+  status           String            @default("PENDING") // PENDING | UNDER_REVIEW | APPROVED | REJECTED | WAITLISTED
+  finalApprovedBy  String?
+  finalApprovedAt  DateTime?
+  feeInvoiceApplied Boolean          @default(false)
+  remarks          String?
+  // Government scholarship tracking
+  govtPortalRefNo  String?
+  govtDisbursementRs Decimal?        @db.Decimal(12, 2)
+  govtDisbursedAt  DateTime?
+  createdAt        DateTime          @default(now())
+
+  reviews          ScholarshipReview[]
 
   @@unique([schemeId, studentId, academicYearId])
   @@map("scholarship_applications")
+}
+
+model ScholarshipReview {
+  id            String                 @id @default(cuid())
+  applicationId String
+  application   ScholarshipApplication @relation(fields: [applicationId], references: [id])
+  reviewerId    String                 // staffId
+  rubricScores  Json                   @default("{}") // {criterion: score}
+  totalScore    Decimal?               @db.Decimal(5, 2)
+  recommendation String?               // APPROVE | REJECT | WAITLIST
+  notes         String?
+  reviewedAt    DateTime               @default(now())
+
+  @@unique([applicationId, reviewerId])
+  @@map("scholarship_reviews")
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
