@@ -2689,6 +2689,8 @@ model PortfolioItem {
   academicYear String?
   endorsedBy   String?  // staff id
   endorsement  String?
+  awardedAt    DateTime?
+  linkedEventId String? // links to SchoolEvent.id
   createdAt    DateTime @default(now())
 
   @@map("portfolio_items")
@@ -3856,6 +3858,8 @@ model DramaCasting {
   studentId  String
   role       String
   isLead     Boolean               @default(false)
+
+  @@unique([configId, studentId, role])
 }
 
 model DramaRehearsal {
@@ -4093,6 +4097,7 @@ model CouncilRole {
   role         String
   appointedAt  DateTime               @default(now())
 
+  @@unique([electionId, studentId, role])
   @@map("council_roles")
 }
 

@@ -16,15 +16,15 @@
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 82 | 100% |
 | Phase 2 — Core Academic | 130 | 130 | 100% |
-| Phase 3 — Operations | 172 | 55 | 32% |
+| Phase 3 — Operations | 172 | 65 | 38% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **267** | **40.6%** |
+| **TOTAL** | **657** | **277** | **42.2%** |
 
-**Last updated:** 2026-04-17
-**Last git commit:** Phase 3.5 — Library Service complete (267/657 tasks)
-**Current focus:** Phase 3 → 3.6 Event & Activity Service
+**Last updated:** 2026-04-18
+**Last git commit:** Phase 3.6 — Event & Activity Service complete (277/657 tasks)
+**Current focus:** Phase 3 → 3.7 Expense & Budget Service
 
 ---
 
@@ -419,17 +419,17 @@
 - [x] **Reading program** (school sets annual reading target; student logs books read; teacher validates; reading leaderboard opt-in; certificate on target completion; auto-linked to library issue/return)
 - [x] Library Service Dockerfile
 
-### 3.6 Event & Activity Service (10 tasks)
-- [ ] Event CRUD (Sports Day, Annual Day, Field Trip, PTM, Workshop, Competition — with budget)
-- [ ] Participant registration (students + staff + parents; consent form for trips with document upload)
-- [ ] **Sports Day management** — track & field events master, heat/semifinal/final brackets, House points table, medal tally, timing/distance entry, champion house declaration
-- [ ] **Drama / Production management** — audition scheduling, casting decisions, rehearsal schedule, costume/prop inventory, ticket sales (online booking from Parent Portal), show-night QR check-in, cast/crew certificates
-- [ ] **Debate, Quiz & Academic Competition** — competition types, participant registration (individual/team), round bracket management (prelim → semi → final), judges panel + scoring rubric, result declaration
-- [ ] Club management (enrollment + admin approval, faculty advisor, meeting schedule, club session attendance, achievement tracking)
-- [ ] **NCC / NSS / Scouts & Guides** — unit registration, member enrollment, rank progression, camp participation, hours/activities tracking, certificate exam eligibility (NCC A/B/C; NSS 240hrs; Scout badge progression)
-- [ ] **Student Council / School Parliament** — online election (nomination, voting, results), council roles (President, VP, House Captains), meeting minutes, council budget, proposal approval workflow
-- [ ] **House / Team system** — house master (custom names/colours/motto), student house assignment, points award (sports/academics/discipline/culture), real-time leaderboard, inter-house competition linkage
-- [ ] Post-event photo gallery publishing + achievement auto-linked to student portfolio
+### 3.6 Event & Activity Service (10 tasks) ✅
+- [x] Event CRUD (Sports Day, Annual Day, Field Trip, PTM, Workshop, Competition — with budget)
+- [x] Participant registration (students + staff + parents; consent form for trips with document upload)
+- [x] **Sports Day management** — track & field events master, heat/semifinal/final brackets, House points table, medal tally, timing/distance entry, champion house declaration
+- [x] **Drama / Production management** — audition scheduling, casting decisions, rehearsal schedule, costume/prop inventory, ticket sales (online booking from Parent Portal), show-night QR check-in, cast/crew certificates
+- [x] **Debate, Quiz & Academic Competition** — competition types, participant registration (individual/team), round bracket management (prelim → semi → final), judges panel + scoring rubric, result declaration
+- [x] Club management (enrollment + admin approval, faculty advisor, meeting schedule, club session attendance, achievement tracking)
+- [x] **NCC / NSS / Scouts & Guides** — unit registration, member enrollment, rank progression, camp participation, hours/activities tracking, certificate exam eligibility (NCC A/B/C; NSS 240hrs; Scout badge progression)
+- [x] **Student Council / School Parliament** — online election (nomination, voting, results), council roles (President, VP, House Captains), meeting minutes, council budget, proposal approval workflow
+- [x] **House / Team system** — house master (custom names/colours/motto), student house assignment, points award (sports/academics/discipline/culture), real-time leaderboard, inter-house competition linkage
+- [x] Post-event photo gallery publishing + achievement auto-linked to student portfolio
 
 ### 3.7 Expense & Budget Service (12 tasks)
 - [ ] Annual budget setup (department-wise, line items, Company Portal approval, version control)
