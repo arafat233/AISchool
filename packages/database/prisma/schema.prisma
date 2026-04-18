@@ -236,9 +236,12 @@ enum BookStatus {
 enum PurchaseOrderStatus {
   DRAFT
   SUBMITTED
-  APPROVED
+  HOD_APPROVED
+  ADMIN_APPROVED
   ORDERED
   RECEIVED
+  INVOICED
+  PAID
   CANCELLED
 }
 
@@ -2584,37 +2587,50 @@ model Vendor {
   tdsApplicable Boolean @default(false)
   tdsSection  String?  // "194C", "194J"
   tdsRate     Decimal  @db.Decimal(5, 2) @default(0)
+  performanceRating Decimal? @db.Decimal(3, 1)  // 0.0 – 5.0
+  isBlacklisted Boolean @default(false)
+  blacklistReason String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   purchaseOrders PurchaseOrder[]
+  invoices       VendorInvoice[]
 
   @@map("vendors")
 }
 
 model PurchaseOrder {
-  id           String              @id @default(cuid())
-  schoolId     String
-  vendorId     String
-  vendor       Vendor              @relation(fields: [vendorId], references: [id])
-  poNo         String              @unique
-  description  String
-  amount       Decimal             @db.Decimal(12, 2)
-  currency     String              @default("INR")
-  requiredBy   DateTime?
-  status       PurchaseOrderStatus @default(DRAFT)
-  approvedBy   String?
-  approvedAt   DateTime?
-  receivedAt   DateTime?
-  invoiceNo    String?
-  paymentDate  DateTime?
-  paymentMode  PaymentMode?
-  tdsDeducted  Decimal             @db.Decimal(10, 2) @default(0)
-  netPayment   Decimal?            @db.Decimal(12, 2)
-  createdBy    String
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime            @updatedAt
+  id              String              @id @default(cuid())
+  schoolId        String
+  vendorId        String
+  vendor          Vendor              @relation(fields: [vendorId], references: [id])
+  lineItemId      String?
+  lineItem        BudgetLineItem?     @relation(fields: [lineItemId], references: [id])
+  poNo            String              @unique
+  description     String
+  amount          Decimal             @db.Decimal(12, 2)
+  currency        String              @default("INR")
+  requiredBy      DateTime?
+  status          PurchaseOrderStatus @default(DRAFT)
+  hodApprovedBy   String?
+  hodApprovedAt   DateTime?
+  adminApprovedBy String?
+  adminApprovedAt DateTime?
+  goodsReceivedBy String?
+  goodsReceivedAt DateTime?
+  invoiceNo       String?
+  invoiceUrl      String?
+  invoiceMatchStatus String?          // MATCHED | MISMATCH | PENDING
+  paymentDate     DateTime?
+  paymentMode     PaymentMode?
+  tdsDeducted     Decimal             @db.Decimal(10, 2) @default(0)
+  netPayment      Decimal?            @db.Decimal(12, 2)
+  createdBy       String
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  tdsChallans     TdsChallan[]
 
   @@map("purchase_orders")
 }
@@ -4127,4 +4143,280 @@ model EventPhoto {
   createdAt DateTime    @default(now())
 
   @@map("event_photos")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PHASE 3.7 — EXPENSE & BUDGET
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── Budget with version control ──────────────────────────────────────────
+
+model Budget {
+  id           String   @id @default(cuid())
+  schoolId     String
+  academicYear String
+  version      Int      @default(1)
+  status       String   @default("DRAFT")  // DRAFT | PENDING_APPROVAL | APPROVED | REJECTED
+  approvedBy   String?
+  approvedAt   DateTime?
+  rejectedBy   String?
+  rejectionReason String?
+  totalAmt     Decimal  @db.Decimal(14, 2) @default(0)
+  createdBy    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  lineItems    BudgetLineItem[]
+
+  @@unique([schoolId, academicYear, version])
+  @@map("budgets")
+}
+
+model BudgetLineItem {
+  id           String   @id @default(cuid())
+  budgetId     String
+  budget       Budget   @relation(fields: [budgetId], references: [id])
+  department   String
+  category     String
+  description  String?
+  allocatedAmt Decimal  @db.Decimal(12, 2)
+  spentAmt     Decimal  @db.Decimal(12, 2) @default(0)
+  createdAt    DateTime @default(now())
+
+  expenses      Expense[]
+  purchaseOrders PurchaseOrder[]
+
+  @@map("budget_line_items")
+}
+
+// ─── Expense entry ─────────────────────────────────────────────────────────
+
+model Expense {
+  id           String   @id @default(cuid())
+  schoolId     String
+  lineItemId   String?
+  lineItem     BudgetLineItem? @relation(fields: [lineItemId], references: [id])
+  type         String   // PETTY_CASH | VENDOR_PAYMENT | UTILITY | SALARY | OTHER
+  description  String
+  amountRs     Decimal  @db.Decimal(12, 2)
+  gstAmountRs  Decimal? @db.Decimal(10, 2)
+  totalRs      Decimal  @db.Decimal(12, 2)
+  vendorId     String?
+  poId         String?
+  paymentMode  String?
+  paymentDate  DateTime
+  receiptUrl   String?
+  recordedBy   String
+  createdAt    DateTime @default(now())
+
+  gstEntry     GstEntry?
+
+  @@map("expenses")
+}
+
+// ─── GST ITC tracking ──────────────────────────────────────────────────────
+
+model GstEntry {
+  id           String   @id @default(cuid())
+  schoolId     String
+  expenseId    String?  @unique
+  expense      Expense? @relation(fields: [expenseId], references: [id])
+  invoiceNo    String
+  invoiceDate  DateTime
+  vendorGstin  String
+  hsnSac       String?
+  taxableAmt   Decimal  @db.Decimal(12, 2)
+  cgst         Decimal  @db.Decimal(10, 2) @default(0)
+  sgst         Decimal  @db.Decimal(10, 2) @default(0)
+  igst         Decimal  @db.Decimal(10, 2) @default(0)
+  totalGst     Decimal  @db.Decimal(10, 2)
+  itcEligible  Boolean  @default(true)
+  itcClaimed   Boolean  @default(false)
+  period       String   // "YYYY-MM"
+  createdAt    DateTime @default(now())
+
+  @@map("gst_entries")
+}
+
+// ─── TDS ───────────────────────────────────────────────────────────────────
+
+model TdsChallan {
+  id             String         @id @default(cuid())
+  schoolId       String
+  poId           String?
+  po             PurchaseOrder? @relation(fields: [poId], references: [id])
+  vendorId       String
+  section        String         // 194C | 194J
+  baseAmtRs      Decimal        @db.Decimal(12, 2)
+  tdsRatePercent Decimal        @db.Decimal(5, 2)
+  tdsAmtRs       Decimal        @db.Decimal(10, 2)
+  challanNo      String?
+  depositedAt    DateTime?
+  quarter        String         // Q1 | Q2 | Q3 | Q4
+  financialYear  String         // "2024-25"
+  form16aUrl     String?
+  createdAt      DateTime       @default(now())
+
+  @@map("tds_challans")
+}
+
+// ─── Bank reconciliation ───────────────────────────────────────────────────
+
+model BankStatement {
+  id           String   @id @default(cuid())
+  schoolId     String
+  accountNo    String
+  bankName     String?
+  period       String   // "YYYY-MM"
+  openingBal   Decimal  @db.Decimal(14, 2)
+  closingBal   Decimal  @db.Decimal(14, 2)
+  importedAt   DateTime @default(now())
+  status       String   @default("PENDING") // PENDING | RECONCILED
+
+  transactions BankTxn[]
+  recons       BankRecon[]
+
+  @@map("bank_statements")
+}
+
+model BankTxn {
+  id            String        @id @default(cuid())
+  statementId   String
+  statement     BankStatement @relation(fields: [statementId], references: [id])
+  txnDate       DateTime
+  narration     String
+  amountRs      Decimal       @db.Decimal(12, 2)
+  txnType       String        // DEBIT | CREDIT
+  matchedType   String?       // FEE_PAYMENT | EXPENSE | SALARY | UNMATCHED
+  matchedRefId  String?
+  isMatched     Boolean       @default(false)
+  reconciledAt  DateTime?
+  createdAt     DateTime      @default(now())
+
+  @@map("bank_txns")
+}
+
+model BankRecon {
+  id             String        @id @default(cuid())
+  schoolId       String
+  statementId    String
+  statement      BankStatement @relation(fields: [statementId], references: [id])
+  signedOffBy    String
+  signedOffAt    DateTime
+  matchedCount   Int           @default(0)
+  unmatchedCount Int           @default(0)
+  reportUrl      String?
+  createdAt      DateTime      @default(now())
+
+  @@map("bank_recons")
+}
+
+// ─── Cash denomination register ───────────────────────────────────────────
+
+model CashRegister {
+  id               String   @id @default(cuid())
+  schoolId         String
+  shiftDate        DateTime
+  cashierId        String
+  openingBalRs     Decimal  @db.Decimal(12, 2)
+  openingDenoms    Json     // [{denomination:2000, count:5}]
+  closingBalRs     Decimal? @db.Decimal(12, 2)
+  closingDenoms    Json?
+  bankDepositRs    Decimal? @db.Decimal(12, 2)
+  depositSlipUrl   String?
+  handedOverTo     String?
+  handoverSignedAt DateTime?
+  status           String   @default("OPEN") // OPEN | CLOSED
+  createdAt        DateTime @default(now())
+
+  transactions     CashTxn[]
+
+  @@map("cash_registers")
+}
+
+model CashTxn {
+  id           String       @id @default(cuid())
+  registerId   String
+  register     CashRegister @relation(fields: [registerId], references: [id])
+  txnType      String       // RECEIPT | PAYMENT
+  amountRs     Decimal      @db.Decimal(10, 2)
+  description  String
+  denominations Json?
+  recordedAt   DateTime     @default(now())
+
+  @@map("cash_txns")
+}
+
+// ─── Revenue recognition ──────────────────────────────────────────────────
+
+model RevenueEntry {
+  id              String   @id @default(cuid())
+  schoolId        String
+  studentId       String?
+  description     String
+  amountRs        Decimal  @db.Decimal(12, 2)
+  revenueType     String   // FEE | GRANT | DONATION | OTHER
+  recognitionDate DateTime
+  isDeferred      Boolean  @default(false)
+  deferralEndDate DateTime?
+  academicYear    String
+  period          String   // "YYYY-MM"
+  createdAt       DateTime @default(now())
+
+  @@map("revenue_entries")
+}
+
+model MonthEndClose {
+  id            String   @id @default(cuid())
+  schoolId      String
+  period        String   // "YYYY-MM"
+  closedBy      String
+  closedAt      DateTime
+  totalRevenue  Decimal  @db.Decimal(14, 2)
+  totalExpense  Decimal  @db.Decimal(14, 2)
+  netPL         Decimal  @db.Decimal(14, 2)
+  notes         String?
+  reportUrl     String?
+
+  @@unique([schoolId, period])
+  @@map("month_end_closes")
+}
+
+// ─── Vendor self-service portal ────────────────────────────────────────────
+
+model VendorInvoice {
+  id             String   @id @default(cuid())
+  vendorId       String
+  vendor         Vendor   @relation(fields: [vendorId], references: [id])
+  poId           String?
+  invoiceNo      String
+  invoiceDate    DateTime
+  amountRs       Decimal  @db.Decimal(12, 2)
+  gstAmountRs    Decimal? @db.Decimal(10, 2)
+  invoiceUrl     String?
+  status         String   @default("SUBMITTED") // SUBMITTED | APPROVED | PAID | DISPUTED
+  approvedBy     String?
+  approvedAt     DateTime?
+  paidAt         DateTime?
+  paymentRef     String?
+  complianceDocs Json     @default("[]")
+  createdAt      DateTime @default(now())
+
+  disputes       VendorDispute[]
+
+  @@map("vendor_invoices")
+}
+
+model VendorDispute {
+  id          String        @id @default(cuid())
+  invoiceId   String
+  invoice     VendorInvoice @relation(fields: [invoiceId], references: [id])
+  reason      String
+  attachmentUrl String?
+  status      String        @default("OPEN") // OPEN | RESOLVED
+  resolvedBy  String?
+  resolvedAt  DateTime?
+  createdAt   DateTime      @default(now())
+
+  @@map("vendor_disputes")
 }
