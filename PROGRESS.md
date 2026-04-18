@@ -16,11 +16,11 @@
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 82 | 100% |
 | Phase 2 — Core Academic | 130 | 130 | 100% |
-| Phase 3 — Operations | 172 | 85 | 49% |
+| Phase 3 — Operations | 172 | 113 | 66% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **297** | **45.2%** |
+| **TOTAL** | **657** | **325** | **49.5%** |
 
 **Last updated:** 2026-04-18
 **Last git commit:** Phase 3.8 — Scholarship Service complete (297/657 tasks)
@@ -473,23 +473,23 @@
 - [x] **Bulk voice call / robo-call system** (pre-recorded or TTS outbound calls; delivery status: answered/not; retry if unanswered; multi-language audio templates)
 - [x] **Digital signage / school TV** (content management: announcements, timetable changes, birthday wishes, event countdowns; schedule per screen; emergency override to all screens)
 
-### 3.11 Facility Management (8 tasks)
-- [ ] Maintenance request submission (location, issue type, photo; auto-assign by category)
-- [ ] SLA tracking per category (electrical 4hr, plumbing 2hr, general 24hr; breach alert)
-- [ ] Preventive maintenance schedule (AC quarterly, generator annual, lift 6-monthly — auto-task creation)
-- [ ] **Pest control & housekeeping** — contractor schedule, compliance certificates, housekeeping duty roster, daily area inspection scorecard, below-threshold escalation
-- [ ] **Utility & energy management** — monthly electricity/water/internet bill entry, consumption trend, energy efficiency KPI (per student), solar panel tracking, utility budget vs actual
-- [ ] **Waste management** — segregation log (dry/wet/hazardous/e-waste), disposal contractor records, recycling tracking, sustainability KPIs
-- [ ] **Water quality management** — RO/purifier maintenance schedule, filter replacement, monthly lab testing results upload, compliance status
-- [ ] **Swimming pool management** (daily water quality log: pH, chlorine, turbidity; chemical dosing; lifeguard roster; student swimming levels; safety equipment inventory; accident log)
+### 3.11 Facility Management (8 tasks) ✅
+- [x] Maintenance request submission (location, issue type, photo; auto-assign by category)
+- [x] SLA tracking per category (electrical 4hr, plumbing 2hr, general 24hr; breach alert)
+- [x] Preventive maintenance schedule (AC quarterly, generator annual, lift 6-monthly — auto-task creation)
+- [x] **Pest control & housekeeping** — contractor schedule, compliance certificates, housekeeping duty roster, daily area inspection scorecard, below-threshold escalation
+- [x] **Utility & energy management** — monthly electricity/water/internet bill entry, consumption trend, energy efficiency KPI (per student), solar panel tracking, utility budget vs actual
+- [x] **Waste management** — segregation log (dry/wet/hazardous/e-waste), disposal contractor records, recycling tracking, sustainability KPIs
+- [x] **Water quality management** — RO/purifier maintenance schedule, filter replacement, monthly lab testing results upload, compliance status
+- [x] **Swimming pool management** (daily water quality log: pH, chlorine, turbidity; chemical dosing; lifeguard roster; student swimming levels; safety equipment inventory; accident log)
 
-### 3.12 Asset Management (6 tasks)
-- [ ] Fixed asset register (capital items: furniture, equipment, computers, vehicles, buildings — QR tag, purchase date, cost, location, condition)
-- [ ] Asset depreciation calculation (SLM or WDV method, current value tracking)
-- [ ] Asset allocation (which room/department holds each asset)
-- [ ] Asset maintenance log (service date, service provider, cost, next service due)
-- [ ] **School property insurance** (policy details, sum insured, premium, renewal alert 60 days before, claim management: incident → assessment → filing → settlement)
-- [ ] Annual asset verification report (system count vs physical count, discrepancy flag)
+### 3.12 Asset Management (6 tasks) ✅
+- [x] Fixed asset register (capital items: furniture, equipment, computers, vehicles, buildings — QR tag, purchase date, cost, location, condition)
+- [x] Asset depreciation calculation (SLM or WDV method, current value tracking)
+- [x] Asset allocation (which room/department holds each asset)
+- [x] Asset maintenance log (service date, service provider, cost, next service due)
+- [x] **School property insurance** (policy details, sum insured, premium, renewal alert 60 days before, claim management: incident → assessment → filing → settlement)
+- [x] Annual asset verification report (system count vs physical count, discrepancy flag)
 
 ### 3.13 Report & Analytics Service (10 tasks)
 - [ ] NestJS app scaffold (`apps/report-service/`)
