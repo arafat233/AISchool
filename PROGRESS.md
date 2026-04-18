@@ -455,23 +455,23 @@
 - [x] Donor-funded scholarship (link to Corporate Partnership module, fund utilisation report to donor)
 - [x] Scholarship analytics (who received, amount, fund source, utilisation by academic year)
 
-### 3.9 Alumni Service (6 tasks)
-- [ ] Alumni registration (graduating students auto-invited on TC issuance)
-- [ ] Alumni directory (searchable: batch year, city, employer, industry — opt-in visibility)
-- [ ] Job board (alumni posts job; school-moderated; current students / alumni apply)
-- [ ] Placement tracking (employer, industry, salary range anonymous — for school analytics)
-- [ ] Mentor-mentee linking (alumnus volunteers as mentor; student requests mentoring session)
-- [ ] Donation / fundraising management (campaign, donation recording, receipt generation, impact report to donor)
+### 3.9 Alumni Service (6 tasks) ✅
+- [x] Alumni registration (graduating students auto-invited on TC issuance)
+- [x] Alumni directory (searchable: batch year, city, employer, industry — opt-in visibility)
+- [x] Job board (alumni posts job; school-moderated; current students / alumni apply)
+- [x] Placement tracking (employer, industry, salary range anonymous — for school analytics)
+- [x] Mentor-mentee linking (alumnus volunteers as mentor; student requests mentoring session)
+- [x] Donation / fundraising management (campaign, donation recording, receipt generation, impact report to donor)
 
-### 3.10 Community & Engagement (8 tasks)
-- [ ] **Parent-Teacher Association (PTA) / SMC management** — committee member register (elected/nominated, tenure), meeting agenda + minutes + action items, PTA fund ledger (separate from school fees), resolution publishing to Parent Portal, online voting for PTA decisions, SMC composition compliance report (government schools)
-- [ ] **Parent volunteer management** — registration of interest (skills: teaching, driving, events), opportunity posting, application + approval, volunteer hours tracking, certificate for top volunteers, background check status
-- [ ] **Community service tracking** (student hours, NGO partner list, organisation contact, service certificate on target completion, hours on portfolio)
-- [ ] **Corporate Partnership & CSR management** — partner master (company, contact, CSR budget, focus areas), MOU tracking, activity-CSR linkage, fund utilisation report auto-generation, impact metrics from ERP data, thank-you letter + impact report
-- [ ] **Lost and found management** (found item log, photo, school-wide push announcement, claimant record, unclaimed disposal after 30 days)
-- [ ] **School store / bookshop** — product catalogue (uniforms by size, stationery, textbooks, school merchandise), inventory + reorder alerts, online purchase from Parent Portal, POS with student QR scan, tailor integration (custom uniform orders + measurements), seasonal stock planning
-- [ ] **Bulk voice call / robo-call system** (pre-recorded or TTS outbound calls; delivery status: answered/not; retry if unanswered; multi-language audio templates)
-- [ ] **Digital signage / school TV** (content management: announcements, timetable changes, birthday wishes, event countdowns; schedule per screen; emergency override to all screens)
+### 3.10 Community & Engagement (8 tasks) ✅
+- [x] **Parent-Teacher Association (PTA) / SMC management** — committee member register (elected/nominated, tenure), meeting agenda + minutes + action items, PTA fund ledger (separate from school fees), resolution publishing to Parent Portal, online voting for PTA decisions, SMC composition compliance report (government schools)
+- [x] **Parent volunteer management** — registration of interest (skills: teaching, driving, events), opportunity posting, application + approval, volunteer hours tracking, certificate for top volunteers, background check status
+- [x] **Community service tracking** (student hours, NGO partner list, organisation contact, service certificate on target completion, hours on portfolio)
+- [x] **Corporate Partnership & CSR management** — partner master (company, contact, CSR budget, focus areas), MOU tracking, activity-CSR linkage, fund utilisation report auto-generation, impact metrics from ERP data, thank-you letter + impact report
+- [x] **Lost and found management** (found item log, photo, school-wide push announcement, claimant record, unclaimed disposal after 30 days)
+- [x] **School store / bookshop** — product catalogue (uniforms by size, stationery, textbooks, school merchandise), inventory + reorder alerts, online purchase from Parent Portal, POS with student QR scan, tailor integration (custom uniform orders + measurements), seasonal stock planning
+- [x] **Bulk voice call / robo-call system** (pre-recorded or TTS outbound calls; delivery status: answered/not; retry if unanswered; multi-language audio templates)
+- [x] **Digital signage / school TV** (content management: announcements, timetable changes, birthday wishes, event countdowns; schedule per screen; emergency override to all screens)
 
 ### 3.11 Facility Management (8 tasks)
 - [ ] Maintenance request submission (location, issue type, photo; auto-assign by category)

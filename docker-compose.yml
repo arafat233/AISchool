@@ -381,6 +381,24 @@ services:
       migrate:
         condition: service_completed_successfully
 
+  ops-service:
+    build:
+      context: .
+      dockerfile: apps/ops-service/Dockerfile
+    container_name: erp_ops
+    <<: *service-defaults
+    ports:
+      - "3020:3020"
+    environment:
+      PORT: 3020
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      OPS_SERVICE_PORT: 3020
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
   scholarship-service:
     build:
       context: .
