@@ -4,17 +4,17 @@
   "checklistPath": "/Users/Najeeb-CapOne/Desktop/AISchool/PROGRESS.md",
   "lastUpdated": "2026-04-18",
   "lastCommit": "pending",
-  "lastCommitMessage": "Phase 3.7 — Expense & Budget Service complete (289/657 tasks)",
+  "lastCommitMessage": "Phase 3.8 — Scholarship Service complete (297/657 tasks)",
   "totalTasks": 657,
-  "completedTasks": 289,
-  "percentComplete": 44.0,
+  "completedTasks": 297,
+  "percentComplete": 45.2,
   "currentPhase": "3",
-  "currentModule": "3.8",
-  "currentTask": "Scholarship Service — Scholarship scheme CRUD",
+  "currentModule": "3.9",
+  "currentTask": "Alumni Service — Alumni registration",
   "phases": {
     "1": { "name": "Foundation", "total": 82, "completed": 82, "percent": 100, "status": "complete" },
     "2": { "name": "Core Academic", "total": 130, "completed": 130, "percent": 100, "status": "complete" },
-    "3": { "name": "Operations", "total": 172, "completed": 77, "percent": 45, "status": "in_progress" },
+    "3": { "name": "Operations", "total": 172, "completed": 85, "percent": 49, "status": "in_progress" },
     "4": { "name": "Intelligence & Mobile", "total": 88, "completed": 0, "percent": 0, "status": "not_started" },
     "5": { "name": "Platform & DevOps", "total": 72, "completed": 0, "percent": 0, "status": "not_started" },
     "6": { "name": "Niche, Compliance & Community", "total": 113, "completed": 0, "percent": 0, "status": "not_started" }
@@ -22,10 +22,10 @@
   "completedModules": [
     "1.1","1.2","1.3","1.4","1.5","1.6","1.7","1.8","1.9","1.10","1.11","1.12","1.13",
     "2.1","2.2","2.3","2.4","2.5","2.6","2.7","2.8","2.9","2.10","2.11","2.12","2.13","2.14",
-    "3.1","3.2","3.3","3.4","3.5","3.6","3.7"
+    "3.1","3.2","3.3","3.4","3.5","3.6","3.7","3.8"
   ],
   "partialModules": [],
-  "pendingModules": ["3.8","3.9","3.10","3.11","3.12","3.13","3.14","3.15","4.x","5.x","6.x"],
+  "pendingModules": ["3.9","3.10","3.11","3.12","3.13","3.14","3.15","4.x","5.x","6.x"],
   "services": {
     "auth-service":        { "port": 3001, "status": "complete" },
     "user-service":        { "port": 3002, "status": "complete" },
@@ -44,7 +44,8 @@
     "health-service":      { "port": 3015, "status": "complete" },
     "library-service":     { "port": 3016, "status": "complete" },
     "event-service":       { "port": 3017, "status": "complete" },
-    "expense-service":     { "port": 3018, "status": "complete" }
+    "expense-service":     { "port": 3018, "status": "complete" },
+    "scholarship-service": { "port": 3019, "status": "complete" }
   },
   "sessionLog": [
     { "date": "2026-04-16", "session": 1, "tasksCompleted": 0, "notes": "Initial checklist + project setup" },
@@ -56,8 +57,9 @@
     { "date": "2026-04-17", "session": 7, "tasksCompleted": 15, "notes": "Phase 2.5: HR Service" },
     { "date": "2026-04-17", "session": 8, "tasksCompleted": 15, "notes": "Phase 2.6: Payroll Service" },
     { "date": "2026-04-17", "session": 9, "tasksCompleted": 49, "notes": "Phase 2.8-2.14: Survey, PTM, Parent Portal, Admission, Calendar, Alert, StaffComms — Phase 2 COMPLETE" },
-    { "date": "2026-04-17", "session": 10, "tasksCompleted": 34, "notes": "Phase 3.1-3.3: Transport (MQTT+WS+geofencing), Health (12 modules), Visitor (blacklist+gate pass)" },
-    { "date": "2026-04-18", "session": 11, "tasksCompleted": 10, "notes": "Phase 3.6: Event & Activity Service (Sports Day, Drama, Debate/Quiz, Clubs, NCC/NSS, Council, House system, Gallery)" },
-    { "date": "2026-04-18", "session": 12, "tasksCompleted": 12, "notes": "Phase 3.7: Expense & Budget Service (Budget version control, PO workflow HOD→Admin→3-way match, TDS 194C/194J, Bank recon auto-match, Cash denom register, GST ITC, GSTR export, Revenue recognition, Vendor portal)" }
+    { "date": "2026-04-17", "session": 10, "tasksCompleted": 34, "notes": "Phase 3.1-3.3: Transport, Health, Visitor" },
+    { "date": "2026-04-18", "session": 11, "tasksCompleted": 10, "notes": "Phase 3.6: Event & Activity Service" },
+    { "date": "2026-04-18", "session": 12, "tasksCompleted": 12, "notes": "Phase 3.7: Expense & Budget Service" },
+    { "date": "2026-04-18", "session": 13, "tasksCompleted": 8, "notes": "Phase 3.8: Scholarship Service (auto-eligibility, rubric reviews, fee-invoice integration, govt tracking, donor utilisation)" }
   ]
 }
