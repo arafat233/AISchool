@@ -453,6 +453,25 @@ services:
       migrate:
         condition: service_completed_successfully
 
+  report-service:
+    build:
+      context: .
+      dockerfile: apps/report-service/Dockerfile
+    container_name: erp_report
+    <<: *service-defaults
+    ports:
+      - "3021:3021"
+    environment:
+      PORT: 3021
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      REPORT_SERVICE_PORT: 3021
+      CHROMIUM_PATH: /usr/bin/chromium-browser
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
   # ═══════════════════════════════════════════════════════════════════════════
   # FRONTEND PORTALS
   # ═══════════════════════════════════════════════════════════════════════════
