@@ -167,7 +167,7 @@ export class ScholarshipService {
   async getApplications(schemeId: string, status?: string) {
     return this.prisma.scholarshipApplication.findMany({
       where: { schemeId, ...(status ? { status } : {}) },
-      include: { student: { select: { rollNumber: true } }, reviews: true },
+      include: { student: { select: { rollNo: true } }, reviews: true },
       orderBy: { createdAt: "desc" },
     });
   }

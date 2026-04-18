@@ -16,11 +16,11 @@
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 82 | 100% |
 | Phase 2 — Core Academic | 130 | 130 | 100% |
-| Phase 3 — Operations | 172 | 77 | 45% |
+| Phase 3 — Operations | 172 | 85 | 49% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **289** | **44.0%** |
+| **TOTAL** | **657** | **297** | **45.2%** |
 
 **Last updated:** 2026-04-18
 **Last git commit:** Phase 3.7 — Expense & Budget Service complete (289/657 tasks)
@@ -445,15 +445,15 @@
 - [x] **Revenue recognition** — accrual accounting, deferred revenue (advance fees), month-end close sign-off, year-end P&L export for auditors, auditor read-only role
 - [x] **Vendor self-service portal** — vendor views own POs, invoices submitted, payment status, raises dispute, uploads compliance docs
 
-### 3.8 Scholarship Service (8 tasks)
-- [ ] Scholarship scheme CRUD (merit, need-based, sports, government, donor — eligibility criteria, seats, award amount/%)
-- [ ] Student application + document submission via portal
-- [ ] Eligibility auto-check (system filters ineligible before review)
-- [ ] Review committee workflow (assigned reviewers, rubric scoring, final approval by School Admin / Company Portal)
-- [ ] Auto-apply scholarship discount to student fee invoice on approval
-- [ ] Government scholarship tracking (PM e-VIDYA, state schemes — external portal status, disbursement received)
-- [ ] Donor-funded scholarship (link to Corporate Partnership module, fund utilisation report to donor)
-- [ ] Scholarship analytics (who received, amount, fund source, utilisation by academic year)
+### 3.8 Scholarship Service (8 tasks) ✅
+- [x] Scholarship scheme CRUD (merit, need-based, sports, government, donor — eligibility criteria, seats, award amount/%)
+- [x] Student application + document submission via portal
+- [x] Eligibility auto-check (system filters ineligible before review)
+- [x] Review committee workflow (assigned reviewers, rubric scoring, final approval by School Admin / Company Portal)
+- [x] Auto-apply scholarship discount to student fee invoice on approval
+- [x] Government scholarship tracking (PM e-VIDYA, state schemes — external portal status, disbursement received)
+- [x] Donor-funded scholarship (link to Corporate Partnership module, fund utilisation report to donor)
+- [x] Scholarship analytics (who received, amount, fund source, utilisation by academic year)
 
 ### 3.9 Alumni Service (6 tasks)
 - [ ] Alumni registration (graduating students auto-invited on TC issuance)

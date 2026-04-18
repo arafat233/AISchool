@@ -748,6 +748,7 @@ model Student {
   houseColor     String?       // for house system
   isCwsn         Boolean       @default(false)  // differently-abled
   apaarId        String?       // APAAR/ABC national ID
+  annualFamilyIncomeRs Decimal? @db.Decimal(14, 2) // for need-based scholarship eligibility
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
