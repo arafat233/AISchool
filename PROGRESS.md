@@ -16,15 +16,15 @@
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 82 | 100% |
 | Phase 2 — Core Academic | 130 | 130 | 100% |
-| Phase 3 — Operations | 172 | 65 | 38% |
+| Phase 3 — Operations | 172 | 77 | 45% |
 | Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **277** | **42.2%** |
+| **TOTAL** | **657** | **289** | **44.0%** |
 
 **Last updated:** 2026-04-18
-**Last git commit:** Phase 3.6 — Event & Activity Service complete (277/657 tasks)
-**Current focus:** Phase 3 → 3.7 Expense & Budget Service
+**Last git commit:** Phase 3.7 — Expense & Budget Service complete (289/657 tasks)
+**Current focus:** Phase 3 → 3.8 Scholarship Service
 
 ---
 
@@ -431,19 +431,19 @@
 - [x] **House / Team system** — house master (custom names/colours/motto), student house assignment, points award (sports/academics/discipline/culture), real-time leaderboard, inter-house competition linkage
 - [x] Post-event photo gallery publishing + achievement auto-linked to student portfolio
 
-### 3.7 Expense & Budget Service (12 tasks)
-- [ ] Annual budget setup (department-wise, line items, Company Portal approval, version control)
-- [ ] Expense entry (petty cash, vendor payments, utilities, salaries — linked to budget line item)
-- [ ] Purchase order workflow (request → HOD approval → Admin approval for large amounts → PO generated → goods receipt → 3-way invoice match → payment)
-- [ ] Vendor management (GSTIN, bank details, categories, performance rating, blacklist)
-- [ ] Budget vs actual spend report (monthly + YTD, per department, chart)
-- [ ] GST input tax credit tracking (ITC on vendor invoices; reconcile with GSTN)
-- [ ] GSTR-1 + GSTR-3B data export format
-- [ ] **TDS on vendor payments** — Section 194C/194J: deduct TDS, generate challan, Form 16A quarterly
-- [ ] **Bank reconciliation** — import bank statement (CSV/OFX), auto-match transactions with fee payments + expenses (amount + date ± 2 days + narration keyword), flag unmatched, reconciliation sign-off PDF
-- [ ] **Cash denomination register** — opening balance, denomination-wise cash received/paid, closing balance, bank deposit with slip upload, cashier shift handover
-- [ ] **Revenue recognition** — accrual accounting, deferred revenue (advance fees), month-end close sign-off, year-end P&L export for auditors, auditor read-only role
-- [ ] **Vendor self-service portal** — vendor views own POs, invoices submitted, payment status, raises dispute, uploads compliance docs
+### 3.7 Expense & Budget Service (12 tasks) ✅
+- [x] Annual budget setup (department-wise, line items, Company Portal approval, version control)
+- [x] Expense entry (petty cash, vendor payments, utilities, salaries — linked to budget line item)
+- [x] Purchase order workflow (request → HOD approval → Admin approval for large amounts → PO generated → goods receipt → 3-way invoice match → payment)
+- [x] Vendor management (GSTIN, bank details, categories, performance rating, blacklist)
+- [x] Budget vs actual spend report (monthly + YTD, per department, chart)
+- [x] GST input tax credit tracking (ITC on vendor invoices; reconcile with GSTN)
+- [x] GSTR-1 + GSTR-3B data export format
+- [x] **TDS on vendor payments** — Section 194C/194J: deduct TDS, generate challan, Form 16A quarterly
+- [x] **Bank reconciliation** — import bank statement (CSV/OFX), auto-match transactions with fee payments + expenses (amount + date ± 2 days + narration keyword), flag unmatched, reconciliation sign-off PDF
+- [x] **Cash denomination register** — opening balance, denomination-wise cash received/paid, closing balance, bank deposit with slip upload, cashier shift handover
+- [x] **Revenue recognition** — accrual accounting, deferred revenue (advance fees), month-end close sign-off, year-end P&L export for auditors, auditor read-only role
+- [x] **Vendor self-service portal** — vendor views own POs, invoices submitted, payment status, raises dispute, uploads compliance docs
 
 ### 3.8 Scholarship Service (8 tasks)
 - [ ] Scholarship scheme CRUD (merit, need-based, sports, government, donor — eligibility criteria, seats, award amount/%)

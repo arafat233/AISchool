@@ -381,6 +381,24 @@ services:
       migrate:
         condition: service_completed_successfully
 
+  expense-service:
+    build:
+      context: .
+      dockerfile: apps/expense-service/Dockerfile
+    container_name: erp_expense
+    <<: *service-defaults
+    ports:
+      - "3018:3018"
+    environment:
+      PORT: 3018
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      EXPENSE_SERVICE_PORT: 3018
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
   event-service:
     build:
       context: .
