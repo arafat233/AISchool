@@ -17,14 +17,14 @@
 | Phase 1 — Foundation | 82 | 82 | 100% |
 | Phase 2 — Core Academic | 130 | 130 | 100% |
 | Phase 3 — Operations | 172 | 172 | 100% |
-| Phase 4 — Intelligence & Mobile | 88 | 59 | 67% |
+| Phase 4 — Intelligence & Mobile | 88 | 88 | 100% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **414** | **63.0%** |
+| **TOTAL** | **657** | **443** | **67.4%** |
 
 **Last updated:** 2026-04-19
-**Last git commit:** Phase 4.6 — Advanced Analytics & BI complete (414/657 tasks)
-**Current focus:** Phase 4 → 4.7 Developer API Platform
+**Last git commit:** Phase 4.7 — Developer API Platform complete — Phase 4 COMPLETE (443/657 tasks)
+**Current focus:** Phase 5 — Platform & DevOps → 5.1 Blockchain Certificate Verification
 
 ---
 
@@ -666,15 +666,15 @@
 - [x] School public website CMS (simple page builder in Admin Portal: Home, About, Admissions, Events, Gallery, Contact; enquiry form → Admission Service; custom domain + SSL)
 - [x] **Social media auto-publishing** (admin posts achievement from ERP → auto-post to school Facebook/Instagram; parental consent check; post scheduling; engagement analytics)
 
-### 4.7 Developer API Platform (8 tasks)
-- [ ] Public REST API gateway with API key authentication
-- [ ] Webhook dispatcher (student_enrolled, fee_paid, result_published, attendance_marked, etc.)
-- [ ] Webhook delivery log + retry logic (3 attempts, exponential backoff; delivery status in dashboard)
-- [ ] API rate limiting per key (configurable per plan: Basic 100/min, Enterprise 1000/min)
-- [ ] API usage dashboard (requests today/month, error rate, latency P50/P95)
-- [ ] OpenAPI / Swagger documentation portal (auto-generated, always in sync, with sandbox)
-- [ ] Sandbox environment (isolated test tenant with sample data, API key auto-provisioned on sign-up)
-- [ ] 6-month deprecation notice process (in-app + email when breaking change planned)
+### 4.7 Developer API Platform (8 tasks) ✅
+- [x] Public REST API gateway with API key authentication
+- [x] Webhook dispatcher (student_enrolled, fee_paid, result_published, attendance_marked, etc.)
+- [x] Webhook delivery log + retry logic (3 attempts, exponential backoff; delivery status in dashboard)
+- [x] API rate limiting per key (configurable per plan: Basic 100/min, Enterprise 1000/min)
+- [x] API usage dashboard (requests today/month, error rate, latency P50/P95)
+- [x] OpenAPI / Swagger documentation portal (auto-generated, always in sync, with sandbox)
+- [x] Sandbox environment (isolated test tenant with sample data, API key auto-provisioned on sign-up)
+- [x] 6-month deprecation notice process (in-app + email when breaking change planned)
 
 ---
 
