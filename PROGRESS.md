@@ -17,14 +17,14 @@
 | Phase 1 — Foundation | 82 | 82 | 100% |
 | Phase 2 — Core Academic | 130 | 130 | 100% |
 | Phase 3 — Operations | 172 | 172 | 100% |
-| Phase 4 — Intelligence & Mobile | 88 | 51 | 58% |
+| Phase 4 — Intelligence & Mobile | 88 | 59 | 67% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **406** | **61.8%** |
+| **TOTAL** | **657** | **414** | **63.0%** |
 
 **Last updated:** 2026-04-19
-**Last git commit:** Phase 4.5 — Multi-language Support complete (406/657 tasks)
-**Current focus:** Phase 4 → 4.6 Advanced Analytics & BI
+**Last git commit:** Phase 4.6 — Advanced Analytics & BI complete (414/657 tasks)
+**Current focus:** Phase 4 → 4.7 Developer API Platform
 
 ---
 
@@ -656,15 +656,15 @@
 - [x] Notification templates in all languages (SMS, WhatsApp, Email — event type × language)
 - [x] Date / number / currency formatting per locale (Intl API)
 
-### 4.6 Advanced Analytics & BI (8 tasks)
-- [ ] Data warehouse schema design (Snowflake / BigQuery — star schema for all fact tables)
-- [ ] Nightly ETL pipeline (operational DB → data warehouse; incremental loads)
-- [ ] Metabase / Grafana BI connector (read-only credentials for advanced schools)
-- [ ] Teacher workload analytics dashboard (portal UI)
-- [ ] Financial forecasting dashboard (portal UI with scenario sliders)
-- [ ] Student learning analytics dashboard (LMS time-on-task, quiz attempts, completion heatmap)
-- [ ] School public website CMS (simple page builder in Admin Portal: Home, About, Admissions, Events, Gallery, Contact; enquiry form → Admission Service; custom domain + SSL)
-- [ ] **Social media auto-publishing** (admin posts achievement from ERP → auto-post to school Facebook/Instagram; parental consent check; post scheduling; engagement analytics)
+### 4.6 Advanced Analytics & BI (8 tasks) ✅
+- [x] Data warehouse schema design (Snowflake / BigQuery — star schema for all fact tables)
+- [x] Nightly ETL pipeline (operational DB → data warehouse; incremental loads)
+- [x] Metabase / Grafana BI connector (read-only credentials for advanced schools)
+- [x] Teacher workload analytics dashboard (portal UI)
+- [x] Financial forecasting dashboard (portal UI with scenario sliders)
+- [x] Student learning analytics dashboard (LMS time-on-task, quiz attempts, completion heatmap)
+- [x] School public website CMS (simple page builder in Admin Portal: Home, About, Admissions, Events, Gallery, Contact; enquiry form → Admission Service; custom domain + SSL)
+- [x] **Social media auto-publishing** (admin posts achievement from ERP → auto-post to school Facebook/Instagram; parental consent check; post scheduling; engagement analytics)
 
 ### 4.7 Developer API Platform (8 tasks)
 - [ ] Public REST API gateway with API key authentication
