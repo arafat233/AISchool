@@ -298,17 +298,30 @@ model Tenant {
   subscriptionEndsAt DateTime?
   maxStudents      Int              @default(500)
   billingEmail     String?
+  contactEmail     String?
+  contactPhone     String?
+  city             String?
+  state            String?
   gstin            String?
   logoUrl          String?
   settings         Json             @default("{}")
-  featureFlags     Json             @default("{}")
+  featureFlags     Json             @default("[]")
+  healthScore      Int?
+  activatedAt      DateTime?
+  churnedAt        DateTime?
+  churnReason      String?
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
   deletedAt        DateTime?
 
-  schools  School[]
-  users    User[]
-  invoices TenantInvoice[]
+  schools             School[]
+  users               User[]
+  invoices            TenantInvoice[]
+  saasInvoices        SaasInvoice[]
+  supportTickets      SupportTicket[]
+  apiKeys             ApiKey[]
+  onboardingChecklist OnboardingChecklist?
+  npsResponses        NpsResponse[]
 
   @@map("tenants")
 }
@@ -414,17 +427,24 @@ model AuditLog {
   id          String   @id @default(cuid())
   userId      String?
   user        User?    @relation(fields: [userId], references: [id])
+  tenantId    String?
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id])
   schoolId    String?
-  action      String   // e.g. "student.created", "fee.payment.recorded"
+  userEmail   String?
+  action      String   // e.g. "LOGIN", "CREATE", "UPDATE", "DELETE", "EXPORT"
+  resource    String?
+  resourceId  String?
   entityType  String?
   entityId    String?
   oldValue    Json?
   newValue    Json?
+  ip          String?
   ipAddress   String?
   userAgent   String?
   createdAt   DateTime @default(now())
 
   @@index([userId])
+  @@index([tenantId])
   @@index([schoolId])
   @@index([entityType, entityId])
   @@index([createdAt])
@@ -5067,4 +5087,115 @@ model AssetVerification {
   createdAt           DateTime @default(now())
 
   @@map("asset_verifications")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SAAS MANAGEMENT — SaasInvoice, SupportTicket, ApiKey, Onboarding, NPS
+// ═══════════════════════════════════════════════════════════════════════════
+
+model SaasInvoice {
+  id            String   @id @default(cuid())
+  tenantId      String
+  tenant        Tenant   @relation(fields: [tenantId], references: [id])
+  month         Int
+  year          Int
+  plan          String
+  studentCount  Int
+  baseAmtRs     Decimal  @db.Decimal(12, 2)
+  gstAmtRs      Decimal  @db.Decimal(12, 2)
+  totalAmtRs    Decimal  @db.Decimal(12, 2)
+  status        String   @default("PENDING") // PENDING | PAID | OVERDUE | VOID
+  dueDate       DateTime
+  paidAt        DateTime?
+  paymentMethod String?  // NACH | UPI | BANK_TRANSFER
+  txnRef        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([tenantId, month, year])
+  @@index([tenantId])
+  @@index([status])
+  @@map("saas_invoices")
+}
+
+model SupportTicket {
+  id              String   @id @default(cuid())
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id])
+  subject         String
+  description     String
+  priority        String   @default("MEDIUM") // LOW | MEDIUM | HIGH | CRITICAL
+  status          String   @default("OPEN")   // OPEN | IN_PROGRESS | AI_RESOLVED | ESCALATED | CLOSED
+  tier            Int      @default(2)        // 1=AI, 2=Agent, 3=Engineering
+  aiResponse      String?
+  resolution      String?
+  sentryIssueUrl  String?
+  slaDeadline     DateTime?
+  firstResponseAt DateTime?
+  closedAt        DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  replies SupportTicketReply[]
+
+  @@index([tenantId])
+  @@index([status])
+  @@map("support_tickets")
+}
+
+model SupportTicketReply {
+  id          String        @id @default(cuid())
+  ticketId    String
+  ticket      SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  message     String
+  authorEmail String
+  isAgent     Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+
+  @@index([ticketId])
+  @@map("support_ticket_replies")
+}
+
+model ApiKey {
+  id           String   @id @default(cuid())
+  tenantId     String
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+  label        String
+  keyPrefix    String   // first 12 chars — for display
+  keyHash      String   @unique // SHA-256 of the full key
+  rateLimit    Int      @default(30) // requests per minute
+  isActive     Boolean  @default(true)
+  requestCount Int      @default(0)
+  lastUsedAt   DateTime?
+  revokedAt    DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([tenantId])
+  @@map("api_keys")
+}
+
+model OnboardingChecklist {
+  id          String   @id @default(cuid())
+  tenantId    String   @unique
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+  steps       Json     @default("{}") // { step_name: { completed, completedAt, data } }
+  currentStep String   @default("school_profile")
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("onboarding_checklists")
+}
+
+model NpsResponse {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  score     Int      // 0–10
+  feedback  String?
+  createdAt DateTime @default(now())
+
+  @@index([tenantId])
+  @@map("nps_responses")
 }

@@ -492,40 +492,40 @@
 - [x] Annual asset verification report (system count vs physical count, discrepancy flag)
 
 ### 3.13 Report & Analytics Service (10 tasks)
-- [ ] NestJS app scaffold (`apps/report-service/`)
-- [ ] PDF report engine (Puppeteer — all reports, report cards, payslips, receipts, certificates)
-- [ ] Excel report engine (ExcelJS — all list exports)
-- [ ] Attendance consolidated report (school-wide, class-wise, staff)
-- [ ] Fee collection consolidated report (daily, monthly, term, YTD, by payment mode)
-- [ ] Academic performance report (class-wise, school-wide, subject-wise, rank lists)
-- [ ] HR & payroll reports (staff count, salary cost, leave utilisation, CPD hours, appraisal distribution)
-- [ ] Custom report builder (admin selects: data source, dimensions, measures, filters, date range → tabular or chart; save as template; schedule email delivery)
-- [ ] **Real-time operations dashboard** (live attendance % per class, all buses on map, visitors on campus count, today's fee collection running total, pending approvals count, today's clinic visits, canteen order queue, compliance overdue items)
-- [ ] Report Service Dockerfile
+- [x] NestJS app scaffold (`apps/report-service/`)
+- [x] PDF report engine (Puppeteer — all reports, report cards, payslips, receipts, certificates)
+- [x] Excel report engine (ExcelJS — all list exports)
+- [x] Attendance consolidated report (school-wide, class-wise, staff)
+- [x] Fee collection consolidated report (daily, monthly, term, YTD, by payment mode)
+- [x] Academic performance report (class-wise, school-wide, subject-wise, rank lists)
+- [x] HR & payroll reports (staff count, salary cost, leave utilisation, CPD hours, appraisal distribution)
+- [x] Custom report builder (admin selects: data source, dimensions, measures, filters, date range → tabular or chart; save as template; schedule email delivery)
+- [x] **Real-time operations dashboard** (live attendance % per class, all buses on map, visitors on campus count, today's fee collection running total, pending approvals count, today's clinic visits, canteen order queue, compliance overdue items)
+- [x] Report Service Dockerfile
 
 ### 3.14 Company / Management Portal (10 tasks)
-- [ ] Next.js 14 app scaffold (`apps/company-portal/`)
-- [ ] Auth + multi-school switcher
-- [ ] Master dashboard (all schools — enrolment, fee collection vs target, staff, compliance alert flags, real-time ops view)
-- [ ] School-wise performance comparison (academic, financial, HR, compliance)
-- [ ] Consolidated financial reports (fee, expense, payroll cost, outstanding, GST, forecast)
-- [ ] Admission funnel across all schools (enquiry → application → admitted conversion %)
-- [ ] AI insights dashboard (dropout risk, fee defaulter prediction, enrolment forecast, teacher effectiveness)
-- [ ] Subscription + license management per school (plan, student count, MRR, renewal date)
-- [ ] Audit logs across all schools (filter by school, date, user, action type)
-- [ ] **Your own SaaS analytics** — MRR, ARR, churn rate, NRR, LTV:CAC ratio, active schools, revenue per student
+- [x] Next.js 14 app scaffold (`apps/management-portal/`)
+- [x] Auth + multi-school switcher
+- [x] Master dashboard (all schools — enrolment, fee collection vs target, staff, compliance alert flags, real-time ops view)
+- [x] School-wise performance comparison (academic, financial, HR, compliance)
+- [x] Consolidated financial reports (fee, expense, payroll cost, outstanding, GST, forecast)
+- [x] Admission funnel across all schools (enquiry → application → admitted conversion %)
+- [x] AI insights dashboard (dropout risk, fee defaulter prediction, enrolment forecast, teacher effectiveness)
+- [x] Subscription + license management per school (plan, student count, MRR, renewal date)
+- [x] Audit logs across all schools (filter by school, date, user, action type)
+- [x] **Your own SaaS analytics** — MRR, ARR, churn rate, NRR, LTV:CAC ratio, active schools, revenue per student
 
 ### 3.15 SaaS Management Service (10 tasks)
-- [ ] NestJS app scaffold (`apps/saas-service/`)
-- [ ] Tenant lifecycle (create → trial → activate → suspend → reactivate → churn)
-- [ ] Subscription plan CRUD + feature flags per plan (Basic/Standard/Premium/Enterprise)
-- [ ] Billing engine (per-student pricing, tiered slabs, GST invoicing to schools, annual discount)
-- [ ] NACH / UPI / bank transfer payment collection from schools
-- [ ] Customer health score calculation (login frequency, feature adoption %, support tickets, NPS, payment timeliness)
-- [ ] **Support ticket system** (in-app submission; AI chatbot tier 1; agent tier 2 with SLA per plan; engineering tier 3 linked to Sentry; status page: status.yourproduct.com)
-- [ ] **Onboarding wizard** (new school: school profile → academic structure → grading scale → fee structure → staff import → student import → training → go-live checklist)
-- [ ] Developer API key issuance + rate limiting per key + usage dashboard
-- [ ] SaaS Service Dockerfile
+- [x] NestJS app scaffold (`apps/saas-service/`)
+- [x] Tenant lifecycle (create → trial → activate → suspend → reactivate → churn)
+- [x] Subscription plan CRUD + feature flags per plan (Basic/Standard/Premium/Enterprise)
+- [x] Billing engine (per-student pricing, tiered slabs, GST invoicing to schools, annual discount)
+- [x] NACH / UPI / bank transfer payment collection from schools
+- [x] Customer health score calculation (login frequency, feature adoption %, support tickets, NPS, payment timeliness)
+- [x] **Support ticket system** (in-app submission; AI chatbot tier 1; agent tier 2 with SLA per plan; engineering tier 3 linked to Sentry; status page: status.yourproduct.com)
+- [x] **Onboarding wizard** (new school: school profile → academic structure → grading scale → fee structure → staff import → student import → training → go-live checklist)
+- [x] Developer API key issuance + rate limiting per key + usage dashboard
+- [x] SaaS Service Dockerfile
 
 ---
 

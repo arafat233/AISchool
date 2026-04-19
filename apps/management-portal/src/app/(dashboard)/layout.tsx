@@ -12,7 +12,7 @@ const nav = [
   { href: "/admissions", label: "Admissions", icon: BookOpen },
   { href: "/finance", label: "Finance", icon: DollarSign },
   { href: "/analytics", label: "Analytics", icon: TrendingUp },
-  { href: "/reports", label: "Reports", icon: FileText },
+  { href: "/reports", label: "SaaS Analytics", icon: BarChart3 },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
