@@ -1,0 +1,92 @@
+# Ingress-nginx — routes all portal + API traffic, SSL termination via cert-manager
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: school-erp-ingress
+  namespace: school-erp
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    # Rate limiting
+    nginx.ingress.kubernetes.io/limit-rps: "50"
+    nginx.ingress.kubernetes.io/limit-connections: "20"
+    # Security headers
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header X-Frame-Options "SAMEORIGIN";
+      add_header X-Content-Type-Options "nosniff";
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+      add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.razorpay.com; img-src 'self' data: https:; connect-src 'self' https:";
+spec:
+  tls:
+    - hosts:
+        - "*.schoolerp.app"
+        - api.schoolerp.app
+      secretName: school-erp-tls
+  rules:
+    - host: admin.schoolerp.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: admin-portal
+                port:
+                  number: 4000
+    - host: teacher.schoolerp.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: teacher-portal
+                port:
+                  number: 4001
+    - host: student.schoolerp.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: student-portal
+                port:
+                  number: 4002
+    - host: parent.schoolerp.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: parent-portal
+                port:
+                  number: 4003
+    - host: manage.schoolerp.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: management-portal
+                port:
+                  number: 4004
+    - host: api.schoolerp.app
+      http:
+        paths:
+          - path: /v1
+            pathType: Prefix
+            backend:
+              service:
+                name: developer-api
+                port:
+                  number: 3023
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 3001

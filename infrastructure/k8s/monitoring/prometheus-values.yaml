@@ -1,0 +1,61 @@
+# Prometheus + Grafana via kube-prometheus-stack Helm chart
+# Install: helm install monitoring prometheus-community/kube-prometheus-stack -f this-file.yaml -n monitoring
+
+grafana:
+  enabled: true
+  adminPassword: "${GRAFANA_ADMIN_PASSWORD}"
+  ingress:
+    enabled: true
+    hosts:
+      - grafana.schoolerp.app
+    tls:
+      - secretName: grafana-tls
+        hosts: [grafana.schoolerp.app]
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: school-erp
+          type: file
+          disableDeletion: false
+          options:
+            path: /var/lib/grafana/dashboards/school-erp
+
+prometheus:
+  prometheusSpec:
+    retention: 30d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: [ReadWriteOnce]
+          resources:
+            requests:
+              storage: 50Gi
+    additionalScrapeConfigs:
+      - job_name: school-erp-services
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [school-erp]
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: "true"
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            target_label: __metrics_path__
+            regex: (.+)
+
+alertmanager:
+  config:
+    global:
+      slack_api_url: "${SLACK_WEBHOOK_URL}"
+    route:
+      receiver: slack-alerts
+      group_wait: 30s
+      group_interval: 5m
+    receivers:
+      - name: slack-alerts
+        slack_configs:
+          - channel: "#school-erp-alerts"
+            title: "{{ .GroupLabels.alertname }}"
+            text: "{{ range .Alerts }}{{ .Annotations.description }}{{ end }}"

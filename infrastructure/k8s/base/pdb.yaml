@@ -1,0 +1,11 @@
+# PodDisruptionBudget — ensure minimum 1 pod always available during node maintenance
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: SERVICE_NAME-pdb
+  namespace: school-erp
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: SERVICE_NAME

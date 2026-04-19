@@ -1,0 +1,115 @@
+# Helm chart values for School ERP
+# Override per environment: values.dev.yaml / values.staging.yaml / values.prod.yaml
+
+global:
+  imageRegistry: ghcr.io/arafat233/school-erp
+  imageTag: latest
+  imagePullPolicy: Always
+  namespace: school-erp
+  environment: production
+
+# Service configurations
+services:
+  auth-service:
+    enabled: true
+    port: 3001
+    replicas: 2
+    resources:
+      requests: { cpu: 100m, memory: 256Mi }
+      limits: { cpu: 500m, memory: 512Mi }
+
+  student-service:
+    enabled: true
+    port: 3003
+    replicas: 2
+
+  fee-service:
+    enabled: true
+    port: 3006
+    replicas: 3      # Higher replicas — peak collection periods
+
+  attendance-service:
+    enabled: true
+    port: 3005
+    replicas: 3      # High write volume at 8-9 AM
+
+  notification-service:
+    enabled: true
+    port: 3007
+    replicas: 2
+
+  ai-service:
+    enabled: true
+    port: 8000
+    replicas: 2
+    resources:
+      requests: { cpu: 500m, memory: 1Gi }
+      limits: { cpu: 2000m, memory: 2Gi }  # ML workloads need more
+
+  developer-api:
+    enabled: true
+    port: 3023
+    replicas: 2
+
+# PostgreSQL HA via CloudNativePG
+postgresql:
+  enabled: true
+  instances: 3        # 1 primary + 2 replicas
+  storage: 100Gi
+  walStorage: 20Gi
+  resources:
+    requests: { cpu: 500m, memory: 1Gi }
+    limits: { cpu: 2000m, memory: 2Gi }
+  backup:
+    enabled: true
+    schedule: "0 * * * *"  # Hourly backup to S3
+    s3Bucket: "school-erp-db-backups"
+    retentionDays: 30
+
+# Redis Cluster
+redis:
+  enabled: true
+  cluster:
+    enabled: true
+    nodes: 6            # 3 masters + 3 replicas
+  auth:
+    enabled: true
+
+# Kafka
+kafka:
+  enabled: true
+  brokers: 3
+  replicationFactor: 3
+  zookeeper:
+    replicas: 3
+
+# HashiCorp Vault
+vault:
+  enabled: true
+  server:
+    ha:
+      enabled: true
+      replicas: 3
+  injector:
+    enabled: true
+
+# Jaeger distributed tracing
+jaeger:
+  enabled: true
+  strategy: production
+  storage:
+    type: elasticsearch
+
+# Sentry
+sentry:
+  dsn: "${SENTRY_DSN}"
+  environment: production
+  tracesSampleRate: 0.2
+
+# Ingress
+ingress:
+  enabled: true
+  className: nginx
+  certManager:
+    enabled: true
+    clusterIssuer: letsencrypt-prod

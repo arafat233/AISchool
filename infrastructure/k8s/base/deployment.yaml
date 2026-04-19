@@ -1,0 +1,77 @@
+# Base Deployment template for all School ERP microservices.
+# Each service overrides this via Kustomize or Helm values.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: SERVICE_NAME
+  namespace: school-erp
+  labels:
+    app: SERVICE_NAME
+    version: "1.0.0"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: SERVICE_NAME
+  template:
+    metadata:
+      labels:
+        app: SERVICE_NAME
+      annotations:
+        # Inject Vault secrets as env vars via Vault Agent sidecar
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "school-erp"
+        vault.hashicorp.com/agent-inject-secret-config: "secret/school-erp/SERVICE_NAME"
+        # Jaeger distributed tracing
+        sidecar.jaegertracing.io/inject: "true"
+    spec:
+      serviceAccountName: school-erp-sa
+      containers:
+        - name: SERVICE_NAME
+          image: ghcr.io/arafat233/school-erp/SERVICE_NAME:latest
+          ports:
+            - containerPort: SERVICE_PORT
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: school-erp-db-secret
+                  key: url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: school-erp-redis-secret
+                  key: url
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: SERVICE_PORT
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: SERVICE_PORT
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: SERVICE_NAME
