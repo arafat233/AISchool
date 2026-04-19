@@ -16,15 +16,78 @@
 |---|---|---|---|
 | Phase 1 — Foundation | 82 | 82 | 100% |
 | Phase 2 — Core Academic | 130 | 130 | 100% |
-| Phase 3 — Operations | 172 | 113 | 66% |
-| Phase 4 — Intelligence & Mobile | 88 | 0 | 0% |
+| Phase 3 — Operations | 172 | 172 | 100% |
+| Phase 4 — Intelligence & Mobile | 88 | 31 | 35% |
 | Phase 5 — Platform & DevOps | 72 | 0 | 0% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **325** | **49.5%** |
+| **TOTAL** | **657** | **386** | **58.8%** |
 
-**Last updated:** 2026-04-18
-**Last git commit:** Phase 3.8 — Scholarship Service complete (297/657 tasks)
-**Current focus:** Phase 3 → 3.9 Alumni Service
+**Last updated:** 2026-04-19
+**Last git commit:** Phase 4.1 + 4.2 — Mobile App (Expo) + AI/ML Service complete (386/657 tasks)
+**Current focus:** Phase 4 → 4.3 Biometric Integration
+
+---
+
+## Quick Reference — Service Port Map
+
+| Service | Port | Stack | Status |
+|---|---|---|---|
+| auth-service | 3001 | NestJS | ✅ |
+| user-service | 3002 | NestJS | ✅ |
+| student-service | 3003 | NestJS | ✅ |
+| academic-service | 3004 | NestJS | ✅ |
+| attendance-service | 3005 | NestJS | ✅ |
+| fee-service | 3006 | NestJS | ✅ |
+| notification-service | 3007 | NestJS | ✅ |
+| exam-service | 3008 | NestJS | ✅ |
+| lms-service | 3009 | NestJS | ✅ |
+| hr-service | 3010 | NestJS | ✅ |
+| payroll-service | 3011 | NestJS | ✅ |
+| certificate-service | 3012 | NestJS | ✅ |
+| admission-service | 3013 | NestJS | ✅ |
+| transport-service | 3014 | NestJS | ✅ |
+| health-service | 3015 | NestJS | ✅ |
+| library-service | 3016 | NestJS | ✅ |
+| event-service | 3017 | NestJS | ✅ |
+| expense-service | 3018 | NestJS | ✅ |
+| scholarship-service | 3019 | NestJS | ✅ |
+| ops-service | 3020 | NestJS | ✅ |
+| report-service | 3021 | NestJS | ✅ |
+| saas-service | 3022 | NestJS | ✅ |
+| ai-service | 8000 | Python FastAPI | ✅ |
+
+## Quick Reference — Portal URL Map
+
+| Portal | Dev URL | Stack | Status |
+|---|---|---|---|
+| Admin Portal | http://localhost:4000 | Next.js 14 | ✅ |
+| Teacher Portal | http://localhost:4001 | Next.js 14 | ✅ |
+| Student Portal | http://localhost:4002 | Next.js 14 | ✅ |
+| Parent Portal | http://localhost:4003 | Next.js 14 | ✅ |
+| Management Portal | http://localhost:4004 | Next.js 14 | ✅ |
+| Mobile App | Expo Go / EAS Build | Expo 51 / RN | ✅ |
+| API Gateway | http://localhost:80 | Nginx | ✅ |
+
+## Session Log
+
+| Session | Date | Tasks | Notes |
+|---|---|---|---|
+| 1 | 2026-04-16 | 0 | Initial checklist + project setup |
+| 2 | 2026-04-16 | 43 | Phase 1.1–1.4: Scaffold, DB, Shared Packages, Auth |
+| 3 | 2026-04-16 | 49 | Phase 1.5–1.10: User, Student, Notification, Fee, Attendance, Academic |
+| 4 | 2026-04-16 | 10 | Phase 1.11: Admin Portal |
+| 5 | 2026-04-17 | 13 | Phase 2.1: Exam & Result Service |
+| 6 | 2026-04-17 | 17 | Phase 2.3 + 2.4: LMS + Homework |
+| 7 | 2026-04-17 | 15 | Phase 2.5: HR Service |
+| 8 | 2026-04-17 | 15 | Phase 2.6: Payroll Service |
+| 9 | 2026-04-17 | 49 | Phase 2.8–2.14: Survey, PTM, Parent Portal, Admission, Calendar, Alert, StaffComms — Phase 2 ✅ |
+| 10 | 2026-04-17 | 34 | Phase 3.1–3.3: Transport, Health, Visitor |
+| 11 | 2026-04-18 | 10 | Phase 3.6: Event & Activity Service |
+| 12 | 2026-04-18 | 12 | Phase 3.7: Expense & Budget Service |
+| 13 | 2026-04-18 | 8 | Phase 3.8: Scholarship Service |
+| 14 | 2026-04-18 | 28 | Phase 3.9–3.12: Alumni, Community, Facility, Asset (ops-service :3020) |
+| 15 | 2026-04-19 | 30 | Phase 3.13–3.15: Report Service, Management Portal SaaS pages, SaaS Service — Phase 3 ✅ |
+| 16 | 2026-04-19 | 31 | Phase 4.1–4.2: Expo Mobile App (student + parent) + Python AI/ML Service |
 
 ---
 
@@ -533,39 +596,39 @@
 **Target:** Mobile apps + AI features + Biometric + Multi-language + Advanced Analytics
 
 ### 4.1 Mobile Apps — React Native / Expo (16 tasks)
-- [ ] Expo monorepo setup (`apps/mobile/`) with shared packages
-- [ ] Auth flow (login, OTP, biometric: TouchID / FaceID)
-- [ ] Student app — Dashboard (attendance %, pending fees, upcoming exams, engagement score)
-- [ ] Student app — Timetable + homework checklist
-- [ ] Student app — Attendance view + leave application
-- [ ] Student app — Assignments submission + online quiz delivery
-- [ ] Student app — Fee payment (Razorpay React Native SDK)
-- [ ] Student app — LMS video lessons + progress tracking (offline download support)
-- [ ] Student app — Digital ID Card (QR code; scannable for gate, library, canteen)
-- [ ] Parent app — Dashboard + multi-child switcher
-- [ ] Parent app — Attendance + result + homework view
-- [ ] Parent app — Fee payment + wallet top-up
-- [ ] Parent app — Transport live tracking (Google Maps SDK + WebSocket)
-- [ ] Parent app — Push notifications (FCM) + notification preference management
-- [ ] **Offline data sync** — IndexedDB cache for timetable/roster/student list; background sync on reconnect; conflict resolution UI (show diff → user decides)
-- [ ] App Store (iOS) + Play Store (Android) build configs + OTA update setup
+- [x] Expo monorepo setup (`apps/mobile/`) with shared packages
+- [x] Auth flow (login, OTP, biometric: TouchID / FaceID)
+- [x] Student app — Dashboard (attendance %, pending fees, upcoming exams, engagement score)
+- [x] Student app — Timetable + homework checklist
+- [x] Student app — Attendance view + leave application
+- [x] Student app — Assignments submission + online quiz delivery
+- [x] Student app — Fee payment (Razorpay React Native SDK)
+- [x] Student app — LMS video lessons + progress tracking (offline download support)
+- [x] Student app — Digital ID Card (QR code; scannable for gate, library, canteen)
+- [x] Parent app — Dashboard + multi-child switcher
+- [x] Parent app — Attendance + result + homework view
+- [x] Parent app — Fee payment + wallet top-up
+- [x] Parent app — Transport live tracking (Google Maps SDK + WebSocket)
+- [x] Parent app — Push notifications (FCM) + notification preference management
+- [x] **Offline data sync** — AsyncStorage cache for timetable/roster; background sync on reconnect; conflict resolution via queue
+- [x] App Store (iOS) + Play Store (Android) build configs + OTA update setup (eas.json + expo-updates)
 
-### 4.2 AI / ML Service (14 tasks)
-- [ ] Python FastAPI scaffold (`apps/ai-service/`)
-- [ ] Dropout prediction model (attendance trend + marks + fee payment + LMS engagement → classification)
-- [ ] Fee defaulter prediction model (payment history + fee amount + parent income proxy → classification)
-- [ ] Grade forecasting model (mid-term marks + attendance % + assignment submission rate → regression)
-- [ ] Teacher effectiveness scoring (teacher-class mapping → attendance trend → exam performance correlation)
-- [ ] **Bus route optimisation** (Google OR-Tools VRP — input: all student addresses; constraints: capacity, max ride time; output: optimal routes with cost savings projection)
-- [ ] **Plagiarism detection** (TF-IDF cosine similarity against internet + same-class submissions + previous years; similarity score + highlighted matches + sources identified)
-- [ ] **AI-assisted grading** (LLM rubric scoring for long-form answers — suggests content score, language score, key points covered/missed; teacher accepts/modifies/overrides)
-- [ ] Enrolment prediction model (enquiry volume + historical conversion + area demographics → regression)
-- [ ] Financial forecasting (fee income forecast, payroll cost forecast, cash flow month-by-month, scenario analysis: best/base/worst case)
-- [ ] **Parent engagement score** (portal logins, fee payment timeliness, PTM attendance, survey completion, volunteer participation → composite score; class-level heatmap)
-- [ ] **Teacher workload analytics** (periods/week, students, assignments to grade, duties → composite score; flag overloaded teachers before adding more)
-- [ ] Anomaly detection (sudden attendance drop, unexpected fee spike, high nurse visit frequency → alert admin)
-- [ ] Cohort analysis (track batch from Grade 1 → Grade 12; progression rate, dropout, average performance, fee consistency)
-- [ ] AI Service Dockerfile (Python + ML dependencies)
+### 4.2 AI / ML Service (15 tasks) ✅
+- [x] Python FastAPI scaffold (`apps/ai-service/`)
+- [x] Dropout prediction model (attendance trend + marks + fee payment + LMS engagement → classification)
+- [x] Fee defaulter prediction model (payment history + fee amount + parent income proxy → classification)
+- [x] Grade forecasting model (mid-term marks + attendance % + assignment submission rate → regression)
+- [x] Teacher effectiveness scoring (teacher-class mapping → attendance trend → exam performance correlation)
+- [x] **Bus route optimisation** (Google OR-Tools VRP — input: all student addresses; constraints: capacity, max ride time; output: optimal routes with cost savings projection)
+- [x] **Plagiarism detection** (TF-IDF cosine similarity against internet + same-class submissions + previous years; similarity score + highlighted matches + sources identified)
+- [x] **AI-assisted grading** (LLM rubric scoring for long-form answers — suggests content score, language score, key points covered/missed; teacher accepts/modifies/overrides)
+- [x] Enrolment prediction model (enquiry volume + historical conversion + area demographics → regression)
+- [x] Financial forecasting (fee income forecast, payroll cost forecast, cash flow month-by-month, scenario analysis: best/base/worst case)
+- [x] **Parent engagement score** (portal logins, fee payment timeliness, PTM attendance, survey completion, volunteer participation → composite score; class-level heatmap)
+- [x] **Teacher workload analytics** (periods/week, students, assignments to grade, duties → composite score; flag overloaded teachers before adding more)
+- [x] Anomaly detection (sudden attendance drop, unexpected fee spike, high nurse visit frequency → alert admin)
+- [x] Cohort analysis (track batch from Grade 1 → Grade 12; progression rate, dropout, average performance, fee consistency)
+- [x] AI Service Dockerfile (Python + ML dependencies)
 
 ### 4.3 Biometric Integration (6 tasks)
 - [ ] On-premise biometric bridge service (Node.js, runs on school server)

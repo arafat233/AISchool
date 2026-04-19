@@ -1,0 +1,77 @@
+{
+  "expo": {
+    "name": "School ERP",
+    "slug": "school-erp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1e3a8a"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.schoolerp.mobile",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Camera is used for biometric login and QR code scanning.",
+        "NSFaceIDUsageDescription": "Face ID is used for secure login.",
+        "NSLocationWhenInUseUsageDescription": "Location is used to track your child's school bus on the map."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1e3a8a"
+      },
+      "package": "com.schoolerp.mobile",
+      "permissions": [
+        "CAMERA",
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT",
+        "ACCESS_FINE_LOCATION",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE"
+      ],
+      "googleServicesFile": "./google-services.json"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#1e3a8a",
+          "sounds": []
+        }
+      ],
+      "expo-router",
+      "expo-font",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow School ERP to use Face ID."
+        }
+      ]
+    ],
+    "scheme": "schoolerp",
+    "extra": {
+      "eas": {
+        "projectId": "school-erp-mobile-project-id"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/school-erp-mobile-project-id",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
+  }
+}
