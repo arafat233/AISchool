@@ -543,6 +543,34 @@ services:
       PORT: 4003
       NEXT_PUBLIC_API_URL: http://localhost:3001
 
+  biometric-bridge:
+    build:
+      context: apps/biometric-bridge
+      dockerfile: Dockerfile
+    container_name: erp_biometric_bridge
+    <<: *service-defaults
+    ports:
+      - "8080:8080"
+    environment:
+      SCHOOL_ID: ${SCHOOL_ID:-school_demo}
+      DEVICES: ${BIOMETRIC_DEVICES:-MainGate:192.168.1.201:4370}
+      POLL_INTERVAL_SECONDS: ${BIOMETRIC_POLL_INTERVAL:-60}
+      FETCH_WINDOW_MINUTES: "10"
+      LOCAL_MQTT_URL: mqtt://mosquitto:1883
+      CLOUD_MQTT_URL: mqtt://mosquitto:1883
+      ATTENDANCE_SERVICE_URL: http://attendance-service:3005
+      NOTIFICATION_SERVICE_URL: http://notification-service:3007
+      HEALTH_ALERT_THRESHOLD_MINUTES: "30"
+    depends_on:
+      mosquitto:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 3
+
 networks:
   erp_net:
     driver: bridge
