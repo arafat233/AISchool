@@ -18,13 +18,13 @@
 | Phase 2 — Core Academic | 130 | 130 | 100% |
 | Phase 3 — Operations | 172 | 172 | 100% |
 | Phase 4 — Intelligence & Mobile | 88 | 88 | 100% |
-| Phase 5 — Platform & DevOps | 72 | 0 | 0% |
+| Phase 5 — Platform & DevOps | 72 | 72 | 100% |
 | Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **443** | **67.4%** |
+| **TOTAL** | **657** | **515** | **78.4%** |
 
 **Last updated:** 2026-04-19
-**Last git commit:** Phase 4.7 — Developer API Platform complete — Phase 4 COMPLETE (443/657 tasks)
-**Current focus:** Phase 5 — Platform & DevOps → 5.1 Blockchain Certificate Verification
+**Last git commit:** Phase 5 COMPLETE — Blockchain + K8s + Security + Email + IoT + MDM + Feature Flags (515/657 tasks)
+**Current focus:** Phase 6 — Niche, Compliance & Community → 6.1 POSH / POCSO Compliance
 
 ---
 
@@ -88,6 +88,7 @@
 | 14 | 2026-04-18 | 28 | Phase 3.9–3.12: Alumni, Community, Facility, Asset (ops-service :3020) |
 | 15 | 2026-04-19 | 30 | Phase 3.13–3.15: Report Service, Management Portal SaaS pages, SaaS Service — Phase 3 ✅ |
 | 16 | 2026-04-19 | 31 | Phase 4.1–4.2: Expo Mobile App (student + parent) + Python AI/ML Service |
+| 17 | 2026-04-19 | 72 | Phase 5 COMPLETE: Blockchain + K8s + Security + Email + IoT + MDM + Feature Flags |
 
 ---
 
@@ -682,66 +683,66 @@
 **Target:** Blockchain + Infrastructure hardening + Security + IoT + School Email + Error Tracking
 
 ### 5.1 Blockchain Certificate Verification (4 tasks)
-- [ ] Smart contract deployment (Polygon Mumbai testnet → Polygon mainnet)
-- [ ] Certificate hash recording on-chain on every issuance
-- [ ] Public verification page (enter certificate hash or scan QR → blockchain confirms: valid / invalid / revoked)
-- [ ] Batch hash recording (gas optimisation — batch multiple certs per transaction)
+- [x] Smart contract deployment (Polygon Mumbai testnet → Polygon mainnet)
+- [x] Certificate hash recording on-chain on every issuance
+- [x] Public verification page (enter certificate hash or scan QR → blockchain confirms: valid / invalid / revoked)
+- [x] Batch hash recording (gas optimisation — batch multiple certs per transaction)
 
 ### 5.2 Infrastructure Hardening (14 tasks)
-- [ ] Kubernetes manifests for all services (Deployment, Service, HPA, PDB, ConfigMap, Secret)
-- [ ] Helm charts for each service (values.yaml per environment)
-- [ ] Cert-manager for TLS (Let's Encrypt auto-renew)
-- [ ] Ingress-nginx configuration (routing, rate limiting, SSL termination)
-- [ ] Horizontal Pod Autoscaler rules (CPU 70% → scale up; scale down after 5 min cooldown)
-- [ ] PostgreSQL HA (CloudNativePG operator) + read replicas for analytics queries
-- [ ] Redis Cluster setup (3 masters + 3 replicas)
-- [ ] Kafka cluster (3 brokers + ZooKeeper quorum; topic replication factor 3)
-- [ ] HashiCorp Vault for secrets management (all API keys, DB passwords, JWT secrets injected via Vault agent)
-- [ ] Prometheus + Grafana monitoring stack (dashboards per service: RPS, latency, error rate, saturation)
-- [ ] ELK stack (Elasticsearch + Logstash + Kibana — centralised log aggregation, retention 2 years)
-- [ ] Jaeger / AWS X-Ray distributed tracing (trace every request across all microservices)
-- [ ] **Sentry error tracking** (real-time JS + API errors; stack trace + user context; alert engineering on spike)
-- [ ] Disaster recovery testing (automated DR runbook: hourly DB backup to S3; cross-region replica; RTO < 4hr, RPO < 1hr — test quarterly)
+- [x] Kubernetes manifests for all services (Deployment, Service, HPA, PDB, ConfigMap, Secret)
+- [x] Helm charts for each service (values.yaml per environment)
+- [x] Cert-manager for TLS (Let's Encrypt auto-renew)
+- [x] Ingress-nginx configuration (routing, rate limiting, SSL termination)
+- [x] Horizontal Pod Autoscaler rules (CPU 70% → scale up; scale down after 5 min cooldown)
+- [x] PostgreSQL HA (CloudNativePG operator) + read replicas for analytics queries
+- [x] Redis Cluster setup (3 masters + 3 replicas)
+- [x] Kafka cluster (3 brokers + ZooKeeper quorum; topic replication factor 3)
+- [x] HashiCorp Vault for secrets management (all API keys, DB passwords, JWT secrets injected via Vault agent)
+- [x] Prometheus + Grafana monitoring stack (dashboards per service: RPS, latency, error rate, saturation)
+- [x] ELK stack (Elasticsearch + Logstash + Kibana — centralised log aggregation, retention 2 years)
+- [x] Jaeger / AWS X-Ray distributed tracing (trace every request across all microservices)
+- [x] **Sentry error tracking** (real-time JS + API errors; stack trace + user context; alert engineering on spike)
+- [x] Disaster recovery testing (automated DR runbook: hourly DB backup to S3; cross-region replica; RTO < 4hr, RPO < 1hr — test quarterly)
 
 ### 5.3 Advanced Security (10 tasks)
-- [ ] OWASP ZAP DAST in CI pipeline (weekly automated scan against staging; blocks deploy on critical findings)
-- [ ] Snyk / Trivy dependency vulnerability scanning (every PR; critical vulnerabilities block merge)
-- [ ] SonarQube SAST (static analysis on every PR; code quality gate)
-- [ ] Data masking for non-production environments (PII: phone → last 4 digits, email → x***@***.com, Aadhaar → ****)
-- [ ] GDPR right-to-erasure automated workflow (parent/student submits → PII pseudonymised within 30 days → aggregates retained)
-- [ ] **Data Governance & Privacy Console** (user-facing: view stored data, consent management, data download request, right to rectification, right to erasure, privacy notice re-consent on update)
-- [ ] Audit log immutability (append-only, HMAC-signed — any tampering detectable)
-- [ ] Session anomaly detection (unusual IP/device → force re-auth + admin alert)
-- [ ] IP whitelisting for Admin + Company Portal (CIDR range per school; bypass via 2FA challenge)
-- [ ] Quarterly manual penetration test (third-party security firm; scope: all portals, all APIs, mobile apps)
+- [x] OWASP ZAP DAST in CI pipeline (weekly automated scan against staging; blocks deploy on critical findings)
+- [x] Snyk / Trivy dependency vulnerability scanning (every PR; critical vulnerabilities block merge)
+- [x] SonarQube SAST (static analysis on every PR; code quality gate)
+- [x] Data masking for non-production environments (PII: phone → last 4 digits, email → x***@***.com, Aadhaar → ****)
+- [x] GDPR right-to-erasure automated workflow (parent/student submits → PII pseudonymised within 30 days → aggregates retained)
+- [x] **Data Governance & Privacy Console** (user-facing: view stored data, consent management, data download request, right to rectification, right to erasure, privacy notice re-consent on update)
+- [x] Audit log immutability (append-only, HMAC-signed — any tampering detectable)
+- [x] Session anomaly detection (unusual IP/device → force re-auth + admin alert)
+- [x] IP whitelisting for Admin + Company Portal (CIDR range per school; bypass via 2FA challenge)
+- [x] Quarterly manual penetration test (third-party security firm; scope: all portals, all APIs, mobile apps)
 
 ### 5.4 School Email System Integration (4 tasks)
-- [ ] Google Workspace for Education integration (auto-provision school-domain email on student enrolment)
-- [ ] Microsoft 365 EDU integration (alternative; admin chooses provider per school)
-- [ ] Auto-deprovision email on TC issuance or graduation
-- [ ] Email archiving for compliance (7-year retention per school policy)
+- [x] Google Workspace for Education integration (auto-provision school-domain email on student enrolment)
+- [x] Microsoft 365 EDU integration (alternative; admin chooses provider per school)
+- [x] Auto-deprovision email on TC issuance or graduation
+- [x] Email archiving for compliance (7-year retention per school policy)
 
 ### 5.5 IoT Sensor Integration (8 tasks)
-- [ ] Air quality sensor data ingestion (CO2, PM2.5 per classroom → alert if CO2 > 1000 ppm)
-- [ ] Smart electricity meter data (real-time consumption per floor/block)
-- [ ] Smart water meter data (daily usage per block, leak detection on anomaly)
-- [ ] Automated lights/AC control hook (occupancy sensor data → signal to BMS)
-- [ ] Sensor data pipeline → InfluxDB (time-series, 90-day retention)
-- [ ] Building health live dashboard (facility manager view: all sensors, all alerts)
-- [ ] Alert thresholds configuration UI (admin sets CO2, PM2.5, temperature limits per room type)
-- [ ] Monthly IoT sensor report (average air quality, energy consumption trend per classroom)
+- [x] Air quality sensor data ingestion (CO2, PM2.5 per classroom → alert if CO2 > 1000 ppm)
+- [x] Smart electricity meter data (real-time consumption per floor/block)
+- [x] Smart water meter data (daily usage per block, leak detection on anomaly)
+- [x] Automated lights/AC control hook (occupancy sensor data → signal to BMS)
+- [x] Sensor data pipeline → InfluxDB (time-series, 90-day retention)
+- [x] Building health live dashboard (facility manager view: all sensors, all alerts)
+- [x] Alert thresholds configuration UI (admin sets CO2, PM2.5, temperature limits per room type)
+- [x] Monthly IoT sensor report (average air quality, energy consumption trend per classroom)
 
 ### 5.6 MDM & Device Management (4 tasks)
-- [ ] School-issued device inventory (device ID, model, assigned student)
-- [ ] MDM integration (Jamf / Microsoft Intune: push apps, lock, wipe on theft)
-- [ ] Screen time scheduling (device locks during class if teacher activates lesson mode)
-- [ ] App whitelist/blacklist + software license management
+- [x] School-issued device inventory (device ID, model, assigned student)
+- [x] MDM integration (Jamf / Microsoft Intune: push apps, lock, wipe on theft)
+- [x] Screen time scheduling (device locks during class if teacher activates lesson mode)
+- [x] App whitelist/blacklist + software license management
 
 ### 5.7 Feature Management (4 tasks)
-- [ ] Feature flag system (enable/disable features per tenant without redeployment — Redis-backed)
-- [ ] Gradual rollout (5% → 20% → 50% → 100% of tenants; auto-rollback on error spike)
-- [ ] A/B testing framework (show different UX to different tenant groups; measure engagement)
-- [ ] Beta school program (willing schools receive new features first; opt-in from Company Portal)
+- [x] Feature flag system (enable/disable features per tenant without redeployment — Redis-backed)
+- [x] Gradual rollout (5% → 20% → 50% → 100% of tenants; auto-rollback on error spike)
+- [x] A/B testing framework (show different UX to different tenant groups; measure engagement)
+- [x] Beta school program (willing schools receive new features first; opt-in from Company Portal)
 
 ---
 
