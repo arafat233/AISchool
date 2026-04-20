@@ -72,11 +72,17 @@ export class StudentService {
   async findOne(id: string, schoolId: string) {
     const s = await this.prisma.student.findFirst({
       where: { id, schoolId },
-      include: {
-        section: { include: { gradeLevel: true } },
-        parents: { include: { user: { include: { profile: true } } } },
+      select: {
+        id: true, admissionNo: true, firstName: true, lastName: true,
+        dateOfBirth: true, gender: true, bloodGroup: true, nationality: true,
+        religion: true, category: true, motherTongue: true, phone: true,
+        address: true, isRTE: true, transportRequired: true, status: true,
+        sectionId: true, academicYearId: true, admissionDate: true,
+        section: { select: { id: true, name: true, gradeLevel: { select: { id: true, name: true, numericLevel: true } } } },
+        parents: { select: { id: true, relation: true, user: { select: { id: true, email: true, profile: { select: { firstName: true, lastName: true, phone: true } } } } } },
         documents: true,
       },
+      // aadharNo intentionally excluded — only accessible via privileged endpoint
     });
     if (!s) throw new NotFoundError("Student", id);
     return s;

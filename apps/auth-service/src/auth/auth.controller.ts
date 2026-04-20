@@ -9,6 +9,7 @@ import {
   Res,
   UseGuards,
 } from "@nestjs/common";
+import { Throttle } from "@nestjs/throttler";
 import { AuthGuard } from "@nestjs/passport";
 import type { Request, Response } from "express";
 
@@ -37,6 +38,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
+  @Throttle({ burst: { limit: 1, ttl: 1_000 }, minute: { limit: 5, ttl: 60_000 }, hour: { limit: 20, ttl: 3600_000 } })
   @Post("login")
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
@@ -85,6 +87,7 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ burst: { limit: 1, ttl: 1_000 }, minute: { limit: 3, ttl: 60_000 }, hour: { limit: 10, ttl: 3600_000 } })
   @Post("forgot-password")
   @HttpCode(HttpStatus.ACCEPTED)
   async forgotPassword(@Body() dto: ForgotPasswordDto) {

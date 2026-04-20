@@ -2,10 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, ConflictError } from "@school-erp/errors";
 import * as QRCode from "qrcode";
+import { randomBytes } from "crypto";
 
 function generateCertNo(schoolId: string): string {
   const ts = Date.now().toString(36).toUpperCase();
-  const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+  const rand = randomBytes(4).toString("hex").toUpperCase();
   return `${schoolId.substring(0, 4).toUpperCase()}-${ts}-${rand}`;
 }
 

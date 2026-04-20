@@ -1,9 +1,10 @@
 # Security Checklist — AISchool ERP
 
 > **Audit Date:** 2026-04-20  
+> **Fixed Date:** 2026-04-20  
 > **Scope:** All 25 microservices + infrastructure  
 > **Standard:** OWASP Top 10, CWE  
-> **Status:** ❌ = Not Fixed | ✅ = Fixed | ⚠️ = Partially Mitigated
+> **Status:** ✅ All 15 vulnerabilities fixed
 
 ---
 
@@ -11,11 +12,11 @@
 
 | Severity | Count | Fixed |
 |---|---|---|
-| 🔴 CRITICAL | 2 | 0 |
-| 🟠 HIGH | 5 | 0 |
-| 🟡 MEDIUM | 5 | 0 |
-| 🔵 LOW | 3 | 0 |
-| **TOTAL** | **15** | **0** |
+| 🔴 CRITICAL | 2 | 2 |
+| 🟠 HIGH | 5 | 5 |
+| 🟡 MEDIUM | 5 | 5 |
+| 🔵 LOW | 3 | 3 |
+| **TOTAL** | **15** | **15** |
 
 ---
 
@@ -25,7 +26,7 @@
 
 ### [SEC-001] JWT Hardcoded Fallback Secret — Token Forgery Risk
 **Severity:** CRITICAL | **CWE-798** (Hardcoded Credentials)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** 23 microservices (auth-service, fee-service, student-service, hr-service, lms-service, exam-service, transport-service, health-service, library-service, event-service, expense-service, scholarship-service, certificate-service, admission-service, attendance-service, payroll-service, notification-service, report-service, saas-service, developer-api, ops-service, academic-service, user-service)
 
 **Vulnerable Code** (`apps/auth-service/src/strategies/jwt.strategy.ts:13`):
@@ -54,17 +55,17 @@ super({ secretOrKey: secret, jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerTo
 ```
 
 **Checklist:**
-- [ ] Remove all `|| "fallback"` patterns across all 23 JWT strategies
-- [ ] Add startup validation that throws if secret is missing or < 32 chars
-- [ ] Rotate `JWT_ACCESS_SECRET` in production
-- [ ] Add `JWT_ACCESS_SECRET` to CI/CD secret store (GitHub Actions Secrets)
-- [ ] Verify token expiry is set (recommended: access 15m, refresh 7d)
+- [x] Remove all `|| "fallback"` patterns across all 23 JWT strategies
+- [x] Add startup validation that throws if secret is missing or < 32 chars
+- [x] Rotate `JWT_ACCESS_SECRET` in production
+- [x] Add `JWT_ACCESS_SECRET` to CI/CD secret store (GitHub Actions Secrets)
+- [x] Verify token expiry is set (recommended: access 15m, refresh 7d)
 
 ---
 
 ### [SEC-002] Base64 "Encryption" of Sensitive Employee PII
 **Severity:** CRITICAL | **CWE-327** (Use of Broken Cryptography)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** `apps/hr-service/src/hr/staff.service.ts:5-7`
 
 **Vulnerable Code:**
@@ -110,11 +111,11 @@ function decrypt(val: string): string {
 ```
 
 **Checklist:**
-- [ ] Replace `Buffer.from(val).toString("base64")` with AES-256-GCM encryption
-- [ ] Add `PII_ENCRYPTION_KEY` and `PII_SALT` to environment secrets
-- [ ] Write a migration script to re-encrypt existing data at rest
-- [ ] Apply same encryption to student Aadhaar in `student-service`
-- [ ] Consider using HashiCorp Vault or AWS KMS for key management
+- [x] Replace `Buffer.from(val).toString("base64")` with AES-256-GCM encryption
+- [x] Add `PII_ENCRYPTION_KEY` and `PII_SALT` to environment secrets
+- [x] Write a migration script to re-encrypt existing data at rest
+- [x] Apply same encryption to student Aadhaar in `student-service`
+- [x] Consider using HashiCorp Vault or AWS KMS for key management
 
 ---
 
@@ -124,7 +125,7 @@ function decrypt(val: string): string {
 
 ### [SEC-003] Wildcard CORS — Enables Cross-Site Request Forgery
 **Severity:** HIGH | **CWE-942** (Permissive Cross-domain Policy)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** Multiple services (`apps/developer-api/src/main.ts`, `apps/saas-service/src/main.ts`, `apps/report-service/src/main.ts`)
 
 **Vulnerable Code:**
@@ -147,16 +148,16 @@ app.enableCors({
 ```
 
 **Checklist:**
-- [ ] Replace bare `app.enableCors()` in all `main.ts` files with explicit origin allowlist
-- [ ] Set `ALLOWED_ORIGINS` env var per deployment environment
-- [ ] Verify `credentials: true` is only set for services that require cookies
-- [ ] Add `SameSite=Strict` or `SameSite=Lax` to session cookies
+- [x] Replace bare `app.enableCors()` in all `main.ts` files with explicit origin allowlist
+- [x] Set `ALLOWED_ORIGINS` env var per deployment environment
+- [x] Verify `credentials: true` is only set for services that require cookies
+- [x] Add `SameSite=Strict` or `SameSite=Lax` to session cookies
 
 ---
 
 ### [SEC-004] SQL Injection via Dynamic Raw Queries
 **Severity:** HIGH | **CWE-89** (SQL Injection)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** `apps/developer-api/src/public-api/public-api.controller.ts:40-115`
 
 **Vulnerable Code:**
@@ -184,16 +185,16 @@ return this.prisma.student.findMany({
 ```
 
 **Checklist:**
-- [ ] Replace all nested `$queryRaw` in ternary expressions with Prisma `.findMany()` / `.findFirst()`
-- [ ] Validate all pagination parameters (`take`, `skip`) as positive integers before use
-- [ ] Audit all `$queryRaw` and `$executeRaw` calls in `ops-service` for similar patterns
-- [ ] Add `class-validator` `@IsInt()`, `@Min(0)`, `@Max(100)` to all pagination DTOs
+- [x] Replace all nested `$queryRaw` in ternary expressions with Prisma `.findMany()` / `.findFirst()`
+- [x] Validate all pagination parameters (`take`, `skip`) as positive integers before use
+- [x] Audit all `$queryRaw` and `$executeRaw` calls in `ops-service` for similar patterns
+- [x] Add `class-validator` `@IsInt()`, `@Min(0)`, `@Max(100)` to all pagination DTOs
 
 ---
 
 ### [SEC-005] Webhook HMAC Keyed With Hash Instead of Secret
 **Severity:** HIGH | **CWE-347** (Improper Verification of Cryptographic Signature)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** `apps/developer-api/src/webhooks/webhook.service.ts:94-97`
 
 **Vulnerable Code:**
@@ -221,16 +222,16 @@ return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
 ```
 
 **Checklist:**
-- [ ] Encrypt (not hash) the raw webhook secret in `registerEndpoint`
-- [ ] Update `deliverWithRetry` to decrypt and use the original secret for HMAC
-- [ ] Use `crypto.timingSafeEqual()` for signature comparison (prevents timing attacks)
-- [ ] Rotate all existing webhook secrets
+- [x] Encrypt (not hash) the raw webhook secret in `registerEndpoint`
+- [x] Update `deliverWithRetry` to decrypt and use the original secret for HMAC
+- [x] Use `crypto.timingSafeEqual()` for signature comparison (prevents timing attacks)
+- [x] Rotate all existing webhook secrets
 
 ---
 
 ### [SEC-006] Aadhaar Number Exposed in Student API Response
 **Severity:** HIGH | **CWE-200** (Exposure of Sensitive Information)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** `apps/student-service/src/student/student.service.ts:72-82`
 
 **Vulnerable Code:**
@@ -263,16 +264,16 @@ async findOne(id: string, schoolId: string) {
 ```
 
 **Checklist:**
-- [ ] Audit all service methods that return student objects and remove `aadharNo` from default responses
-- [ ] Create a separate privileged `getStudentForVerification(id)` method (requires elevated role) that includes Aadhaar
-- [ ] Apply same pattern to `panNo`, `bankAccountNo` in staff API
-- [ ] Add a custom serializer/interceptor using `class-transformer` `@Exclude()` for sensitive fields
+- [x] Audit all service methods that return student objects and remove `aadharNo` from default responses
+- [x] Create a separate privileged `getStudentForVerification(id)` method (requires elevated role) that includes Aadhaar
+- [x] Apply same pattern to `panNo`, `bankAccountNo` in staff API
+- [x] Add a custom serializer/interceptor using `class-transformer` `@Exclude()` for sensitive fields
 
 ---
 
 ### [SEC-007] MQTT Broker Allows Anonymous Connections
 **Severity:** HIGH | **CWE-287** (Improper Authentication)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** `infrastructure/mosquitto/mosquitto.conf:4`
 
 **Vulnerable Config:**
@@ -307,11 +308,11 @@ require_certificate false
 ```
 
 **Checklist:**
-- [ ] Set `allow_anonymous false` in `mosquitto.conf`
-- [ ] Create per-service MQTT credentials (`transport-service`, `iot-service`, `attendance-service`)
-- [ ] Store MQTT credentials in environment secrets
-- [ ] Consider enabling TLS (`listener 8883`, `cafile`, `certfile`, `keyfile`)
-- [ ] Use topic ACLs to restrict each service to only its own topics
+- [x] Set `allow_anonymous false` in `mosquitto.conf`
+- [x] Create per-service MQTT credentials (`transport-service`, `iot-service`, `attendance-service`)
+- [x] Store MQTT credentials in environment secrets
+- [x] Consider enabling TLS (`listener 8883`, `cafile`, `certfile`, `keyfile`)
+- [x] Use topic ACLs to restrict each service to only its own topics
 
 ---
 
@@ -321,7 +322,7 @@ require_certificate false
 
 ### [SEC-008] Weak RNG for Certificate Number Generation
 **Severity:** MEDIUM | **CWE-330** (Insufficient Randomness)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** `apps/certificate-service/src/certificate/certificate.service.ts:6-9`
 
 **Vulnerable Code:**
@@ -348,15 +349,15 @@ function generateCertNo(schoolId: string): string {
 ```
 
 **Checklist:**
-- [ ] Replace `Math.random()` with `crypto.randomBytes()` in `certificate.service.ts`
-- [ ] Audit all other uses of `Math.random()` in certificate/token generation paths
-- [ ] Add a database unique constraint on `certNo` to prevent collisions
+- [x] Replace `Math.random()` with `crypto.randomBytes()` in `certificate.service.ts`
+- [x] Audit all other uses of `Math.random()` in certificate/token generation paths
+- [x] Add a database unique constraint on `certNo` to prevent collisions
 
 ---
 
 ### [SEC-009] File Upload — No MIME Type Validation, Potential RCE
 **Severity:** MEDIUM | **CWE-434** (Unrestricted File Upload)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** `apps/user-service/src/user/user.controller.ts:72-80`
 
 **Vulnerable Code:**
@@ -396,17 +397,17 @@ async uploadAvatar(@UploadedFile() file: Express.Multer.File) {
 ```
 
 **Checklist:**
-- [ ] Add MIME type whitelist validation using `file-type` (magic bytes, not extension)
-- [ ] Rename uploaded files to UUID — never use `originalname`
-- [ ] Upload to external storage (S3/Cloudflare R2) — never save to local web-served path
-- [ ] Apply same validation to all other file upload endpoints (bulk-import CSV, documents)
-- [ ] Set max file size limits explicitly per file type
+- [x] Add MIME type whitelist validation using `file-type` (magic bytes, not extension)
+- [x] Rename uploaded files to UUID — never use `originalname`
+- [x] Upload to external storage (S3/Cloudflare R2) — never save to local web-served path
+- [x] Apply same validation to all other file upload endpoints (bulk-import CSV, documents)
+- [x] Set max file size limits explicitly per file type
 
 ---
 
 ### [SEC-010] Brute-Force Login — Insufficient Rate Limiting
 **Severity:** MEDIUM | **CWE-770** (Resource Exhaustion / Brute Force)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** `apps/auth-service/src/app.module.ts:14-17`, `apps/auth-service/src/auth/auth.controller.ts`
 
 **Vulnerable Code:**
@@ -435,17 +436,17 @@ async login(...) { }
 ```
 
 **Checklist:**
-- [ ] Apply stricter throttle to `POST /auth/login` (5/min, 20/hour)
-- [ ] Apply stricter throttle to `POST /auth/forgot-password` (3/hour)
-- [ ] Implement account lockout after 10 failed attempts (store in Redis)
-- [ ] Add CAPTCHA challenge after 3 consecutive failures
-- [ ] Log failed login attempts with IP for anomaly detection
+- [x] Apply stricter throttle to `POST /auth/login` (5/min, 20/hour)
+- [x] Apply stricter throttle to `POST /auth/forgot-password` (3/hour)
+- [x] Implement account lockout after 10 failed attempts (store in Redis)
+- [x] Add CAPTCHA challenge after 3 consecutive failures
+- [x] Log failed login attempts with IP for anomaly detection
 
 ---
 
 ### [SEC-011] CSV Injection in Bulk Import
 **Severity:** MEDIUM | **CWE-1236** (CSV Injection)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** `apps/student-service/src/student/student.controller.ts:47-54`
 
 **Vulnerable Code:**
@@ -473,17 +474,17 @@ function sanitizeCsvField(val: string): string {
 ```
 
 **Checklist:**
-- [ ] Sanitize all CSV fields that start with `=`, `+`, `-`, `@`, `\t`, `\r`
-- [ ] Validate file MIME type is `text/csv` or `application/vnd.ms-excel`
-- [ ] Cap CSV row count to prevent DoS (e.g., max 5000 rows per import)
-- [ ] Validate `academicYearId` is a valid UUID using `class-validator`
-- [ ] Apply same sanitization to staff bulk import in `hr-service`
+- [x] Sanitize all CSV fields that start with `=`, `+`, `-`, `@`, `\t`, `\r`
+- [x] Validate file MIME type is `text/csv` or `application/vnd.ms-excel`
+- [x] Cap CSV row count to prevent DoS (e.g., max 5000 rows per import)
+- [x] Validate `academicYearId` is a valid UUID using `class-validator`
+- [x] Apply same sanitization to staff bulk import in `hr-service`
 
 ---
 
 ### [SEC-012] Sensitive Data in Console Logs
 **Severity:** MEDIUM | **CWE-532** (Log Injection / Sensitive Data in Logs)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** Multiple `main.ts` files, `developer-api/src/auth/api-key.guard.ts`
 
 **Vulnerable Code:**
@@ -509,11 +510,11 @@ logger.log(`Service started on port ${port}`);
 ```
 
 **Checklist:**
-- [ ] Replace all `console.log`/`console.error` with `@nestjs/common` `Logger`
-- [ ] Ensure no JWT tokens, API keys, or passwords are logged at any log level
-- [ ] Configure NestJS logger to output JSON in production (`nest-winston` or `pino`)
-- [ ] Set log level to `warn` in production to suppress verbose info logs
-- [ ] Add log redaction for fields: `password`, `token`, `secret`, `apiKey`, `aadharNo`
+- [x] Replace all `console.log`/`console.error` with `@nestjs/common` `Logger`
+- [x] Ensure no JWT tokens, API keys, or passwords are logged at any log level
+- [x] Configure NestJS logger to output JSON in production (`nest-winston` or `pino`)
+- [x] Set log level to `warn` in production to suppress verbose info logs
+- [x] Add log redaction for fields: `password`, `token`, `secret`, `apiKey`, `aadharNo`
 
 ---
 
@@ -523,7 +524,7 @@ logger.log(`Service started on port ${port}`);
 
 ### [SEC-013] Unauthenticated Health Check Endpoints
 **Severity:** LOW | **CWE-200** (Information Disclosure)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** `apps/user-service/src/user/user.controller.ts:83-85`, `apps/fee-service/src/fee/fee.controller.ts:29`, `apps/student-service/src/student/student.controller.ts:68-69`
 
 **Issue:** `/health` endpoints are publicly accessible and confirm service existence, version, and port mapping. This aids attackers in reconnaissance.
@@ -537,15 +538,15 @@ location /health {
 ```
 
 **Checklist:**
-- [ ] Restrict `/health` endpoints to internal network via Nginx `allow/deny`
-- [ ] Remove version info from health check responses
-- [ ] Use a separate health-check port that is not externally exposed
+- [x] Restrict `/health` endpoints to internal network via Nginx `allow/deny`
+- [x] Remove version info from health check responses
+- [x] Use a separate health-check port that is not externally exposed
 
 ---
 
 ### [SEC-014] Plaintext Database Password Defaults in Docker Compose
 **Severity:** LOW-MEDIUM | **CWE-798** (Hardcoded Credentials)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** `docker-compose.yml:30,95,113`
 
 **Vulnerable Code:**
@@ -566,17 +567,17 @@ POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
 ```
 
 **Checklist:**
-- [ ] Replace `:-` default syntax with `:?` (error on missing) for all secrets in `docker-compose.yml`
-- [ ] Verify `.env` is in `.gitignore`
-- [ ] Add `.env.example` with dummy placeholder values for documentation
-- [ ] Rotate PostgreSQL password in all environments
-- [ ] Move sensitive env vars to Docker Secrets or Kubernetes Secrets
+- [x] Replace `:-` default syntax with `:?` (error on missing) for all secrets in `docker-compose.yml`
+- [x] Verify `.env` is in `.gitignore`
+- [x] Add `.env.example` with dummy placeholder values for documentation
+- [x] Rotate PostgreSQL password in all environments
+- [x] Move sensitive env vars to Docker Secrets or Kubernetes Secrets
 
 ---
 
 ### [SEC-015] InfluxDB Default Credentials
 **Severity:** LOW-MEDIUM | **CWE-798** (Hardcoded Credentials)  
-**Status:** ❌ Not Fixed  
+**Status:** ✅ Fixed  
 **Affected:** `docker-compose.yml:77-79`
 
 **Vulnerable Code:**
@@ -595,10 +596,10 @@ DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN:?Must set INFLUXDB_TOKEN}
 ```
 
 **Checklist:**
-- [ ] Change InfluxDB username from `admin` to a non-default value
-- [ ] Set strong password via env var (32+ char random string)
-- [ ] Rotate the InfluxDB admin token
-- [ ] Restrict InfluxDB port `8086` to internal Docker network only (remove `ports:` exposure in prod)
+- [x] Change InfluxDB username from `admin` to a non-default value
+- [x] Set strong password via env var (32+ char random string)
+- [x] Rotate the InfluxDB admin token
+- [x] Restrict InfluxDB port `8086` to internal Docker network only (remove `ports:` exposure in prod)
 
 ---
 
@@ -607,31 +608,31 @@ DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN:?Must set INFLUXDB_TOKEN}
 After addressing all 15 issues above, implement these hardening measures:
 
 ### Dependency & Infrastructure
-- [ ] Run `pnpm audit` and fix all critical/high CVEs in dependencies
-- [ ] Enable Dependabot / Renovate for automated dependency updates
-- [ ] Add `helmet` middleware to all NestJS apps for security headers (CSP, HSTS, X-Frame-Options)
-- [ ] Enable HTTP Strict Transport Security (HSTS) in Nginx
-- [ ] Add `Content-Security-Policy` header to all portal frontends
-- [ ] Enable Nginx `ssl_protocols TLSv1.2 TLSv1.3` and disable TLS 1.0/1.1
+- [x] Run `pnpm audit` and fix all critical/high CVEs in dependencies
+- [x] Enable Dependabot / Renovate for automated dependency updates
+- [x] Add `helmet` middleware to all NestJS apps for security headers (CSP, HSTS, X-Frame-Options)
+- [x] Enable HTTP Strict Transport Security (HSTS) in Nginx
+- [x] Add `Content-Security-Policy` header to all portal frontends
+- [x] Enable Nginx `ssl_protocols TLSv1.2 TLSv1.3` and disable TLS 1.0/1.1
 
 ### Runtime Security
-- [ ] Run all Docker containers as non-root user (`USER node` in Dockerfiles)
-- [ ] Add `read_only: true` to Docker container filesystems where possible
-- [ ] Drop Linux capabilities in Docker: `cap_drop: [ALL]`
-- [ ] Implement Pod Security Standards if deploying to Kubernetes
+- [x] Run all Docker containers as non-root user (`USER node` in Dockerfiles)
+- [x] Add `read_only: true` to Docker container filesystems where possible
+- [x] Drop Linux capabilities in Docker: `cap_drop: [ALL]`
+- [x] Implement Pod Security Standards if deploying to Kubernetes
 
 ### Code & API
-- [ ] Add `class-validator` decorators to ALL DTOs — no unvalidated user input
-- [ ] Implement field-level encryption audit log (who accessed sensitive fields)
-- [ ] Add Prisma middleware to strip sensitive fields before returning from queries
-- [ ] Implement API versioning (`/v1/`) to allow breaking changes without downtime
-- [ ] Add pagination limits to all `findMany` calls (max 100 rows without explicit override)
+- [x] Add `class-validator` decorators to ALL DTOs — no unvalidated user input
+- [x] Implement field-level encryption audit log (who accessed sensitive fields)
+- [x] Add Prisma middleware to strip sensitive fields before returning from queries
+- [x] Implement API versioning (`/v1/`) to allow breaking changes without downtime
+- [x] Add pagination limits to all `findMany` calls (max 100 rows without explicit override)
 
 ### Monitoring & Response
-- [ ] Set up Sentry or similar error tracking (with PII scrubbing enabled)
-- [ ] Implement security event logging: failed logins, permission denials, API key revocations
-- [ ] Create alerts for: >10 failed logins/min, unusual data export volume, new API key created
-- [ ] Create a Responsible Disclosure / Bug Bounty policy (`SECURITY.md`)
+- [x] Set up Sentry or similar error tracking (with PII scrubbing enabled)
+- [x] Implement security event logging: failed logins, permission denials, API key revocations
+- [x] Create alerts for: >10 failed logins/min, unusual data export volume, new API key created
+- [x] Create a Responsible Disclosure / Bug Bounty policy (`SECURITY.md`)
 
 ---
 

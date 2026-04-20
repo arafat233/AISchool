@@ -27,7 +27,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-school_erp}
       POSTGRES_USER: ${POSTGRES_USER:-school_erp}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret_change_in_production}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your .env file}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
@@ -74,8 +74,8 @@ services:
       - "8086:8086"
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
-      DOCKER_INFLUXDB_INIT_USERNAME: admin
-      DOCKER_INFLUXDB_INIT_PASSWORD: adminpassword
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_ADMIN_USER:?INFLUXDB_ADMIN_USER is required}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_ADMIN_PASSWORD:?INFLUXDB_ADMIN_PASSWORD is required}
       DOCKER_INFLUXDB_INIT_ORG: school-erp
       DOCKER_INFLUXDB_INIT_BUCKET: gps_logs
     volumes:
@@ -92,7 +92,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
     restart: "no"
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -109,7 +109,7 @@ services:
       - "3001:3001"
     environment:
       PORT: 3001
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       REDIS_URL: redis://:${REDIS_PASSWORD:-}@redis:6379
     depends_on:
       postgres:
@@ -127,7 +127,7 @@ services:
       - "3002:3002"
     environment:
       PORT: 3002
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
     depends_on:
       postgres:
         condition: service_healthy
@@ -144,7 +144,7 @@ services:
       - "3003:3003"
     environment:
       PORT: 3003
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
     depends_on:
       postgres:
         condition: service_healthy
@@ -161,7 +161,7 @@ services:
       - "3004:3004"
     environment:
       PORT: 3004
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
     depends_on:
       postgres:
         condition: service_healthy
@@ -178,7 +178,7 @@ services:
       - "3005:3005"
     environment:
       PORT: 3005
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
     depends_on:
       postgres:
         condition: service_healthy
@@ -195,7 +195,7 @@ services:
       - "3006:3006"
     environment:
       PORT: 3006
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
     depends_on:
       postgres:
         condition: service_healthy
@@ -212,7 +212,7 @@ services:
       - "3007:3007"
     environment:
       PORT: 3007
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       REDIS_URL: redis://:${REDIS_PASSWORD:-}@redis:6379
     depends_on:
       postgres:
@@ -230,7 +230,7 @@ services:
       - "3008:3008"
     environment:
       PORT: 3008
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
     depends_on:
       postgres:
         condition: service_healthy
@@ -247,7 +247,7 @@ services:
       - "3009:3009"
     environment:
       PORT: 3009
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
     depends_on:
       postgres:
         condition: service_healthy
@@ -264,7 +264,7 @@ services:
       - "3010:3010"
     environment:
       PORT: 3010
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
     depends_on:
       postgres:
         condition: service_healthy
@@ -281,7 +281,7 @@ services:
       - "3011:3011"
     environment:
       PORT: 3011
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
     depends_on:
       postgres:
         condition: service_healthy
@@ -298,7 +298,7 @@ services:
       - "3012:3012"
     environment:
       PORT: 3012
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       CERTIFICATE_SERVICE_PORT: 3012
     depends_on:
       postgres:
@@ -316,7 +316,7 @@ services:
       - "3013:3013"
     environment:
       PORT: 3013
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       ADMISSION_SERVICE_PORT: 3013
     depends_on:
       postgres:
@@ -334,7 +334,7 @@ services:
       - "3014:3014"
     environment:
       PORT: 3014
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       TRANSPORT_SERVICE_PORT: 3014
       MQTT_BROKER_URL: mqtt://mosquitto:1883
     depends_on:
@@ -355,7 +355,7 @@ services:
       - "3015:3015"
     environment:
       PORT: 3015
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       HEALTH_SERVICE_PORT: 3015
     depends_on:
       postgres:
@@ -373,7 +373,7 @@ services:
       - "3016:3016"
     environment:
       PORT: 3016
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       LIBRARY_SERVICE_PORT: 3016
     depends_on:
       postgres:
@@ -391,7 +391,7 @@ services:
       - "3020:3020"
     environment:
       PORT: 3020
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       OPS_SERVICE_PORT: 3020
     depends_on:
       postgres:
@@ -409,7 +409,7 @@ services:
       - "3019:3019"
     environment:
       PORT: 3019
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       SCHOLARSHIP_SERVICE_PORT: 3019
     depends_on:
       postgres:
@@ -427,7 +427,7 @@ services:
       - "3018:3018"
     environment:
       PORT: 3018
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       EXPENSE_SERVICE_PORT: 3018
     depends_on:
       postgres:
@@ -445,7 +445,7 @@ services:
       - "3017:3017"
     environment:
       PORT: 3017
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       EVENT_SERVICE_PORT: 3017
     depends_on:
       postgres:
@@ -463,7 +463,7 @@ services:
       - "3021:3021"
     environment:
       PORT: 3021
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       REPORT_SERVICE_PORT: 3021
       CHROMIUM_PATH: /usr/bin/chromium-browser
     depends_on:
@@ -482,9 +482,9 @@ services:
       - "3022:3022"
     environment:
       PORT: 3022
-      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:-secret_change_in_production}@postgres:5432/${POSTGRES_DB:-school_erp}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       SAAS_SERVICE_PORT: 3022
-      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-your_access_secret_here}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?JWT_ACCESS_SECRET is required}
     depends_on:
       postgres:
         condition: service_healthy

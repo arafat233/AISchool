@@ -1,10 +1,16 @@
-import { NestFactory } from "@nestjs/core";
+import { NestFactory, Reflector } from "@nestjs/core";
+import { Logger } from "@nestjs/common";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  const logger = new Logger("DeveloperApi");
+  app.enableCors({
+    origin: (process.env.CORS_ORIGINS ?? "").split(",").filter(Boolean),
+    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    credentials: true,
+  });
   app.setGlobalPrefix("v1");
 
   // ── Swagger / OpenAPI docs ───────────────────────────────────────────────
@@ -29,6 +35,6 @@ async function bootstrap() {
 
   const port = process.env.DEVELOPER_API_PORT ?? 3023;
   await app.listen(port);
-  console.log(`Developer API running on :${port} — docs: http://localhost:${port}/docs`);
+  logger.log(`Listening on :${port} — docs: http://localhost:${port}/docs`);
 }
 bootstrap();

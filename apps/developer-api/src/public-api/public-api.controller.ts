@@ -8,6 +8,7 @@ import {
 import {
   ApiTags, ApiSecurity, ApiOperation, ApiQuery, ApiParam,
 } from "@nestjs/swagger";
+import { Prisma } from "@prisma/client";
 import { ApiKeyGuard, ApiKeyContext } from "../auth/api-key.guard";
 import { PrismaService } from "../prisma/prisma.service";
 
@@ -32,12 +33,13 @@ export class StudentsApiController {
     const ctx: ApiKeyContext = req.apiKeyContext;
     const take = Math.min(Number(limit), 100);
     const skip = (Number(page) - 1) * take;
+    const classFilter = classId ? Prisma.sql`AND s.class_id = ${classId}` : Prisma.empty;
     return this.prisma.$queryRaw`
       SELECT s.id, s.full_name, s.admission_no, s.status, cl.name AS class_name, s.gender
       FROM students s
       JOIN classes cl ON cl.id = s.class_id
       WHERE s.school_id = ${ctx.schoolId}
-        ${classId ? this.prisma.$queryRaw`AND s.class_id = ${classId}` : this.prisma.$queryRaw``}
+        ${classFilter}
       ORDER BY s.full_name
       LIMIT ${take} OFFSET ${skip}
     `;

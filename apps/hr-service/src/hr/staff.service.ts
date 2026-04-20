@@ -1,10 +1,24 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError } from "@school-erp/errors";
+import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 
-// Simple XOR-based obfuscation (production would use KMS/vault)
-function encrypt(val: string): string { return Buffer.from(val).toString("base64"); }
-function decrypt(val: string): string { return Buffer.from(val, "base64").toString("utf8"); }
+const PII_KEY = Buffer.from(process.env.PII_ENCRYPTION_KEY!, "hex"); // 32-byte hex key required
+
+function encrypt(val: string): string {
+  const iv = randomBytes(12);
+  const cipher = createCipheriv("aes-256-gcm", PII_KEY, iv);
+  const enc = Buffer.concat([cipher.update(val, "utf8"), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  return `${iv.toString("hex")}:${tag.toString("hex")}:${enc.toString("hex")}`;
+}
+
+function decrypt(val: string): string {
+  const [ivHex, tagHex, encHex] = val.split(":");
+  const decipher = createDecipheriv("aes-256-gcm", PII_KEY, Buffer.from(ivHex, "hex"));
+  decipher.setAuthTag(Buffer.from(tagHex, "hex"));
+  return Buffer.concat([decipher.update(Buffer.from(encHex, "hex")), decipher.final()]).toString("utf8");
+}
 
 @Injectable()
 export class StaffService {

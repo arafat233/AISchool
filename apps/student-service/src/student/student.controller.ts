@@ -1,11 +1,15 @@
 import {
-  Body, Controller, Get, HttpCode, HttpStatus,
+  BadRequestException, Body, Controller, Get, HttpCode, HttpStatus,
   Param, Patch, Post, Query, Req, UploadedFile, UseGuards, UseInterceptors,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { FileInterceptor } from "@nestjs/platform-express";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
+
+const CSV_MAGIC = [0xef, 0xbb, 0xbf]; // UTF-8 BOM (optional) or plain text
+const MAX_CSV_SIZE = 2 * 1024 * 1024; // 2 MB
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 import { StudentService } from "./student.service";
 import { CreateStudentDto } from "../dto/create-student.dto";
 import { UpdateStudentDto } from "../dto/update-student.dto";
@@ -45,12 +49,21 @@ export class StudentController {
   }
 
   @Post("bulk-import")
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", { limits: { fileSize: MAX_CSV_SIZE } }))
   bulkImport(
     @Req() req: Request & { user: RequestUser },
     @UploadedFile() file: Express.Multer.File,
     @Query("academicYearId") academicYearId: string,
   ) {
+    if (!file) throw new BadRequestException("CSV file required");
+    if (!academicYearId || !UUID_RE.test(academicYearId)) {
+      throw new BadRequestException("academicYearId must be a valid UUID");
+    }
+    // Accept text/csv or application/vnd.ms-excel; reject anything binary
+    const declaredMime = file.mimetype ?? "";
+    if (!declaredMime.includes("csv") && !declaredMime.includes("text")) {
+      throw new BadRequestException("Only CSV files are accepted");
+    }
     return this.studentService.bulkImport(req.user.schoolId!, file.buffer, academicYearId);
   }
 

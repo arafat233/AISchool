@@ -14,6 +14,25 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import axios from "axios";
 import crypto from "crypto";
+import { Prisma } from "@prisma/client";
+import { createCipheriv, createDecipheriv, randomBytes, timingSafeEqual } from "crypto";
+
+const WEBHOOK_KEY = Buffer.from(process.env.WEBHOOK_ENCRYPTION_KEY!, "hex"); // 32-byte hex key
+
+function encryptSecret(val: string): string {
+  const iv = randomBytes(12);
+  const cipher = createCipheriv("aes-256-gcm", WEBHOOK_KEY, iv);
+  const enc = Buffer.concat([cipher.update(val, "utf8"), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  return `${iv.toString("hex")}:${tag.toString("hex")}:${enc.toString("hex")}`;
+}
+
+function decryptSecret(val: string): string {
+  const [ivHex, tagHex, encHex] = val.split(":");
+  const decipher = createDecipheriv("aes-256-gcm", WEBHOOK_KEY, Buffer.from(ivHex, "hex"));
+  decipher.setAuthTag(Buffer.from(tagHex, "hex"));
+  return Buffer.concat([decipher.update(Buffer.from(encHex, "hex")), decipher.final()]).toString("utf8");
+}
 
 export type WebhookEvent =
   | "student_enrolled"
@@ -34,10 +53,10 @@ export class WebhookService {
   // ── Registration ──────────────────────────────────────────────────────────
 
   async registerEndpoint(schoolId: string, url: string, events: WebhookEvent[], secret: string) {
-    const secretHash = crypto.createHash("sha256").update(secret).digest("hex");
+    const secretEnc = encryptSecret(secret);
     await this.prisma.$executeRaw`
       INSERT INTO webhook_endpoints (school_id, url, events, secret_hash, is_active, created_at)
-      VALUES (${schoolId}, ${url}, ${JSON.stringify(events)}::jsonb, ${secretHash}, true, NOW())
+      VALUES (${schoolId}, ${url}, ${JSON.stringify(events)}::jsonb, ${secretEnc}, true, NOW())
     `;
   }
 
@@ -90,9 +109,10 @@ export class WebhookService {
       attempt,
     });
 
-    // HMAC-SHA256 signature for consumer verification
+    // Decrypt stored secret and use raw value as HMAC key
+    const rawSecret = decryptSecret(endpoint.secret_hash);
     const signature = crypto
-      .createHmac("sha256", endpoint.secret_hash)
+      .createHmac("sha256", rawSecret)
       .update(body)
       .digest("hex");
 
@@ -165,6 +185,7 @@ export class WebhookService {
   // ── Delivery Log ──────────────────────────────────────────────────────────
 
   async getDeliveryLog(schoolId: string, endpointId?: string) {
+    const epFilter = endpointId ? Prisma.sql`AND wdl.endpoint_id = ${endpointId}` : Prisma.empty;
     return this.prisma.$queryRaw<any[]>`
       SELECT
         wdl.endpoint_id,
@@ -178,7 +199,7 @@ export class WebhookService {
       FROM webhook_delivery_logs wdl
       JOIN webhook_endpoints we ON we.id = wdl.endpoint_id
       WHERE we.school_id = ${schoolId}
-        ${endpointId ? this.prisma.$queryRaw`AND wdl.endpoint_id = ${endpointId}` : this.prisma.$queryRaw``}
+        ${epFilter}
       ORDER BY wdl.attempted_at DESC
       LIMIT 100
     `;
