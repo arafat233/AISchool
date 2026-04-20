@@ -19,12 +19,12 @@
 | Phase 3 — Operations | 172 | 172 | 100% |
 | Phase 4 — Intelligence & Mobile | 88 | 88 | 100% |
 | Phase 5 — Platform & DevOps | 72 | 72 | 100% |
-| Phase 6 — Niche, Compliance & Community | 113 | 0 | 0% |
-| **TOTAL** | **657** | **515** | **78.4%** |
+| Phase 6 — Niche, Compliance & Community | 113 | 113 | 100% |
+| **TOTAL** | **657** | **657** | **100%** |
 
-**Last updated:** 2026-04-19
-**Last git commit:** Phase 5 COMPLETE — Blockchain + K8s + Security + Email + IoT + MDM + Feature Flags (515/657 tasks)
-**Current focus:** Phase 6 — Niche, Compliance & Community → 6.1 POSH / POCSO Compliance
+**Last updated:** 2026-04-20
+**Last git commit:** Phase 6 COMPLETE — ALL 657 TASKS DONE 🎉
+**Current focus:** ALL PHASES COMPLETE — School ERP fully built
 
 ---
 
@@ -89,6 +89,7 @@
 | 15 | 2026-04-19 | 30 | Phase 3.13–3.15: Report Service, Management Portal SaaS pages, SaaS Service — Phase 3 ✅ |
 | 16 | 2026-04-19 | 31 | Phase 4.1–4.2: Expo Mobile App (student + parent) + Python AI/ML Service |
 | 17 | 2026-04-19 | 72 | Phase 5 COMPLETE: Blockchain + K8s + Security + Email + IoT + MDM + Feature Flags |
+| 18 | 2026-04-20 | 113 | Phase 6 COMPLETE: POSH + Labour Law + RTE + International + Hostel + Pre-Primary + Vocational + IEP + Gamification + Niche + Magazine + Mentoring + Accreditation — ALL 657 TASKS DONE |
 
 ---
 
@@ -750,130 +751,130 @@
 **Target:** International + Hostel + Pre-Primary + Vocational + Compliance + Gamification + Governance
 
 ### 6.1 POSH & Child Safety Compliance (8 tasks)
-- [ ] **POSH module** — ICC member register (designation, tenure), complaint portal (confidential, anonymous option), investigation timeline tracking (mandatory 90 days), annual report auto-generation (filed with District Officer — mandatory by 31 Jan), policy digital acknowledgement (all staff annually), third-party complaint coverage
-- [ ] **POCSO mandatory reporting workflow** — abuse incident logged → system generates POCSO report draft → DSL notified → mandatory filing reminder with 24-hour deadline
-- [ ] **Child Safeguarding Policy** — DSL role designation, all staff digital acknowledgement annually, all incidents routed to DSL, visitor vetting integration
-- [ ] Staff background check tracking (police verification status per staff member — blocks certain permissions until verified)
-- [ ] Annual POSH training completion tracking (certification upload, compliance alert if any staff not completed)
-- [ ] Safeguarding incident log (confidential — access restricted to DSL + Principal only; encrypted)
-- [ ] **Building safety & infrastructure compliance** — structural audit log, certificate of occupancy, electrical audit, generator compliance (pollution cert, fuel storage licence), ramp/accessibility audit (RPwD Act), annual building compliance calendar
-- [ ] **Fire safety module** — drill records (quarterly mandatory), fire extinguisher inventory (location, type, inspection date, expiry), evacuation plan upload (assembly points per class), first aid kit inventory, emergency exit inspection log, fire NOC tracking
+- [x] **POSH module** — ICC member register (designation, tenure), complaint portal (confidential, anonymous option), investigation timeline tracking (mandatory 90 days), annual report auto-generation (filed with District Officer — mandatory by 31 Jan), policy digital acknowledgement (all staff annually), third-party complaint coverage
+- [x] **POCSO mandatory reporting workflow** — abuse incident logged → system generates POCSO report draft → DSL notified → mandatory filing reminder with 24-hour deadline
+- [x] **Child Safeguarding Policy** — DSL role designation, all staff digital acknowledgement annually, all incidents routed to DSL, visitor vetting integration
+- [x] Staff background check tracking (police verification status per staff member — blocks certain permissions until verified)
+- [x] Annual POSH training completion tracking (certification upload, compliance alert if any staff not completed)
+- [x] Safeguarding incident log (confidential — access restricted to DSL + Principal only; encrypted)
+- [x] **Building safety & infrastructure compliance** — structural audit log, certificate of occupancy, electrical audit, generator compliance (pollution cert, fuel storage licence), ramp/accessibility audit (RPwD Act), annual building compliance calendar
+- [x] **Fire safety module** — drill records (quarterly mandatory), fire extinguisher inventory (location, type, inspection date, expiry), evacuation plan upload (assembly points per class), first aid kit inventory, emergency exit inspection log, fire NOC tracking
 
 ### 6.2 Labour Law & Statutory Compliance (8 tasks)
-- [ ] **Annual compliance calendar** — all items with deadlines, responsible person, 60/30/15/7-day reminders, document upload on completion, overdue flagged red in Admin + Company Portal
-- [ ] Minimum wage compliance check (support staff wages vs state minimum wage — auto-flag breach)
-- [ ] Labour Welfare Fund (state-wise monthly deduction + bi-annual remittance, challan generation)
-- [ ] Professional Tax annual return data export (state-wise format)
-- [ ] ESI monthly challan generation + annual return data export
-- [ ] EPF ECR monthly file generation + annual PF statement per employee
-- [ ] **RTI Management** — application receipt + RTI number, 30-day response deadline tracking, department-wise information compilation, response document formatting, first/second appeal timeline, RTI register (mandatory), Section 4 proactive disclosure published on school website CMS
-- [ ] UDISE+ data compilation + export (annual school data submission to government portal)
+- [x] **Annual compliance calendar** — all items with deadlines, responsible person, 60/30/15/7-day reminders, document upload on completion, overdue flagged red in Admin + Company Portal
+- [x] Minimum wage compliance check (support staff wages vs state minimum wage — auto-flag breach)
+- [x] Labour Welfare Fund (state-wise monthly deduction + bi-annual remittance, challan generation)
+- [x] Professional Tax annual return data export (state-wise format)
+- [x] ESI monthly challan generation + annual return data export
+- [x] EPF ECR monthly file generation + annual PF statement per employee
+- [x] **RTI Management** — application receipt + RTI number, 30-day response deadline tracking, department-wise information compilation, response document formatting, first/second appeal timeline, RTI register (mandatory), Section 4 proactive disclosure published on school website CMS
+- [x] UDISE+ data compilation + export (annual school data submission to government portal)
 
 ### 6.3 RTE & Government Compliance (6 tasks)
-- [ ] **RTE 25% reservation** — seat allocation per class per year, income certificate verification workflow, lottery draw (randomised, transparent — log stored), student tagged as RTE in system
-- [ ] Government reimbursement claim per RTE student (fee structure × RTE student count × term → claim document generation)
-- [ ] Reimbursement tracking (claim filed → pending → received; shortfall tracked separately)
-- [ ] RTE student progress monitoring (government requires attendance + performance tracking — auto-report)
-- [ ] RTE compliance report for District Education Officer (monthly: seats, applicants, admitted, attending)
-- [ ] **APAAR ID / ABC integration** (Academic Bank of Credits API — generate or import APAAR ID per student; push academic credits; DigiLocker linkage; credit transfer on school change)
+- [x] **RTE 25% reservation** — seat allocation per class per year, income certificate verification workflow, lottery draw (randomised, transparent — log stored), student tagged as RTE in system
+- [x] Government reimbursement claim per RTE student (fee structure × RTE student count × term → claim document generation)
+- [x] Reimbursement tracking (claim filed → pending → received; shortfall tracked separately)
+- [x] RTE student progress monitoring (government requires attendance + performance tracking — auto-report)
+- [x] RTE compliance report for District Education Officer (monthly: seats, applicants, admitted, attending)
+- [x] **APAAR ID / ABC integration** (Academic Bank of Credits API — generate or import APAAR ID per student; push academic credits; DigiLocker linkage; credit transfer on school change)
 
 ### 6.4 International School Modules (8 tasks)
-- [ ] **IB PYP (Grades 1–5)** — UOI planning, transdisciplinary theme mapping, learner profile assessment, portfolio of student work
-- [ ] **IB MYP (Grades 6–10)** — subject group management, ATL skills assessment, Community Project / Personal Project tracking, eAssessment registration
-- [ ] **IB DP (Grades 11–12)** — CAS hours (150hrs: Creativity + Activity + Service) tracking, TOK essay + exhibition tracking, Extended Essay supervisor log, predicted grades, DP exam registration management
-- [ ] **Cambridge IGCSE / A-Level** — subject/component management, coursework tracking, Cambridge Centre number + candidate number per student, results day import from Cambridge portal
-- [ ] **Foreign / NRI student management** — passport + visa details, renewal reminders (60 days before), foreign student register (immigration compliance), multi-currency fee collection (FX rate from RBI/XE API, FX gain/loss accounting), time zone per parent profile (notifications at appropriate local time)
-- [ ] **Apostille & document legalisation** — request workflow, MEA submission tracking, courier tracking, document returned + sticker verified
-- [ ] **International staff management** — work permit, visa type/expiry, DTAA benefit tracking, foreign salary component, relocation allowance tracking
-- [ ] Multi-currency consolidated report (Company Portal — all currencies converted to base INR for reporting; FX rate used on conversion date recorded)
+- [x] **IB PYP (Grades 1–5)** — UOI planning, transdisciplinary theme mapping, learner profile assessment, portfolio of student work
+- [x] **IB MYP (Grades 6–10)** — subject group management, ATL skills assessment, Community Project / Personal Project tracking, eAssessment registration
+- [x] **IB DP (Grades 11–12)** — CAS hours (150hrs: Creativity + Activity + Service) tracking, TOK essay + exhibition tracking, Extended Essay supervisor log, predicted grades, DP exam registration management
+- [x] **Cambridge IGCSE / A-Level** — subject/component management, coursework tracking, Cambridge Centre number + candidate number per student, results day import from Cambridge portal
+- [x] **Foreign / NRI student management** — passport + visa details, renewal reminders (60 days before), foreign student register (immigration compliance), multi-currency fee collection (FX rate from RBI/XE API, FX gain/loss accounting), time zone per parent profile (notifications at appropriate local time)
+- [x] **Apostille & document legalisation** — request workflow, MEA submission tracking, courier tracking, document returned + sticker verified
+- [x] **International staff management** — work permit, visa type/expiry, DTAA benefit tracking, foreign salary component, relocation allowance tracking
+- [x] Multi-currency consolidated report (Company Portal — all currencies converted to base INR for reporting; FX rate used on conversion date recorded)
 
 ### 6.5 Hostel / Boarding School Module (10 tasks)
-- [ ] Room management (blocks, floors, rooms, beds; room type; capacity)
-- [ ] Student bed allotment (per academic year; allotment letter generation)
-- [ ] Warden management (assigned per block; duty roster; emergency contact)
-- [ ] **Hostel attendance** (daily night count: in hostel / weekend leave / holiday leave; roll call report to Principal)
-- [ ] Mess / dining management (meal plan per student; dietary preferences; monthly mess bill; food wastage log)
-- [ ] Hostel fee (room rent + mess + laundry + utilities — separate fee head; auto-added to student invoice)
-- [ ] **Leave & outing management** (student applies; warden → parent approval chain; gate pass issued; return time tracked)
-- [ ] Hostel visitor log (separate from school gate; visiting hours enforced)
-- [ ] Hostel incident register (fights, property damage, health issues — warden logs, parent notified)
-- [ ] **Staff quarters / housing management** — housing unit master (type, block, floor), staff allotment (waiting list if no vacancy), monthly rent + utility deduction from salary, vacating checklist on exit, guest house booking system
+- [x] Room management (blocks, floors, rooms, beds; room type; capacity)
+- [x] Student bed allotment (per academic year; allotment letter generation)
+- [x] Warden management (assigned per block; duty roster; emergency contact)
+- [x] **Hostel attendance** (daily night count: in hostel / weekend leave / holiday leave; roll call report to Principal)
+- [x] Mess / dining management (meal plan per student; dietary preferences; monthly mess bill; food wastage log)
+- [x] Hostel fee (room rent + mess + laundry + utilities — separate fee head; auto-added to student invoice)
+- [x] **Leave & outing management** (student applies; warden → parent approval chain; gate pass issued; return time tracked)
+- [x] Hostel visitor log (separate from school gate; visiting hours enforced)
+- [x] Hostel incident register (fights, property damage, health issues — warden logs, parent notified)
+- [x] **Staff quarters / housing management** — housing unit master (type, block, floor), staff allotment (waiting list if no vacancy), monthly rent + utility deduction from salary, vacating checklist on exit, guest house booking system
 
 ### 6.6 Pre-Primary / Play School Module (8 tasks)
-- [ ] Daily activity log per child (nap time, meals eaten, mood, activities participated)
-- [ ] **Parent daily report** — auto-generated at end of day: what child did, ate, mood, incidents → pushed to Parent Portal + WhatsApp
-- [ ] Developmental milestone tracking (gross motor, fine motor, language, cognitive, social-emotional — age-appropriate milestones per month)
-- [ ] Allergen-specific meal tracking (per-child allergen profile; kitchen flagged; POS blocks incompatible meal)
-- [ ] **Photo / video diary** (teacher uploads 2–3 photos per child per day → parent sees in app — parental consent required; GDPR-compliant; photos not shared with other parents)
-- [ ] Pickup authorisation (parent specifies authorised pickup persons with photos; security app checks at gate; child cannot be released to unauthorised person)
-- [ ] Potty training log (2–3 year olds — sensitive, access restricted to key carer + parent)
-- [ ] Nap schedule management per child (individual schedule; nurse log for sleep issues)
+- [x] Daily activity log per child (nap time, meals eaten, mood, activities participated)
+- [x] **Parent daily report** — auto-generated at end of day: what child did, ate, mood, incidents → pushed to Parent Portal + WhatsApp
+- [x] Developmental milestone tracking (gross motor, fine motor, language, cognitive, social-emotional — age-appropriate milestones per month)
+- [x] Allergen-specific meal tracking (per-child allergen profile; kitchen flagged; POS blocks incompatible meal)
+- [x] **Photo / video diary** (teacher uploads 2–3 photos per child per day → parent sees in app — parental consent required; GDPR-compliant; photos not shared with other parents)
+- [x] Pickup authorisation (parent specifies authorised pickup persons with photos; security app checks at gate; child cannot be released to unauthorised person)
+- [x] Potty training log (2–3 year olds — sensitive, access restricted to key carer + parent)
+- [x] Nap schedule management per child (individual schedule; nurse log for sleep issues)
 
 ### 6.7 Vocational Education & NEP 2020 (6 tasks)
-- [ ] Vocational subject master (IT, Beauty & Wellness, Retail, Agriculture, Plumbing, Healthcare, Media — mapped to NSQF levels 1–8)
-- [ ] Industry partner linkage (company provides on-the-job training; contact, OJT schedule, supervision)
-- [ ] On-the-job training placement (student assigned to industry partner; OJT attendance tracked separately)
-- [ ] NSQF competency assessment (skills mapped to NSQF levels; internal + external assessor; sector skill council assessor visit scheduling)
-- [ ] NSQF certificate eligibility (auto-calculated on competency completion; certificate issuance tracking; NAPS apprenticeship portal integration link)
-- [ ] **NEP 2020 competency-based assessment** — competency framework (NCERT Learning Outcomes per grade per subject), lessons mapped to outcomes, assessment tagged to competencies (Achieved/Partial/Not Yet), holistic progress card (cognitive + physical + social + emotional), FLN dashboard for Grades 1–3
+- [x] Vocational subject master (IT, Beauty & Wellness, Retail, Agriculture, Plumbing, Healthcare, Media — mapped to NSQF levels 1–8)
+- [x] Industry partner linkage (company provides on-the-job training; contact, OJT schedule, supervision)
+- [x] On-the-job training placement (student assigned to industry partner; OJT attendance tracked separately)
+- [x] NSQF competency assessment (skills mapped to NSQF levels; internal + external assessor; sector skill council assessor visit scheduling)
+- [x] NSQF certificate eligibility (auto-calculated on competency completion; certificate issuance tracking; NAPS apprenticeship portal integration link)
+- [x] **NEP 2020 competency-based assessment** — competency framework (NCERT Learning Outcomes per grade per subject), lessons mapped to outcomes, assessment tagged to competencies (Achieved/Partial/Not Yet), holistic progress card (cognitive + physical + social + emotional), FLN dashboard for Grades 1–3
 
 ### 6.8 Special Education & IEP (6 tasks)
-- [ ] **CWSN student profile** — disability type, government benefits (free books, transport subsidy, scholarship, rehabilitation), flagged on admission
-- [ ] IEP creation (goals, accommodations, support required, assistive tech needs; co-created by teacher + counsellor + parent; parent sign-off)
-- [ ] IEP review cycle (termly — progress against goals updated; parent sign-off on review)
-- [ ] Exam accommodations (extra time, separate room, scribe — auto-linked to Exam module for that student)
-- [ ] Special educator assignment (session logs maintained; progress notes)
-- [ ] CWSN government compliance report (count, disability category, benefits provided — mandatory for government-aided schools)
+- [x] **CWSN student profile** — disability type, government benefits (free books, transport subsidy, scholarship, rehabilitation), flagged on admission
+- [x] IEP creation (goals, accommodations, support required, assistive tech needs; co-created by teacher + counsellor + parent; parent sign-off)
+- [x] IEP review cycle (termly — progress against goals updated; parent sign-off on review)
+- [x] Exam accommodations (extra time, separate room, scribe — auto-linked to Exam module for that student)
+- [x] Special educator assignment (session logs maintained; progress notes)
+- [x] CWSN government compliance report (count, disability category, benefits provided — mandatory for government-aided schools)
 
 ### 6.9 Niche School Type Modules (6 tasks)
-- [ ] **Multi-shift school** (morning/afternoon/evening — separate timetables, separate attendance sessions, shared facility booking with conflict detection across shifts, combined academic reporting)
-- [ ] **Mid-day meal tracking (PM POSHAN)** — daily beneficiary count per class, menu tracking vs government weekly menu, grain/ingredient stock log, cook register + wages, monthly government compliance report, annual inspection readiness
-- [ ] **Student discipline complete** — misconduct types, escalation workflow (warning → detention → suspension → expulsion; Principal approval required for suspension+), parent notification on each level, appeal workflow, serial offender flag (3+ incidents/term), POCSO protocol trigger on abuse
-- [ ] **Remedial teaching program** — teacher identifies struggling students (marks below threshold), remedial batch creation, separate attendance for remedial sessions, pre/post assessment to measure improvement, program effectiveness report
-- [ ] **Practical / lab exam management** — separate practical exam schedule, lab group assignment (students in batches), separate marks entry (internal examiner + external board examiner), equipment checklist, external examiner visit scheduling
-- [ ] **Career guidance & college counselling** — aptitude test / interest inventory, career pathway suggestions, college database (cut-offs by stream/year), application tracker (applied/shortlisted/admitted/rejected), competitive exam tracker (JEE/NEET/CLAT), alumni mentor connect integration
+- [x] **Multi-shift school** (morning/afternoon/evening — separate timetables, separate attendance sessions, shared facility booking with conflict detection across shifts, combined academic reporting)
+- [x] **Mid-day meal tracking (PM POSHAN)** — daily beneficiary count per class, menu tracking vs government weekly menu, grain/ingredient stock log, cook register + wages, monthly government compliance report, annual inspection readiness
+- [x] **Student discipline complete** — misconduct types, escalation workflow (warning → detention → suspension → expulsion; Principal approval required for suspension+), parent notification on each level, appeal workflow, serial offender flag (3+ incidents/term), POCSO protocol trigger on abuse
+- [x] **Remedial teaching program** — teacher identifies struggling students (marks below threshold), remedial batch creation, separate attendance for remedial sessions, pre/post assessment to measure improvement, program effectiveness report
+- [x] **Practical / lab exam management** — separate practical exam schedule, lab group assignment (students in batches), separate marks entry (internal examiner + external board examiner), equipment checklist, external examiner visit scheduling
+- [x] **Career guidance & college counselling** — aptitude test / interest inventory, career pathway suggestions, college database (cut-offs by stream/year), application tracker (applied/shortlisted/admitted/rejected), competitive exam tracker (JEE/NEET/CLAT), alumni mentor connect integration
 
 ### 6.10 Board Affiliation Compliance (4 tasks)
-- [ ] Teacher qualification tracking (B.Ed / D.Ed compliance per board requirements per designation)
-- [ ] Staff-to-student ratio monitoring (board mandates specific ratios — alert when out of range)
-- [ ] Infrastructure compliance checklist (library size, lab equipment, playground — self-assessment)
-- [ ] Annual affiliation renewal document checklist + board inspection readiness report
+- [x] Teacher qualification tracking (B.Ed / D.Ed compliance per board requirements per designation)
+- [x] Staff-to-student ratio monitoring (board mandates specific ratios — alert when out of range)
+- [x] Infrastructure compliance checklist (library size, lab equipment, playground — self-assessment)
+- [x] Annual affiliation renewal document checklist + board inspection readiness report
 
 ### 6.11 Student Insurance Management (4 tasks)
-- [ ] Group student accident insurance policy management (insurer, sum assured, coverage period, premium per student)
-- [ ] Premium collection (added to student fee invoice as separate head)
-- [ ] Claim filing workflow (accident → generate claim documents → track claim status → settlement amount)
-- [ ] Policy renewal alerts (60 days before expiry); claim rejection tracking + appeal management
+- [x] Group student accident insurance policy management (insurer, sum assured, coverage period, premium per student)
+- [x] Premium collection (added to student fee invoice as separate head)
+- [x] Claim filing workflow (accident → generate claim documents → track claim status → settlement amount)
+- [x] Policy renewal alerts (60 days before expiry); claim rejection tracking + appeal management
 
 ### 6.12 Gamification & Engagement Engine (10 tasks)
-- [ ] Points system (configurable per school: attendance, assignments, quizzes, reading, community service, LMS completion — anti-gaming: no repeat points for same action in 24hr)
-- [ ] Badges — tiered (Bronze/Silver/Gold) per category (Academic, Sports, Cultural, Service, Attendance)
-- [ ] Streaks (consecutive days: attendance, LMS engagement, homework submission; streak bonus at 7/30/100 days)
-- [ ] Leaderboards (class-level + school-level, opt-in only, seasonal resets, top-3 highlighted)
-- [ ] Rewards (configurable: canteen wallet credit, library priority borrow, merit certificate — point redemption via Student Portal)
-- [ ] **Student digital portfolio** (upload best work per term; teacher endorsement + comment; portfolio grows Grade 1 → Grade 12; export as PDF for college applications; achievement + certificate auto-linked)
-- [ ] **Digital ID card** (QR code, scannable: security gate, librarian for book issue, canteen POS; auto-updated on class promotion; downloadable PDF)
-- [ ] Student council integration (council achievement auto-linked to portfolio and report card)
-- [ ] House points leaderboard (real-time update across Student + Admin portals; inter-house competition linkage)
-- [ ] Gamification analytics (most engaged students, activity-wise points distribution, engagement trend)
+- [x] Points system (configurable per school: attendance, assignments, quizzes, reading, community service, LMS completion — anti-gaming: no repeat points for same action in 24hr)
+- [x] Badges — tiered (Bronze/Silver/Gold) per category (Academic, Sports, Cultural, Service, Attendance)
+- [x] Streaks (consecutive days: attendance, LMS engagement, homework submission; streak bonus at 7/30/100 days)
+- [x] Leaderboards (class-level + school-level, opt-in only, seasonal resets, top-3 highlighted)
+- [x] Rewards (configurable: canteen wallet credit, library priority borrow, merit certificate — point redemption via Student Portal)
+- [x] **Student digital portfolio** (upload best work per term; teacher endorsement + comment; portfolio grows Grade 1 → Grade 12; export as PDF for college applications; achievement + certificate auto-linked)
+- [x] **Digital ID card** (QR code, scannable: security gate, librarian for book issue, canteen POS; auto-updated on class promotion; downloadable PDF)
+- [x] Student council integration (council achievement auto-linked to portfolio and report card)
+- [x] House points leaderboard (real-time update across Student + Admin portals; inter-house competition linkage)
+- [x] Gamification analytics (most engaged students, activity-wise points distribution, engagement trend)
 
 ### 6.13 School Magazine & Digital Yearbook (4 tasks)
-- [ ] Digital school magazine builder (rich text + photo layout; student article submissions; teacher editorial review; published to Parent Portal + school website + alumni email)
-- [ ] **Digital yearbook** — photo submission portal, editorial review + arrangement, student superlatives voting, senior farewell section, interactive PDF + web version, print version order management (bulk print via vendor)
-- [ ] Photo gallery per event (post-event upload by staff; published with parent consent filter)
-- [ ] Magazine / yearbook archive (all past issues accessible from Student + Parent portals)
+- [x] Digital school magazine builder (rich text + photo layout; student article submissions; teacher editorial review; published to Parent Portal + school website + alumni email)
+- [x] **Digital yearbook** — photo submission portal, editorial review + arrangement, student superlatives voting, senior farewell section, interactive PDF + web version, print version order management (bulk print via vendor)
+- [x] Photo gallery per event (post-event upload by staff; published with parent consent filter)
+- [x] Magazine / yearbook archive (all past issues accessible from Student + Parent portals)
 
 ### 6.14 Student Mentoring Program (4 tasks)
-- [ ] Senior-junior mentor matching (Grade 10–12 mentor → junior student; teacher supervisor oversight)
-- [ ] Mentor-mentee meeting log (date, focus area: academic/social/career, notes)
-- [ ] Mentoring effectiveness tracking (did mentee's performance improve? — linked to exam results)
-- [ ] Mentor recognition (CPD-equivalent points + portfolio achievement; certificate for top mentors)
+- [x] Senior-junior mentor matching (Grade 10–12 mentor → junior student; teacher supervisor oversight)
+- [x] Mentor-mentee meeting log (date, focus area: academic/social/career, notes)
+- [x] Mentoring effectiveness tracking (did mentee's performance improve? — linked to exam results)
+- [x] Mentor recognition (CPD-equivalent points + portfolio achievement; certificate for top mentors)
 
 ### 6.15 Accreditation & Quality Management (4 tasks)
-- [ ] Quality framework selection (ISO 21001:2018, NAAC-equivalent, school board QA)
-- [ ] Self-Study Report data compilation (auto-pull from ERP: enrolment, staff, infrastructure, results, compliance)
-- [ ] Peer review / inspection scheduling + readiness checklist
-- [ ] Quality improvement action plan (post-inspection findings → action items → tracking → closed)
+- [x] Quality framework selection (ISO 21001:2018, NAAC-equivalent, school board QA)
+- [x] Self-Study Report data compilation (auto-pull from ERP: enrolment, staff, infrastructure, results, compliance)
+- [x] Peer review / inspection scheduling + readiness checklist
+- [x] Quality improvement action plan (post-inspection findings → action items → tracking → closed)
 
 ---
 
