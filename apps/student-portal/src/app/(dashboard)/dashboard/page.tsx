@@ -26,27 +26,6 @@ interface StudentDashboard {
   recentResults: { subject: string; marks: number; maxMarks: number; grade: string }[];
 }
 
-function StatCard({
-  title, value, sub, icon: Icon, color, href,
-}: {
-  title: string; value: string | number; sub?: string;
-  icon: React.ElementType; color: string; href?: string;
-}) {
-  const content = (
-    <div className="bg-white rounded-xl border border-border p-5 flex items-start gap-4 hover:shadow-sm transition">
-      <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${color}`}>
-        <Icon className="w-5 h-5 text-white" />
-      </div>
-      <div>
-        <p className="text-xs text-muted-foreground font-medium">{title}</p>
-        <p className="text-2xl font-bold text-gray-900 mt-0.5">{value}</p>
-        {sub && <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>}
-      </div>
-    </div>
-  );
-  return href ? <Link href={href}>{content}</Link> : content;
-}
-
 export default function DashboardPage() {
   const user = useAuthStore((s) => s.user);
 
@@ -84,17 +63,17 @@ export default function DashboardPage() {
   };
 
   const attendancePct = stats?.attendancePercent ?? 0;
-  const attendanceColor =
-    attendancePct >= 85 ? "text-green-700" : attendancePct >= 75 ? "text-amber-700" : "text-red-700";
   const attendanceBg =
     attendancePct >= 85 ? "bg-green-500" : attendancePct >= 75 ? "bg-amber-500" : "bg-red-500";
+  const attendanceText =
+    attendancePct >= 85 ? "text-green-700 dark:text-green-400" : attendancePct >= 75 ? "text-amber-700 dark:text-amber-400" : "text-red-700 dark:text-red-400";
 
   return (
     <div className="space-y-6">
       {/* Greeting */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900">
-          {greeting()}, {user?.firstName}! 👋
+        <h2 className="text-xl font-bold text-foreground">
+          {greeting()}, {user?.firstName}
         </h2>
         <p className="text-sm text-muted-foreground mt-0.5">
           {new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
@@ -103,7 +82,7 @@ export default function DashboardPage() {
 
       {/* Low-attendance warning */}
       {attendancePct < 75 && (
-        <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-800">
+        <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-sm text-red-700 dark:text-red-400">
           <AlertTriangle className="w-4 h-4 shrink-0" />
           <span>
             Your attendance is <strong>{attendancePct}%</strong> — below the 75% minimum. Please attend regularly.
@@ -111,66 +90,67 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Attendance */}
-        <div className="bg-white rounded-xl border border-border p-5 col-span-2 lg:col-span-1">
-          <div className="flex items-center gap-3 mb-3">
-            <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${attendanceBg}`}>
-              <ClipboardCheck className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground font-medium">Attendance</p>
-              <p className={`text-2xl font-bold ${attendanceColor}`}>{attendancePct}%</p>
-            </div>
+      {/* Stats strip */}
+      <div className="bg-card rounded-xl border border-border divide-y lg:divide-y-0 lg:divide-x divide-border grid grid-cols-1 lg:grid-cols-4">
+        {/* Attendance with progress bar */}
+        <div className="p-5">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium mb-1">
+            <ClipboardCheck className="w-3.5 h-3.5 shrink-0" />
+            Attendance
           </div>
-          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-            <div className={`h-full rounded-full ${attendanceBg}`} style={{ width: `${attendancePct}%` }} />
+          <p className={`text-2xl font-bold tabular-nums ${attendanceText}`}>{attendancePct}%</p>
+          <div className="mt-1.5 h-1.5 bg-muted rounded-full overflow-hidden">
+            <div className={`h-full rounded-full ${attendanceBg} transition-all`} style={{ width: `${attendancePct}%` }} />
           </div>
-          <p className="text-xs text-muted-foreground mt-1.5">
+          <p className="text-xs text-muted-foreground mt-1 tabular-nums">
             {stats?.presentDays} present / {stats?.totalDays} days
           </p>
         </div>
-
-        <StatCard
-          title="Pending Fees"
-          value={stats ? formatCurrency(stats.pendingFees) : "—"}
-          sub={`${stats?.pendingFeesCount ?? 0} invoice(s) due`}
-          icon={CreditCard}
-          color={stats?.pendingFeesCount ? "bg-amber-500" : "bg-green-500"}
-          href="/fees"
-        />
-        <StatCard
-          title="Upcoming Exams"
-          value={stats?.upcomingExams.length ?? 0}
-          sub="in next 30 days"
-          icon={BookOpen}
-          color="bg-sidebar"
-        />
-        <StatCard
-          title="Today's Homework"
-          value={stats?.todayHomework.length ?? 0}
-          sub="assignments pending"
-          icon={ClipboardList}
-          color={stats?.todayHomework.length ? "bg-blue-500" : "bg-green-500"}
-        />
+        <div className="p-5">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium mb-1">
+            <CreditCard className="w-3.5 h-3.5 shrink-0" />
+            Pending Fees
+          </div>
+          <Link href="/fees" className="group">
+            <p className="text-2xl font-bold text-foreground tabular-nums group-hover:text-primary transition">
+              {stats ? formatCurrency(stats.pendingFees) : "—"}
+            </p>
+          </Link>
+          <p className="text-xs text-muted-foreground mt-0.5">{stats?.pendingFeesCount ?? 0} invoice(s) due</p>
+        </div>
+        <div className="p-5">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium mb-1">
+            <BookOpen className="w-3.5 h-3.5 shrink-0" />
+            Upcoming Exams
+          </div>
+          <p className="text-2xl font-bold text-foreground tabular-nums">{stats?.upcomingExams.length ?? 0}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">in next 30 days</p>
+        </div>
+        <div className="p-5">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium mb-1">
+            <ClipboardList className="w-3.5 h-3.5 shrink-0" />
+            Today&apos;s Homework
+          </div>
+          <p className="text-2xl font-bold text-foreground tabular-nums">{stats?.todayHomework.length ?? 0}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">assignments pending</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Today's homework */}
-        <div className="bg-white rounded-xl border border-border p-5">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">Today&apos;s Homework</h3>
+        <div className="bg-card rounded-xl border border-border p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-3">Today&apos;s Homework</h3>
           {!stats?.todayHomework.length ? (
             <div className="flex flex-col items-center py-6 text-muted-foreground gap-2">
-              <CheckCircle2 className="w-7 h-7 text-green-400" />
+              <CheckCircle2 className="w-7 h-7 opacity-20" />
               <p className="text-sm">No homework today</p>
             </div>
           ) : (
             <div className="space-y-2">
               {stats.todayHomework.map((hw) => (
-                <div key={hw.id} className="p-3 rounded-lg bg-gray-50 border border-border/50">
+                <div key={hw.id} className="p-3 rounded-lg bg-muted/30 border border-border/50">
                   <p className="text-xs font-semibold text-primary">{hw.subject}</p>
-                  <p className="text-sm text-gray-700 mt-0.5">{hw.description}</p>
+                  <p className="text-sm text-foreground mt-0.5">{hw.description}</p>
                   <p className="text-xs text-muted-foreground mt-1">Due: {formatDate(hw.dueDate)}</p>
                 </div>
               ))}
@@ -179,8 +159,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Upcoming exams */}
-        <div className="bg-white rounded-xl border border-border p-5">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">Upcoming Exams</h3>
+        <div className="bg-card rounded-xl border border-border p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-3">Upcoming Exams</h3>
           {!stats?.upcomingExams.length ? (
             <p className="text-sm text-muted-foreground text-center py-6">No exams scheduled</p>
           ) : (
@@ -192,14 +172,14 @@ export default function DashboardPage() {
                 return (
                   <div key={exam.id} className="flex items-center gap-3 p-3 rounded-lg border border-border/50">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900">{exam.subject}</p>
+                      <p className="text-sm font-medium text-foreground">{exam.subject}</p>
                       <p className="text-xs text-muted-foreground">{exam.type} · {formatDate(exam.date)}</p>
                     </div>
                     <span className={cn(
-                      "text-xs font-semibold px-2 py-0.5 rounded-full shrink-0",
-                      daysLeft <= 3 ? "bg-red-50 text-red-700" :
-                      daysLeft <= 7 ? "bg-amber-50 text-amber-700" :
-                      "bg-gray-100 text-gray-600"
+                      "text-xs font-semibold px-2 py-0.5 rounded-md shrink-0 tabular-nums",
+                      daysLeft <= 3 ? "bg-red-500/10 text-red-700 dark:text-red-400" :
+                      daysLeft <= 7 ? "bg-amber-500/10 text-amber-700 dark:text-amber-400" :
+                      "bg-muted text-muted-foreground"
                     )}>
                       {daysLeft}d
                     </span>
@@ -211,30 +191,30 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent results */}
-        <div className="bg-white rounded-xl border border-border p-5">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">Recent Results</h3>
+        <div className="bg-card rounded-xl border border-border p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-3">Recent Results</h3>
           {!stats?.recentResults.length ? (
             <p className="text-sm text-muted-foreground text-center py-6">No results yet</p>
           ) : (
             <div className="space-y-2">
               {stats.recentResults.map((r, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border border-border/50">
+                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border/50">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900">{r.subject}</p>
+                    <p className="text-sm font-medium text-foreground">{r.subject}</p>
                     <div className="flex items-center gap-1.5 mt-1">
-                      <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                         <div
                           className={cn("h-full rounded-full", (r.marks / r.maxMarks) >= 0.75 ? "bg-green-500" : "bg-amber-500")}
                           style={{ width: `${(r.marks / r.maxMarks) * 100}%` }}
                         />
                       </div>
-                      <span className="text-xs text-muted-foreground shrink-0">{r.marks}/{r.maxMarks}</span>
+                      <span className="text-xs text-muted-foreground shrink-0 tabular-nums">{r.marks}/{r.maxMarks}</span>
                     </div>
                   </div>
                   <span className={cn(
                     "text-sm font-bold shrink-0 w-8 text-center",
-                    r.grade.startsWith("A") ? "text-green-700" :
-                    r.grade.startsWith("B") ? "text-blue-700" : "text-amber-700"
+                    r.grade.startsWith("A") ? "text-green-700 dark:text-green-400" :
+                    r.grade.startsWith("B") ? "text-blue-700 dark:text-blue-400" : "text-amber-700 dark:text-amber-400"
                   )}>
                     {r.grade}
                   </span>

@@ -41,11 +41,11 @@ interface PaymentHistory {
   invoiceTitle: string;
 }
 
-const STATUS_CONFIG: Record<InvoiceStatus, { label: string; color: string; icon: React.ElementType }> = {
-  PAID:    { label: "Paid",    color: "text-green-700 bg-green-50 border-green-200",  icon: CheckCircle2  },
-  PENDING: { label: "Pending", color: "text-amber-700 bg-amber-50 border-amber-200",  icon: Clock         },
-  PARTIAL: { label: "Partial", color: "text-blue-700 bg-blue-50 border-blue-200",     icon: Clock         },
-  OVERDUE: { label: "Overdue", color: "text-red-700 bg-red-50 border-red-200",        icon: AlertTriangle },
+const STATUS_CONFIG: Record<InvoiceStatus, { label: string; cls: string; icon: React.ElementType }> = {
+  PAID:    { label: "Paid",    cls: "text-green-700 dark:text-green-400 bg-green-500/10 border-green-500/20",  icon: CheckCircle2  },
+  PENDING: { label: "Pending", cls: "text-amber-700 dark:text-amber-400 bg-amber-500/10 border-amber-500/20",  icon: Clock         },
+  PARTIAL: { label: "Partial", cls: "text-blue-700 dark:text-blue-400 bg-blue-500/10 border-blue-500/20",     icon: Clock         },
+  OVERDUE: { label: "Overdue", cls: "text-red-700 dark:text-red-400 bg-red-500/10 border-red-500/20",        icon: AlertTriangle },
 };
 
 export default function FeesPage() {
@@ -57,16 +57,9 @@ export default function FeesPage() {
     queryFn: () => api.get("/fee/student/invoices").then((r) => r.data),
     placeholderData: [
       {
-        id: "inv1",
-        invoiceNo: "INV-2026-001",
-        title: "Term 1 Fees — 2025-26",
-        term: "Term 1",
-        academicYear: "2025-26",
-        dueDate: "2026-04-30",
-        totalAmount: 4500000,
-        paidAmount: 4500000,
-        balanceAmount: 0,
-        status: "PAID",
+        id: "inv1", invoiceNo: "INV-2026-001", title: "Term 1 Fees — 2025-26",
+        term: "Term 1", academicYear: "2025-26", dueDate: "2026-04-30",
+        totalAmount: 4500000, paidAmount: 4500000, balanceAmount: 0, status: "PAID",
         items: [
           { description: "Tuition Fee", amount: 3500000 },
           { description: "Sports Fee", amount: 500000 },
@@ -75,16 +68,9 @@ export default function FeesPage() {
         ],
       },
       {
-        id: "inv2",
-        invoiceNo: "INV-2026-002",
-        title: "Term 2 Fees — 2025-26",
-        term: "Term 2",
-        academicYear: "2025-26",
-        dueDate: "2026-05-15",
-        totalAmount: 4200000,
-        paidAmount: 2000000,
-        balanceAmount: 2200000,
-        status: "PARTIAL",
+        id: "inv2", invoiceNo: "INV-2026-002", title: "Term 2 Fees — 2025-26",
+        term: "Term 2", academicYear: "2025-26", dueDate: "2026-05-15",
+        totalAmount: 4200000, paidAmount: 2000000, balanceAmount: 2200000, status: "PARTIAL",
         items: [
           { description: "Tuition Fee", amount: 3500000 },
           { description: "Sports Fee", amount: 500000 },
@@ -92,16 +78,9 @@ export default function FeesPage() {
         ],
       },
       {
-        id: "inv3",
-        invoiceNo: "INV-2026-003",
-        title: "Annual Day & Excursion",
-        term: "Annual",
-        academicYear: "2025-26",
-        dueDate: "2026-04-20",
-        totalAmount: 150000,
-        paidAmount: 0,
-        balanceAmount: 150000,
-        status: "OVERDUE",
+        id: "inv3", invoiceNo: "INV-2026-003", title: "Annual Day & Excursion",
+        term: "Annual", academicYear: "2025-26", dueDate: "2026-04-20",
+        totalAmount: 150000, paidAmount: 0, balanceAmount: 150000, status: "OVERDUE",
         items: [
           { description: "Annual Day Contribution", amount: 100000 },
           { description: "Excursion Fee", amount: 50000 },
@@ -123,18 +102,13 @@ export default function FeesPage() {
     mutationFn: (invoiceId: string) =>
       api.post("/fee/razorpay/order", { invoiceId }).then((r) => r.data),
     onSuccess: (data: { orderId: string; amount: number; currency: string; key: string; invoiceId: string }) => {
-      // Load Razorpay checkout
       if (typeof window === "undefined") return;
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.onload = () => {
         const options = {
-          key: data.key,
-          amount: data.amount,
-          currency: data.currency,
-          name: "AISchool",
-          description: "Fee Payment",
-          order_id: data.orderId,
+          key: data.key, amount: data.amount, currency: data.currency,
+          name: "AISchool", description: "Fee Payment", order_id: data.orderId,
           handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
             try {
               await api.post("/fee/razorpay/verify", {
@@ -164,48 +138,47 @@ export default function FeesPage() {
 
   return (
     <div className="space-y-4">
-      {/* Summary */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl border border-border p-5 flex items-start gap-3">
-          <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center">
-            <IndianRupee className="w-5 h-5 text-white" />
-          </div>
+      {/* Summary strip */}
+      <div className="bg-card rounded-xl border border-border divide-x divide-border grid grid-cols-3">
+        <div className="p-5 flex items-start gap-3">
+          <IndianRupee className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
           <div>
             <p className="text-xs text-muted-foreground font-medium">Total Outstanding</p>
-            <p className="text-xl font-bold text-gray-900 mt-0.5">{formatCurrency(totalOutstanding)}</p>
+            <p className="text-xl font-bold text-foreground mt-0.5 tabular-nums">{formatCurrency(totalOutstanding)}</p>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-border p-5 flex items-start gap-3">
-          <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center">
-            <AlertTriangle className="w-5 h-5 text-white" />
-          </div>
+        <div className="p-5 flex items-start gap-3">
+          <AlertTriangle className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
           <div>
             <p className="text-xs text-muted-foreground font-medium">Overdue</p>
-            <p className="text-xl font-bold text-gray-900 mt-0.5">
+            <p className="text-xl font-bold text-foreground mt-0.5 tabular-nums">
               {invoices.filter((i) => i.status === "OVERDUE").length} invoice(s)
             </p>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-border p-5 flex items-start gap-3">
-          <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center">
-            <CheckCircle2 className="w-5 h-5 text-white" />
-          </div>
+        <div className="p-5 flex items-start gap-3">
+          <CheckCircle2 className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
           <div>
             <p className="text-xs text-muted-foreground font-medium">Paid This Year</p>
-            <p className="text-xl font-bold text-gray-900 mt-0.5">
+            <p className="text-xl font-bold text-foreground mt-0.5 tabular-nums">
               {formatCurrency(invoices.filter((i) => i.status === "PAID").reduce((s, i) => s + i.totalAmount, 0))}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 bg-gray-100 p-1 rounded-lg w-fit">
+      {/* Underline tabs */}
+      <div className="flex border-b border-border">
         {(["invoices", "history"] as const).map((t) => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium capitalize transition ${
-              tab === t ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
-            }`}>
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`relative px-4 py-2.5 text-sm font-medium capitalize transition focus-visible:outline-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:transition-colors ${
+              tab === t
+                ? "text-foreground after:bg-primary"
+                : "text-muted-foreground hover:text-foreground after:bg-transparent"
+            }`}
+          >
             {t === "invoices" ? "Invoices" : "Payment History"}
           </button>
         ))}
@@ -221,21 +194,17 @@ export default function FeesPage() {
             const paidPct = inv.totalAmount > 0 ? (inv.paidAmount / inv.totalAmount) * 100 : 0;
 
             return (
-              <div key={inv.id} className="bg-white rounded-xl border border-border overflow-hidden">
-                {/* Header */}
+              <div key={inv.id} className="bg-card rounded-xl border border-border overflow-hidden">
                 <button
-                  className="w-full flex items-start gap-4 px-5 py-4 hover:bg-gray-50/50 transition text-left"
+                  className="w-full flex items-start gap-4 px-5 py-4 hover:bg-muted/40 transition text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
                   onClick={() => setExpanded(isExpanded ? null : inv.id)}
                 >
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                    <CreditCard className="w-5 h-5 text-primary" />
-                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-gray-900">{inv.title}</span>
+                      <span className="font-semibold text-foreground">{inv.title}</span>
                       <span className={cn(
-                        "inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full border",
-                        cfg.color
+                        "inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-md border",
+                        cfg.cls
                       )}>
                         <StatusIcon className="w-3 h-3" />
                         {cfg.label}
@@ -244,56 +213,52 @@ export default function FeesPage() {
                     <p className="text-xs text-muted-foreground mt-0.5">
                       {inv.invoiceNo} · Due {formatDate(inv.dueDate)}
                     </p>
-                    {/* Progress bar */}
                     {inv.status !== "PAID" && (
                       <div className="mt-2 flex items-center gap-2">
-                        <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                           <div className="h-full bg-primary rounded-full" style={{ width: `${paidPct}%` }} />
                         </div>
-                        <span className="text-xs text-muted-foreground shrink-0">{paidPct.toFixed(0)}% paid</span>
+                        <span className="text-xs text-muted-foreground shrink-0 tabular-nums">{paidPct.toFixed(0)}% paid</span>
                       </div>
                     )}
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="font-bold text-gray-900">{formatCurrency(inv.totalAmount)}</p>
+                    <p className="font-bold text-foreground tabular-nums">{formatCurrency(inv.totalAmount)}</p>
                     {inv.balanceAmount > 0 && (
-                      <p className="text-xs text-red-600 mt-0.5">
+                      <p className="text-xs text-destructive mt-0.5 tabular-nums">
                         Balance: {formatCurrency(inv.balanceAmount)}
                       </p>
                     )}
                   </div>
                 </button>
 
-                {/* Expanded detail */}
                 {isExpanded && (
                   <div className="border-t border-border px-5 py-4 space-y-4">
-                    {/* Line items */}
                     <div className="space-y-1.5">
                       {inv.items.map((item, i) => (
                         <div key={i} className="flex justify-between text-sm">
                           <span className="text-muted-foreground">{item.description}</span>
-                          <span className="font-medium">{formatCurrency(item.amount)}</span>
+                          <span className="font-medium text-foreground tabular-nums">{formatCurrency(item.amount)}</span>
                         </div>
                       ))}
-                      <div className="pt-2 border-t border-border flex justify-between text-sm font-semibold">
+                      <div className="pt-2 border-t border-border flex justify-between text-sm font-semibold text-foreground">
                         <span>Total</span>
-                        <span>{formatCurrency(inv.totalAmount)}</span>
+                        <span className="tabular-nums">{formatCurrency(inv.totalAmount)}</span>
                       </div>
                       {inv.paidAmount > 0 && (
-                        <div className="flex justify-between text-sm text-green-700">
+                        <div className="flex justify-between text-sm text-green-700 dark:text-green-400">
                           <span>Paid</span>
-                          <span>− {formatCurrency(inv.paidAmount)}</span>
+                          <span className="tabular-nums">− {formatCurrency(inv.paidAmount)}</span>
                         </div>
                       )}
                       {inv.balanceAmount > 0 && (
-                        <div className="flex justify-between text-sm font-bold text-red-700">
+                        <div className="flex justify-between text-sm font-bold text-destructive">
                           <span>Balance Due</span>
-                          <span>{formatCurrency(inv.balanceAmount)}</span>
+                          <span className="tabular-nums">{formatCurrency(inv.balanceAmount)}</span>
                         </div>
                       )}
                     </div>
 
-                    {/* Actions */}
                     <div className="flex gap-2">
                       {inv.balanceAmount > 0 && (
                         <button
@@ -324,31 +289,31 @@ export default function FeesPage() {
 
       {/* Payment history */}
       {tab === "history" && (
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           {history.length === 0 ? (
             <div className="py-16 text-center text-muted-foreground">
-              <CreditCard className="w-8 h-8 mx-auto mb-3 text-gray-200" />
-              No payments yet
+              <CreditCard className="w-8 h-8 mx-auto mb-3 opacity-20" />
+              <p className="text-sm">No payments yet</p>
             </div>
           ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border bg-gray-50/50">
+                <tr className="border-b border-border bg-muted/30">
                   {["Receipt No", "Invoice", "Date", "Mode", "Amount"].map((h) => (
-                    <th key={h} className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">{h}</th>
+                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-widest">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {history.map((p) => (
-                  <tr key={p.id} className="border-b border-border/50 hover:bg-gray-50/50">
+                  <tr key={p.id} className="border-b border-border/50 hover:bg-muted/40 transition-colors">
                     <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{p.receiptNo}</td>
-                    <td className="px-4 py-3 font-medium">{p.invoiceTitle}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{formatDate(p.date)}</td>
+                    <td className="px-4 py-3 font-medium text-foreground">{p.invoiceTitle}</td>
+                    <td className="px-4 py-3 text-muted-foreground tabular-nums">{formatDate(p.date)}</td>
                     <td className="px-4 py-3">
-                      <span className="text-xs font-medium bg-gray-100 px-2 py-0.5 rounded-full">{p.mode}</span>
+                      <span className="text-xs font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-md">{p.mode}</span>
                     </td>
-                    <td className="px-4 py-3 font-semibold text-green-700">{formatCurrency(p.amount)}</td>
+                    <td className="px-4 py-3 font-semibold text-green-700 dark:text-green-400 tabular-nums">{formatCurrency(p.amount)}</td>
                   </tr>
                 ))}
               </tbody>
