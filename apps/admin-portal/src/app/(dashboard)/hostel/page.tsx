@@ -29,35 +29,35 @@ export default function HostelPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Hostel Management</h1>
-          <p className="text-sm text-gray-500 mt-1">Room allotment, leave management, daily roll call</p>
+          <h1 className="text-2xl font-bold text-foreground">Hostel Management</h1>
+          <p className="text-sm text-muted-foreground mt-1">Room allotment, leave management, daily roll call</p>
         </div>
       </div>
 
       <div className="grid grid-cols-4 gap-4">
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
-          <div className="text-2xl font-bold text-gray-900">{occupiedBeds}/{totalBeds}</div>
-          <div className="text-sm text-gray-500 mt-1">Beds Occupied</div>
-          <div className="text-xs text-gray-400 mt-1">{Math.round(occupiedBeds * 100 / totalBeds)}% occupancy</div>
+        <div className="bg-card border border-border rounded-xl p-4">
+          <div className="text-2xl font-bold text-foreground">{occupiedBeds}/{totalBeds}</div>
+          <div className="text-sm text-muted-foreground mt-1">Beds Occupied</div>
+          <div className="text-xs text-muted-foreground mt-1">{Math.round(occupiedBeds * 100 / totalBeds)}% occupancy</div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <div className="bg-card border border-border rounded-xl p-4">
           <div className="text-2xl font-bold text-blue-600">{pendingLeaves}</div>
-          <div className="text-sm text-gray-500 mt-1">Pending Leave Requests</div>
+          <div className="text-sm text-muted-foreground mt-1">Pending Leave Requests</div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <div className="bg-card border border-border rounded-xl p-4">
           <div className="text-2xl font-bold text-green-600">{MOCK_ROOMS.length}</div>
-          <div className="text-sm text-gray-500 mt-1">Total Rooms</div>
+          <div className="text-sm text-muted-foreground mt-1">Total Rooms</div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <div className="bg-card border border-border rounded-xl p-4">
           <div className="text-2xl font-bold text-orange-600">{totalBeds - occupiedBeds}</div>
-          <div className="text-sm text-gray-500 mt-1">Vacant Beds</div>
+          <div className="text-sm text-muted-foreground mt-1">Vacant Beds</div>
         </div>
       </div>
 
-      <div className="flex gap-1 border-b border-gray-200">
+      <div className="flex gap-1 border-b border-border">
         {(["rooms", "leaves", "rollcall"] as const).map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 text-sm font-medium capitalize border-b-2 -mb-px ${activeTab === tab ? "border-gray-800 text-gray-900" : "border-transparent text-gray-500 hover:text-gray-700"}`}>
+            className={`px-4 py-2 text-sm font-medium capitalize border-b-2 -mb-px ${activeTab === tab ? "border-gray-800 text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}>
             {tab === "rollcall" ? "Night Roll Call" : tab === "leaves" ? `Leave Requests ${pendingLeaves > 0 ? `(${pendingLeaves})` : ""}` : "Rooms"}
           </button>
         ))}
@@ -66,31 +66,31 @@ export default function HostelPage() {
       {activeTab === "rooms" && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {MOCK_ROOMS.map(room => (
-            <div key={room.id} className="bg-white border border-gray-200 rounded-xl p-4">
+            <div key={room.id} className="bg-card border border-border rounded-xl p-4">
               <div className="flex items-start justify-between">
                 <div>
-                  <div className="font-semibold text-gray-900">Room {room.roomNo}</div>
-                  <div className="text-xs text-gray-500">Block {room.block} · Floor {room.floor} · {room.type}</div>
+                  <div className="font-semibold text-foreground">Room {room.roomNo}</div>
+                  <div className="text-xs text-muted-foreground">Block {room.block} · Floor {room.floor} · {room.type}</div>
                 </div>
                 <span className={`text-xs px-2 py-0.5 rounded-full ${room.occupied === room.capacity ? "bg-red-50 text-red-700" : room.occupied === 0 ? "bg-green-50 text-green-700" : "bg-yellow-50 text-yellow-700"}`}>
                   {room.occupied}/{room.capacity} beds
                 </span>
               </div>
               <div className="mt-3">
-                <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="w-full bg-muted rounded-full h-2">
                   <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${(room.occupied / room.capacity) * 100}%` }} />
                 </div>
               </div>
-              <div className="text-xs text-gray-400 mt-2">Warden: {room.warden}</div>
+              <div className="text-xs text-muted-foreground mt-2">Warden: {room.warden}</div>
             </div>
           ))}
         </div>
       )}
 
       {activeTab === "leaves" && (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="bg-card border border-border rounded-xl overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
+            <thead className="bg-muted text-muted-foreground text-xs uppercase">
               <tr>
                 <th className="px-5 py-3 text-left">Student</th>
                 <th className="px-5 py-3 text-left">Type</th>
@@ -103,13 +103,13 @@ export default function HostelPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {MOCK_LEAVES.map(leave => (
-                <tr key={leave.id} className="hover:bg-gray-50">
+                <tr key={leave.id} className="hover:bg-muted">
                   <td className="px-5 py-3">
-                    <div className="font-medium text-gray-900">{leave.studentName}</div>
-                    <div className="text-xs text-gray-400">{leave.class}</div>
+                    <div className="font-medium text-foreground">{leave.studentName}</div>
+                    <div className="text-xs text-muted-foreground">{leave.class}</div>
                   </td>
-                  <td className="px-5 py-3 text-gray-600">{leave.type}</td>
-                  <td className="px-5 py-3 text-gray-600">{leave.from} → {leave.to}</td>
+                  <td className="px-5 py-3 text-muted-foreground">{leave.type}</td>
+                  <td className="px-5 py-3 text-muted-foreground">{leave.from} → {leave.to}</td>
                   <td className="px-5 py-3 text-center">{leave.wardenApproved ? "✅" : "⏳"}</td>
                   <td className="px-5 py-3 text-center">{leave.parentApproved ? "✅" : "⏳"}</td>
                   <td className="px-5 py-3 text-center">
@@ -128,10 +128,10 @@ export default function HostelPage() {
       )}
 
       {activeTab === "rollcall" && (
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <div className="text-center text-gray-500 py-8">
+        <div className="bg-card border border-border rounded-xl p-6">
+          <div className="text-center text-muted-foreground py-8">
             <div className="text-4xl mb-3">🌙</div>
-            <div className="font-medium text-gray-700">Night Roll Call</div>
+            <div className="font-medium text-foreground">Night Roll Call</div>
             <p className="text-sm mt-2">Record tonight's night count for all hostel students</p>
             <button className="mt-4 px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 text-sm">
               Start Roll Call

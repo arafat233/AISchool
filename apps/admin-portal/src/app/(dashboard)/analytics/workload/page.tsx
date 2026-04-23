@@ -30,7 +30,7 @@ function ScoreBar({ score }: { score: number }) {
   const color = score >= 80 ? "bg-red-500" : score >= 60 ? "bg-orange-400" : "bg-green-500";
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+      <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
         <div className={`h-full ${color} rounded-full`} style={{ width: `${Math.min(score, 100)}%` }} />
       </div>
       <span className="text-xs font-medium w-8 text-right">{score}</span>
@@ -56,36 +56,36 @@ export default function TeacherWorkloadPage() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Teacher Workload Analytics</h1>
+        <h1 className="text-2xl font-bold text-foreground">Teacher Workload Analytics</h1>
         <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">
           Reassign Duties
         </button>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white border rounded-xl p-4">
-          <p className="text-sm text-gray-500">Total Teachers</p>
-          <p className="text-3xl font-bold text-gray-900 mt-1">{rows.length}</p>
+        <div className="bg-card border rounded-xl p-4">
+          <p className="text-sm text-muted-foreground">Total Teachers</p>
+          <p className="text-3xl font-bold text-foreground mt-1">{rows.length}</p>
         </div>
-        <div className="bg-white border rounded-xl p-4">
-          <p className="text-sm text-gray-500">Overloaded</p>
+        <div className="bg-card border rounded-xl p-4">
+          <p className="text-sm text-muted-foreground">Overloaded</p>
           <p className="text-3xl font-bold text-red-600 mt-1">{overloaded}</p>
-          <p className="text-xs text-gray-400 mt-1">Score &gt; 80 — do not assign more</p>
+          <p className="text-xs text-muted-foreground mt-1">Score &gt; 80 — do not assign more</p>
         </div>
-        <div className="bg-white border rounded-xl p-4">
-          <p className="text-sm text-gray-500">High Load</p>
+        <div className="bg-card border rounded-xl p-4">
+          <p className="text-sm text-muted-foreground">High Load</p>
           <p className="text-3xl font-bold text-orange-500 mt-1">{high}</p>
-          <p className="text-xs text-gray-400 mt-1">Score 60-80 — monitor closely</p>
+          <p className="text-xs text-muted-foreground mt-1">Score 60-80 — monitor closely</p>
         </div>
       </div>
 
-      <div className="bg-white border rounded-xl overflow-hidden">
-        <div className="px-6 py-4 border-b font-semibold text-gray-800">Staff Workload Breakdown</div>
+      <div className="bg-card border rounded-xl overflow-hidden">
+        <div className="px-6 py-4 border-b font-semibold text-foreground">Staff Workload Breakdown</div>
         {loading ? (
-          <div className="p-8 text-center text-gray-400">Loading…</div>
+          <div className="p-8 text-center text-muted-foreground">Loading…</div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-gray-600 text-xs uppercase">
+            <thead className="bg-muted text-muted-foreground text-xs uppercase">
               <tr>
                 <th className="px-4 py-3 text-left">Teacher</th>
                 <th className="px-4 py-3 text-left">Subject</th>
@@ -99,9 +99,9 @@ export default function TeacherWorkloadPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {rows.map((r, i) => (
-                <tr key={i} className="hover:bg-gray-50">
+                <tr key={i} className="hover:bg-muted">
                   <td className="px-4 py-3 font-medium">{r.teacher_name}</td>
-                  <td className="px-4 py-3 text-gray-600">{r.subject}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{r.subject}</td>
                   <td className="px-4 py-3 text-right">{r.periods_per_week}</td>
                   <td className="px-4 py-3 text-right">{r.student_count}</td>
                   <td className="px-4 py-3 text-right">{r.assignments_pending}</td>

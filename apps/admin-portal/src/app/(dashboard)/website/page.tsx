@@ -44,7 +44,7 @@ export default function SchoolWebsitePage() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">School Public Website CMS</h1>
+        <h1 className="text-2xl font-bold text-foreground">School Public Website CMS</h1>
         <a
           href="#"
           target="_blank"
@@ -62,25 +62,25 @@ export default function SchoolWebsitePage() {
 
       <div className="grid grid-cols-2 gap-4">
         {pages.map((page) => (
-          <div key={page.type} className="bg-white border rounded-xl p-4 flex items-start justify-between">
+          <div key={page.type} className="bg-card border rounded-xl p-4 flex items-start justify-between">
             <div className="flex items-center gap-3">
               <span className="text-2xl">{PAGE_ICONS[page.type]}</span>
               <div>
-                <p className="font-medium text-gray-900">{page.title}</p>
-                <p className="text-xs text-gray-400 mt-0.5">Last edited: {page.lastEdited}</p>
+                <p className="font-medium text-foreground">{page.title}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Last edited: {page.lastEdited}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setEditing(page)}
-                className="text-xs px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-600"
+                className="text-xs px-3 py-1 rounded-lg border border-border hover:bg-muted text-muted-foreground"
               >
                 Edit
               </button>
               <button
                 onClick={() => togglePublish(page.type)}
                 className={`text-xs px-3 py-1 rounded-lg font-medium ${
-                  page.published ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  page.published ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-muted text-muted-foreground hover:bg-muted"
                 }`}
               >
                 {page.published ? "Published" : "Draft"}
@@ -98,14 +98,14 @@ export default function SchoolWebsitePage() {
       {/* Edit Modal */}
       {editing && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl">
+          <div className="bg-card rounded-2xl shadow-2xl w-full max-w-2xl">
             <div className="px-6 py-4 border-b flex items-center justify-between">
-              <h2 className="font-semibold text-gray-900">{PAGE_ICONS[editing.type]} Edit: {editing.title}</h2>
-              <button onClick={() => setEditing(null)} className="text-gray-400 hover:text-gray-600">✕</button>
+              <h2 className="font-semibold text-foreground">{PAGE_ICONS[editing.type]} Edit: {editing.title}</h2>
+              <button onClick={() => setEditing(null)} className="text-muted-foreground hover:text-muted-foreground">✕</button>
             </div>
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Page Title</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Page Title</label>
                 <input
                   value={editing.title}
                   onChange={(e) => setEditing({ ...editing, title: e.target.value })}
@@ -113,7 +113,7 @@ export default function SchoolWebsitePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Content</label>
                 <textarea
                   rows={8}
                   value={editing.content}
@@ -124,7 +124,7 @@ export default function SchoolWebsitePage() {
               </div>
             </div>
             <div className="px-6 py-4 border-t flex justify-end gap-3">
-              <button onClick={() => setEditing(null)} className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">Cancel</button>
+              <button onClick={() => setEditing(null)} className="px-4 py-2 text-sm border rounded-lg hover:bg-muted">Cancel</button>
               <button onClick={saveContent} className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save Page</button>
             </div>
           </div>

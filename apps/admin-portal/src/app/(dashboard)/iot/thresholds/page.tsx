@@ -62,11 +62,11 @@ export default function IotThresholdsPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Alert Threshold Configuration</h1>
-          <p className="text-sm text-gray-500 mt-1">Set sensor alert limits per room type. Changes apply to all rooms of that type.</p>
+          <h1 className="text-2xl font-bold text-foreground">Alert Threshold Configuration</h1>
+          <p className="text-sm text-muted-foreground mt-1">Set sensor alert limits per room type. Changes apply to all rooms of that type.</p>
         </div>
         <div className="flex gap-2">
-          <a href="/iot" className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">
+          <a href="/iot" className="px-4 py-2 text-sm border border-input rounded-lg hover:bg-muted">
             ← Dashboard
           </a>
           <button onClick={saveAll} className={`px-4 py-2 text-sm rounded-lg text-white ${saved ? "bg-green-600" : "bg-gray-800 hover:bg-gray-700"}`}>
@@ -82,16 +82,16 @@ export default function IotThresholdsPage() {
 
       <div className="space-y-4">
         {configs.map(cfg => (
-          <div key={cfg.roomType} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
-              <h2 className="font-semibold text-gray-900">{cfg.roomType}</h2>
+          <div key={cfg.roomType} className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 bg-muted border-b border-border">
+              <h2 className="font-semibold text-foreground">{cfg.roomType}</h2>
               {editing === cfg.roomType ? (
                 <div className="flex gap-2">
-                  <button onClick={() => setEditing(null)} className="text-sm text-gray-500 hover:text-gray-700">Cancel</button>
+                  <button onClick={() => setEditing(null)} className="text-sm text-muted-foreground hover:text-foreground">Cancel</button>
                   <button onClick={saveEdit} className="text-sm px-3 py-1 bg-gray-800 text-white rounded-md">Save</button>
                 </div>
               ) : (
-                <button onClick={() => startEdit(cfg)} className="text-sm text-gray-600 hover:text-gray-900 border border-gray-300 px-3 py-1 rounded-md">
+                <button onClick={() => startEdit(cfg)} className="text-sm text-muted-foreground hover:text-foreground border border-input px-3 py-1 rounded-md">
                   Edit
                 </button>
               )}
@@ -100,7 +100,7 @@ export default function IotThresholdsPage() {
             <div className="p-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
               {fields.map(f => (
                 <div key={f.key}>
-                  <div className="text-xs text-gray-500 mb-1">{f.label}</div>
+                  <div className="text-xs text-muted-foreground mb-1">{f.label}</div>
                   {editing === cfg.roomType && editForm ? (
                     <div>
                       <input
@@ -109,14 +109,14 @@ export default function IotThresholdsPage() {
                         max={f.max}
                         value={editForm[f.key] as number}
                         onChange={e => setEditForm({ ...editForm, [f.key]: Number(e.target.value) })}
-                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                        className="w-full border border-input rounded px-2 py-1 text-sm"
                       />
-                      <div className="text-xs text-gray-400 mt-0.5">{f.unit}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">{f.unit}</div>
                     </div>
                   ) : (
                     <div>
-                      <div className="font-bold text-gray-900">{cfg[f.key]}</div>
-                      <div className="text-xs text-gray-400">{f.unit}</div>
+                      <div className="font-bold text-foreground">{cfg[f.key]}</div>
+                      <div className="text-xs text-muted-foreground">{f.unit}</div>
                     </div>
                   )}
                 </div>
@@ -126,7 +126,7 @@ export default function IotThresholdsPage() {
         ))}
       </div>
 
-      <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-600">
+      <div className="bg-muted border border-border rounded-xl p-4 text-sm text-muted-foreground">
         <strong>How thresholds work:</strong> When a sensor reading exceeds a threshold, an alert is sent to all ADMIN and FACILITY_MANAGER users via push notification and email. BMS automation triggers (lights/AC) are independent and governed by occupancy sensor events.
       </div>
     </div>

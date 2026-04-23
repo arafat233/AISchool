@@ -52,7 +52,7 @@ const statusColor: Record<string, string> = {
   OK: "bg-green-100 text-green-800",
   WARNING: "bg-yellow-100 text-yellow-800",
   ALERT: "bg-red-100 text-red-800",
-  OFFLINE: "bg-gray-100 text-gray-600",
+  OFFLINE: "bg-muted text-muted-foreground",
 };
 
 const severityColor: Record<string, string> = {
@@ -81,8 +81,8 @@ export default function IotDashboardPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Building Health Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-1">Live sensor data — refreshes every 30s · Last: {lastRefresh.toLocaleTimeString()}</p>
+          <h1 className="text-2xl font-bold text-foreground">Building Health Dashboard</h1>
+          <p className="text-sm text-muted-foreground mt-1">Live sensor data — refreshes every 30s · Last: {lastRefresh.toLocaleTimeString()}</p>
         </div>
         <a href="/iot/thresholds" className="px-4 py-2 text-sm bg-gray-800 text-white rounded-lg hover:bg-gray-700">
           Configure Thresholds
@@ -95,11 +95,11 @@ export default function IotDashboardPage() {
           { label: "Normal", count: counts.OK, color: "text-green-600", bg: "bg-green-50 border-green-200" },
           { label: "Warning", count: counts.WARNING, color: "text-yellow-600", bg: "bg-yellow-50 border-yellow-200" },
           { label: "Alert", count: counts.ALERT, color: "text-red-600", bg: "bg-red-50 border-red-200" },
-          { label: "Offline", count: counts.OFFLINE, color: "text-gray-500", bg: "bg-gray-50 border-gray-200" },
+          { label: "Offline", count: counts.OFFLINE, color: "text-muted-foreground", bg: "bg-muted border-border" },
         ].map(kpi => (
           <div key={kpi.label} className={`rounded-xl border p-4 ${kpi.bg}`}>
             <div className={`text-3xl font-bold ${kpi.color}`}>{kpi.count}</div>
-            <div className="text-sm text-gray-600 mt-1">{kpi.label}</div>
+            <div className="text-sm text-muted-foreground mt-1">{kpi.label}</div>
           </div>
         ))}
       </div>
@@ -107,15 +107,15 @@ export default function IotDashboardPage() {
       {/* Active Alerts */}
       {alerts.filter(a => !a.acknowledged).length > 0 && (
         <div className="space-y-2">
-          <h2 className="text-lg font-semibold text-gray-800">Active Alerts ({alerts.filter(a => !a.acknowledged).length})</h2>
+          <h2 className="text-lg font-semibold text-foreground">Active Alerts ({alerts.filter(a => !a.acknowledged).length})</h2>
           {alerts.filter(a => !a.acknowledged).map(alert => (
             <div key={alert.id} className={`rounded-lg p-4 flex items-start justify-between ${severityColor[alert.severity]}`}>
               <div>
-                <div className="font-medium text-gray-900">{alert.location} — {alert.type.replace(/_/g, " ")}</div>
-                <div className="text-sm text-gray-700 mt-0.5">{alert.message}</div>
-                <div className="text-xs text-gray-500 mt-1">{new Date(alert.triggeredAt).toLocaleTimeString()}</div>
+                <div className="font-medium text-foreground">{alert.location} — {alert.type.replace(/_/g, " ")}</div>
+                <div className="text-sm text-foreground mt-0.5">{alert.message}</div>
+                <div className="text-xs text-muted-foreground mt-1">{new Date(alert.triggeredAt).toLocaleTimeString()}</div>
               </div>
-              <button onClick={() => acknowledgeAlert(alert.id)} className="ml-4 text-xs px-3 py-1.5 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+              <button onClick={() => acknowledgeAlert(alert.id)} className="ml-4 text-xs px-3 py-1.5 bg-card border border-input rounded-md hover:bg-muted">
                 Acknowledge
               </button>
             </div>
@@ -126,9 +126,9 @@ export default function IotDashboardPage() {
       {/* Sensor Grid */}
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <h2 className="text-lg font-semibold text-gray-800 mr-2">Sensors</h2>
+          <h2 className="text-lg font-semibold text-foreground mr-2">Sensors</h2>
           {["ALL", "AIR_QUALITY", "ELECTRICITY", "WATER", "OCCUPANCY", "ALERT", "OFFLINE"].map(f => (
-            <button key={f} onClick={() => setFilter(f)} className={`text-xs px-3 py-1 rounded-full border ${filter === f ? "bg-gray-800 text-white border-gray-800" : "text-gray-600 border-gray-200 hover:bg-gray-50"}`}>
+            <button key={f} onClick={() => setFilter(f)} className={`text-xs px-3 py-1 rounded-full border ${filter === f ? "bg-gray-800 text-white border-gray-800" : "text-muted-foreground border-border hover:bg-muted"}`}>
               {f.replace("_", " ")}
             </button>
           ))}
@@ -136,58 +136,58 @@ export default function IotDashboardPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map(sensor => (
-            <div key={sensor.deviceId} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+            <div key={sensor.deviceId} className="bg-card border border-border rounded-xl p-4 shadow-sm">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <div className="font-medium text-gray-900">{sensor.location}</div>
-                  <div className="text-xs text-gray-500">{sensor.deviceId} · {sensor.sensorType.replace("_", " ")}</div>
+                  <div className="font-medium text-foreground">{sensor.location}</div>
+                  <div className="text-xs text-muted-foreground">{sensor.deviceId} · {sensor.sensorType.replace("_", " ")}</div>
                 </div>
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColor[sensor.status]}`}>{sensor.status}</span>
               </div>
 
               {sensor.sensorType === "AIR_QUALITY" && (
                 <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div className={`rounded-lg p-2 ${(sensor.lastReading.co2_ppm ?? 0) > 1000 ? "bg-red-50" : "bg-gray-50"}`}>
-                    <div className="text-xs text-gray-500">CO₂</div>
-                    <div className="font-bold text-gray-900">{sensor.lastReading.co2_ppm} <span className="text-xs font-normal">ppm</span></div>
+                  <div className={`rounded-lg p-2 ${(sensor.lastReading.co2_ppm ?? 0) > 1000 ? "bg-red-50" : "bg-muted"}`}>
+                    <div className="text-xs text-muted-foreground">CO₂</div>
+                    <div className="font-bold text-foreground">{sensor.lastReading.co2_ppm} <span className="text-xs font-normal">ppm</span></div>
                   </div>
-                  <div className={`rounded-lg p-2 ${(sensor.lastReading.pm25_ugm3 ?? 0) > 25 ? "bg-red-50" : "bg-gray-50"}`}>
-                    <div className="text-xs text-gray-500">PM2.5</div>
-                    <div className="font-bold text-gray-900">{sensor.lastReading.pm25_ugm3} <span className="text-xs font-normal">µg/m³</span></div>
+                  <div className={`rounded-lg p-2 ${(sensor.lastReading.pm25_ugm3 ?? 0) > 25 ? "bg-red-50" : "bg-muted"}`}>
+                    <div className="text-xs text-muted-foreground">PM2.5</div>
+                    <div className="font-bold text-foreground">{sensor.lastReading.pm25_ugm3} <span className="text-xs font-normal">µg/m³</span></div>
                   </div>
-                  <div className="rounded-lg p-2 bg-gray-50">
-                    <div className="text-xs text-gray-500">Temp</div>
-                    <div className="font-bold text-gray-900">{sensor.lastReading.temperature_c}°C</div>
+                  <div className="rounded-lg p-2 bg-muted">
+                    <div className="text-xs text-muted-foreground">Temp</div>
+                    <div className="font-bold text-foreground">{sensor.lastReading.temperature_c}°C</div>
                   </div>
-                  <div className="rounded-lg p-2 bg-gray-50">
-                    <div className="text-xs text-gray-500">Humidity</div>
-                    <div className="font-bold text-gray-900">{sensor.lastReading.humidity_pct}%</div>
+                  <div className="rounded-lg p-2 bg-muted">
+                    <div className="text-xs text-muted-foreground">Humidity</div>
+                    <div className="font-bold text-foreground">{sensor.lastReading.humidity_pct}%</div>
                   </div>
                 </div>
               )}
 
               {sensor.sensorType === "ELECTRICITY" && (
-                <div className="rounded-lg p-3 bg-gray-50">
-                  <div className="text-xs text-gray-500">Today's Consumption</div>
-                  <div className="text-2xl font-bold text-gray-900">{sensor.lastReading.kwh} <span className="text-sm font-normal text-gray-500">kWh</span></div>
+                <div className="rounded-lg p-3 bg-muted">
+                  <div className="text-xs text-muted-foreground">Today's Consumption</div>
+                  <div className="text-2xl font-bold text-foreground">{sensor.lastReading.kwh} <span className="text-sm font-normal text-muted-foreground">kWh</span></div>
                 </div>
               )}
 
               {sensor.sensorType === "WATER" && (
-                <div className="rounded-lg p-3 bg-gray-50">
-                  <div className="text-xs text-gray-500">Today's Usage</div>
-                  <div className="text-2xl font-bold text-gray-900">{sensor.lastReading.liters?.toLocaleString()} <span className="text-sm font-normal text-gray-500">L</span></div>
+                <div className="rounded-lg p-3 bg-muted">
+                  <div className="text-xs text-muted-foreground">Today's Usage</div>
+                  <div className="text-2xl font-bold text-foreground">{sensor.lastReading.liters?.toLocaleString()} <span className="text-sm font-normal text-muted-foreground">L</span></div>
                 </div>
               )}
 
               {sensor.sensorType === "OCCUPANCY" && (
-                <div className={`rounded-lg p-3 text-center ${sensor.lastReading.occupied ? "bg-blue-50" : "bg-gray-50"}`}>
+                <div className={`rounded-lg p-3 text-center ${sensor.lastReading.occupied ? "bg-blue-50" : "bg-muted"}`}>
                   <div className="text-2xl">{sensor.lastReading.occupied ? "🟢" : "⚫"}</div>
                   <div className="text-sm font-medium mt-1">{sensor.lastReading.occupied ? "Occupied" : "Vacant"}</div>
                 </div>
               )}
 
-              <div className="text-xs text-gray-400 mt-2">Last seen: {new Date(sensor.lastSeen).toLocaleTimeString()}</div>
+              <div className="text-xs text-muted-foreground mt-2">Last seen: {new Date(sensor.lastSeen).toLocaleTimeString()}</div>
             </div>
           ))}
         </div>

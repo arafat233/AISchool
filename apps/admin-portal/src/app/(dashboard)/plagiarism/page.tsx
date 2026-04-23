@@ -58,7 +58,7 @@ export default function PlagiarismTrendPage() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Plagiarism Trend Report</h1>
+        <h1 className="text-2xl font-bold text-foreground">Plagiarism Trend Report</h1>
         <select
           value={filterTerm}
           onChange={(e) => setFilterTerm(e.target.value)}
@@ -71,30 +71,30 @@ export default function PlagiarismTrendPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white border rounded-xl p-4">
-          <p className="text-sm text-gray-500">Total Submissions Scanned</p>
-          <p className="text-3xl font-bold text-gray-900 mt-1">{totalSubmissions}</p>
+        <div className="bg-card border rounded-xl p-4">
+          <p className="text-sm text-muted-foreground">Total Submissions Scanned</p>
+          <p className="text-3xl font-bold text-foreground mt-1">{totalSubmissions}</p>
         </div>
-        <div className="bg-white border rounded-xl p-4">
-          <p className="text-sm text-gray-500">Avg Similarity</p>
+        <div className="bg-card border rounded-xl p-4">
+          <p className="text-sm text-muted-foreground">Avg Similarity</p>
           <p className="text-3xl font-bold text-orange-600 mt-1">{avgSimilarity}%</p>
         </div>
-        <div className="bg-white border rounded-xl p-4">
-          <p className="text-sm text-gray-500">High Plagiarism Flags</p>
+        <div className="bg-card border rounded-xl p-4">
+          <p className="text-sm text-muted-foreground">High Plagiarism Flags</p>
           <p className="text-3xl font-bold text-red-600 mt-1">{totalFlagged}</p>
         </div>
       </div>
 
       {/* Trend Table */}
-      <div className="bg-white border rounded-xl overflow-hidden">
+      <div className="bg-card border rounded-xl overflow-hidden">
         <div className="px-6 py-4 border-b">
-          <h2 className="font-semibold text-gray-800">By Class &amp; Term</h2>
+          <h2 className="font-semibold text-foreground">By Class &amp; Term</h2>
         </div>
         {loading ? (
-          <div className="p-8 text-center text-gray-400">Loading…</div>
+          <div className="p-8 text-center text-muted-foreground">Loading…</div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-gray-600 text-xs uppercase">
+            <thead className="bg-muted text-muted-foreground text-xs uppercase">
               <tr>
                 <th className="px-4 py-3 text-left">Class</th>
                 <th className="px-4 py-3 text-left">Term</th>
@@ -108,9 +108,9 @@ export default function PlagiarismTrendPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filtered.map((r, i) => (
-                <tr key={i} className="hover:bg-gray-50">
+                <tr key={i} className="hover:bg-muted">
                   <td className="px-4 py-3 font-medium">{r.class_name}</td>
-                  <td className="px-4 py-3 text-gray-600">{r.term_name}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{r.term_name}</td>
                   <td className="px-4 py-3 text-right">{r.total_submissions}</td>
                   <td className="px-4 py-3 text-right font-semibold">{r.avg_similarity_pct}%</td>
                   <td className="px-4 py-3 text-right text-red-600 font-semibold">{r.high_plagiarism_count}</td>
@@ -124,7 +124,7 @@ export default function PlagiarismTrendPage() {
         )}
       </div>
 
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-muted-foreground">
         Scans run automatically on every assignment submission via BullMQ. Flagged submissions are sent to the teacher review queue. Students see similarity warnings before final submit.
       </p>
     </div>

@@ -25,34 +25,34 @@ export default function DisciplinePage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Student Discipline</h1>
-          <p className="text-sm text-gray-500 mt-1">Incident log, escalation workflow, appeal management</p>
+          <h1 className="text-2xl font-bold text-foreground">Student Discipline</h1>
+          <p className="text-sm text-muted-foreground mt-1">Incident log, escalation workflow, appeal management</p>
         </div>
         <button className="px-4 py-2 text-sm bg-gray-800 text-white rounded-lg hover:bg-gray-700">Log Incident</button>
       </div>
 
       <div className="grid grid-cols-4 gap-4">
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
-          <div className="text-2xl font-bold text-gray-900">{incidents.length}</div>
-          <div className="text-sm text-gray-500 mt-1">Total Incidents (Term)</div>
+        <div className="bg-card border border-border rounded-xl p-4">
+          <div className="text-2xl font-bold text-foreground">{incidents.length}</div>
+          <div className="text-sm text-muted-foreground mt-1">Total Incidents (Term)</div>
         </div>
-        <div className={`border rounded-xl p-4 ${serialOffenders > 0 ? "bg-red-50 border-red-200" : "bg-white border-gray-200"}`}>
-          <div className={`text-2xl font-bold ${serialOffenders > 0 ? "text-red-600" : "text-gray-900"}`}>{serialOffenders}</div>
-          <div className="text-sm text-gray-500 mt-1">Serial Offenders</div>
+        <div className={`border rounded-xl p-4 ${serialOffenders > 0 ? "bg-red-50 border-red-200" : "bg-card border-border"}`}>
+          <div className={`text-2xl font-bold ${serialOffenders > 0 ? "text-red-600" : "text-foreground"}`}>{serialOffenders}</div>
+          <div className="text-sm text-muted-foreground mt-1">Serial Offenders</div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <div className="bg-card border border-border rounded-xl p-4">
           <div className="text-2xl font-bold text-orange-600">{incidents.filter(i => i.action === "SUSPENSION").length}</div>
-          <div className="text-sm text-gray-500 mt-1">Suspensions</div>
+          <div className="text-sm text-muted-foreground mt-1">Suspensions</div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <div className="bg-card border border-border rounded-xl p-4">
           <div className="text-2xl font-bold text-green-600">{incidents.filter(i => i.parentNotified).length}</div>
-          <div className="text-sm text-gray-500 mt-1">Parents Notified</div>
+          <div className="text-sm text-muted-foreground mt-1">Parents Notified</div>
         </div>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-card border border-border rounded-xl overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
+          <thead className="bg-muted text-muted-foreground text-xs uppercase">
             <tr>
               <th className="px-5 py-3 text-left">Student</th>
               <th className="px-5 py-3 text-left">Incident Type</th>
@@ -65,13 +65,13 @@ export default function DisciplinePage() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {incidents.map(inc => (
-              <tr key={inc.id} className={`hover:bg-gray-50 ${inc.serialOffender ? "bg-red-50/40" : ""}`}>
+              <tr key={inc.id} className={`hover:bg-muted ${inc.serialOffender ? "bg-red-50/40" : ""}`}>
                 <td className="px-5 py-3">
-                  <div className="font-medium text-gray-900">{inc.studentName}</div>
-                  <div className="text-xs text-gray-400">{inc.class}</div>
+                  <div className="font-medium text-foreground">{inc.studentName}</div>
+                  <div className="text-xs text-muted-foreground">{inc.class}</div>
                 </td>
-                <td className="px-5 py-3 text-gray-600">{inc.type}</td>
-                <td className="px-5 py-3 text-gray-500">{inc.date}</td>
+                <td className="px-5 py-3 text-muted-foreground">{inc.type}</td>
+                <td className="px-5 py-3 text-muted-foreground">{inc.date}</td>
                 <td className="px-5 py-3 text-center">
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${actionColor[inc.action]}`}>{inc.action}</span>
                 </td>
@@ -79,7 +79,7 @@ export default function DisciplinePage() {
                 <td className="px-5 py-3 text-center">
                   {inc.action === "SUSPENSION" || inc.action === "EXPULSION"
                     ? inc.principalApproved ? "✅" : <span className="text-orange-500 text-xs">Pending</span>
-                    : <span className="text-gray-300 text-xs">N/A</span>}
+                    : <span className="text-muted-foreground text-xs">N/A</span>}
                 </td>
                 <td className="px-5 py-3 text-center">
                   {inc.serialOffender && <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">🚨 Serial</span>}

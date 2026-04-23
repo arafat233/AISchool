@@ -28,7 +28,7 @@ const RECENT_BADGES = [
 
 const tierColor: Record<string, string> = {
   BRONZE: "text-orange-700 bg-orange-50",
-  SILVER: "text-gray-600 bg-gray-100",
+  SILVER: "text-muted-foreground bg-muted",
   GOLD: "text-yellow-700 bg-yellow-50",
 };
 
@@ -39,10 +39,10 @@ export default function GamificationPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gamification & Engagement</h1>
-          <p className="text-sm text-gray-500 mt-1">Points, badges, streaks, house standings, rewards</p>
+          <h1 className="text-2xl font-bold text-foreground">Gamification & Engagement</h1>
+          <p className="text-sm text-muted-foreground mt-1">Points, badges, streaks, house standings, rewards</p>
         </div>
-        <a href="/gamification/config" className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">Configure Points</a>
+        <a href="/gamification/config" className="px-4 py-2 text-sm border border-input rounded-lg hover:bg-muted">Configure Points</a>
       </div>
 
       {/* House Leaderboard Strip */}
@@ -59,19 +59,19 @@ export default function GamificationPage() {
         ))}
       </div>
 
-      <div className="flex gap-1 border-b border-gray-200">
+      <div className="flex gap-1 border-b border-border">
         {(["leaderboard", "houses", "badges", "rewards"] as const).map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 text-sm font-medium capitalize border-b-2 -mb-px ${activeTab === tab ? "border-gray-800 text-gray-900" : "border-transparent text-gray-500 hover:text-gray-700"}`}>
+            className={`px-4 py-2 text-sm font-medium capitalize border-b-2 -mb-px ${activeTab === tab ? "border-gray-800 text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}>
             {tab}
           </button>
         ))}
       </div>
 
       {activeTab === "leaderboard" && (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="bg-card border border-border rounded-xl overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
+            <thead className="bg-muted text-muted-foreground text-xs uppercase">
               <tr>
                 <th className="px-5 py-3 text-center w-12">Rank</th>
                 <th className="px-5 py-3 text-left">Student</th>
@@ -83,19 +83,19 @@ export default function GamificationPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {TOP_STUDENTS.map(s => (
-                <tr key={s.rank} className={`hover:bg-gray-50 ${s.rank <= 3 ? "bg-yellow-50/30" : ""}`}>
+                <tr key={s.rank} className={`hover:bg-muted ${s.rank <= 3 ? "bg-yellow-50/30" : ""}`}>
                   <td className="px-5 py-3 text-center">
-                    <span className={`text-lg font-bold ${s.rank === 1 ? "text-yellow-500" : s.rank === 2 ? "text-gray-400" : s.rank === 3 ? "text-orange-500" : "text-gray-600"}`}>
+                    <span className={`text-lg font-bold ${s.rank === 1 ? "text-yellow-500" : s.rank === 2 ? "text-muted-foreground" : s.rank === 3 ? "text-orange-500" : "text-muted-foreground"}`}>
                       {s.rank === 1 ? "🥇" : s.rank === 2 ? "🥈" : s.rank === 3 ? "🥉" : `#${s.rank}`}
                     </span>
                   </td>
                   <td className="px-5 py-3">
-                    <div className="font-medium text-gray-900">{s.name}</div>
-                    <div className="text-xs text-gray-400">{s.class}</div>
+                    <div className="font-medium text-foreground">{s.name}</div>
+                    <div className="text-xs text-muted-foreground">{s.class}</div>
                   </td>
-                  <td className="px-5 py-3 text-gray-600">{s.house}</td>
-                  <td className="px-5 py-3 text-right font-bold text-gray-900">{s.points.toLocaleString()}</td>
-                  <td className="px-5 py-3 text-center text-gray-600">{s.badges} 🏅</td>
+                  <td className="px-5 py-3 text-muted-foreground">{s.house}</td>
+                  <td className="px-5 py-3 text-right font-bold text-foreground">{s.points.toLocaleString()}</td>
+                  <td className="px-5 py-3 text-center text-muted-foreground">{s.badges} 🏅</td>
                   <td className="px-5 py-3 text-center">
                     <span className="text-orange-600 font-medium">🔥 {s.streak}</span>
                   </td>
@@ -108,19 +108,19 @@ export default function GamificationPage() {
 
       {activeTab === "badges" && (
         <div className="space-y-4">
-          <h2 className="font-semibold text-gray-800">Recently Awarded Badges</h2>
+          <h2 className="font-semibold text-foreground">Recently Awarded Badges</h2>
           {RECENT_BADGES.map((b, i) => (
-            <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between">
+            <div key={i} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="text-3xl">{b.badge.split(" ").pop()}</div>
                 <div>
-                  <div className="font-medium text-gray-900">{b.student}</div>
-                  <div className="text-sm text-gray-500">{b.badge.split(" ").slice(0, -1).join(" ")} · {b.category}</div>
+                  <div className="font-medium text-foreground">{b.student}</div>
+                  <div className="text-sm text-muted-foreground">{b.badge.split(" ").slice(0, -1).join(" ")} · {b.category}</div>
                 </div>
               </div>
               <div className="text-right">
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${tierColor[b.tier]}`}>{b.tier}</span>
-                <div className="text-xs text-gray-400 mt-1">{b.awardedAt}</div>
+                <div className="text-xs text-muted-foreground mt-1">{b.awardedAt}</div>
               </div>
             </div>
           ))}
@@ -137,10 +137,10 @@ export default function GamificationPage() {
             { name: "House Captain for a Day", description: "Lead house activities for one day", cost: 1000, icon: "👑" },
             { name: "Cafeteria Special Meal", description: "Free special meal at cafeteria", cost: 300, icon: "🍽️" },
           ].map(reward => (
-            <div key={reward.name} className="bg-white border border-gray-200 rounded-xl p-4">
+            <div key={reward.name} className="bg-card border border-border rounded-xl p-4">
               <div className="text-3xl mb-2">{reward.icon}</div>
-              <div className="font-medium text-gray-900">{reward.name}</div>
-              <div className="text-xs text-gray-500 mt-1">{reward.description}</div>
+              <div className="font-medium text-foreground">{reward.name}</div>
+              <div className="text-xs text-muted-foreground mt-1">{reward.description}</div>
               <div className="flex items-center justify-between mt-3">
                 <span className="text-sm font-bold text-purple-700">{reward.cost} pts</span>
                 <button className="text-xs px-3 py-1 bg-gray-800 text-white rounded-md hover:bg-gray-700">Edit</button>

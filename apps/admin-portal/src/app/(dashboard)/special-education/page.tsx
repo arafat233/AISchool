@@ -29,51 +29,51 @@ export default function SpecialEducationPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Special Education & IEP</h1>
-          <p className="text-sm text-gray-500 mt-1">CWSN student profiles, Individualised Education Plans, exam accommodations</p>
+          <h1 className="text-2xl font-bold text-foreground">Special Education & IEP</h1>
+          <p className="text-sm text-muted-foreground mt-1">CWSN student profiles, Individualised Education Plans, exam accommodations</p>
         </div>
         <button className="px-4 py-2 text-sm bg-gray-800 text-white rounded-lg hover:bg-gray-700">Compliance Report</button>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <div className="bg-card border border-border rounded-xl p-4">
           <div className="text-2xl font-bold text-blue-600">{students.length}</div>
-          <div className="text-sm text-gray-500 mt-1">CWSN Students</div>
+          <div className="text-sm text-muted-foreground mt-1">CWSN Students</div>
         </div>
-        <div className={`border rounded-xl p-4 ${reviewDue > 0 ? "bg-orange-50 border-orange-200" : "bg-white border-gray-200"}`}>
-          <div className={`text-2xl font-bold ${reviewDue > 0 ? "text-orange-600" : "text-gray-900"}`}>{reviewDue}</div>
-          <div className="text-sm text-gray-500 mt-1">IEP Reviews Due</div>
+        <div className={`border rounded-xl p-4 ${reviewDue > 0 ? "bg-orange-50 border-orange-200" : "bg-card border-border"}`}>
+          <div className={`text-2xl font-bold ${reviewDue > 0 ? "text-orange-600" : "text-foreground"}`}>{reviewDue}</div>
+          <div className="text-sm text-muted-foreground mt-1">IEP Reviews Due</div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <div className="bg-card border border-border rounded-xl p-4">
           <div className="text-2xl font-bold text-green-600">{students.filter(s => s.udid).length}</div>
-          <div className="text-sm text-gray-500 mt-1">UDID Registered</div>
+          <div className="text-sm text-muted-foreground mt-1">UDID Registered</div>
         </div>
       </div>
 
       <div className="space-y-3">
         {students.map(student => (
-          <div key={student.id} className="bg-white border border-gray-200 rounded-xl p-5">
+          <div key={student.id} className="bg-card border border-border rounded-xl p-5">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <div className="font-semibold text-gray-900">{student.name}</div>
-                  <span className="text-xs text-gray-500">{student.class}</span>
+                  <div className="font-semibold text-foreground">{student.name}</div>
+                  <span className="text-xs text-muted-foreground">{student.class}</span>
                   {!student.udid && <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">UDID Pending</span>}
                 </div>
-                <div className="text-sm text-gray-600 mt-1">{disabilityLabels[student.disability] ?? student.disability}</div>
-                {student.udid && <div className="text-xs text-gray-400 mt-0.5">UDID: {student.udid}</div>}
+                <div className="text-sm text-muted-foreground mt-1">{disabilityLabels[student.disability] ?? student.disability}</div>
+                {student.udid && <div className="text-xs text-muted-foreground mt-0.5">UDID: {student.udid}</div>}
               </div>
               <div className="text-right">
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${student.iepStatus === "REVIEW_DUE" ? "bg-orange-100 text-orange-700" : "bg-green-100 text-green-700"}`}>
                   IEP: {student.iepStatus.replace("_", " ")}
                 </span>
-                <div className="text-xs text-gray-400 mt-1">Last review: {student.lastReview}</div>
+                <div className="text-xs text-muted-foreground mt-1">Last review: {student.lastReview}</div>
               </div>
             </div>
 
             <div className="mt-3 flex gap-4">
               <div>
-                <div className="text-xs text-gray-500 mb-1">Exam Accommodations</div>
+                <div className="text-xs text-muted-foreground mb-1">Exam Accommodations</div>
                 <div className="flex gap-1 flex-wrap">
                   {student.accommodations.map(acc => (
                     <span key={acc} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{acc.replace("_", " ")}</span>
@@ -81,7 +81,7 @@ export default function SpecialEducationPage() {
                 </div>
               </div>
               <div>
-                <div className="text-xs text-gray-500 mb-1">Government Benefits</div>
+                <div className="text-xs text-muted-foreground mb-1">Government Benefits</div>
                 <div className="flex gap-1 flex-wrap">
                   {student.benefits.map(b => (
                     <span key={b} className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full">{b.replace("_", " ")}</span>
@@ -91,7 +91,7 @@ export default function SpecialEducationPage() {
             </div>
 
             <div className="flex gap-2 mt-3">
-              <button className="text-xs px-3 py-1 border border-gray-200 rounded-md hover:bg-gray-50">View IEP</button>
+              <button className="text-xs px-3 py-1 border border-border rounded-md hover:bg-muted">View IEP</button>
               {student.iepStatus === "REVIEW_DUE" && (
                 <button className="text-xs px-3 py-1 bg-orange-600 text-white rounded-md hover:bg-orange-700">Start Review</button>
               )}

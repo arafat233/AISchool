@@ -30,7 +30,7 @@ const ROLLOUT_STAGES: (0 | 5 | 20 | 50 | 100)[] = [0, 5, 20, 50, 100];
 
 const rolloutColor = (pct: number, enabled: boolean, killed: boolean) => {
   if (killed) return "text-red-600 bg-red-50";
-  if (!enabled || pct === 0) return "text-gray-500 bg-gray-50";
+  if (!enabled || pct === 0) return "text-muted-foreground bg-muted";
   if (pct < 20) return "text-yellow-700 bg-yellow-50";
   if (pct < 100) return "text-blue-700 bg-blue-50";
   return "text-green-700 bg-green-50";
@@ -62,8 +62,8 @@ export default function FeatureFlagsPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Feature Management</h1>
-          <p className="text-sm text-gray-500 mt-1">Control feature rollout per tenant without redeployment</p>
+          <h1 className="text-2xl font-bold text-foreground">Feature Management</h1>
+          <p className="text-sm text-muted-foreground mt-1">Control feature rollout per tenant without redeployment</p>
         </div>
         <a href="/feature-flags/beta" className="px-4 py-2 text-sm bg-gray-800 text-white rounded-lg hover:bg-gray-700">
           Beta Program
@@ -71,23 +71,23 @@ export default function FeatureFlagsPage() {
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <div className="bg-card border border-border rounded-xl p-4">
           <div className="text-2xl font-bold text-green-600">{totalActive}</div>
-          <div className="text-sm text-gray-500 mt-1">Active Features</div>
+          <div className="text-sm text-muted-foreground mt-1">Active Features</div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <div className="bg-card border border-border rounded-xl p-4">
           <div className="text-2xl font-bold text-purple-600">{betaOnly}</div>
-          <div className="text-sm text-gray-500 mt-1">Beta-Only Features</div>
+          <div className="text-sm text-muted-foreground mt-1">Beta-Only Features</div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <div className="bg-card border border-border rounded-xl p-4">
           <div className="text-2xl font-bold text-blue-600">{fullRollout}</div>
-          <div className="text-sm text-gray-500 mt-1">Full Rollout (100%)</div>
+          <div className="text-sm text-muted-foreground mt-1">Full Rollout (100%)</div>
         </div>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-card border border-border rounded-xl overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
+          <thead className="bg-muted text-muted-foreground text-xs uppercase">
             <tr>
               <th className="px-5 py-3 text-left">Feature</th>
               <th className="px-5 py-3 text-center">Enabled</th>
@@ -100,18 +100,18 @@ export default function FeatureFlagsPage() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {flags.map(flag => (
-              <tr key={flag.key} className={`hover:bg-gray-50 ${flag.killSwitchActive ? "bg-red-50" : ""}`}>
+              <tr key={flag.key} className={`hover:bg-muted ${flag.killSwitchActive ? "bg-red-50" : ""}`}>
                 <td className="px-5 py-4">
-                  <div className="font-medium text-gray-900">{flag.name}</div>
-                  <div className="text-xs text-gray-400 mt-0.5 font-mono">{flag.key}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">{flag.description}</div>
+                  <div className="font-medium text-foreground">{flag.name}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5 font-mono">{flag.key}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{flag.description}</div>
                 </td>
                 <td className="px-5 py-4 text-center">
                   <button
                     onClick={() => toggleEnabled(flag.key)}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${flag.enabled ? "bg-green-500" : "bg-gray-300"}`}
                   >
-                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${flag.enabled ? "translate-x-6" : "translate-x-1"}`} />
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-card transition-transform ${flag.enabled ? "translate-x-6" : "translate-x-1"}`} />
                   </button>
                 </td>
                 <td className="px-5 py-4 text-center">
@@ -128,7 +128,7 @@ export default function FeatureFlagsPage() {
                         className={`text-xs px-2 py-0.5 rounded border transition-colors ${
                           flag.rolloutPct === stage
                             ? "bg-gray-800 text-white border-gray-800"
-                            : "text-gray-500 border-gray-200 hover:bg-gray-50"
+                            : "text-muted-foreground border-border hover:bg-muted"
                         }`}
                       >
                         {stage}%
@@ -155,7 +155,7 @@ export default function FeatureFlagsPage() {
                     {flag.killSwitchActive ? "ACTIVE" : "Activate"}
                   </button>
                 </td>
-                <td className="px-5 py-4 text-right text-gray-400 text-xs">{flag.updatedAt}</td>
+                <td className="px-5 py-4 text-right text-muted-foreground text-xs">{flag.updatedAt}</td>
               </tr>
             ))}
           </tbody>

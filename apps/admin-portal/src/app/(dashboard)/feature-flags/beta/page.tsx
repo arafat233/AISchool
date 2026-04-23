@@ -32,10 +32,10 @@ export default function BetaProgramPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Beta School Program</h1>
-          <p className="text-sm text-gray-500 mt-1">Beta schools receive new features before general availability</p>
+          <h1 className="text-2xl font-bold text-foreground">Beta School Program</h1>
+          <p className="text-sm text-muted-foreground mt-1">Beta schools receive new features before general availability</p>
         </div>
-        <a href="/feature-flags" className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">
+        <a href="/feature-flags" className="px-4 py-2 text-sm border border-input rounded-lg hover:bg-muted">
           ← Feature Flags
         </a>
       </div>
@@ -44,18 +44,18 @@ export default function BetaProgramPage() {
         <strong>{betaSchools.length} schools</strong> enrolled in the beta program. Beta schools receive features at 0% global rollout and provide early feedback before wider release.
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
+      <div className="bg-card border border-border rounded-xl overflow-hidden">
+        <div className="px-5 py-4 border-b border-border flex items-center gap-3">
           <input
             type="text"
             placeholder="Search schools..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="flex-1 border border-input rounded-lg px-3 py-2 text-sm"
           />
         </div>
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
+          <thead className="bg-muted text-muted-foreground text-xs uppercase">
             <tr>
               <th className="px-5 py-3 text-left">School</th>
               <th className="px-5 py-3 text-left">City</th>
@@ -67,12 +67,12 @@ export default function BetaProgramPage() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {betaSchools.filter(s => s.schoolName.toLowerCase().includes(search.toLowerCase())).map(school => (
-              <tr key={school.tenantId} className="hover:bg-gray-50">
-                <td className="px-5 py-3 font-medium text-gray-900">{school.schoolName}</td>
-                <td className="px-5 py-3 text-gray-500">{school.city}</td>
-                <td className="px-5 py-3 text-right text-gray-700">{school.activeStudents.toLocaleString()}</td>
-                <td className="px-5 py-3 text-gray-500">{school.enrolledAt}</td>
-                <td className="px-5 py-3 text-gray-500 text-xs">{school.feedback ?? "—"}</td>
+              <tr key={school.tenantId} className="hover:bg-muted">
+                <td className="px-5 py-3 font-medium text-foreground">{school.schoolName}</td>
+                <td className="px-5 py-3 text-muted-foreground">{school.city}</td>
+                <td className="px-5 py-3 text-right text-foreground">{school.activeStudents.toLocaleString()}</td>
+                <td className="px-5 py-3 text-muted-foreground">{school.enrolledAt}</td>
+                <td className="px-5 py-3 text-muted-foreground text-xs">{school.feedback ?? "—"}</td>
                 <td className="px-5 py-3 text-center">
                   <button onClick={() => removeBeta(school.tenantId)} className="text-xs text-red-500 hover:text-red-700 border border-red-200 px-3 py-1 rounded-md hover:bg-red-50">
                     Remove

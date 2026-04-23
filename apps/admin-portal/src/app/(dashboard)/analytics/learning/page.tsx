@@ -40,13 +40,13 @@ export default function LearningAnalyticsPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Student Learning Analytics</h1>
+      <h1 className="text-2xl font-bold text-foreground">Student Learning Analytics</h1>
 
       {/* Course Heatmap */}
-      <div className="bg-white border rounded-xl overflow-hidden">
-        <div className="px-6 py-4 border-b font-semibold text-gray-800">Course Completion Heatmap</div>
+      <div className="bg-card border rounded-xl overflow-hidden">
+        <div className="px-6 py-4 border-b font-semibold text-foreground">Course Completion Heatmap</div>
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-600 text-xs uppercase">
+          <thead className="bg-muted text-muted-foreground text-xs uppercase">
             <tr>
               <th className="px-4 py-3 text-left">Course</th>
               <th className="px-4 py-3 text-left">Class</th>
@@ -60,14 +60,14 @@ export default function LearningAnalyticsPage() {
             {courses.map((c, i) => {
               const color = c.avg_progress_pct >= 80 ? "bg-green-500" : c.avg_progress_pct >= 50 ? "bg-blue-500" : "bg-orange-400";
               return (
-                <tr key={i} className="hover:bg-gray-50">
+                <tr key={i} className="hover:bg-muted">
                   <td className="px-4 py-3 font-medium">{c.course_name}</td>
-                  <td className="px-4 py-3 text-gray-600">{c.class_name}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{c.class_name}</td>
                   <td className="px-4 py-3 text-right font-semibold">{c.avg_progress_pct}%</td>
                   <td className="px-4 py-3 text-right">{c.completed_students}/{c.total_students}</td>
                   <td className="px-4 py-3 text-right">{c.total_time_hours}h</td>
                   <td className="px-4 py-3">
-                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-2 bg-muted rounded-full overflow-hidden">
                       <div className={`h-full ${color} rounded-full`} style={{ width: `${c.avg_progress_pct}%` }} />
                     </div>
                   </td>
@@ -79,21 +79,21 @@ export default function LearningAnalyticsPage() {
       </div>
 
       {/* Lesson Drop-off Funnel */}
-      <div className="bg-white border rounded-xl overflow-hidden">
-        <div className="px-6 py-4 border-b font-semibold text-gray-800">Lesson-Level Drop-off (Mathematics — Algebra, Grade 9-A)</div>
+      <div className="bg-card border rounded-xl overflow-hidden">
+        <div className="px-6 py-4 border-b font-semibold text-foreground">Lesson-Level Drop-off (Mathematics — Algebra, Grade 9-A)</div>
         <div className="p-6 space-y-3">
           {lessons.map((l, i) => {
             const dropPct = 100 - l.completion_pct;
             const width = Math.max(l.completion_pct, 10);
             return (
               <div key={i} className="flex items-center gap-3">
-                <span className="text-xs text-gray-500 w-5 text-right">{i + 1}</span>
+                <span className="text-xs text-muted-foreground w-5 text-right">{i + 1}</span>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-700">{l.lesson_title}</span>
-                    <span className="text-xs text-gray-500">{l.avg_time_min} min avg</span>
+                    <span className="text-sm text-foreground">{l.lesson_title}</span>
+                    <span className="text-xs text-muted-foreground">{l.avg_time_min} min avg</span>
                   </div>
-                  <div className="h-6 bg-gray-100 rounded-lg overflow-hidden flex">
+                  <div className="h-6 bg-muted rounded-lg overflow-hidden flex">
                     <div
                       className="h-full bg-blue-500 rounded-l-lg flex items-center justify-center text-white text-xs"
                       style={{ width: `${width}%` }}
@@ -111,7 +111,7 @@ export default function LearningAnalyticsPage() {
         </div>
       </div>
 
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-muted-foreground">
         Data sourced from LMS lesson progress records. Students who watched &gt;80% of a video or scrolled to end of PDF are counted as completed.
       </p>
     </div>
