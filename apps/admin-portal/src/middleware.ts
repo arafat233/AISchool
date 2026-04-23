@@ -1,11 +1,13 @@
-import createMiddleware from "next-intl/middleware";
-import { routing } from "./i18n/routing";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export default createMiddleware(routing);
+// Pass-through middleware — i18n routing removed (no [locale] folder structure)
+export function middleware(_request: NextRequest) {
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
-    // Match all paths except static files, api routes, _next
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|ico|css|js)).*)",
   ],
 };
