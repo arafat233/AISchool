@@ -41,41 +41,41 @@ export default function PtmPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-gray-900">PTM Booking</h1>
+      <h1 className="text-xl font-bold text-foreground">PTM Booking</h1>
 
       {/* Event list */}
       <div className="space-y-3">
         {(events ?? []).map((ev: any) => (
-          <div key={ev.id} className={`bg-white rounded-xl border p-5 cursor-pointer transition ${selectedEvent === ev.id ? "border-primary ring-1 ring-primary" : "border-gray-200 hover:border-primary/40"}`}
+          <div key={ev.id} className={`bg-card rounded-xl border p-5 cursor-pointer transition ${selectedEvent === ev.id ? "border-primary ring-1 ring-primary" : "border-border hover:border-primary/40"}`}
             onClick={() => setSelectedEvent(ev.id)}>
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-semibold text-gray-800">{ev.title}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{format(new Date(ev.eventDate), "EEEE, dd MMMM yyyy")}</p>
+                <p className="text-sm font-semibold text-foreground">{ev.title}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{format(new Date(ev.eventDate), "EEEE, dd MMMM yyyy")}</p>
                 {ev.isVirtual && <span className="mt-1 inline-block text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Virtual — {ev.meetingPlatform}</span>}
-                {ev.venue && <span className="mt-1 inline-block text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{ev.venue}</span>}
+                {ev.venue && <span className="mt-1 inline-block text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{ev.venue}</span>}
               </div>
               <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full">{ev.status}</span>
             </div>
           </div>
         ))}
-        {!events?.length && <p className="text-sm text-gray-400 text-center py-12">No PTM events scheduled</p>}
+        {!events?.length && <p className="text-sm text-muted-foreground text-center py-12">No PTM events scheduled</p>}
       </div>
 
       {/* Slots */}
       {selectedEvent && slots && (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div className="px-5 py-4 border-b border-gray-100">
-            <h2 className="text-sm font-semibold text-gray-800">Available Slots</h2>
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
+          <div className="px-5 py-4 border-b border-border/50">
+            <h2 className="text-sm font-semibold text-foreground">Available Slots</h2>
           </div>
           <div className="divide-y divide-gray-100">
             {slots.map((slot: any) => (
               <div key={slot.id} className="flex items-center justify-between px-5 py-3">
                 <div>
-                  <p className="text-sm font-medium text-gray-800">
+                  <p className="text-sm font-medium text-foreground">
                     {format(new Date(slot.startTime), "hh:mm a")} – {format(new Date(slot.endTime), "hh:mm a")}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     {slot.staff?.user?.profile?.firstName} {slot.staff?.user?.profile?.lastName}
                   </p>
                 </div>
@@ -94,7 +94,7 @@ export default function PtmPage() {
                 )}
               </div>
             ))}
-            {!slots.length && <p className="px-5 py-6 text-sm text-gray-400 text-center">No slots available</p>}
+            {!slots.length && <p className="px-5 py-6 text-sm text-muted-foreground text-center">No slots available</p>}
           </div>
         </div>
       )}

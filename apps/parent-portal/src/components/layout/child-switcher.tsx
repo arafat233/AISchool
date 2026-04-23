@@ -16,7 +16,8 @@ export function ChildSwitcher() {
     <div className="relative px-3 py-2">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-2 bg-white/10 hover:bg-white/20 rounded-lg px-3 py-2 transition"
+        aria-label="Switch child"
+        className="w-full flex items-center gap-2 bg-white/10 hover:bg-white/20 rounded-lg px-3 py-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
       >
         <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold uppercase shrink-0">
           {active?.firstName?.[0]}{active?.lastName?.[0]}
@@ -29,13 +30,13 @@ export function ChildSwitcher() {
       </button>
 
       {open && (
-        <div className="absolute left-3 right-3 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50">
+        <div className="absolute left-3 right-3 top-full mt-1 bg-card rounded-lg shadow-lg border border-border overflow-hidden z-50">
           {children.map((child) => (
             <button
               key={child.id}
               onClick={() => { setActiveChild(child.id); setOpen(false); }}
               className={cn(
-                "w-full flex items-center gap-2 px-3 py-2.5 text-sm hover:bg-gray-50 transition",
+                "w-full flex items-center gap-2 px-3 py-2.5 text-sm hover:bg-muted/40 transition focus-visible:outline-none",
                 child.id === activeChildId && "bg-primary/5 text-primary font-medium"
               )}
             >
@@ -43,8 +44,8 @@ export function ChildSwitcher() {
                 {child.firstName[0]}{child.lastName[0]}
               </div>
               <div className="text-left">
-                <p className="font-medium text-xs">{child.firstName} {child.lastName}</p>
-                <p className="text-gray-500 text-xs">{child.className} — {child.sectionName}</p>
+                <p className="font-medium text-xs text-foreground">{child.firstName} {child.lastName}</p>
+                <p className="text-muted-foreground text-xs">{child.className} — {child.sectionName}</p>
               </div>
             </button>
           ))}

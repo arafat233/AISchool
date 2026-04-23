@@ -41,20 +41,20 @@ export default function SurveysPage() {
     return (
       <div className="space-y-6 max-w-2xl">
         <div className="flex items-center gap-3">
-          <button onClick={() => setActiveSurvey(null)} className="text-sm text-gray-500 hover:text-gray-700">← Back</button>
-          <h1 className="text-xl font-bold text-gray-900">{surveyDetail?.title}</h1>
+          <button onClick={() => setActiveSurvey(null)} className="text-sm text-muted-foreground hover:text-foreground">← Back</button>
+          <h1 className="text-xl font-bold text-foreground">{surveyDetail?.title}</h1>
         </div>
-        {surveyDetail?.description && <p className="text-sm text-gray-600">{surveyDetail.description}</p>}
+        {surveyDetail?.description && <p className="text-sm text-muted-foreground">{surveyDetail.description}</p>}
 
         <div className="space-y-5">
           {(surveyDetail?.questions ?? []).map((q: any, i: number) => (
-            <div key={q.id} className="bg-white rounded-xl border border-gray-200 p-5">
-              <p className="text-sm font-medium text-gray-800 mb-3">{i + 1}. {q.questionText}</p>
+            <div key={q.id} className="bg-card rounded-xl border border-border p-5">
+              <p className="text-sm font-medium text-foreground mb-3">{i + 1}. {q.questionText}</p>
               {(q.questionType === "RATING" || q.questionType === "NPS") && (
                 <div className="flex gap-2 flex-wrap">
                   {Array.from({ length: q.questionType === "NPS" ? 10 : (q.maxValue ?? 5) }, (_, i) => i + (q.minValue ?? 1)).map((n) => (
                     <button key={n} onClick={() => setAnswers((a) => ({ ...a, [q.id]: n }))}
-                      className={`w-10 h-10 rounded-lg border text-sm font-semibold transition ${answers[q.id] === n ? "bg-primary text-white border-primary" : "border-gray-200 hover:border-primary text-gray-700"}`}>
+                      className={`w-10 h-10 rounded-lg border text-sm font-semibold transition ${answers[q.id] === n ? "bg-primary text-white border-primary" : "border-border hover:border-primary text-foreground"}`}>
                       {n}
                     </button>
                   ))}
@@ -68,7 +68,7 @@ export default function SurveysPage() {
                         checked={answers[q.id] === opt}
                         onChange={() => setAnswers((a) => ({ ...a, [q.id]: opt }))}
                         className="text-primary" />
-                      <span className="text-sm text-gray-700">{opt}</span>
+                      <span className="text-sm text-foreground">{opt}</span>
                     </label>
                   ))}
                 </div>
@@ -87,7 +87,7 @@ export default function SurveysPage() {
                           }));
                         }}
                         className="text-primary" />
-                      <span className="text-sm text-gray-700">{opt}</span>
+                      <span className="text-sm text-foreground">{opt}</span>
                     </label>
                   ))}
                 </div>
@@ -112,16 +112,16 @@ export default function SurveysPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-gray-900">Surveys</h1>
+      <h1 className="text-xl font-bold text-foreground">Surveys</h1>
       <div className="space-y-3">
         {(surveys ?? []).map((s: any) => (
-          <div key={s.id} className="bg-white rounded-xl border border-gray-200 p-5 flex items-start justify-between">
+          <div key={s.id} className="bg-card rounded-xl border border-border p-5 flex items-start justify-between">
             <div className="flex items-start gap-3">
               <ClipboardList className="w-5 h-5 text-primary mt-0.5 shrink-0" />
               <div>
-                <p className="text-sm font-semibold text-gray-800">{s.title}</p>
-                {s.description && <p className="text-xs text-gray-500 mt-0.5">{s.description}</p>}
-                <p className="text-xs text-gray-400 mt-1">{s._count?.questions ?? 0} questions · {s._count?.responses ?? 0} responses</p>
+                <p className="text-sm font-semibold text-foreground">{s.title}</p>
+                {s.description && <p className="text-xs text-muted-foreground mt-0.5">{s.description}</p>}
+                <p className="text-xs text-muted-foreground mt-1">{s._count?.questions ?? 0} questions · {s._count?.responses ?? 0} responses</p>
               </div>
             </div>
             <button onClick={() => setActiveSurvey(s)}
@@ -130,7 +130,7 @@ export default function SurveysPage() {
             </button>
           </div>
         ))}
-        {!surveys?.length && <p className="text-sm text-gray-400 text-center py-12">No surveys available</p>}
+        {!surveys?.length && <p className="text-sm text-muted-foreground text-center py-12">No surveys available</p>}
       </div>
     </div>
   );

@@ -48,7 +48,7 @@ export default function CertificatesPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-900">Certificates</h1>
+        <h1 className="text-xl font-bold text-foreground">Certificates</h1>
         <button onClick={() => setShowForm((v) => !v)}
           className="flex items-center gap-2 bg-primary text-white text-sm px-4 py-2 rounded-lg hover:opacity-90 transition">
           <Plus className="w-4 h-4" />
@@ -57,11 +57,11 @@ export default function CertificatesPage() {
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <h2 className="text-sm font-semibold text-gray-800 mb-4">New Certificate Request</h2>
+        <div className="bg-card rounded-xl border border-border p-5">
+          <h2 className="text-sm font-semibold text-foreground mb-4">New Certificate Request</h2>
           <form onSubmit={handleSubmit((d) => request.mutate(d))} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Certificate Type</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Certificate Type</label>
               <select className="input w-full" {...register("certificateType", { required: true })}>
                 <option value="">Select type…</option>
                 {CERT_TYPES.map((t) => (
@@ -70,7 +70,7 @@ export default function CertificatesPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Purpose</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Purpose</label>
               <input type="text" className="input w-full" placeholder="e.g. Bank account opening"
                 {...register("purpose", { required: true })} />
             </div>
@@ -86,19 +86,19 @@ export default function CertificatesPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100">
-          <h2 className="text-sm font-semibold text-gray-800">My Requests</h2>
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        <div className="px-5 py-4 border-b border-border/50">
+          <h2 className="text-sm font-semibold text-foreground">My Requests</h2>
         </div>
         <div className="divide-y divide-gray-100">
           {(data ?? []).map((r: any) => (
             <div key={r.id} className="flex items-center gap-3 px-5 py-4">
               {statusIcon(r.status)}
               <div className="flex-1">
-                <p className="text-sm font-semibold text-gray-800">
+                <p className="text-sm font-semibold text-foreground">
                   {r.certificateType?.charAt(0) + r.certificateType?.slice(1).toLowerCase()} Certificate
                 </p>
-                <p className="text-xs text-gray-500">{r.purpose} · {format(new Date(r.createdAt), "dd MMM yyyy")}</p>
+                <p className="text-xs text-muted-foreground">{r.purpose} · {format(new Date(r.createdAt), "dd MMM yyyy")}</p>
               </div>
               <div className="flex items-center gap-3">
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
@@ -116,7 +116,7 @@ export default function CertificatesPage() {
               </div>
             </div>
           ))}
-          {!data?.length && <p className="px-5 py-8 text-sm text-gray-400 text-center">No certificate requests yet</p>}
+          {!data?.length && <p className="px-5 py-8 text-sm text-muted-foreground text-center">No certificate requests yet</p>}
         </div>
       </div>
     </div>

@@ -31,7 +31,7 @@ export default function AttendancePage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-gray-900">Attendance</h1>
+      <h1 className="text-xl font-bold text-foreground">Attendance</h1>
 
       {data && (
         <div className="grid grid-cols-3 gap-4">
@@ -40,24 +40,24 @@ export default function AttendancePage() {
             { label: "Present Days", value: data.presentDays ?? 0, color: "text-blue-600" },
             { label: "Absent Days", value: data.absentDays ?? 0, color: "text-rose-600" },
           ].map((s) => (
-            <div key={s.label} className="bg-white rounded-xl border border-gray-200 p-4 text-center">
+            <div key={s.label} className="bg-card rounded-xl border border-border p-4 text-center">
               <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
-              <p className="text-xs text-gray-500 mt-1">{s.label}</p>
+              <p className="text-xs text-muted-foreground mt-1">{s.label}</p>
             </div>
           ))}
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100">
-          <h2 className="text-sm font-semibold text-gray-800">Attendance History</h2>
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        <div className="px-5 py-4 border-b border-border/50">
+          <h2 className="text-sm font-semibold text-foreground">Attendance History</h2>
         </div>
         <div className="divide-y divide-gray-100">
           {(history ?? []).slice(0, 30).map((r: any) => (
             <div key={r.id} className="flex items-center justify-between px-5 py-3">
               <div className="flex items-center gap-3">
                 {statusIcon(r.status)}
-                <p className="text-sm text-gray-800">{format(new Date(r.date), "EEE, dd MMM yyyy")}</p>
+                <p className="text-sm text-foreground">{format(new Date(r.date), "EEE, dd MMM yyyy")}</p>
               </div>
               <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                 r.status === "PRESENT" ? "bg-emerald-50 text-emerald-700" :
@@ -66,7 +66,7 @@ export default function AttendancePage() {
               }`}>{r.status}</span>
             </div>
           ))}
-          {!history?.length && <p className="px-5 py-8 text-sm text-gray-400 text-center">No records found</p>}
+          {!history?.length && <p className="px-5 py-8 text-sm text-muted-foreground text-center">No records found</p>}
         </div>
       </div>
     </div>

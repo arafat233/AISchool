@@ -38,7 +38,7 @@ export default function FeesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-gray-900">Fees</h1>
+      <h1 className="text-xl font-bold text-foreground">Fees</h1>
 
       {summary && (
         <div className="grid grid-cols-3 gap-4">
@@ -47,9 +47,9 @@ export default function FeesPage() {
             { label: "Total Paid", value: `₹${(summary.totalPaid ?? 0).toLocaleString()}`, color: "text-emerald-600" },
             { label: "Overdue", value: `₹${(summary.overdue ?? 0).toLocaleString()}`, color: "text-amber-600" },
           ].map((s) => (
-            <div key={s.label} className="bg-white rounded-xl border border-gray-200 p-4 text-center">
+            <div key={s.label} className="bg-card rounded-xl border border-border p-4 text-center">
               <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
-              <p className="text-xs text-gray-500 mt-1">{s.label}</p>
+              <p className="text-xs text-muted-foreground mt-1">{s.label}</p>
             </div>
           ))}
         </div>
@@ -57,19 +57,19 @@ export default function FeesPage() {
 
       {/* Pending fee items */}
       {summary?.pendingItems?.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div className="px-5 py-4 border-b border-gray-100">
-            <h2 className="text-sm font-semibold text-gray-800">Pending Payments</h2>
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
+          <div className="px-5 py-4 border-b border-border/50">
+            <h2 className="text-sm font-semibold text-foreground">Pending Payments</h2>
           </div>
           <div className="divide-y divide-gray-100">
             {summary.pendingItems.map((item: any) => (
               <div key={item.id} className="flex items-center justify-between px-5 py-3">
                 <div>
-                  <p className="text-sm font-medium text-gray-800">{item.feeTypeName}</p>
-                  <p className="text-xs text-gray-500">Due: {new Date(item.dueDate).toLocaleDateString()}</p>
+                  <p className="text-sm font-medium text-foreground">{item.feeTypeName}</p>
+                  <p className="text-xs text-muted-foreground">Due: {new Date(item.dueDate).toLocaleDateString()}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <p className="text-sm font-semibold text-gray-900">₹{item.amount.toLocaleString()}</p>
+                  <p className="text-sm font-semibold text-foreground">₹{item.amount.toLocaleString()}</p>
                   <button
                     onClick={() => initiatePay.mutate(item.id)}
                     disabled={initiatePay.isPending}
@@ -85,9 +85,9 @@ export default function FeesPage() {
       )}
 
       {/* Payment history */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100">
-          <h2 className="text-sm font-semibold text-gray-800">Payment History</h2>
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        <div className="px-5 py-4 border-b border-border/50">
+          <h2 className="text-sm font-semibold text-foreground">Payment History</h2>
         </div>
         <div className="divide-y divide-gray-100">
           {(transactions ?? []).map((t: any) => (
@@ -97,12 +97,12 @@ export default function FeesPage() {
                   ? <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                   : <Clock className="w-4 h-4 text-amber-500" />}
                 <div>
-                  <p className="text-sm text-gray-800">{t.feeTypeName}</p>
-                  <p className="text-xs text-gray-500">{new Date(t.paidAt ?? t.createdAt).toLocaleDateString()}</p>
+                  <p className="text-sm text-foreground">{t.feeTypeName}</p>
+                  <p className="text-xs text-muted-foreground">{new Date(t.paidAt ?? t.createdAt).toLocaleDateString()}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <p className="text-sm font-semibold text-gray-900">₹{t.amount.toLocaleString()}</p>
+                <p className="text-sm font-semibold text-foreground">₹{t.amount.toLocaleString()}</p>
                 {t.receiptUrl && (
                   <a href={t.receiptUrl} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1 text-xs text-primary hover:underline">
@@ -113,7 +113,7 @@ export default function FeesPage() {
               </div>
             </div>
           ))}
-          {!transactions?.length && <p className="px-5 py-8 text-sm text-gray-400 text-center">No payment history</p>}
+          {!transactions?.length && <p className="px-5 py-8 text-sm text-muted-foreground text-center">No payment history</p>}
         </div>
       </div>
     </div>

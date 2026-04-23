@@ -18,25 +18,25 @@ export default function ResultsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-gray-900">Results</h1>
+      <h1 className="text-xl font-bold text-foreground">Results</h1>
 
       {(results ?? []).length === 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 py-16 text-center text-gray-400 text-sm">
+        <div className="bg-card rounded-xl border border-border py-16 text-center text-muted-foreground text-sm">
           No results published yet.
         </div>
       )}
 
       {(results ?? []).map((r: any) => (
-        <div key={r.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div key={r.id} className="bg-card rounded-xl border border-border overflow-hidden">
+          <div className="px-5 py-4 border-b border-border/50 flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-gray-800">{r.examTitle}</h2>
-              <p className="text-xs text-gray-500 mt-0.5">{r.examDate ? new Date(r.examDate).toLocaleDateString() : ""}</p>
+              <h2 className="text-sm font-semibold text-foreground">{r.examTitle}</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">{r.examDate ? new Date(r.examDate).toLocaleDateString() : ""}</p>
             </div>
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <p className="text-lg font-bold text-primary">{r.totalMarksObtained ?? "—"} / {r.totalMaxMarks ?? "—"}</p>
-                <p className="text-xs text-gray-500">Total</p>
+                <p className="text-xs text-muted-foreground">Total</p>
               </div>
               {r.reportCardUrl && (
                 <a href={r.reportCardUrl} target="_blank" rel="noopener noreferrer"
@@ -50,9 +50,9 @@ export default function ResultsPage() {
           <div className="divide-y divide-gray-100">
             {(r.subjectResults ?? []).map((s: any) => (
               <div key={s.subjectId} className="flex items-center justify-between px-5 py-3">
-                <p className="text-sm text-gray-700">{s.subjectName}</p>
+                <p className="text-sm text-foreground">{s.subjectName}</p>
                 <div className="flex items-center gap-4">
-                  <p className="text-sm font-semibold text-gray-900">{s.marksObtained} / {s.maxMarks}</p>
+                  <p className="text-sm font-semibold text-foreground">{s.marksObtained} / {s.maxMarks}</p>
                   {s.grade && (
                     <span className="text-xs font-bold bg-primary/10 text-primary px-2 py-0.5 rounded">{s.grade}</span>
                   )}
