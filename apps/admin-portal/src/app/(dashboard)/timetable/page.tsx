@@ -6,7 +6,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/lib/api";
-import { Plus, X, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Plus, X, Loader2, Calendar } from "lucide-react";
 import toast from "react-hot-toast";
 
 const DAYS = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
@@ -34,6 +35,8 @@ const slotSchema = z.object({
 });
 type SlotForm = z.infer<typeof slotSchema>;
 
+const labelCls = "block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5";
+
 export default function TimetablePage() {
   const qc = useQueryClient();
   const [selectedSection, setSelectedSection] = useState("");
@@ -53,8 +56,7 @@ export default function TimetablePage() {
 
   const { data: timetable = [], isLoading } = useQuery<TimetableSlot[]>({
     queryKey: ["timetable", selectedSection],
-    queryFn: () =>
-      api.get(`/academic/timetable/${selectedSection}`).then((r) => r.data),
+    queryFn: () => api.get(`/academic/timetable/${selectedSection}`).then((r) => r.data),
     enabled: !!selectedSection,
     placeholderData: [],
   });
@@ -66,12 +68,7 @@ export default function TimetablePage() {
 
   const addSlot = useMutation({
     mutationFn: (d: SlotForm) => api.post("/academic/timetable", d).then((r) => r.data),
-    onSuccess: () => {
-      toast.success("Slot added");
-      qc.invalidateQueries({ queryKey: ["timetable"] });
-      reset();
-      setShowAdd(false);
-    },
+    onSuccess: () => { toast.success("Slot added"); qc.invalidateQueries({ queryKey: ["timetable"] }); reset(); setShowAdd(false); },
     onError: () => toast.error("Conflict or error adding slot"),
   });
 
@@ -80,7 +77,6 @@ export default function TimetablePage() {
     onSuccess: () => { toast.success("Slot removed"); qc.invalidateQueries({ queryKey: ["timetable"] }); },
   });
 
-  // Group by day
   const byDay: Record<string, TimetableSlot[]> = {};
   DAYS.forEach((d) => { byDay[d] = []; });
   timetable.forEach((s) => { byDay[s.dayOfWeek]?.push(s); });
@@ -88,40 +84,46 @@ export default function TimetablePage() {
   return (
     <>
       {showAdd && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md shadow-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold">Add Timetable Slot</h2>
-              <button onClick={() => setShowAdd(false)}><X className="w-5 h-5 text-gray-400" /></button>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-card rounded-xl w-full max-w-md shadow-xl border border-border">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+              <h2 className="font-semibold text-foreground">Add Timetable Slot</h2>
+              <button
+                onClick={() => setShowAdd(false)}
+                aria-label="Close"
+                className="text-muted-foreground hover:text-foreground transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
-            <form onSubmit={handleSubmit((d) => addSlot.mutate({ ...d, sectionId: selectedSection }))} className="space-y-4">
+            <form onSubmit={handleSubmit((d) => addSlot.mutate({ ...d, sectionId: selectedSection }))} className="p-6 space-y-4">
               <div>
-                <label className="text-xs font-medium text-gray-700 block mb-1">Subject</label>
-                <select className="input w-full" {...register("subjectId")}>
+                <label htmlFor="tt-subject" className={labelCls}>Subject</label>
+                <select id="tt-subject" className="input w-full" {...register("subjectId")}>
                   <option value="">Select subject…</option>
                   {subjects.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-medium text-gray-700 block mb-1">Day</label>
-                  <select className="input w-full" {...register("dayOfWeek")}>
+                  <label htmlFor="tt-day" className={labelCls}>Day</label>
+                  <select id="tt-day" className="input w-full" {...register("dayOfWeek")}>
                     {DAYS.map((d) => <option key={d} value={d}>{DAY_SHORT[d]}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-700 block mb-1">Period #</label>
-                  <input type="number" className="input w-full" {...register("periodNumber")} />
+                  <label htmlFor="tt-period" className={labelCls}>Period #</label>
+                  <input id="tt-period" type="number" className="input w-full" {...register("periodNumber")} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-medium text-gray-700 block mb-1">Start Time</label>
-                  <input type="time" className="input w-full" {...register("startTime")} />
+                  <label htmlFor="tt-start" className={labelCls}>Start Time</label>
+                  <input id="tt-start" type="time" className="input w-full" {...register("startTime")} />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-700 block mb-1">End Time</label>
-                  <input type="time" className="input w-full" {...register("endTime")} />
+                  <label htmlFor="tt-end" className={labelCls}>End Time</label>
+                  <input id="tt-end" type="time" className="input w-full" {...register("endTime")} />
                 </div>
               </div>
               <div className="flex gap-3 pt-2">
@@ -136,11 +138,11 @@ export default function TimetablePage() {
       )}
 
       <div className="space-y-4">
-        {/* Controls */}
         <div className="flex items-center gap-3">
           <select
             value={selectedSection}
             onChange={(e) => setSelectedSection(e.target.value)}
+            aria-label="Select section"
             className="input max-w-xs"
           >
             <option value="">Select section…</option>
@@ -158,45 +160,51 @@ export default function TimetablePage() {
         </div>
 
         {!selectedSection ? (
-          <div className="bg-white rounded-xl border border-border py-20 text-center text-muted-foreground">
-            Select a section to view or edit its timetable.
+          <div className="bg-card rounded-xl border border-border py-20 text-center text-muted-foreground">
+            <Calendar className="w-8 h-8 mx-auto mb-3 opacity-20" />
+            <p className="text-sm">Select a section to view or edit its timetable.</p>
           </div>
         ) : isLoading ? (
           <div className="py-16 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-muted-foreground" /></div>
         ) : (
-          <div className="bg-white rounded-xl border border-border overflow-hidden">
+          <div className="bg-card rounded-xl border border-border overflow-hidden">
+            {/* Day headers */}
             <div className="grid grid-cols-6 divide-x divide-border border-b border-border">
               {DAYS.map((day) => (
-                <div key={day} className="px-3 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider text-center bg-gray-50/50">
+                <div key={day} className="px-3 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-widest text-center bg-muted/30">
                   {DAY_SHORT[day]}
                 </div>
               ))}
             </div>
+            {/* Slot grid */}
             <div className="grid grid-cols-6 divide-x divide-border min-h-[400px]">
               {DAYS.map((day) => (
                 <div key={day} className="p-2 space-y-2">
-                  {byDay[day].sort((a, b) => a.startTime.localeCompare(b.startTime)).map((slot) => (
-                    <div
-                      key={slot.id}
-                      className="group relative bg-primary/5 border border-primary/20 rounded-lg p-2 text-xs"
-                    >
-                      <p className="font-semibold text-primary truncate">
-                        {slot.subject?.name ?? "—"}
-                      </p>
-                      <p className="text-muted-foreground">{slot.startTime} – {slot.endTime}</p>
-                      {slot.teacher?.user && (
-                        <p className="text-muted-foreground truncate">
-                          {slot.teacher.user.firstName} {slot.teacher.user.lastName}
-                        </p>
-                      )}
-                      <button
-                        onClick={() => deleteSlot.mutate(slot.id)}
-                        className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 text-gray-400 hover:text-destructive transition"
+                  {byDay[day]
+                    .sort((a, b) => a.startTime.localeCompare(b.startTime))
+                    .map((slot) => (
+                      <div
+                        key={slot.id}
+                        className="group relative bg-primary/8 border border-primary/20 rounded-lg p-2 text-xs hover:bg-primary/12 transition-colors"
                       >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </div>
-                  ))}
+                        <p className="font-semibold text-primary truncate">
+                          {slot.subject?.name ?? "—"}
+                        </p>
+                        <p className="text-muted-foreground mt-0.5">{slot.startTime} – {slot.endTime}</p>
+                        {slot.teacher?.user && (
+                          <p className="text-muted-foreground truncate">
+                            {slot.teacher.user.firstName} {slot.teacher.user.lastName}
+                          </p>
+                        )}
+                        <button
+                          onClick={() => deleteSlot.mutate(slot.id)}
+                          aria-label="Remove slot"
+                          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition focus-visible:outline-none focus-visible:opacity-100"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
                 </div>
               ))}
             </div>

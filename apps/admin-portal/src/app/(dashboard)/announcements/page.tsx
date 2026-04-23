@@ -7,6 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Plus, X, Loader2, Megaphone, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -26,13 +27,15 @@ const schema = z.object({
 });
 type FormData = z.infer<typeof schema>;
 
-const AUDIENCE_COLOR: Record<string, string> = {
-  ALL: "bg-blue-50 text-blue-700",
-  STUDENTS: "bg-green-50 text-green-700",
-  PARENTS: "bg-purple-50 text-purple-700",
-  STAFF: "bg-amber-50 text-amber-700",
-  TEACHERS: "bg-teal-50 text-teal-700",
+const AUDIENCE_STYLE: Record<string, string> = {
+  ALL: "bg-primary/10 text-primary",
+  STUDENTS: "bg-green-500/10 text-green-700 dark:text-green-400",
+  PARENTS: "bg-violet-500/10 text-violet-700 dark:text-violet-400",
+  STAFF: "bg-amber-500/10 text-amber-700 dark:text-amber-400",
+  TEACHERS: "bg-cyan-500/10 text-cyan-700 dark:text-cyan-400",
 };
+
+const labelCls = "block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5";
 
 export default function AnnouncementsPage() {
   const qc = useQueryClient();
@@ -68,21 +71,27 @@ export default function AnnouncementsPage() {
   return (
     <>
       {showAdd && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-lg shadow-xl">
-            <div className="flex items-center justify-between px-6 py-4 border-b">
-              <h2 className="font-semibold">New Announcement</h2>
-              <button onClick={() => setShowAdd(false)}><X className="w-5 h-5 text-gray-400" /></button>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-card rounded-xl w-full max-w-lg shadow-xl border border-border">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+              <h2 className="font-semibold text-foreground">New Announcement</h2>
+              <button
+                onClick={() => setShowAdd(false)}
+                aria-label="Close"
+                className="text-muted-foreground hover:text-foreground transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
             <form onSubmit={handleSubmit((d) => create.mutate(d))} className="p-6 space-y-4">
               <div>
-                <label className="text-xs font-medium text-gray-700 block mb-1">Title</label>
-                <input className="input w-full" placeholder="Annual Sports Day…" {...register("title")} />
+                <label htmlFor="ann-title" className={labelCls}>Title</label>
+                <input id="ann-title" className="input w-full" placeholder="Annual Sports Day…" {...register("title")} />
                 {errors.title && <p className="err">{errors.title.message}</p>}
               </div>
               <div>
-                <label className="text-xs font-medium text-gray-700 block mb-1">Target Audience</label>
-                <select className="input w-full" {...register("targetAudience")}>
+                <label htmlFor="ann-audience" className={labelCls}>Target Audience</label>
+                <select id="ann-audience" className="input w-full" {...register("targetAudience")}>
                   <option value="ALL">Everyone</option>
                   <option value="STUDENTS">Students</option>
                   <option value="PARENTS">Parents</option>
@@ -91,8 +100,9 @@ export default function AnnouncementsPage() {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-medium text-gray-700 block mb-1">Content</label>
+                <label htmlFor="ann-content" className={labelCls}>Content</label>
                 <textarea
+                  id="ann-content"
                   rows={5}
                   className="input w-full resize-none"
                   placeholder="Write your announcement here…"
@@ -122,38 +132,39 @@ export default function AnnouncementsPage() {
         {isLoading ? (
           <div className="py-16 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-muted-foreground" /></div>
         ) : announcements.length === 0 ? (
-          <div className="bg-white rounded-xl border border-border py-20 text-center text-muted-foreground">
-            <Megaphone className="w-10 h-10 mx-auto mb-3 text-gray-200" />
-            <p>No announcements yet. Create the first one!</p>
+          <div className="bg-card rounded-xl border border-border py-20 text-center text-muted-foreground">
+            <Megaphone className="w-8 h-8 mx-auto mb-3 opacity-20" />
+            <p className="text-sm">No announcements yet. Create the first one.</p>
           </div>
         ) : (
           <div className="space-y-3">
             {announcements.map((a) => (
-              <div key={a.id} className="bg-white rounded-xl border border-border p-5">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <Megaphone className="w-5 h-5 text-primary" />
-                  </div>
+              <article key={a.id} className="bg-card rounded-xl border border-border p-5">
+                <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-gray-900">{a.title}</h3>
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${AUDIENCE_COLOR[a.targetAudience] ?? "bg-gray-100 text-gray-600"}`}>
+                    <div className="flex items-center gap-2.5 flex-wrap mb-2">
+                      <h3 className="font-semibold text-foreground">{a.title}</h3>
+                      <span className={cn(
+                        "inline-flex px-2 py-0.5 rounded-md text-xs font-semibold",
+                        AUDIENCE_STYLE[a.targetAudience] ?? "bg-muted text-muted-foreground"
+                      )}>
                         {a.targetAudience}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 leading-relaxed">{a.content}</p>
-                    <p className="text-xs text-muted-foreground mt-2">
+                    <p className="text-sm text-muted-foreground leading-relaxed">{a.content}</p>
+                    <p className="text-xs text-muted-foreground mt-3">
                       {a.sender ? `${a.sender.firstName} ${a.sender.lastName}` : "Admin"} · {formatDate(a.createdAt)}
                     </p>
                   </div>
                   <button
                     onClick={() => remove.mutate(a.id)}
-                    className="shrink-0 text-gray-300 hover:text-destructive transition"
+                    aria-label="Delete announcement"
+                    className="shrink-0 text-muted-foreground hover:text-destructive transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         )}
