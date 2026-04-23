@@ -25,7 +25,7 @@ const STATUS_COLORS: Record<AttendanceStatus, string> = {
   OL: "bg-purple-500 text-white border-purple-500",
 };
 
-const STATUS_IDLE = "border-border text-gray-500 bg-white hover:bg-gray-50";
+const STATUS_IDLE = "border-border text-muted-foreground bg-card hover:bg-muted/40";
 
 interface Section {
   id: string;
@@ -44,7 +44,6 @@ interface AttendanceRecord {
   status: AttendanceStatus;
 }
 
-// LocalStorage key for offline queue
 const OFFLINE_QUEUE_KEY = "teacher_attendance_offline_queue";
 
 interface QueueEntry {
@@ -110,7 +109,6 @@ export default function AttendancePage() {
       : [],
   });
 
-  // Pre-fill all as Present when students load
   useEffect(() => {
     if (students.length > 0) {
       setMarks((prev) => {
@@ -125,11 +123,7 @@ export default function AttendancePage() {
 
   const submitMutation = useMutation({
     mutationFn: (records: AttendanceRecord[]) =>
-      api.post("/attendance/bulk", {
-        sectionId: selectedSection,
-        date,
-        records,
-      }),
+      api.post("/attendance/bulk", { sectionId: selectedSection, date, records }),
     onSuccess: () => {
       toast.success("Attendance saved!");
       qc.invalidateQueries({ queryKey: ["teacher-dashboard"] });
@@ -144,7 +138,6 @@ export default function AttendancePage() {
     }));
 
     if (!isOnline) {
-      // Save to offline queue
       const entry: QueueEntry = { sectionId: selectedSection, date, records, savedAt: new Date().toISOString() };
       const queue = [...loadOfflineQueue(), entry];
       saveOfflineQueue(queue);
@@ -177,7 +170,6 @@ export default function AttendancePage() {
     }
   }, []);
 
-  // Auto-sync when coming back online
   useEffect(() => {
     if (isOnline && offlineQueue.length > 0) {
       syncOfflineQueue();
@@ -191,22 +183,21 @@ export default function AttendancePage() {
     <div className="space-y-4">
       {/* Offline banner */}
       {!isOnline && (
-        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-800">
+        <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-lg px-4 py-3 text-sm text-amber-700 dark:text-amber-400">
           <WifiOff className="w-4 h-4 shrink-0" />
           You&apos;re offline. Attendance will be saved locally and synced when you reconnect.
         </div>
       )}
 
-      {/* Offline queue indicator */}
       {offlineQueue.length > 0 && isOnline && (
-        <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800">
+        <div className="flex items-center justify-between bg-blue-500/10 border border-blue-500/20 rounded-lg px-4 py-3 text-sm text-blue-700 dark:text-blue-400">
           <div className="flex items-center gap-2">
             <Wifi className="w-4 h-4" />
             {offlineQueue.length} offline record(s) pending sync
           </div>
           <button
             onClick={syncOfflineQueue}
-            className="text-xs font-semibold text-blue-700 hover:underline"
+            className="text-xs font-semibold hover:underline focus-visible:outline-none"
           >
             Sync now
           </button>
@@ -218,6 +209,7 @@ export default function AttendancePage() {
         <select
           value={selectedSection}
           onChange={(e) => setSelectedSection(e.target.value)}
+          aria-label="Select class section"
           className="input min-w-[180px]"
         >
           <option value="">Select class / section</option>
@@ -231,17 +223,18 @@ export default function AttendancePage() {
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
+          aria-label="Attendance date"
           className="input"
         />
         {selectedSection && students.length > 0 && (
-          <div className="flex gap-2 text-xs font-medium">
-            <span className="bg-green-50 text-green-700 border border-green-200 px-2.5 py-1.5 rounded-lg">
+          <div className="flex gap-2 text-xs font-medium tabular-nums">
+            <span className="bg-green-500/10 text-green-700 dark:text-green-400 border border-green-500/20 px-2.5 py-1.5 rounded-md">
               Present: {presentCount}
             </span>
-            <span className="bg-red-50 text-red-700 border border-red-200 px-2.5 py-1.5 rounded-lg">
+            <span className="bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/20 px-2.5 py-1.5 rounded-md">
               Absent: {absentCount}
             </span>
-            <span className="bg-gray-50 text-gray-600 border border-border px-2.5 py-1.5 rounded-lg">
+            <span className="bg-muted text-muted-foreground border border-border px-2.5 py-1.5 rounded-md">
               Total: {students.length}
             </span>
           </div>
@@ -253,7 +246,7 @@ export default function AttendancePage() {
         {STATUSES.map((s) => (
           <span
             key={s}
-            className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${STATUS_COLORS[s]}`}
+            className={`text-xs font-semibold px-2.5 py-1 rounded-md border ${STATUS_COLORS[s]}`}
           >
             {s} — {STATUS_LABELS[s]}
           </span>
@@ -262,30 +255,30 @@ export default function AttendancePage() {
 
       {/* Student roster */}
       {!selectedSection ? (
-        <div className="bg-white rounded-xl border border-border p-12 text-center text-muted-foreground">
-          <AlertTriangle className="w-8 h-8 mx-auto mb-3 text-gray-200" />
-          Select a class to start marking attendance
+        <div className="bg-card rounded-xl border border-border p-12 text-center text-muted-foreground">
+          <AlertTriangle className="w-8 h-8 mx-auto mb-3 opacity-20" />
+          <p className="text-sm">Select a class to start marking attendance</p>
         </div>
       ) : loadingStudents ? (
-        <div className="bg-white rounded-xl border border-border p-12 text-center">
+        <div className="bg-card rounded-xl border border-border p-12 text-center">
           <Loader2 className="w-6 h-6 animate-spin mx-auto text-muted-foreground" />
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border bg-gray-50/50">
-                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider w-8">#</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Student</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Adm No</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+              <tr className="border-b border-border bg-muted/30">
+                <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-widest w-8">#</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-widest">Student</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-widest">Adm No</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-widest">Status</th>
               </tr>
             </thead>
             <tbody>
               {students.map((student, idx) => (
-                <tr key={student.id} className="border-b border-border/50 hover:bg-gray-50/50">
-                  <td className="px-4 py-3 text-muted-foreground text-xs">{idx + 1}</td>
-                  <td className="px-4 py-3 font-medium">
+                <tr key={student.id} className="border-b border-border/50 hover:bg-muted/40 transition-colors">
+                  <td className="px-4 py-3 text-muted-foreground text-xs tabular-nums">{idx + 1}</td>
+                  <td className="px-4 py-3 font-medium text-foreground">
                     {student.user.firstName} {student.user.lastName}
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
@@ -298,7 +291,7 @@ export default function AttendancePage() {
                           key={status}
                           onClick={() => setMarks((m) => ({ ...m, [student.id]: status }))}
                           title={STATUS_LABELS[status]}
-                          className={`w-8 h-8 rounded-md text-xs font-bold border transition ${
+                          className={`w-8 h-8 rounded-md text-xs font-bold border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                             marks[student.id] === status ? STATUS_COLORS[status] : STATUS_IDLE
                           }`}
                         >
@@ -313,8 +306,8 @@ export default function AttendancePage() {
           </table>
 
           {/* Save bar */}
-          <div className="px-4 py-3 bg-gray-50 border-t border-border flex items-center justify-between">
-            <p className="text-xs text-muted-foreground">
+          <div className="px-4 py-3 bg-muted/30 border-t border-border flex items-center justify-between">
+            <p className="text-xs text-muted-foreground tabular-nums">
               {students.length} students · {presentCount} present · {absentCount} absent
             </p>
             <button
@@ -335,9 +328,8 @@ export default function AttendancePage() {
         </div>
       )}
 
-      {/* All done state */}
       {selectedSection && students.length > 0 && submitMutation.isSuccess && (
-        <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-sm text-green-800">
+        <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-lg px-4 py-3 text-sm text-green-700 dark:text-green-400">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           Attendance saved for {new Date(date).toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short" })}
         </div>

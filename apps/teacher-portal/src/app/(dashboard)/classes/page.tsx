@@ -60,33 +60,27 @@ export default function ClassesPage() {
 
   return (
     <div className="space-y-4">
-      {/* Summary row */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl border border-border p-5 flex items-start gap-3">
-          <div className="w-10 h-10 bg-sidebar rounded-lg flex items-center justify-center">
-            <BookOpen className="w-5 h-5 text-white" />
-          </div>
+      {/* Summary strip */}
+      <div className="bg-card rounded-xl border border-border divide-x divide-border grid grid-cols-3">
+        <div className="p-5 flex items-start gap-3">
+          <BookOpen className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
           <div>
             <p className="text-xs text-muted-foreground font-medium">Subjects</p>
-            <p className="text-2xl font-bold text-gray-900">{new Set(classes.map((c) => c.subject)).size}</p>
+            <p className="text-2xl font-bold text-foreground tabular-nums">{new Set(classes.map((c) => c.subject)).size}</p>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-border p-5 flex items-start gap-3">
-          <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-            <Users className="w-5 h-5 text-white" />
-          </div>
+        <div className="p-5 flex items-start gap-3">
+          <Users className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
           <div>
             <p className="text-xs text-muted-foreground font-medium">Total Students</p>
-            <p className="text-2xl font-bold text-gray-900">{totalStudents}</p>
+            <p className="text-2xl font-bold text-foreground tabular-nums">{totalStudents}</p>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-border p-5 flex items-start gap-3">
-          <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
-            <BookOpen className="w-5 h-5 text-white" />
-          </div>
+        <div className="p-5 flex items-start gap-3">
+          <BookOpen className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
           <div>
             <p className="text-xs text-muted-foreground font-medium">Class Teacher</p>
-            <p className="text-sm font-bold text-gray-900 mt-0.5 leading-tight">
+            <p className="text-sm font-bold text-foreground mt-0.5 leading-tight">
               {classTeacher ? `${classTeacher.class} — ${classTeacher.section}` : "—"}
             </p>
           </div>
@@ -98,23 +92,19 @@ export default function ClassesPage() {
         {classes.map((cls) => {
           const isExpanded = expandedClass === cls.sectionId;
           return (
-            <div key={cls.id} className="bg-white rounded-xl border border-border overflow-hidden">
-              {/* Header row */}
+            <div key={cls.id} className="bg-card rounded-xl border border-border overflow-hidden">
               <button
-                className="w-full flex items-center gap-4 px-5 py-4 hover:bg-gray-50/50 transition text-left"
+                className="w-full flex items-center gap-4 px-5 py-4 hover:bg-muted/40 transition text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
                 onClick={() => setExpandedClass(isExpanded ? null : cls.sectionId)}
               >
-                <div className="w-10 h-10 rounded-lg bg-sidebar/10 flex items-center justify-center shrink-0">
-                  <BookOpen className="w-5 h-5 text-sidebar" />
-                </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-gray-900">{cls.subject}</span>
-                    <span className="text-xs text-muted-foreground font-mono bg-gray-100 px-1.5 py-0.5 rounded">
+                    <span className="font-semibold text-foreground">{cls.subject}</span>
+                    <span className="text-xs text-muted-foreground font-mono bg-muted px-1.5 py-0.5 rounded">
                       {cls.subjectCode}
                     </span>
                     {cls.isClassTeacher && (
-                      <span className="text-xs bg-sidebar text-white px-2 py-0.5 rounded-full font-medium">
+                      <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-md font-medium">
                         Class Teacher
                       </span>
                     )}
@@ -126,11 +116,11 @@ export default function ClassesPage() {
                 <div className="flex items-center gap-6 shrink-0">
                   <div className="text-right">
                     <p className="text-xs text-muted-foreground">Students</p>
-                    <p className="font-semibold text-gray-900">{cls.studentCount}</p>
+                    <p className="font-semibold text-foreground tabular-nums">{cls.studentCount}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-muted-foreground">Periods/week</p>
-                    <p className="font-semibold text-gray-900">{cls.periodsPerWeek}</p>
+                    <p className="text-xs text-muted-foreground">Periods/wk</p>
+                    <p className="font-semibold text-foreground tabular-nums">{cls.periodsPerWeek}</p>
                   </div>
                   {isExpanded ? (
                     <ChevronDown className="w-4 h-4 text-muted-foreground" />
@@ -140,7 +130,6 @@ export default function ClassesPage() {
                 </div>
               </button>
 
-              {/* Expanded student list */}
               {isExpanded && (
                 <div className="border-t border-border">
                   {loadingStudents ? (
@@ -150,19 +139,19 @@ export default function ClassesPage() {
                   ) : (
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="bg-gray-50/50">
-                          <th className="text-left px-5 py-2.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">Roll</th>
-                          <th className="text-left px-5 py-2.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">Name</th>
-                          <th className="text-left px-5 py-2.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">Admission No</th>
+                        <tr className="bg-muted/30">
+                          <th className="text-left px-5 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-widest">Roll</th>
+                          <th className="text-left px-5 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-widest">Name</th>
+                          <th className="text-left px-5 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-widest">Admission No</th>
                         </tr>
                       </thead>
                       <tbody>
                         {students.map((s) => (
-                          <tr key={s.id} className="border-t border-border/50 hover:bg-gray-50/30">
-                            <td className="px-5 py-2.5 text-muted-foreground text-xs font-mono w-12">
+                          <tr key={s.id} className="border-t border-border/50 hover:bg-muted/40 transition-colors">
+                            <td className="px-5 py-2.5 text-muted-foreground text-xs font-mono tabular-nums w-12">
                               {s.rollNo ?? "—"}
                             </td>
-                            <td className="px-5 py-2.5 font-medium">
+                            <td className="px-5 py-2.5 font-medium text-foreground">
                               {s.user.firstName} {s.user.lastName}
                             </td>
                             <td className="px-5 py-2.5 font-mono text-xs text-muted-foreground">

@@ -57,10 +57,12 @@ interface LeaveBalance {
 }
 
 const STATUS_CONFIG = {
-  PENDING: { label: "Pending", icon: Clock, color: "text-amber-700 bg-amber-50 border-amber-200" },
-  APPROVED: { label: "Approved", icon: CheckCircle2, color: "text-green-700 bg-green-50 border-green-200" },
-  REJECTED: { label: "Rejected", icon: XCircle, color: "text-red-700 bg-red-50 border-red-200" },
+  PENDING: { label: "Pending", icon: Clock, cls: "text-amber-700 dark:text-amber-400 bg-amber-500/10 border-amber-500/20" },
+  APPROVED: { label: "Approved", icon: CheckCircle2, cls: "text-green-700 dark:text-green-400 bg-green-500/10 border-green-500/20" },
+  REJECTED: { label: "Rejected", icon: XCircle, cls: "text-red-700 dark:text-red-400 bg-red-500/10 border-red-500/20" },
 };
+
+const labelCls = "block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5";
 
 export default function LeavePage() {
   const [view, setView] = useState<"apply" | "history">("apply");
@@ -145,31 +147,33 @@ export default function LeavePage() {
       {/* Leave balances */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {balances.map((b) => (
-          <div key={b.type} className="bg-white rounded-xl border border-border p-4">
+          <div key={b.type} className="bg-card rounded-xl border border-border p-4">
             <p className="text-xs text-muted-foreground font-medium">{LEAVE_LABELS[b.type]}</p>
             <div className="flex items-end gap-1 mt-1">
-              <span className="text-2xl font-bold text-gray-900">{b.balance}</span>
-              <span className="text-xs text-muted-foreground mb-0.5">/ {b.total}</span>
+              <span className="text-2xl font-bold text-foreground tabular-nums">{b.balance}</span>
+              <span className="text-xs text-muted-foreground mb-0.5 tabular-nums">/ {b.total}</span>
             </div>
-            <div className="mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
               <div
-                className="h-full rounded-full bg-sidebar"
+                className="h-full rounded-full bg-primary transition-all"
                 style={{ width: `${(b.balance / b.total) * 100}%` }}
               />
             </div>
-            <p className="text-xs text-muted-foreground mt-1">{b.used} used</p>
+            <p className="text-xs text-muted-foreground mt-1 tabular-nums">{b.used} used</p>
           </div>
         ))}
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 bg-gray-100 p-1 rounded-lg w-fit">
+      {/* Underline tabs */}
+      <div className="flex border-b border-border">
         {(["apply", "history"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setView(t)}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium capitalize transition ${
-              view === t ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+            className={`relative px-4 py-2.5 text-sm font-medium capitalize transition focus-visible:outline-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:transition-colors ${
+              view === t
+                ? "text-foreground after:bg-primary"
+                : "text-muted-foreground hover:text-foreground after:bg-transparent"
             }`}
           >
             {t === "apply" ? "Apply Leave" : "My Applications"}
@@ -179,16 +183,16 @@ export default function LeavePage() {
 
       {/* Apply form */}
       {view === "apply" && (
-        <div className="bg-white rounded-xl border border-border p-6 max-w-xl">
+        <div className="bg-card rounded-xl border border-border p-6 max-w-xl">
           <div className="flex items-center gap-2 mb-5">
             <FileText className="w-5 h-5 text-primary" />
-            <h3 className="text-sm font-semibold text-gray-900">New Leave Application</h3>
+            <h3 className="text-sm font-semibold text-foreground">New Leave Application</h3>
           </div>
 
           <form onSubmit={handleSubmit((d) => apply.mutate(d))} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Leave Type</label>
-              <select {...register("leaveType")} className="input w-full">
+              <label htmlFor="leave-type" className={labelCls}>Leave Type</label>
+              <select id="leave-type" {...register("leaveType")} className="input w-full">
                 {LEAVE_TYPES.map((t) => (
                   <option key={t} value={t}>
                     {LEAVE_LABELS[t]} ({t})
@@ -200,8 +204,9 @@ export default function LeavePage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">From Date</label>
+                <label htmlFor="leave-from" className={labelCls}>From Date</label>
                 <input
+                  id="leave-from"
                   type="date"
                   {...register("fromDate")}
                   min={new Date().toISOString().split("T")[0]}
@@ -210,8 +215,9 @@ export default function LeavePage() {
                 {errors.fromDate && <p className="err">{errors.fromDate.message}</p>}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">To Date</label>
+                <label htmlFor="leave-to" className={labelCls}>To Date</label>
                 <input
+                  id="leave-to"
                   type="date"
                   {...register("toDate")}
                   min={fromDate || new Date().toISOString().split("T")[0]}
@@ -222,14 +228,15 @@ export default function LeavePage() {
             </div>
 
             {fromDate && toDate && calculateDays() > 0 && (
-              <div className="text-sm text-muted-foreground bg-gray-50 px-3 py-2 rounded-lg border border-border">
-                Duration: <span className="font-semibold text-gray-900">{calculateDays()} day(s)</span>
+              <div className="text-sm text-muted-foreground bg-muted/30 px-3 py-2 rounded-lg border border-border">
+                Duration: <span className="font-semibold text-foreground tabular-nums">{calculateDays()} day(s)</span>
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Reason</label>
+              <label htmlFor="leave-reason" className={labelCls}>Reason</label>
               <textarea
+                id="leave-reason"
                 {...register("reason")}
                 rows={3}
                 placeholder="Briefly describe the reason for leave..."
@@ -252,18 +259,18 @@ export default function LeavePage() {
 
       {/* History */}
       {view === "history" && (
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           {history.length === 0 ? (
             <div className="py-16 text-center text-muted-foreground">
-              <FileText className="w-8 h-8 mx-auto mb-3 text-gray-200" />
-              <p>No leave applications yet</p>
+              <FileText className="w-8 h-8 mx-auto mb-3 opacity-20" />
+              <p className="text-sm">No leave applications yet</p>
             </div>
           ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border bg-gray-50/50">
+                <tr className="border-b border-border bg-muted/30">
                   {["Type", "From", "To", "Days", "Applied On", "Status", "Remarks"].map((h) => (
-                    <th key={h} className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-widest">
                       {h}
                     </th>
                   ))}
@@ -274,18 +281,18 @@ export default function LeavePage() {
                   const cfg = STATUS_CONFIG[app.status];
                   const StatusIcon = cfg.icon;
                   return (
-                    <tr key={app.id} className="border-b border-border/50 hover:bg-gray-50/50">
+                    <tr key={app.id} className="border-b border-border/50 hover:bg-muted/40 transition-colors">
                       <td className="px-4 py-3">
-                        <span className="font-medium">{app.leaveType}</span>
+                        <span className="font-medium text-foreground">{app.leaveType}</span>
                         <p className="text-xs text-muted-foreground">{app.reason.slice(0, 30)}…</p>
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">{formatDate(app.fromDate)}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{formatDate(app.toDate)}</td>
-                      <td className="px-4 py-3 font-semibold">{app.days}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{formatDate(app.appliedOn)}</td>
+                      <td className="px-4 py-3 text-muted-foreground tabular-nums">{formatDate(app.fromDate)}</td>
+                      <td className="px-4 py-3 text-muted-foreground tabular-nums">{formatDate(app.toDate)}</td>
+                      <td className="px-4 py-3 font-semibold text-foreground tabular-nums">{app.days}</td>
+                      <td className="px-4 py-3 text-muted-foreground tabular-nums">{formatDate(app.appliedOn)}</td>
                       <td className="px-4 py-3">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${cfg.color}`}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border ${cfg.cls}`}
                         >
                           <StatusIcon className="w-3 h-3" />
                           {cfg.label}

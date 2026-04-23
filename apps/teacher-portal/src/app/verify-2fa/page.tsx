@@ -36,35 +36,38 @@ export default function Verify2FAPage() {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
           <div className="w-14 h-14 bg-sidebar rounded-2xl flex items-center justify-center mb-4 shadow-lg">
             <ShieldCheck className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Two-Factor Auth</h1>
-          <p className="text-sm text-gray-500 mt-1">Enter the code from your authenticator app</p>
+          <h1 className="text-2xl font-bold text-foreground">Two-Factor Auth</h1>
+          <p className="text-sm text-muted-foreground mt-1">Enter the code from your authenticator app</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+        <div className="bg-card rounded-2xl shadow-sm border border-border p-8">
           <form onSubmit={handleSubmit((d) => verify.mutate(d))} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">6-Digit Code</label>
+              <label htmlFor="totp-code" className="block text-sm font-medium text-foreground mb-1.5">
+                6-Digit Code
+              </label>
               <input
+                id="totp-code"
                 type="text"
                 inputMode="numeric"
                 maxLength={6}
                 placeholder="000000"
                 autoFocus
-                className="w-full px-3.5 py-3 border border-gray-300 rounded-lg text-xl text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                className="input w-full text-xl text-center tracking-widest py-3"
                 {...register("totpCode")}
               />
-              {errors.totpCode && <p className="mt-1 text-xs text-destructive">{errors.totpCode.message}</p>}
+              {errors.totpCode && <p className="err">{errors.totpCode.message}</p>}
             </div>
             <button
               type="submit"
               disabled={verify.isPending}
-              className="w-full bg-primary text-primary-foreground py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition disabled:opacity-60 flex items-center justify-center gap-2"
+              className="btn-primary w-full flex items-center justify-center gap-2"
             >
               {verify.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
               Verify

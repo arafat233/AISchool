@@ -72,26 +72,25 @@ export default function TimetablePage() {
   const slotMap = new Map<string, TimetableSlot>();
   slots.forEach((s) => slotMap.set(`${s.day}-${s.period}`, s));
 
-  const totalPeriodsPerDay = (day: Day) =>
-    slots.filter((s) => s.day === day).length;
+  const totalPeriodsPerDay = (day: Day) => slots.filter((s) => s.day === day).length;
 
   return (
     <div className="space-y-4">
       {/* Substitute duty alerts */}
       {substituteAlerts.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-2">
-          <div className="flex items-center gap-2 text-sm font-semibold text-amber-800">
+        <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 space-y-2">
+          <div className="flex items-center gap-2 text-sm font-semibold text-amber-700 dark:text-amber-400">
             <AlertTriangle className="w-4 h-4" />
             Substitute Duty Assigned ({substituteAlerts.length})
           </div>
           {substituteAlerts.map((alert) => (
             <div
               key={alert.id}
-              className="flex items-center gap-3 bg-white/70 rounded-lg px-3 py-2 text-sm"
+              className="flex items-center gap-3 bg-card rounded-lg px-3 py-2 text-sm border border-border"
             >
-              <span className="text-amber-700 font-medium">Period {alert.period}</span>
-              <span className="text-gray-600">—</span>
-              <span className="text-gray-700">
+              <span className="text-amber-700 dark:text-amber-400 font-medium">Period {alert.period}</span>
+              <span className="text-muted-foreground">—</span>
+              <span className="text-foreground">
                 {alert.originalClass} Section {alert.section}
               </span>
               <span className="text-xs text-muted-foreground ml-auto">
@@ -113,39 +112,39 @@ export default function TimetablePage() {
               className={cn(
                 "rounded-xl border p-3 text-center",
                 isToday
-                  ? "bg-sidebar text-white border-sidebar"
-                  : "bg-white border-border"
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-card border-border"
               )}
             >
-              <p className={cn("text-xs font-medium", isToday ? "text-white/70" : "text-muted-foreground")}>
+              <p className={cn("text-xs font-medium", isToday ? "text-primary-foreground/70" : "text-muted-foreground")}>
                 {day.slice(0, 3)}
               </p>
-              <p className={cn("text-2xl font-bold mt-0.5", isToday ? "text-white" : "text-gray-900")}>
+              <p className={cn("text-2xl font-bold mt-0.5 tabular-nums", isToday ? "text-primary-foreground" : "text-foreground")}>
                 {count}
               </p>
-              <p className={cn("text-xs", isToday ? "text-white/70" : "text-muted-foreground")}>periods</p>
+              <p className={cn("text-xs", isToday ? "text-primary-foreground/70" : "text-muted-foreground")}>periods</p>
             </div>
           );
         })}
       </div>
 
       {/* Timetable grid */}
-      <div className="bg-white rounded-xl border border-border overflow-auto">
+      <div className="bg-card rounded-xl border border-border overflow-auto">
         <table className="w-full text-xs min-w-[700px]">
           <thead>
-            <tr className="border-b border-border bg-gray-50/50">
-              <th className="text-left px-3 py-3 text-muted-foreground font-medium w-20">Period</th>
+            <tr className="border-b border-border bg-muted/30">
+              <th className="text-left px-3 py-3 text-muted-foreground font-semibold uppercase tracking-widest w-20">Period</th>
               {DAYS.map((day) => (
                 <th
                   key={day}
                   className={cn(
-                    "px-3 py-3 text-center font-semibold",
-                    day === today ? "text-sidebar" : "text-muted-foreground"
+                    "px-3 py-3 text-center font-semibold uppercase tracking-widest",
+                    day === today ? "text-primary" : "text-muted-foreground"
                   )}
                 >
                   {day.slice(0, 3)}
                   {day === today && (
-                    <span className="ml-1 text-xs bg-sidebar text-white rounded px-1">Today</span>
+                    <span className="ml-1 text-xs bg-primary text-primary-foreground rounded px-1">Today</span>
                   )}
                 </th>
               ))}
@@ -155,29 +154,29 @@ export default function TimetablePage() {
             {PERIODS.map((period) => (
               <tr key={period} className="border-b border-border/50">
                 <td className="px-3 py-3 align-top">
-                  <div className="font-semibold text-gray-700">P{period}</div>
-                  <div className="text-muted-foreground text-xs mt-0.5">{PERIOD_TIMES[period]}</div>
+                  <div className="font-semibold text-foreground">P{period}</div>
+                  <div className="text-muted-foreground text-xs mt-0.5 tabular-nums">{PERIOD_TIMES[period]}</div>
                 </td>
                 {DAYS.map((day) => {
                   const slot = slotMap.get(`${day}-${period}`);
                   const isToday = day === today;
                   return (
-                    <td key={day} className={cn("px-2 py-2 align-top", isToday && "bg-sidebar/5")}>
+                    <td key={day} className={cn("px-2 py-2 align-top", isToday && "bg-primary/5")}>
                       {slot ? (
                         <div
                           className={cn(
                             "rounded-lg px-2.5 py-2 border",
                             slot.isSubstitute
-                              ? "bg-amber-50 border-amber-200"
+                              ? "bg-amber-500/10 border-amber-500/20"
                               : isToday
-                              ? "bg-sidebar/10 border-sidebar/20"
+                              ? "bg-primary/10 border-primary/20"
                               : "bg-primary/5 border-primary/10"
                           )}
                         >
                           <p
                             className={cn(
                               "font-semibold leading-none",
-                              slot.isSubstitute ? "text-amber-800" : "text-gray-800"
+                              slot.isSubstitute ? "text-amber-700 dark:text-amber-400" : "text-foreground"
                             )}
                           >
                             {slot.subject}
@@ -186,7 +185,7 @@ export default function TimetablePage() {
                             {slot.class} {slot.section}
                           </p>
                           {slot.isSubstitute && (
-                            <span className="inline-block mt-1 text-xs bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded font-medium">
+                            <span className="inline-block mt-1 text-xs bg-amber-500/20 text-amber-700 dark:text-amber-400 px-1.5 py-0.5 rounded font-medium">
                               Sub
                             </span>
                           )}
@@ -205,7 +204,7 @@ export default function TimetablePage() {
 
       <div className="flex items-center gap-2 text-xs text-muted-foreground">
         <Info className="w-3.5 h-3.5" />
-        <span className="bg-amber-50 border border-amber-200 text-amber-700 px-2 py-0.5 rounded font-medium">Sub</span>
+        <span className="bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded-md font-medium">Sub</span>
         indicates a substitute duty assigned to you
       </div>
     </div>
