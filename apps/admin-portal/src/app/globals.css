@@ -23,6 +23,26 @@
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
   }
+
+  .dark {
+    --background: 222 25% 8%;
+    --foreground: 210 15% 92%;
+    --card: 222 22% 11%;
+    --card-foreground: 210 15% 92%;
+    --primary: 221.2 83.2% 60%;
+    --primary-foreground: 222 25% 8%;
+    --secondary: 222 18% 15%;
+    --secondary-foreground: 210 15% 92%;
+    --muted: 222 18% 15%;
+    --muted-foreground: 215 12% 55%;
+    --accent: 222 18% 15%;
+    --accent-foreground: 210 15% 92%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 222 18% 18%;
+    --input: 222 18% 18%;
+    --ring: 221.2 83.2% 60%;
+  }
 }
 
 @layer base {
@@ -32,7 +52,7 @@
 
 @layer components {
   .input {
-    @apply px-3.5 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition bg-white;
+    @apply px-3.5 py-2.5 border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-primary transition bg-card text-foreground placeholder:text-muted-foreground;
   }
 
   .btn-primary {
@@ -40,7 +60,7 @@
   }
 
   .btn-secondary {
-    @apply bg-white border border-border text-gray-700 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition;
+    @apply bg-card border border-border text-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-muted transition;
   }
 
   .err {
