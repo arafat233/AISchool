@@ -15,7 +15,7 @@ interface DashboardData {
 
 function StatCard({ title, value, sub, icon: Icon, color }: { title: string; value: string | number; sub?: string; icon: any; color: string }) {
   return (
-    <div className="bg-white rounded-xl border border-border p-5 flex items-center gap-4">
+    <div className="bg-card rounded-xl border border-border p-5 flex items-center gap-4">
       <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color}`}>
         <Icon size={22} className="text-white" />
       </div>
@@ -72,14 +72,14 @@ export default function ManagementDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pending Fees Alert */}
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h2 className="font-semibold text-foreground mb-4 flex items-center gap-2"><AlertTriangle size={16} className="text-orange-500" /> Outstanding Fees</h2>
           <p className="text-3xl font-bold text-orange-600">₹{((data?.totalPendingFees ?? 0) / 100000).toFixed(2)}L</p>
           <p className="text-sm text-muted-foreground mt-1">Across all schools</p>
         </div>
 
         {/* System Health */}
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h2 className="font-semibold text-foreground mb-4 flex items-center gap-2"><CheckCircle size={16} className="text-green-500" /> System Health</h2>
           {data?.systemHealth && data.systemHealth.length > 0 ? (
             <div className="space-y-2 max-h-40 overflow-y-auto">
@@ -98,7 +98,7 @@ export default function ManagementDashboard() {
         </div>
 
         {/* Active Admissions */}
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h2 className="font-semibold text-foreground mb-4">Active Admissions</h2>
           <p className="text-3xl font-bold text-blue-600">{data?.activeAdmissions ?? 0}</p>
           <p className="text-sm text-muted-foreground mt-1">Applications in pipeline</p>

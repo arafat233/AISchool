@@ -30,7 +30,7 @@ export default function FinancePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Monthly Revenue Trend */}
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h2 className="font-semibold mb-4">Monthly Revenue (₹)</h2>
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={monthly}>
@@ -44,7 +44,7 @@ export default function FinancePage() {
         </div>
 
         {/* Plan Breakdown */}
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h2 className="font-semibold mb-4">Revenue by Plan</h2>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={planBreakdown}>

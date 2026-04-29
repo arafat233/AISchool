@@ -24,7 +24,7 @@ export default function AdmissionsPage() {
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-6">Admission Funnel</h1>
 
-      <div className="bg-white rounded-xl border border-border p-6 mb-6">
+      <div className="bg-card rounded-xl border border-border p-6 mb-6">
         <h2 className="font-semibold mb-4">Applications by Stage — All Schools</h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={funnels}>
@@ -39,7 +39,7 @@ export default function AdmissionsPage() {
         </ResponsiveContainer>
       </div>
 
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             <tr>

@@ -36,7 +36,7 @@ interface SubRow {
 }
 
 const PLAN_COLORS: Record<string, string> = {
-  BASIC: "bg-slate-100 text-slate-600",
+  BASIC: "bg-muted text-muted-foreground",
   STANDARD: "bg-blue-100 text-blue-700",
   PREMIUM: "bg-purple-100 text-purple-700",
   ENTERPRISE: "bg-yellow-100 text-yellow-700",
@@ -45,7 +45,7 @@ const STATUS_COLORS: Record<string, string> = {
   ACTIVE: "bg-green-100 text-green-700",
   TRIAL: "bg-teal-100 text-teal-700",
   SUSPENDED: "bg-red-100 text-red-700",
-  CHURNED: "bg-slate-100 text-slate-500",
+  CHURNED: "bg-muted text-muted-foreground",
 };
 
 // ─── Mock fallbacks ───────────────────────────────────────────────────────────
@@ -107,7 +107,7 @@ export default function SettingsPage() {
             key={t}
             onClick={() => setTab(t)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
-              tab === t ? "bg-white shadow text-foreground" : "text-muted-foreground hover:text-foreground"
+              tab === t ? "bg-card shadow text-foreground" : "text-muted-foreground hover:text-foreground"
             }`}
           >
             {t === "audit" ? <Shield size={14} /> : <CreditCard size={14} />}
@@ -123,7 +123,7 @@ export default function SettingsPage() {
         <div>
           {/* Filters */}
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex items-center gap-2 bg-white border border-border rounded-lg px-3 py-2 text-sm">
+            <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-2 text-sm">
               <Filter size={14} className="text-muted-foreground" />
               <input
                 placeholder="Filter by school…"
@@ -135,7 +135,7 @@ export default function SettingsPage() {
             <select
               value={filterAction}
               onChange={(e) => setFilterAction(e.target.value)}
-              className="bg-white border border-border rounded-lg px-3 py-2 text-sm outline-none"
+              className="bg-card border border-border rounded-lg px-3 py-2 text-sm outline-none"
             >
               <option value="">All Actions</option>
               {["CREATE", "UPDATE", "DELETE", "LOGIN", "EXPORT"].map((a) => (
@@ -151,7 +151,7 @@ export default function SettingsPage() {
             <span className="ml-auto text-sm text-muted-foreground">{filteredLogs.length} entries</span>
           </div>
 
-          <div className="bg-white rounded-xl border border-border overflow-hidden">
+          <div className="bg-card rounded-xl border border-border overflow-hidden">
             <table className="w-full text-sm">
               <thead className="bg-muted/50">
                 <tr>
@@ -172,7 +172,7 @@ export default function SettingsPage() {
                     <td className="px-4 py-3 font-medium">{l.schoolName}</td>
                     <td className="px-4 py-3 text-muted-foreground">{l.userEmail}</td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${ACTION_COLORS[l.action] ?? "bg-slate-100 text-slate-600"}`}>
+                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${ACTION_COLORS[l.action] ?? "bg-muted text-muted-foreground"}`}>
                         {l.action}
                       </span>
                     </td>
@@ -189,7 +189,7 @@ export default function SettingsPage() {
 
       {/* ── Subscriptions ──────────────────────────────────────────────────── */}
       {!loading && tab === "subscriptions" && (
-        <div className="bg-white rounded-xl border border-border overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-muted/50">
               <tr>
@@ -208,12 +208,12 @@ export default function SettingsPage() {
                     <tr key={s.id} className="hover:bg-muted/30 transition">
                       <td className="px-4 py-3 font-medium">{s.schoolName}</td>
                       <td className="px-4 py-3">
-                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${PLAN_COLORS[s.plan] ?? "bg-slate-100 text-slate-600"}`}>
+                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${PLAN_COLORS[s.plan] ?? "bg-muted text-muted-foreground"}`}>
                           {s.plan}
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${STATUS_COLORS[s.status] ?? "bg-slate-100 text-slate-600"}`}>
+                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${STATUS_COLORS[s.status] ?? "bg-muted text-muted-foreground"}`}>
                           {s.status}
                         </span>
                       </td>

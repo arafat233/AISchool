@@ -35,7 +35,7 @@ export default function AnalyticsPage() {
       <p className="text-sm text-muted-foreground mb-8">Platform-wide intelligence across all schools</p>
 
       {/* AI Insights */}
-      <div className="bg-white rounded-xl border border-border p-6 mb-6">
+      <div className="bg-card rounded-xl border border-border p-6 mb-6">
         <h2 className="font-semibold mb-4 flex items-center gap-2"><TrendingUp size={16} className="text-primary" /> AI Insights</h2>
         <div className="space-y-3">
           {AI_INSIGHTS.map((ins, i) => (
@@ -49,7 +49,7 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Enrollment Trend */}
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h2 className="font-semibold mb-4 flex items-center gap-2"><Users size={15} /> Student Enrollment Trend</h2>
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart data={enrollmentTrend}>
@@ -69,7 +69,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Revenue Trend */}
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h2 className="font-semibold mb-4 flex items-center gap-2"><DollarSign size={15} /> Platform Revenue Trend (₹)</h2>
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart data={revenueTrend}>

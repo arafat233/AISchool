@@ -52,7 +52,7 @@ function KpiCard({
   label: string; value: string; delta?: number; icon: any; color: string; sub?: string;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-border p-5">
+    <div className="bg-card rounded-xl border border-border p-5">
       <div className="flex items-start justify-between mb-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${color}`}>
@@ -134,7 +134,7 @@ export default function SaasReportsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* MRR Trend */}
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h2 className="font-semibold mb-4">MRR Trend (₹)</h2>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={metrics.monthlyData}>
@@ -148,7 +148,7 @@ export default function SaasReportsPage() {
         </div>
 
         {/* School Growth */}
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h2 className="font-semibold mb-4">School Count Growth</h2>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={metrics.monthlyData}>
@@ -165,7 +165,7 @@ export default function SaasReportsPage() {
       </div>
 
       {/* Plan Breakdown Table */}
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="px-6 py-4 border-b border-border">
           <h2 className="font-semibold">Revenue by Plan</h2>
         </div>
