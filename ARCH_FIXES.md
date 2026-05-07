@@ -140,9 +140,9 @@
 - [x] **OG-01** — Add controller E2E tests for auth-service (guard, validation, response shape)
 - [x] **OG-02** — Add controller E2E tests for fee-service
 - [x] **OG-03** — Add controller E2E tests for student-service
-- [ ] **OG-04** — Add unit tests for ops-service modules (alumni, asset, community, facility, social)
-- [ ] **OG-05** — Add unit tests for developer-api (sandbox, deprecation, webhooks)
-- [ ] **OG-06** — Add pytest test suite for AI service (all 7 routers)
+- [x] **OG-04** — Add unit tests for ops-service modules (alumni, asset, community, facility, social)
+- [x] **OG-05** — Add unit tests for developer-api (sandbox, deprecation, webhooks)
+- [x] **OG-06** — Add pytest test suite for AI service (all 7 routers)
 - [ ] **OG-07** — Add frontend tests for admin-portal (React Testing Library + Playwright)
 - [ ] **OG-08** — Add React Native tests for mobile app (Jest + RNTL)
 
