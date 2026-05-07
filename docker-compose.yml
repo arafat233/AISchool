@@ -492,6 +492,52 @@ services:
         condition: service_completed_successfully
 
   # ═══════════════════════════════════════════════════════════════════════════
+  # API GATEWAY
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: apps/api-gateway/Dockerfile
+    container_name: erp_api_gateway
+    <<: *service-defaults
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:4000,http://localhost:4001,http://localhost:4002,http://localhost:4003,http://localhost:4004}
+      AUTH_SERVICE_URL: http://auth-service:3001
+      USER_SERVICE_URL: http://user-service:3002
+      STUDENT_SERVICE_URL: http://student-service:3003
+      ACADEMIC_SERVICE_URL: http://academic-service:3004
+      ATTENDANCE_SERVICE_URL: http://attendance-service:3005
+      FEE_SERVICE_URL: http://fee-service:3006
+      NOTIFICATION_SERVICE_URL: http://notification-service:3007
+      EXAM_SERVICE_URL: http://exam-service:3008
+      LMS_SERVICE_URL: http://lms-service:3009
+      HR_SERVICE_URL: http://hr-service:3010
+      PAYROLL_SERVICE_URL: http://payroll-service:3011
+      CERTIFICATE_SERVICE_URL: http://certificate-service:3012
+      ADMISSION_SERVICE_URL: http://admission-service:3013
+      TRANSPORT_SERVICE_URL: http://transport-service:3014
+      HEALTH_SERVICE_URL: http://health-service:3015
+      LIBRARY_SERVICE_URL: http://library-service:3016
+      EVENT_SERVICE_URL: http://event-service:3017
+      EXPENSE_SERVICE_URL: http://expense-service:3018
+      SCHOLARSHIP_SERVICE_URL: http://scholarship-service:3019
+      OPS_SERVICE_URL: http://ops-service:3020
+      REPORT_SERVICE_URL: http://report-service:3021
+      SAAS_SERVICE_URL: http://saas-service:3022
+      AI_SERVICE_URL: http://ai-service:8000
+      BIOMETRIC_SERVICE_URL: http://biometric-bridge:8080
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # ═══════════════════════════════════════════════════════════════════════════
   # FRONTEND PORTALS
   # ═══════════════════════════════════════════════════════════════════════════
 
@@ -505,7 +551,10 @@ services:
       - "4000:4000"
     environment:
       PORT: 4000
-      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NEXT_PUBLIC_API_URL: http://api-gateway:3000
+    depends_on:
+      api-gateway:
+        condition: service_healthy
 
   teacher-portal:
     build:
@@ -517,7 +566,10 @@ services:
       - "4001:4001"
     environment:
       PORT: 4001
-      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NEXT_PUBLIC_API_URL: http://api-gateway:3000
+    depends_on:
+      api-gateway:
+        condition: service_healthy
 
   student-portal:
     build:
@@ -529,7 +581,10 @@ services:
       - "4002:4002"
     environment:
       PORT: 4002
-      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NEXT_PUBLIC_API_URL: http://api-gateway:3000
+    depends_on:
+      api-gateway:
+        condition: service_healthy
 
   parent-portal:
     build:
@@ -541,7 +596,10 @@ services:
       - "4003:4003"
     environment:
       PORT: 4003
-      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NEXT_PUBLIC_API_URL: http://api-gateway:3000
+    depends_on:
+      api-gateway:
+        condition: service_healthy
 
   biometric-bridge:
     build:

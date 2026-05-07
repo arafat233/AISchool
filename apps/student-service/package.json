@@ -2,7 +2,7 @@
   "name": "@school-erp/student-service",
   "version": "1.0.0",
   "private": true,
-  "scripts": { "dev": "nest start --watch", "build": "nest build", "start": "node dist/main.js", "test": "jest" },
+  "scripts": { "dev": "nest start --watch", "build": "nest build", "start": "node dist/main.js", "test": "jest", "test:e2e": "jest --config test/jest-e2e.json" },
   "dependencies": {
     "@nestjs/common": "^10.4.7",
     "@nestjs/config": "^3.3.0",
@@ -28,6 +28,8 @@
     "@nestjs/testing": "^10.4.7",
     "@school-erp/tsconfig": "workspace:*",
     "@types/jest": "^29.5.14",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^7.0.0",
     "@types/node": "^22.9.3",
     "@types/passport-jwt": "^4.0.1",
     "jest": "^29.7.0",

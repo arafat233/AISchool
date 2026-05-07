@@ -9,6 +9,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
+    "test:e2e": "jest --config test/jest-e2e.json",
     "lint": "eslint src --ext .ts"
   },
   "dependencies": {
@@ -46,6 +47,8 @@
     "@nestjs/cli": "^10.4.8",
     "@nestjs/schematics": "^10.2.3",
     "@nestjs/testing": "^10.4.7",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^7.0.0",
     "@school-erp/tsconfig": "workspace:*",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.8",
