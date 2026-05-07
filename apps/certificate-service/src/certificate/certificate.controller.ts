@@ -5,6 +5,7 @@ import { AuthGuard } from "@nestjs/passport";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
 import { CertificateService } from "./certificate.service";
+import { CreateTemplateDto, UpdateTemplateDto, CreateCertificateRequestDto, IssueCertificateDto } from "./dto/certificate.dto";
 
 // Public controller for verification (no auth)
 @Controller("verify")
@@ -25,13 +26,13 @@ export class CertificateController {
   // ─── Templates ────────────────────────────────────────────────────────────────
 
   @Post("templates")
-  createTemplate(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.svc.createTemplate(req.user.schoolId!, body);
+  createTemplate(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateTemplateDto) {
+    return this.svc.createTemplate(req.user.schoolId!, dto);
   }
 
   @Put("templates/:id")
-  updateTemplate(@Param("id") id: string, @Body() body: any) {
-    return this.svc.updateTemplate(id, body);
+  updateTemplate(@Param("id") id: string, @Body() dto: UpdateTemplateDto) {
+    return this.svc.updateTemplate(id, dto);
   }
 
   @Get("templates")
@@ -42,8 +43,8 @@ export class CertificateController {
   // ─── Requests ─────────────────────────────────────────────────────────────────
 
   @Post("requests")
-  createRequest(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.svc.createRequest({ schoolId: req.user.schoolId!, requestedBy: req.user.id, ...body });
+  createRequest(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateCertificateRequestDto) {
+    return this.svc.createRequest({ schoolId: req.user.schoolId!, requestedBy: req.user.id, ...dto });
   }
 
   @Get("requests")
@@ -64,8 +65,8 @@ export class CertificateController {
   // ─── Issue ────────────────────────────────────────────────────────────────────
 
   @Post("issue")
-  issue(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.svc.issueCertificate({ issuedBy: req.user.id, schoolId: req.user.schoolId!, ...body });
+  issue(@Req() req: Request & { user: RequestUser }, @Body() dto: IssueCertificateDto) {
+    return this.svc.issueCertificate({ issuedBy: req.user.id, schoolId: req.user.schoolId!, ...dto });
   }
 
   // ─── HTML preview ─────────────────────────────────────────────────────────────

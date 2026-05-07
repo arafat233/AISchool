@@ -14,8 +14,19 @@ import { UpdateUserDto } from "../dto/update-user.dto";
 import { ChangePasswordDto } from "../dto/change-password.dto";
 import { AssignRoleDto } from "../dto/assign-role.dto";
 import { ListUsersQueryDto } from "../dto/list-users-query.dto";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const ALLOWED_AVATAR_MIME = new Set(["image/jpeg", "image/png", "image/webp"]);
+
+const s3 = new S3Client({
+  region: process.env.S3_REGION ?? "auto",
+  endpoint: process.env.S3_ENDPOINT,
+  credentials: {
+    accessKeyId: process.env.S3_ACCESS_KEY ?? "",
+    secretAccessKey: process.env.S3_SECRET_KEY ?? "",
+  },
+  forcePathStyle: !!process.env.S3_FORCE_PATH_STYLE,
+});
 const ALLOWED_AVATAR_MAGIC: Array<{ bytes: number[]; mime: string }> = [
   { bytes: [0xff, 0xd8, 0xff],             mime: "image/jpeg" },
   { bytes: [0x89, 0x50, 0x4e, 0x47],       mime: "image/png"  },
@@ -92,7 +103,7 @@ export class UserController {
 
   @Post("me/avatar")
   @UseInterceptors(FileInterceptor("file", { limits: { fileSize: 2 * 1024 * 1024 } }))
-  uploadAvatar(
+  async uploadAvatar(
     @Req() req: Request & { user: RequestUser },
     @UploadedFile() file: Express.Multer.File,
   ) {
@@ -103,8 +114,16 @@ export class UserController {
     }
     const ext = detectedMime.split("/")[1].replace("jpeg", "jpg");
     const safeFilename = `${randomUUID()}.${ext}`;
-    // TODO: upload to S3/R2 using safeFilename, get URL, then update
-    const avatarUrl = `/uploads/avatars/${safeFilename}`;
+
+    // Upload to S3/R2
+    await s3.send(new PutObjectCommand({
+      Bucket: process.env.S3_BUCKET ?? "school-erp",
+      Key: `avatars/${safeFilename}`,
+      Body: file.buffer,
+      ContentType: detectedMime,
+    }));
+    const avatarUrl = `${process.env.S3_PUBLIC_URL ?? ""}/avatars/${safeFilename}`;
+
     return this.userService.updateAvatar(req.user.id, req.user.tenantId, avatarUrl);
   }
 

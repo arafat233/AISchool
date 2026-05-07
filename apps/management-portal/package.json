@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 4004",
+    "dev": "next dev --port 3104",
     "build": "next build",
-    "start": "next start --port 4004",
+    "start": "next start --port 3104",
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",

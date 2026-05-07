@@ -3,6 +3,7 @@ import { AuthGuard } from "@nestjs/passport";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
 import { HomeworkService } from "./homework.service";
+import { UpdateHomeworkDto } from "./dto/homework.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("homework")
@@ -35,8 +36,8 @@ export class HomeworkController {
   }
 
   @Put(":id")
-  update(@Param("id") id: string, @Body() body: any) {
-    return this.svc.updateHomework(id, { ...body, dueDate: body.dueDate ? new Date(body.dueDate) : undefined });
+  update(@Param("id") id: string, @Body() dto: UpdateHomeworkDto) {
+    return this.svc.updateHomework(id, { ...dto, dueDate: dto.dueDate ? new Date(dto.dueDate) : undefined });
   }
 
   @Delete(":id")

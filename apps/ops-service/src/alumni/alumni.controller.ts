@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AlumniService } from "./alumni.service";
+import { UpdateAlumniProfileDto } from "./dto/alumni.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("alumni")
@@ -18,8 +19,8 @@ export class AlumniController {
   }
 
   @Patch(":alumniId/profile")
-  updateProfile(@Param("alumniId") alumniId: string, @Body() body: any) {
-    return this.svc.updateAlumniProfile(alumniId, body);
+  updateProfile(@Param("alumniId") alumniId: string, @Body() dto: UpdateAlumniProfileDto) {
+    return this.svc.updateAlumniProfile(alumniId, dto);
   }
 
   @Get(":schoolId/directory")

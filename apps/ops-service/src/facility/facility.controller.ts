@@ -1,6 +1,11 @@
 import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { FacilityService } from "./facility.service";
+import {
+  SubmitFacilityRequestDto, CreatePreventiveScheduleDto, LogPestControlDto,
+  RecordHousekeepingInspectionDto, RecordUtilityBillDto, LogWasteDto,
+  LogWaterQualityDto, LogPoolQualityDto,
+} from "./dto/facility.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("facility")
@@ -8,8 +13,8 @@ export class FacilityController {
   constructor(private readonly svc: FacilityService) {}
 
   @Post(":schoolId/requests")
-  submitRequest(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.submitRequest(schoolId, body.reportedBy, body);
+  submitRequest(@Param("schoolId") schoolId: string, @Body() dto: SubmitFacilityRequestDto) {
+    return this.svc.submitRequest(schoolId, dto.reportedBy, dto);
   }
 
   @Patch("requests/:requestId/assign")
@@ -33,8 +38,8 @@ export class FacilityController {
   }
 
   @Post(":schoolId/preventive")
-  createPM(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.createPreventiveSchedule(schoolId, body);
+  createPM(@Param("schoolId") schoolId: string, @Body() dto: CreatePreventiveScheduleDto) {
+    return this.svc.createPreventiveSchedule(schoolId, dto);
   }
 
   @Patch("preventive/:pmId/complete")
@@ -48,13 +53,13 @@ export class FacilityController {
   }
 
   @Post(":schoolId/pest-control")
-  logPestControl(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.logPestControl(schoolId, { ...body, scheduledAt: new Date(body.scheduledAt), completedAt: body.completedAt ? new Date(body.completedAt) : undefined, nextScheduled: body.nextScheduled ? new Date(body.nextScheduled) : undefined });
+  logPestControl(@Param("schoolId") schoolId: string, @Body() dto: LogPestControlDto) {
+    return this.svc.logPestControl(schoolId, { ...dto, scheduledAt: new Date(dto.scheduledAt), completedAt: dto.completedAt ? new Date(dto.completedAt) : undefined, nextScheduled: dto.nextScheduled ? new Date(dto.nextScheduled) : undefined });
   }
 
   @Post(":schoolId/housekeeping/inspections")
-  recordInspection(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.recordHousekeepingInspection(schoolId, body.inspectedBy, { ...body, inspectionDate: new Date(body.inspectionDate) });
+  recordInspection(@Param("schoolId") schoolId: string, @Body() dto: RecordHousekeepingInspectionDto) {
+    return this.svc.recordHousekeepingInspection(schoolId, dto.inspectedBy, { ...dto, inspectionDate: new Date(dto.inspectionDate) });
   }
 
   @Get(":schoolId/housekeeping/inspections")
@@ -63,8 +68,8 @@ export class FacilityController {
   }
 
   @Post(":schoolId/utilities")
-  recordUtility(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.recordUtilityBill(schoolId, body);
+  recordUtility(@Param("schoolId") schoolId: string, @Body() dto: RecordUtilityBillDto) {
+    return this.svc.recordUtilityBill(schoolId, dto);
   }
 
   @Get(":schoolId/utilities/trend")
@@ -78,8 +83,8 @@ export class FacilityController {
   }
 
   @Post(":schoolId/waste")
-  logWaste(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.logWaste(schoolId, { ...body, logDate: new Date(body.logDate) });
+  logWaste(@Param("schoolId") schoolId: string, @Body() dto: LogWasteDto) {
+    return this.svc.logWaste(schoolId, { ...dto, logDate: new Date(dto.logDate) });
   }
 
   @Get(":schoolId/waste/analytics")
@@ -88,8 +93,8 @@ export class FacilityController {
   }
 
   @Post(":schoolId/water-quality")
-  logWaterQuality(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.logWaterQuality(schoolId, { ...body, logDate: new Date(body.logDate), nextFilterDue: body.nextFilterDue ? new Date(body.nextFilterDue) : undefined });
+  logWaterQuality(@Param("schoolId") schoolId: string, @Body() dto: LogWaterQualityDto) {
+    return this.svc.logWaterQuality(schoolId, { ...dto, logDate: new Date(dto.logDate), nextFilterDue: dto.nextFilterDue ? new Date(dto.nextFilterDue) : undefined });
   }
 
   @Get(":schoolId/water-quality")
@@ -98,8 +103,8 @@ export class FacilityController {
   }
 
   @Post(":schoolId/pool")
-  logPoolQuality(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.logPoolQuality(schoolId, { ...body, logDate: new Date(body.logDate) });
+  logPoolQuality(@Param("schoolId") schoolId: string, @Body() dto: LogPoolQualityDto) {
+    return this.svc.logPoolQuality(schoolId, { ...dto, logDate: new Date(dto.logDate) });
   }
 
   @Get(":schoolId/pool")

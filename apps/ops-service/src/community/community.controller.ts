@@ -1,6 +1,11 @@
 import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { CommunityService } from "./community.service";
+import {
+  AddPtaMemberDto, CreatePtaMeetingDto, UpdatePtaMeetingDto, RecordPtaFundEntryDto,
+  CreateVolunteerOpportunityDto, LogCommunityServiceDto, CreatePartnerDto, LogCsrActivityDto,
+  LogFoundItemDto, CreateProductDto, PlaceOrderDto, CreateCallTemplateDto, CreateSignageContentDto,
+} from "./dto/community.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("community")
@@ -9,8 +14,8 @@ export class CommunityController {
 
   // PTA
   @Post(":schoolId/pta/members")
-  addPtaMember(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.addPtaMember(schoolId, { ...body, electedAt: new Date(body.electedAt), tenureEndAt: body.tenureEndAt ? new Date(body.tenureEndAt) : undefined });
+  addPtaMember(@Param("schoolId") schoolId: string, @Body() dto: AddPtaMemberDto) {
+    return this.svc.addPtaMember(schoolId, { ...dto, electedAt: new Date(dto.electedAt), tenureEndAt: dto.tenureEndAt ? new Date(dto.tenureEndAt) : undefined });
   }
 
   @Get(":schoolId/pta/members")
@@ -19,13 +24,13 @@ export class CommunityController {
   }
 
   @Post(":schoolId/pta/meetings")
-  createMeeting(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.createPtaMeeting(schoolId, body.createdBy, { ...body, meetingDate: new Date(body.meetingDate) });
+  createMeeting(@Param("schoolId") schoolId: string, @Body() dto: CreatePtaMeetingDto) {
+    return this.svc.createPtaMeeting(schoolId, dto.createdBy, { ...dto, meetingDate: new Date(dto.meetingDate) });
   }
 
   @Patch("pta/meetings/:meetingId")
-  updateMeeting(@Param("meetingId") meetingId: string, @Body() body: any) {
-    return this.svc.updatePtaMeeting(meetingId, body);
+  updateMeeting(@Param("meetingId") meetingId: string, @Body() dto: UpdatePtaMeetingDto) {
+    return this.svc.updatePtaMeeting(meetingId, dto);
   }
 
   @Post("pta/meetings/:meetingId/votes")
@@ -44,8 +49,8 @@ export class CommunityController {
   }
 
   @Post(":schoolId/pta/fund")
-  recordFundEntry(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.recordPtaFundEntry(schoolId, { ...body, entryDate: new Date(body.entryDate) });
+  recordFundEntry(@Param("schoolId") schoolId: string, @Body() dto: RecordPtaFundEntryDto) {
+    return this.svc.recordPtaFundEntry(schoolId, { ...dto, entryDate: new Date(dto.entryDate) });
   }
 
   @Get(":schoolId/pta/fund/balance")
@@ -75,8 +80,8 @@ export class CommunityController {
   }
 
   @Post(":schoolId/volunteers/opportunities")
-  createOpportunity(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.createVolunteerOpportunity(schoolId, body.createdBy, { ...body, opportunityDate: new Date(body.opportunityDate) });
+  createOpportunity(@Param("schoolId") schoolId: string, @Body() dto: CreateVolunteerOpportunityDto) {
+    return this.svc.createVolunteerOpportunity(schoolId, dto.createdBy, { ...dto, opportunityDate: new Date(dto.opportunityDate) });
   }
 
   @Post("volunteers/opportunities/:opportunityId/apply")
@@ -96,8 +101,8 @@ export class CommunityController {
 
   // Community service
   @Post(":schoolId/community-service")
-  logService(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.logCommunityService(schoolId, { ...body, activityDate: new Date(body.activityDate) });
+  logService(@Param("schoolId") schoolId: string, @Body() dto: LogCommunityServiceDto) {
+    return this.svc.logCommunityService(schoolId, { ...dto, activityDate: new Date(dto.activityDate) });
   }
 
   @Patch("community-service/:logId/validate")
@@ -112,13 +117,13 @@ export class CommunityController {
 
   // Corporate Partners
   @Post(":schoolId/partners")
-  createPartner(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.createPartner(schoolId, { ...body, mouStartDate: body.mouStartDate ? new Date(body.mouStartDate) : undefined, mouEndDate: body.mouEndDate ? new Date(body.mouEndDate) : undefined });
+  createPartner(@Param("schoolId") schoolId: string, @Body() dto: CreatePartnerDto) {
+    return this.svc.createPartner(schoolId, { ...dto, mouStartDate: dto.mouStartDate ? new Date(dto.mouStartDate) : undefined, mouEndDate: dto.mouEndDate ? new Date(dto.mouEndDate) : undefined });
   }
 
   @Post("partners/:partnerId/csr-activities")
-  logCsrActivity(@Param("partnerId") partnerId: string, @Body() body: any) {
-    return this.svc.logCsrActivity(partnerId, { ...body, activityDate: new Date(body.activityDate) });
+  logCsrActivity(@Param("partnerId") partnerId: string, @Body() dto: LogCsrActivityDto) {
+    return this.svc.logCsrActivity(partnerId, { ...dto, activityDate: new Date(dto.activityDate) });
   }
 
   @Get("partners/:partnerId/utilisation-report")
@@ -133,8 +138,8 @@ export class CommunityController {
 
   // Lost & Found
   @Post(":schoolId/lost-found")
-  logFoundItem(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.logFoundItem(schoolId, body.reportedBy, { ...body, foundAt: new Date(body.foundAt) });
+  logFoundItem(@Param("schoolId") schoolId: string, @Body() dto: LogFoundItemDto) {
+    return this.svc.logFoundItem(schoolId, dto.reportedBy, { ...dto, foundAt: new Date(dto.foundAt) });
   }
 
   @Patch("lost-found/:itemId/claim")
@@ -154,8 +159,8 @@ export class CommunityController {
 
   // Store
   @Post(":schoolId/store/products")
-  createProduct(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.createProduct(schoolId, body);
+  createProduct(@Param("schoolId") schoolId: string, @Body() dto: CreateProductDto) {
+    return this.svc.createProduct(schoolId, dto);
   }
 
   @Patch("store/products/:productId/stock")
@@ -164,8 +169,8 @@ export class CommunityController {
   }
 
   @Post(":schoolId/store/orders")
-  placeOrder(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.placeOrder(schoolId, body);
+  placeOrder(@Param("schoolId") schoolId: string, @Body() dto: PlaceOrderDto) {
+    return this.svc.placeOrder(schoolId, dto);
   }
 
   @Get(":schoolId/store/products")
@@ -180,8 +185,8 @@ export class CommunityController {
 
   // Robo calls
   @Post(":schoolId/robo-calls/templates")
-  createTemplate(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.createCallTemplate(schoolId, body);
+  createTemplate(@Param("schoolId") schoolId: string, @Body() dto: CreateCallTemplateDto) {
+    return this.svc.createCallTemplate(schoolId, dto);
   }
 
   @Post("robo-calls/templates/:templateId/dispatch")
@@ -201,8 +206,8 @@ export class CommunityController {
 
   // Digital signage
   @Post(":schoolId/signage")
-  createSignage(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.createSignageContent(schoolId, body.createdBy, { ...body, startAt: new Date(body.startAt), endAt: new Date(body.endAt) });
+  createSignage(@Param("schoolId") schoolId: string, @Body() dto: CreateSignageContentDto) {
+    return this.svc.createSignageContent(schoolId, dto.createdBy, { ...dto, startAt: new Date(dto.startAt), endAt: new Date(dto.endAt) });
   }
 
   @Post(":schoolId/signage/emergency")

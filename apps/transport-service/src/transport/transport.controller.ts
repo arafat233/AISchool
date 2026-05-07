@@ -3,6 +3,10 @@ import { AuthGuard } from "@nestjs/passport";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
 import { TransportService } from "./transport.service";
+import {
+  CreateRouteDto, AddStopDto, UpdateStopDto, CreateVehicleDto, UpdateVehicleDto,
+  AddMaintenanceDto, CreateDriverDto, AssignStudentDto, StartTripDto,
+} from "./dto/transport.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller()
@@ -12,8 +16,8 @@ export class TransportController {
   // ─── Routes ───────────────────────────────────────────────────────────────────
 
   @Post("routes")
-  createRoute(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.svc.createRoute(req.user.schoolId!, body);
+  createRoute(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateRouteDto) {
+    return this.svc.createRoute(req.user.schoolId!, dto);
   }
 
   @Get("routes")
@@ -22,13 +26,13 @@ export class TransportController {
   }
 
   @Post("routes/:id/stops")
-  addStop(@Param("id") routeId: string, @Body() body: any) {
-    return this.svc.addStop(routeId, body);
+  addStop(@Param("id") routeId: string, @Body() dto: AddStopDto) {
+    return this.svc.addStop(routeId, dto);
   }
 
   @Patch("stops/:id")
-  updateStop(@Param("id") stopId: string, @Body() body: any) {
-    return this.svc.updateStop(stopId, body);
+  updateStop(@Param("id") stopId: string, @Body() dto: UpdateStopDto) {
+    return this.svc.updateStop(stopId, dto);
   }
 
   @Delete("stops/:id")
@@ -39,12 +43,12 @@ export class TransportController {
   // ─── Vehicles ─────────────────────────────────────────────────────────────────
 
   @Post("vehicles")
-  createVehicle(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  createVehicle(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateVehicleDto) {
     return this.svc.createVehicle(req.user.schoolId!, {
-      ...body,
-      insuranceExpiry: body.insuranceExpiry ? new Date(body.insuranceExpiry) : undefined,
-      fitnessExpiry:   body.fitnessExpiry   ? new Date(body.fitnessExpiry)   : undefined,
-      pucExpiry:       body.pucExpiry       ? new Date(body.pucExpiry)       : undefined,
+      ...dto,
+      insuranceExpiry: dto.insuranceExpiry ? new Date(dto.insuranceExpiry) : undefined,
+      fitnessExpiry:   dto.fitnessExpiry   ? new Date(dto.fitnessExpiry)   : undefined,
+      pucExpiry:       dto.pucExpiry       ? new Date(dto.pucExpiry)       : undefined,
     });
   }
 
@@ -54,16 +58,16 @@ export class TransportController {
   }
 
   @Patch("vehicles/:id")
-  updateVehicle(@Param("id") id: string, @Body() body: any) {
-    return this.svc.updateVehicle(id, body);
+  updateVehicle(@Param("id") id: string, @Body() dto: UpdateVehicleDto) {
+    return this.svc.updateVehicle(id, dto);
   }
 
   @Post("vehicles/:id/maintenance")
-  addMaintenance(@Param("id") vehicleId: string, @Body() body: any) {
+  addMaintenance(@Param("id") vehicleId: string, @Body() dto: AddMaintenanceDto) {
     return this.svc.addMaintenanceLog(vehicleId, {
-      ...body,
-      serviceDate: new Date(body.serviceDate),
-      nextDueDate: body.nextDueDate ? new Date(body.nextDueDate) : undefined,
+      ...dto,
+      serviceDate: new Date(dto.serviceDate),
+      nextDueDate: dto.nextDueDate ? new Date(dto.nextDueDate) : undefined,
     });
   }
 
@@ -75,10 +79,10 @@ export class TransportController {
   // ─── Drivers ──────────────────────────────────────────────────────────────────
 
   @Post("drivers")
-  createDriver(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  createDriver(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateDriverDto) {
     return this.svc.createDriver(req.user.schoolId!, {
-      ...body,
-      licenceExpiry: body.licenceExpiry ? new Date(body.licenceExpiry) : undefined,
+      ...dto,
+      licenceExpiry: dto.licenceExpiry ? new Date(dto.licenceExpiry) : undefined,
     });
   }
 
@@ -90,8 +94,8 @@ export class TransportController {
   // ─── Student assignment ───────────────────────────────────────────────────────
 
   @Post("assignments")
-  assignStudent(@Body() body: any) {
-    return this.svc.assignStudent(body);
+  assignStudent(@Body() dto: AssignStudentDto) {
+    return this.svc.assignStudent(dto);
   }
 
   @Get("assignments/student/:studentId")
@@ -102,8 +106,8 @@ export class TransportController {
   // ─── Trips ────────────────────────────────────────────────────────────────────
 
   @Post("trips")
-  startTrip(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.svc.startTrip({ schoolId: req.user.schoolId!, ...body });
+  startTrip(@Req() req: Request & { user: RequestUser }, @Body() dto: StartTripDto) {
+    return this.svc.startTrip({ schoolId: req.user.schoolId!, ...dto });
   }
 
   @Post("trips/:id/end")

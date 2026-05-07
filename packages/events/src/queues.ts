@@ -1,32 +1,32 @@
 /** BullMQ queue names */
 export const QUEUES = {
   // Notifications
-  EMAIL: "queue:email",
-  SMS: "queue:sms",
-  PUSH: "queue:push",
-  WHATSAPP: "queue:whatsapp",
+  EMAIL: "queue-email",
+  SMS: "queue-sms",
+  PUSH: "queue-push",
+  WHATSAPP: "queue-whatsapp",
 
   // Reports / PDF
-  PDF_GENERATION: "queue:pdf",
-  REPORT_CARD: "queue:report-card",
+  PDF_GENERATION: "queue-pdf",
+  REPORT_CARD: "queue-report-card",
 
   // Fees
-  FEE_REMINDER: "queue:fee-reminder",
-  PAYMENT_WEBHOOK: "queue:payment-webhook",
-  FEE_PAYMENT_RECEIVED: "queue:fee-payment-received",
+  FEE_REMINDER: "queue-fee-reminder",
+  PAYMENT_WEBHOOK: "queue-payment-webhook",
+  FEE_PAYMENT_RECEIVED: "queue-fee-payment-received",
 
   // Attendance
-  ATTENDANCE_ALERT: "queue:attendance-alert",
+  ATTENDANCE_ALERT: "queue-attendance-alert",
 
   // Student lifecycle
-  STUDENT_ENROLLED: "queue:student-enrolled",
+  STUDENT_ENROLLED: "queue-student-enrolled",
 
   // Exam
-  EXAM_RESULT_PUBLISHED: "queue:exam-result-published",
+  EXAM_RESULT_PUBLISHED: "queue-exam-result-published",
 
   // General
-  BULK_IMPORT: "queue:bulk-import",
-  AUDIT_LOG: "queue:audit-log",
+  BULK_IMPORT: "queue-bulk-import",
+  AUDIT_LOG: "queue-audit-log",
 } as const;
 
 export type QueueName = (typeof QUEUES)[keyof typeof QUEUES];

@@ -11,6 +11,7 @@ import { StatutoryService } from "./statutory.service";
 import { GratuityService } from "./gratuity.service";
 import { AdvanceService } from "./advance.service";
 import { ExportService } from "./export.service";
+import { CreateSalaryComponentDto, UpdateSalaryComponentDto, CreatePayrollRunDto, RequestAdvanceDto } from "./dto/payroll.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("payroll")
@@ -29,8 +30,8 @@ export class PayrollController {
   @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("structure/:designationId/components")
-  createComponent(@Param("designationId") designationId: string, @Body() body: any) {
-    return this.structure.createComponent(designationId, body);
+  createComponent(@Param("designationId") designationId: string, @Body() dto: CreateSalaryComponentDto) {
+    return this.structure.createComponent(designationId, dto);
   }
 
   @Get("structure/:designationId")
@@ -41,8 +42,8 @@ export class PayrollController {
   @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Put("structure/components/:id")
-  updateComponent(@Param("id") id: string, @Body() body: any) {
-    return this.structure.updateComponent(id, body);
+  updateComponent(@Param("id") id: string, @Body() dto: UpdateSalaryComponentDto) {
+    return this.structure.updateComponent(id, dto);
   }
 
   // ─── Payroll runs ─────────────────────────────────────────────────────────────
@@ -50,8 +51,8 @@ export class PayrollController {
   @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "ACCOUNTANT")
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("runs")
-  createRun(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.payroll.createRun(req.user.schoolId!, body);
+  createRun(@Req() req: Request & { user: RequestUser }, @Body() dto: CreatePayrollRunDto) {
+    return this.payroll.createRun(req.user.schoolId!, dto);
   }
 
   @Get("runs")
@@ -139,8 +140,8 @@ export class PayrollController {
   // ─── Salary advances ──────────────────────────────────────────────────────────
 
   @Post("advances")
-  requestAdvance(@Body() body: any) {
-    return this.advance.requestAdvance(body);
+  requestAdvance(@Body() dto: RequestAdvanceDto) {
+    return this.advance.requestAdvance(dto);
   }
 
   @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL")

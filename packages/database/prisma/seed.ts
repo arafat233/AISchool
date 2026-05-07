@@ -1,113 +1,46 @@
-import { PrismaClient, SubscriptionPlan, TenantType, UserRole } from "@prisma/client";
-import * as bcrypt from "bcrypt";
+import { PrismaClient, UserRole, UserStatus } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+// Pre-hashed "Admin@123!" with bcrypt rounds=12
+const PASSWORD_HASH = "$2b$12$XFib9lckgCJgJySLYgIJx.9bDNtdSiAIFKKP3cI0aoQtj8t5VKkPm";
+
 async function main() {
-  console.log("🌱 Seeding database...");
-
-  // ─── Default Super Admin Tenant ──────────────────────────────────────────
+  // Tenant
   const tenant = await prisma.tenant.upsert({
-    where: { subdomain: "default" },
+    where: { id: "seed-tenant-001" },
     update: {},
-    create: {
-      name: "School ERP Platform",
-      subdomain: "default",
-      type: TenantType.SCHOOL,
-      plan: SubscriptionPlan.ENTERPRISE,
-      isActive: true,
-    },
+    create: { id: "seed-tenant-001", name: "Demo School ERP", type: "COMPANY", plan: "ENTERPRISE", status: "ACTIVE" },
   });
 
-  console.log(`✅ Tenant: ${tenant.name} (${tenant.id})`);
+  const users: Array<{ id: string; email: string; role: UserRole; first: string; last: string; phone: string }> = [
+    { id: "seed-user-superadmin",  email: "admin@schoolerp.local",    role: UserRole.SUPER_ADMIN,      first: "Super",  last: "Admin",   phone: "+911234567890" },
+    { id: "seed-user-schooladmin", email: "schooladmin@demo.local",   role: UserRole.SCHOOL_ADMIN,     first: "School", last: "Admin",   phone: "+911234567891" },
+    { id: "seed-user-teacher",     email: "teacher@demo.local",       role: UserRole.SUBJECT_TEACHER,  first: "John",   last: "Teacher", phone: "+911234567892" },
+    { id: "seed-user-student",     email: "student@demo.local",       role: UserRole.STUDENT,          first: "Jane",   last: "Student", phone: "+911234567893" },
+    { id: "seed-user-parent",      email: "parent@demo.local",        role: UserRole.PARENT,           first: "Bob",    last: "Parent",  phone: "+911234567894" },
+  ];
 
-  // ─── Super Admin User ────────────────────────────────────────────────────
-  const passwordHash = await bcrypt.hash("Admin@123!", 12);
-
-  const superAdmin = await prisma.user.upsert({
-    where: { email: "admin@schoolerp.local" },
-    update: {},
-    create: {
-      tenantId: tenant.id,
-      email: "admin@schoolerp.local",
-      phone: "+911234567890",
-      passwordHash,
-      role: UserRole.SUPER_ADMIN,
-      isActive: true,
-      isEmailVerified: true,
-      profile: {
-        create: {
-          firstName: "Super",
-          lastName: "Admin",
-        },
-      },
-    },
-  });
-
-  console.log(`✅ Super Admin: ${superAdmin.email}`);
-
-  // ─── Demo School ─────────────────────────────────────────────────────────
-  const school = await prisma.school.upsert({
-    where: { tenantId: tenant.id },
-    update: {},
-    create: {
-      tenantId: tenant.id,
-      name: "Demo Public School",
-      address: "123 Education Street",
-      city: "Mumbai",
-      state: "Maharashtra",
-      country: "India",
-      pincode: "400001",
-      phone: "+912212345678",
-      email: "info@demopublicschool.edu.in",
-      establishedYear: 2000,
-      affiliationBoard: "CBSE",
-      affiliationNumber: "DEMO/2000/001",
-    },
-  });
-
-  console.log(`✅ School: ${school.name}`);
-
-  // ─── Academic Year ───────────────────────────────────────────────────────
-  const academicYear = await prisma.academicYear.upsert({
-    where: {
-      schoolId_name: { schoolId: school.id, name: "2024-25" },
-    },
-    update: {},
-    create: {
-      schoolId: school.id,
-      name: "2024-25",
-      startDate: new Date("2024-04-01"),
-      endDate: new Date("2025-03-31"),
-      isCurrent: true,
-    },
-  });
-
-  console.log(`✅ Academic Year: ${academicYear.name}`);
-
-  // ─── Grade Levels ────────────────────────────────────────────────────────
-  const grades = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
-  for (let i = 0; i < grades.length; i++) {
-    await prisma.gradeLevel.upsert({
-      where: { schoolId_name: { schoolId: school.id, name: `Grade ${grades[i]}` } },
+  for (const u of users) {
+    await prisma.user.upsert({
+      where: { id: u.id },
       update: {},
       create: {
-        schoolId: school.id,
-        name: `Grade ${grades[i]}`,
-        numericLevel: i + 1,
+        id: u.id,
+        tenantId: tenant.id,
+        email: u.email,
+        phone: u.phone,
+        passwordHash: PASSWORD_HASH,
+        role: u.role,
+        status: UserStatus.ACTIVE,
+        profile: { create: { firstName: u.first, lastName: u.last } },
       },
     });
+    console.log(`Seeded: ${u.email} (${u.role})`);
   }
-  console.log("✅ Grade levels seeded");
-
-  console.log("🎉 Seed complete!");
+  console.log("\nDone. Password for all: Admin@123!");
 }
 
 main()
-  .catch((e) => {
-    console.error("❌ Seed failed:", e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .catch((e) => { console.error(e); process.exit(1); })
+  .finally(async () => { await prisma.$disconnect(); });

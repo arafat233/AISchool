@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Patch, Delete, Param, Query, Body, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { EventService } from "./event.service";
+import { UpdateEventDto, UpdateDramaPropDto, UpdateClubDto, UpdateHouseDto } from "./dto/event.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("events")
@@ -18,8 +19,8 @@ export class EventController {
   }
 
   @Patch(":eventId")
-  updateEvent(@Param("eventId") eventId: string, @Body() body: any) {
-    return this.svc.updateEvent(eventId, body);
+  updateEvent(@Param("eventId") eventId: string, @Body() dto: UpdateEventDto) {
+    return this.svc.updateEvent(eventId, dto);
   }
 
   @Get(":schoolId")
@@ -135,8 +136,8 @@ export class EventController {
   }
 
   @Patch("drama/props/:propId")
-  updateDramaProp(@Param("propId") propId: string, @Body() body: any) {
-    return this.svc.updateDramaProp(propId, body);
+  updateDramaProp(@Param("propId") propId: string, @Body() dto: UpdateDramaPropDto) {
+    return this.svc.updateDramaProp(propId, dto);
   }
 
   @Post("drama/:configId/tickets")
@@ -199,8 +200,8 @@ export class EventController {
   }
 
   @Patch("clubs/:clubId")
-  updateClub(@Param("clubId") clubId: string, @Body() body: any) {
-    return this.svc.updateClub(clubId, body);
+  updateClub(@Param("clubId") clubId: string, @Body() dto: UpdateClubDto) {
+    return this.svc.updateClub(clubId, dto);
   }
 
   @Get(":schoolId/clubs")
@@ -308,8 +309,8 @@ export class EventController {
   }
 
   @Patch("houses/:houseId")
-  updateHouse(@Param("houseId") houseId: string, @Body() body: any) {
-    return this.svc.updateHouse(houseId, body);
+  updateHouse(@Param("houseId") houseId: string, @Body() dto: UpdateHouseDto) {
+    return this.svc.updateHouse(houseId, dto);
   }
 
   @Post("houses/:houseId/members")

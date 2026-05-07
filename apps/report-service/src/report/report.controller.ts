@@ -2,6 +2,7 @@ import { Controller, Get, Post, Param, Query, Body, Res, UseGuards } from "@nest
 import { AuthGuard } from "@nestjs/passport";
 import { Response } from "express";
 import { ReportService } from "./report.service";
+import { CustomReportDto } from "./dto/report.dto";
 
 @Controller()
 @UseGuards(AuthGuard("jwt"))
@@ -131,9 +132,9 @@ export class ReportController {
 
   // ─── Custom Builder ───────────────────────────────────────────────────────
   @Post("custom")
-  async customReport(@Body() body: any, @Res() res: Response) {
-    const data = await this.svc.buildCustomReport(body);
-    return this.send(res, data, body.format ?? "json", "custom-report");
+  async customReport(@Body() dto: CustomReportDto, @Res() res: Response) {
+    const data = await this.svc.buildCustomReport(dto);
+    return this.send(res, data, dto.format ?? "json", "custom-report");
   }
 
   // ─── Health ───────────────────────────────────────────────────────────────

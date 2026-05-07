@@ -3,6 +3,7 @@ import { AuthGuard } from "@nestjs/passport";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
 import { AlertService } from "./alert.service";
+import { BroadcastAlertDto } from "./dto/alert.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("alerts")
@@ -10,8 +11,8 @@ export class AlertController {
   constructor(private readonly svc: AlertService) {}
 
   @Post("broadcast")
-  broadcast(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.svc.broadcastAlert(req.user.schoolId!, { ...body, sentBy: req.user.id });
+  broadcast(@Req() req: Request & { user: RequestUser }, @Body() dto: BroadcastAlertDto) {
+    return this.svc.broadcastAlert(req.user.schoolId!, { ...dto, sentBy: req.user.id });
   }
 
   @Get()

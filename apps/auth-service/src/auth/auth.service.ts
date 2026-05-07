@@ -39,13 +39,14 @@ export class AuthService {
   }
 
   async validateLocalUser(email: string, password: string) {
-    const user = await this.prisma.user.findUnique({
+    // email is unique only within a tenant; use findFirst since we don't know tenantId at login time
+    const user = await this.prisma.user.findFirst({
       where: { email: email.toLowerCase() },
-      include: { twoFactor: true },
+      include: { twoFactorAuth: true },
     });
 
     if (!user) throw new InvalidCredentialsError();
-    if (!user.isActive) throw new AccountDisabledError();
+    if (user.status !== "ACTIVE") throw new AccountDisabledError();
 
     const passwordValid = await bcrypt.compare(password, user.passwordHash ?? "");
     if (!passwordValid) throw new InvalidCredentialsError();
@@ -58,11 +59,11 @@ export class AuthService {
 
     // 2FA required for privileged roles
     const requires2FA = ["SUPER_ADMIN", "ADMIN", "ACCOUNTANT"].includes(user.role);
-    if (requires2FA && user.twoFactor?.isEnabled) {
+    if (requires2FA && user.twoFactorAuth?.isEnabled) {
       if (!dto.totpCode) {
         throw new TwoFactorRequiredError();
       }
-      const valid = this.totpService.verify(user.twoFactor.secret!, dto.totpCode);
+      const valid = this.totpService.verify(user.twoFactorAuth.secret!, dto.totpCode);
       if (!valid) throw new InvalidOtpError();
     }
 
@@ -92,7 +93,7 @@ export class AuthService {
         tenantId: user.tenantId,
         userId: user.id,
         action: "LOGIN",
-        entity: "User",
+        entityType: "User",
         entityId: user.id,
         ipAddress,
         userAgent,
@@ -103,7 +104,7 @@ export class AuthService {
   }
 
   async register(dto: RegisterDto) {
-    const existing = await this.prisma.user.findUnique({
+    const existing = await this.prisma.user.findFirst({
       where: { email: dto.email.toLowerCase() },
     });
     if (existing) {
@@ -141,14 +142,14 @@ export class AuthService {
         tenantId: (await this.prisma.user.findUniqueOrThrow({ where: { id: userId } })).tenantId,
         userId,
         action: "LOGOUT",
-        entity: "User",
+        entityType: "User",
         entityId: userId,
       },
     });
   }
 
   async forgotPassword(email: string) {
-    const user = await this.prisma.user.findUnique({ where: { email: email.toLowerCase() } });
+    const user = await this.prisma.user.findFirst({ where: { email: email.toLowerCase() } });
     if (!user) return; // silently ignore — don't reveal user existence
 
     const token = generateSecureToken(32);
@@ -226,7 +227,7 @@ export class AuthService {
     ipAddress: string,
     userAgent: string,
   ) {
-    let user = await this.prisma.user.findUnique({ where: { email: profile.email } });
+    let user = await this.prisma.user.findFirst({ where: { email: profile.email } });
     if (!user) throw new UnauthorizedException("No account found for this OAuth identity");
 
     await this.prisma.user.update({

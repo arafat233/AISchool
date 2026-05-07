@@ -72,6 +72,17 @@
     ],
     "moduleNameMapper": {
       "^expo-secure-store$": "<rootDir>/__mocks__/expo-secure-store.ts",
+      "^expo-router$": "<rootDir>/__mocks__/expo-router.ts",
+      "^expo-local-authentication$": "<rootDir>/__mocks__/expo-local-authentication.ts",
+      "^expo-notifications$": "<rootDir>/__mocks__/expo-notifications.ts",
+      "^expo-camera$": "<rootDir>/__mocks__/expo-camera.ts",
+      "^expo-barcode-scanner$": "<rootDir>/__mocks__/expo-barcode-scanner.ts",
+      "^expo-constants$": "<rootDir>/__mocks__/expo-constants.ts",
+      "^expo-haptics$": "<rootDir>/__mocks__/expo-haptics.ts",
+      "^expo-av$": "<rootDir>/__mocks__/expo-av.ts",
+      "^@react-navigation/native$": "<rootDir>/__mocks__/@react-navigation/native.ts",
+      "^@react-navigation/native-stack$": "<rootDir>/__mocks__/@react-navigation/native-stack.ts",
+      "^@react-navigation/bottom-tabs$": "<rootDir>/__mocks__/@react-navigation/bottom-tabs.ts",
       "^axios$": "<rootDir>/__mocks__/axios.ts"
     }
   }

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@ne
 import { AuthGuard } from "@nestjs/passport";
 import { LibraryService } from "./library.service";
 import { CreateBookDto, UpdateBookDto, CreateEBookDto, CreatePeriodicalDto, RecordPeriodicalIssueDto, SuggestBookDto } from "../dto/library.dto";
+import { CreateReadingProgramDto, LogReadingEntryDto } from "./dto/reading-program.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("library")
@@ -183,13 +184,13 @@ export class LibraryController {
   // ─── Reading program ──────────────────────────────────────────────────────
 
   @Post(":schoolId/reading-programs")
-  createProgram(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.createReadingProgram(schoolId, { ...body, startDate: new Date(body.startDate), endDate: new Date(body.endDate) });
+  createProgram(@Param("schoolId") schoolId: string, @Body() dto: CreateReadingProgramDto) {
+    return this.svc.createReadingProgram(schoolId, { ...dto, startDate: new Date(dto.startDate), endDate: new Date(dto.endDate) });
   }
 
   @Post("reading-programs/:programId/logs")
-  logReading(@Param("programId") programId: string, @Body() body: any) {
-    return this.svc.logReadingEntry(programId, body.studentId, body);
+  logReading(@Param("programId") programId: string, @Body() dto: LogReadingEntryDto) {
+    return this.svc.logReadingEntry(programId, dto.studentId, dto);
   }
 
   @Patch("reading-logs/:logId/validate")

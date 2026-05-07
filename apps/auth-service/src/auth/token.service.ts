@@ -64,7 +64,7 @@ export class TokenService {
         tokenHash,
         expiresAt,
         ipAddress: input.ipAddress,
-        userAgent: input.userAgent,
+        deviceInfo: input.userAgent,
       },
     });
 
@@ -79,17 +79,17 @@ export class TokenService {
 
     const stored = await this.prisma.refreshToken.findUnique({
       where: { tokenHash },
-      include: { user: { include: { twoFactor: true } } },
+      include: { user: true },
     });
 
-    if (!stored || stored.isRevoked || stored.expiresAt < new Date()) {
+    if (!stored || stored.revokedAt !== null || stored.expiresAt < new Date()) {
       throw new UnauthorizedException("Invalid or expired refresh token");
     }
 
     // Rotate: revoke old, issue new
     await this.prisma.refreshToken.update({
       where: { id: stored.id },
-      data: { isRevoked: true },
+      data: { revokedAt: new Date() },
     });
 
     const tenant = await this.prisma.tenant.findUniqueOrThrow({
@@ -116,14 +116,14 @@ export class TokenService {
     const tokenHash = sha256(rawRefreshToken);
     await this.prisma.refreshToken.updateMany({
       where: { tokenHash },
-      data: { isRevoked: true },
+      data: { revokedAt: new Date() },
     });
   }
 
   async revokeAllUserTokens(userId: string) {
     await this.prisma.refreshToken.updateMany({
-      where: { userId, isRevoked: false },
-      data: { isRevoked: true },
+      where: { userId, revokedAt: null },
+      data: { revokedAt: new Date() },
     });
   }
 

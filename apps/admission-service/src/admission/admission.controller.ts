@@ -3,6 +3,7 @@ import { AuthGuard } from "@nestjs/passport";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
 import { AdmissionService } from "./admission.service";
+import { CreateEnquiryDto, UpdateEnquiryDto, AddFollowUpDto, CreateApplicationDto, UpdateApplicationStatusDto } from "./dto/admission.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller()
@@ -12,10 +13,10 @@ export class AdmissionController {
   // ─── Enquiries ────────────────────────────────────────────────────────────────
 
   @Post("enquiries")
-  createEnquiry(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  createEnquiry(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateEnquiryDto) {
     return this.svc.createEnquiry(req.user.schoolId!, {
-      ...body,
-      dateOfBirth: body.dateOfBirth ? new Date(body.dateOfBirth) : undefined,
+      ...dto,
+      dateOfBirth: dto.dateOfBirth ? new Date(dto.dateOfBirth) : undefined,
     });
   }
 
@@ -34,10 +35,10 @@ export class AdmissionController {
   }
 
   @Patch("enquiries/:id")
-  updateEnquiry(@Param("id") id: string, @Body() body: any) {
+  updateEnquiry(@Param("id") id: string, @Body() dto: UpdateEnquiryDto) {
     return this.svc.updateEnquiry(id, {
-      ...body,
-      nextFollowUpDate: body.nextFollowUpDate ? new Date(body.nextFollowUpDate) : undefined,
+      ...dto,
+      nextFollowUpDate: dto.nextFollowUpDate ? new Date(dto.nextFollowUpDate) : undefined,
     });
   }
 
@@ -45,22 +46,22 @@ export class AdmissionController {
   addFollowUp(
     @Req() req: Request & { user: RequestUser },
     @Param("id") enquiryId: string,
-    @Body() body: any,
+    @Body() dto: AddFollowUpDto,
   ) {
     return this.svc.addFollowUp(enquiryId, {
-      ...body,
+      ...dto,
       loggedBy: req.user.id,
-      nextDate: body.nextDate ? new Date(body.nextDate) : undefined,
+      nextDate: dto.nextDate ? new Date(dto.nextDate) : undefined,
     });
   }
 
   // ─── Applications ─────────────────────────────────────────────────────────────
 
   @Post("applications")
-  createApplication(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  createApplication(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateApplicationDto) {
     return this.svc.createApplication(req.user.schoolId!, {
-      ...body,
-      dateOfBirth: body.dateOfBirth ? new Date(body.dateOfBirth) : undefined,
+      ...dto,
+      dateOfBirth: dto.dateOfBirth ? new Date(dto.dateOfBirth) : undefined,
     });
   }
 
@@ -75,12 +76,12 @@ export class AdmissionController {
   }
 
   @Patch("applications/:id/status")
-  updateStatus(@Req() req: Request & { user: RequestUser }, @Param("id") id: string, @Body() body: any) {
+  updateStatus(@Req() req: Request & { user: RequestUser }, @Param("id") id: string, @Body() dto: UpdateApplicationStatusDto) {
     return this.svc.updateApplicationStatus(id, {
-      ...body,
+      ...dto,
       reviewedBy: req.user.id,
-      interviewDate: body.interviewDate ? new Date(body.interviewDate) : undefined,
-      offerDate: body.offerDate ? new Date(body.offerDate) : undefined,
+      interviewDate: dto.interviewDate ? new Date(dto.interviewDate) : undefined,
+      offerDate: dto.offerDate ? new Date(dto.offerDate) : undefined,
     });
   }
 

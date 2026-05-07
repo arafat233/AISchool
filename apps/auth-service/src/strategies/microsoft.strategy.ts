@@ -1,9 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { IProfile, OIDCStrategy } from "passport-microsoft";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { Strategy: MicrosoftOIDCStrategy } = require("passport-microsoft");
+type IProfile = any;
 
 @Injectable()
-export class MicrosoftStrategy extends PassportStrategy(OIDCStrategy as any, "microsoft") {
+export class MicrosoftStrategy extends PassportStrategy(MicrosoftOIDCStrategy, "microsoft") {
   constructor() {
     super({
       clientID: process.env.MS_CLIENT_ID || "not-configured",

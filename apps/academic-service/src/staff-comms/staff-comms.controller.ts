@@ -3,6 +3,7 @@ import { AuthGuard } from "@nestjs/passport";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
 import { StaffCommsService } from "./staff-comms.service";
+import { PublishCircularDto } from "./dto/staff-comms.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("staff-comms")
@@ -12,8 +13,8 @@ export class StaffCommsController {
   // ─── Circulars ────────────────────────────────────────────────────────────────
 
   @Post("circulars")
-  publishCircular(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.svc.publishCircular(req.user.schoolId!, { ...body, publishedBy: req.user.id });
+  publishCircular(@Req() req: Request & { user: RequestUser }, @Body() dto: PublishCircularDto) {
+    return this.svc.publishCircular(req.user.schoolId!, { ...dto, publishedBy: req.user.id });
   }
 
   @Get("circulars")

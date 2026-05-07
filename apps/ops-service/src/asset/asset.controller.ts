@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AssetService } from "./asset.service";
+import { RegisterAssetDto, UpdateAssetDto, LogAssetMaintenanceDto, CreateInsurancePolicyDto } from "./dto/asset.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("assets")
@@ -8,13 +9,13 @@ export class AssetController {
   constructor(private readonly svc: AssetService) {}
 
   @Post(":schoolId")
-  registerAsset(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.registerAsset(schoolId, { ...body, purchaseDate: new Date(body.purchaseDate) });
+  registerAsset(@Param("schoolId") schoolId: string, @Body() dto: RegisterAssetDto) {
+    return this.svc.registerAsset(schoolId, { ...dto, purchaseDate: new Date(dto.purchaseDate) });
   }
 
   @Patch(":assetId")
-  updateAsset(@Param("assetId") assetId: string, @Body() body: any) {
-    return this.svc.updateAsset(assetId, body);
+  updateAsset(@Param("assetId") assetId: string, @Body() dto: UpdateAssetDto) {
+    return this.svc.updateAsset(assetId, dto);
   }
 
   @Get(":schoolId")
@@ -43,8 +44,8 @@ export class AssetController {
   }
 
   @Post(":assetId/maintenance")
-  logMaintenance(@Param("assetId") assetId: string, @Body() body: any) {
-    return this.svc.logMaintenance(assetId, { ...body, serviceDate: new Date(body.serviceDate), nextServiceDue: body.nextServiceDue ? new Date(body.nextServiceDue) : undefined });
+  logMaintenance(@Param("assetId") assetId: string, @Body() dto: LogAssetMaintenanceDto) {
+    return this.svc.logMaintenance(assetId, { ...dto, serviceDate: new Date(dto.serviceDate), nextServiceDue: dto.nextServiceDue ? new Date(dto.nextServiceDue) : undefined });
   }
 
   @Get(":assetId/maintenance")
@@ -58,8 +59,8 @@ export class AssetController {
   }
 
   @Post(":schoolId/insurance")
-  createPolicy(@Param("schoolId") schoolId: string, @Body() body: any) {
-    return this.svc.createInsurancePolicy(schoolId, { ...body, startDate: new Date(body.startDate), endDate: new Date(body.endDate) });
+  createPolicy(@Param("schoolId") schoolId: string, @Body() dto: CreateInsurancePolicyDto) {
+    return this.svc.createInsurancePolicy(schoolId, { ...dto, startDate: new Date(dto.startDate), endDate: new Date(dto.endDate) });
   }
 
   @Get(":schoolId/insurance/expiring")

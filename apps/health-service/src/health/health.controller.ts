@@ -3,6 +3,11 @@ import { AuthGuard } from "@nestjs/passport";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
 import { HealthService } from "./health.service";
+import {
+  UpsertMedicalProfileDto, LogNurseVisitDto, LogMedicationDto,
+  ReportIncidentDto, AddVaccinationDto, RecordFitnessDto,
+  CreateAedDto, CreateCounsellingSessionDto, RecordDisciplineDto,
+} from "./dto/health.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller()
@@ -12,8 +17,8 @@ export class HealthController {
   // ─── Medical profile ──────────────────────────────────────────────────────────
 
   @Put("medical-profiles/:studentId")
-  upsertProfile(@Param("studentId") studentId: string, @Body() body: any) {
-    return this.svc.upsertMedicalProfile(studentId, body);
+  upsertProfile(@Param("studentId") studentId: string, @Body() dto: UpsertMedicalProfileDto) {
+    return this.svc.upsertMedicalProfile(studentId, dto);
   }
 
   @Get("medical-profiles/:studentId")
@@ -24,8 +29,8 @@ export class HealthController {
   // ─── Nurse visits ─────────────────────────────────────────────────────────────
 
   @Post("nurse-visits")
-  logVisit(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.svc.logNurseVisit(req.user.schoolId!, { ...body, attendedBy: req.user.id });
+  logVisit(@Req() req: Request & { user: RequestUser }, @Body() dto: LogNurseVisitDto) {
+    return this.svc.logNurseVisit(req.user.schoolId!, { ...dto, attendedBy: req.user.id });
   }
 
   @Get("nurse-visits")
@@ -36,11 +41,11 @@ export class HealthController {
   // ─── Medication admin ─────────────────────────────────────────────────────────
 
   @Post("medication-logs")
-  logMedication(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  logMedication(@Req() req: Request & { user: RequestUser }, @Body() dto: LogMedicationDto) {
     return this.svc.logMedicationAdmin(req.user.schoolId!, {
-      ...body,
-      scheduledTime: new Date(body.scheduledTime),
-      administeredAt: body.administeredAt ? new Date(body.administeredAt) : undefined,
+      ...dto,
+      scheduledTime: new Date(dto.scheduledTime),
+      administeredAt: dto.administeredAt ? new Date(dto.administeredAt) : undefined,
     });
   }
 
@@ -52,8 +57,8 @@ export class HealthController {
   // ─── Incidents ────────────────────────────────────────────────────────────────
 
   @Post("incidents")
-  reportIncident(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.svc.reportIncident(req.user.schoolId!, { ...body, reportedBy: req.user.id });
+  reportIncident(@Req() req: Request & { user: RequestUser }, @Body() dto: ReportIncidentDto) {
+    return this.svc.reportIncident(req.user.schoolId!, { ...dto, reportedBy: req.user.id });
   }
 
   @Get("incidents")
@@ -64,11 +69,11 @@ export class HealthController {
   // ─── Vaccinations ─────────────────────────────────────────────────────────────
 
   @Post("vaccinations/:studentId")
-  addVaccination(@Param("studentId") studentId: string, @Body() body: any) {
+  addVaccination(@Param("studentId") studentId: string, @Body() dto: AddVaccinationDto) {
     return this.svc.upsertVaccination(studentId, {
-      ...body,
-      administeredOn: body.administeredOn ? new Date(body.administeredOn) : undefined,
-      dueDate: body.dueDate ? new Date(body.dueDate) : undefined,
+      ...dto,
+      administeredOn: dto.administeredOn ? new Date(dto.administeredOn) : undefined,
+      dueDate: dto.dueDate ? new Date(dto.dueDate) : undefined,
     });
   }
 
@@ -85,8 +90,8 @@ export class HealthController {
   // ─── Fitness ──────────────────────────────────────────────────────────────────
 
   @Post("fitness")
-  recordFitness(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.svc.recordFitness({ ...body, recordedBy: req.user.id });
+  recordFitness(@Req() req: Request & { user: RequestUser }, @Body() dto: RecordFitnessDto) {
+    return this.svc.recordFitness({ ...dto, recordedBy: req.user.id });
   }
 
   @Get("fitness/:studentId")
@@ -97,10 +102,10 @@ export class HealthController {
   // ─── AED ──────────────────────────────────────────────────────────────────────
 
   @Post("aed")
-  createAed(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  createAed(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateAedDto) {
     return this.svc.upsertAed(req.user.schoolId!, {
-      ...body,
-      padExpiryDate: body.padExpiryDate ? new Date(body.padExpiryDate) : undefined,
+      ...dto,
+      padExpiryDate: dto.padExpiryDate ? new Date(dto.padExpiryDate) : undefined,
     });
   }
 
@@ -112,11 +117,11 @@ export class HealthController {
   // ─── Counselling ──────────────────────────────────────────────────────────────
 
   @Post("counselling")
-  createSession(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  createSession(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateCounsellingSessionDto) {
     return this.svc.createCounsellingSession(req.user.schoolId!, {
-      ...body,
+      ...dto,
       counsellorId: req.user.id,
-      nextSession: body.nextSession ? new Date(body.nextSession) : undefined,
+      nextSession: dto.nextSession ? new Date(dto.nextSession) : undefined,
     });
   }
 
@@ -128,8 +133,8 @@ export class HealthController {
   // ─── Discipline ───────────────────────────────────────────────────────────────
 
   @Post("discipline")
-  recordDiscipline(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.svc.recordDisciplineIncident(req.user.schoolId!, { ...body, recordedBy: req.user.id });
+  recordDiscipline(@Req() req: Request & { user: RequestUser }, @Body() dto: RecordDisciplineDto) {
+    return this.svc.recordDisciplineIncident(req.user.schoolId!, { ...dto, recordedBy: req.user.id });
   }
 
   @Get("discipline")

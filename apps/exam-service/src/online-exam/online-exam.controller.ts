@@ -9,6 +9,7 @@ import type { RequestUser } from "@school-erp/types";
 import { QuestionBankService } from "./question-bank.service";
 import { TestBuilderService } from "./test-builder.service";
 import { TestDeliveryService } from "./test-delivery.service";
+import { CreateQuestionDto, UpdateQuestionDto, CreateOnlineTestDto, SaveAnswerDto, SubmitManualScoreDto } from "./dto/online-exam.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("online-exam")
@@ -22,8 +23,8 @@ export class OnlineExamController {
   // ─── Question Bank ──────────────────────────────────────────────────────────
 
   @Post("questions")
-  createQuestion(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.qb.createQuestion(req.user.schoolId!, body);
+  createQuestion(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateQuestionDto) {
+    return this.qb.createQuestion(req.user.schoolId!, dto);
   }
 
   @Get("questions")
@@ -56,8 +57,8 @@ export class OnlineExamController {
   }
 
   @Put("questions/:id")
-  updateQuestion(@Param("id") id: string, @Body() body: any) {
-    return this.qb.updateQuestion(id, body);
+  updateQuestion(@Param("id") id: string, @Body() dto: UpdateQuestionDto) {
+    return this.qb.updateQuestion(id, dto);
   }
 
   @Delete("questions/:id")
@@ -74,8 +75,8 @@ export class OnlineExamController {
   // ─── Online Tests ────────────────────────────────────────────────────────────
 
   @Post("tests")
-  createTest(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.tb.createOnlineTest(req.user.schoolId!, body);
+  createTest(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateOnlineTestDto) {
+    return this.tb.createOnlineTest(req.user.schoolId!, dto);
   }
 
   @Get("tests")
@@ -139,8 +140,8 @@ export class OnlineExamController {
   }
 
   @Post("attempts/:attemptId/answer")
-  saveAnswer(@Param("attemptId") attemptId: string, @Body() body: any) {
-    return this.td.saveAnswer(attemptId, body);
+  saveAnswer(@Param("attemptId") attemptId: string, @Body() dto: SaveAnswerDto) {
+    return this.td.saveAnswer(attemptId, dto);
   }
 
   @Post("attempts/:attemptId/tab-switch")
@@ -161,8 +162,8 @@ export class OnlineExamController {
   }
 
   @Post("review/:answerId/score")
-  submitManualScore(@Param("answerId") answerId: string, @Body() body: any) {
-    return this.td.submitManualScore(answerId, body);
+  submitManualScore(@Param("answerId") answerId: string, @Body() dto: SubmitManualScoreDto) {
+    return this.td.submitManualScore(answerId, dto);
   }
 
   @Get("health")

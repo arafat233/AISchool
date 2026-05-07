@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { Worker, Job } from "bullmq";
+import { Worker, Job, Queue } from "bullmq";
 import { createLogger } from "@school-erp/logger";
 import { QUEUES } from "@school-erp/events";
 import { SmsAdapter } from "../adapters/sms.adapter";
 import { EmailAdapter } from "../adapters/email.adapter";
 import { PushAdapter } from "../adapters/push.adapter";
 import { WhatsappAdapter } from "../adapters/whatsapp.adapter";
+import axios from "axios";
 
 @Injectable()
 export class NotificationProcessor {
@@ -48,7 +49,34 @@ export class NotificationProcessor {
     new Worker(QUEUES.ATTENDANCE_ALERT, async (job: Job) => {
       const { absentStudentIds, date } = job.data;
       this.logger.log(`Processing absent alerts for ${absentStudentIds.length} students on ${date}`);
-      // TODO: fetch parent contacts and enqueue SMS/WhatsApp jobs
+
+      const studentServiceUrl = process.env.STUDENT_SERVICE_URL ?? "http://student-service:3002";
+      const smsQueue = new Queue(QUEUES.SMS, { connection });
+      const whatsappQueue = new Queue(QUEUES.WHATSAPP, { connection });
+
+      for (const studentId of (absentStudentIds as string[])) {
+        let parentContacts: Array<{ phone: string; name: string }> = [];
+        try {
+          const res = await axios.get(`${studentServiceUrl}/internal/students/${studentId}/parent-contacts`);
+          parentContacts = res.data ?? [];
+        } catch {
+          this.logger.warn(`Could not fetch parent contacts for student ${studentId} — skipping`);
+        }
+
+        for (const contact of parentContacts) {
+          const message = `Attendance Alert: Your child was marked absent on ${date}. Please contact the school if this is incorrect.`;
+
+          await smsQueue.add("send-sms", { to: contact.phone, message }, { attempts: 3, backoff: { type: "exponential", delay: 5000 } });
+
+          await whatsappQueue.add("send-whatsapp", {
+            to: contact.phone,
+            templateName: "attendance_alert",
+            params: { name: contact.name, date },
+          }, { attempts: 3, backoff: { type: "exponential", delay: 5000 } });
+
+          this.logger.log(`Enqueued SMS/WhatsApp for parent ${contact.phone} (student ${studentId})`);
+        }
+      }
     }, { connection });
 
     new Worker(QUEUES.FEE_PAYMENT_RECEIVED, async (job: Job) => {

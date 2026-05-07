@@ -6,6 +6,7 @@ import { AuthGuard } from "@nestjs/passport";
 import type { Request, Response } from "express";
 import type { RequestUser } from "@school-erp/types";
 import { ExamService, ExamStatus, ExamType } from "./exam.service";
+import { CreateExamScheduleDto, ApplyGraceDto, UpsertGracePolicyDto, UpsertGradingConfigDto } from "./dto/exam.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("exam")
@@ -47,8 +48,8 @@ export class ExamController {
   // ─── Schedule ────────────────────────────────────────────────────────────────
 
   @Post(":id/schedule")
-  createSchedule(@Param("id") examId: string, @Body() body: any) {
-    return this.svc.createScheduleEntry({ ...body, examId });
+  createSchedule(@Param("id") examId: string, @Body() dto: CreateExamScheduleDto) {
+    return this.svc.createScheduleEntry({ ...dto, examId });
   }
 
   @Get(":id/schedule")
@@ -101,20 +102,20 @@ export class ExamController {
   // ─── Grace Marks ─────────────────────────────────────────────────────────────
 
   @Post(":id/grace-marks")
-  applyGrace(@Param("id") examId: string, @Body() body: any) {
-    return this.svc.applyGraceMarks(examId, body);
+  applyGrace(@Param("id") examId: string, @Body() dto: ApplyGraceDto) {
+    return this.svc.applyGraceMarks(examId, dto);
   }
 
   @Post(":id/grace-policy")
-  upsertGracePolicy(@Param("id") examId: string, @Body() body: any) {
-    return this.svc.upsertGraceMarksPolicy(examId, body);
+  upsertGracePolicy(@Param("id") examId: string, @Body() dto: UpsertGracePolicyDto) {
+    return this.svc.upsertGraceMarksPolicy(examId, dto);
   }
 
   // ─── Grading Config ──────────────────────────────────────────────────────────
 
   @Post("grading-config")
-  upsertGradingConfig(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
-    return this.svc.upsertGradingConfig(req.user.schoolId!, body);
+  upsertGradingConfig(@Req() req: Request & { user: RequestUser }, @Body() dto: UpsertGradingConfigDto) {
+    return this.svc.upsertGradingConfig(req.user.schoolId!, dto);
   }
 
   @Get("grading-config")

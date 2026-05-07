@@ -9,6 +9,7 @@ import { CourseService } from "./course.service";
 import { ProgressService } from "./progress.service";
 import { LiveClassService, MeetingProvider } from "./live-class.service";
 import { SyllabusService, TopicStatus } from "./syllabus.service";
+import { UpdateLessonDto } from "./dto/lms.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("lms")
@@ -67,8 +68,8 @@ export class LmsController {
   }
 
   @Put("lessons/:id")
-  updateLesson(@Param("id") id: string, @Body() body: any) {
-    return this.course.updateLesson(id, body);
+  updateLesson(@Param("id") id: string, @Body() dto: UpdateLessonDto) {
+    return this.course.updateLesson(id, dto);
   }
 
   @Delete("lessons/:id")

@@ -3,6 +3,7 @@ import { AuthGuard } from "@nestjs/passport";
 import type { Request, Response } from "express";
 import type { RequestUser } from "@school-erp/types";
 import { CalendarService } from "./calendar.service";
+import { CreateCalendarEventDto, UpdateCalendarEventDto } from "./dto/calendar.dto";
 
 @Controller("calendar")
 export class CalendarController {
@@ -10,11 +11,11 @@ export class CalendarController {
 
   @UseGuards(AuthGuard("jwt"))
   @Post("events")
-  createEvent(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  createEvent(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateCalendarEventDto) {
     return this.svc.createEvent(req.user.schoolId!, {
-      ...body,
-      date: new Date(body.date),
-      endDate: body.endDate ? new Date(body.endDate) : undefined,
+      ...dto,
+      date: new Date(dto.date),
+      endDate: dto.endDate ? new Date(dto.endDate) : undefined,
       createdBy: req.user.id,
     });
   }
@@ -36,8 +37,8 @@ export class CalendarController {
 
   @UseGuards(AuthGuard("jwt"))
   @Patch("events/:id")
-  updateEvent(@Param("id") id: string, @Body() body: any) {
-    return this.svc.updateEvent(id, body);
+  updateEvent(@Param("id") id: string, @Body() dto: UpdateCalendarEventDto) {
+    return this.svc.updateEvent(id, dto);
   }
 
   @UseGuards(AuthGuard("jwt"))
