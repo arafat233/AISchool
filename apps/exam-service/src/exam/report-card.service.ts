@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { BrowserPoolService } from "../browser/browser-pool.service";
 
 interface HallTicketData {
   exam: any;
@@ -14,9 +15,11 @@ interface ReportCardData {
 
 @Injectable()
 export class ReportCardService {
+  constructor(private readonly browserPool: BrowserPoolService) {}
+
   /**
    * Generates a hall ticket PDF as a Buffer.
-   * Uses Puppeteer to render HTML → PDF in production.
+   * Uses the shared BrowserPoolService (single browser instance, one page per call).
    * Falls back to a structured HTML buffer when Chrome is unavailable (CI / dev without Chromium).
    */
   async generateHallTicketPDF(data: HallTicketData): Promise<Buffer> {
@@ -34,18 +37,9 @@ export class ReportCardService {
 
   private async renderHTMLtoPDF(html: string): Promise<Buffer> {
     try {
-      // Attempt Puppeteer rendering (requires Chrome/Chromium at PUPPETEER_EXECUTABLE_PATH)
-      const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-      if (!executablePath) throw new Error("No Chromium path configured");
-
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const puppeteer = require("puppeteer-core");
-      const browser = await puppeteer.launch({ executablePath, args: ["--no-sandbox", "--disable-setuid-sandbox"] });
-      const page = await browser.newPage();
-      await page.setContent(html, { waitUntil: "networkidle0" });
-      const pdf = await page.pdf({ format: "A4", printBackground: true, margin: { top: "20mm", bottom: "20mm", left: "15mm", right: "15mm" } });
-      await browser.close();
-      return Buffer.from(pdf);
+      return await this.browserPool.renderPdf(html, {
+        margin: { top: "20mm", bottom: "20mm", left: "15mm", right: "15mm" },
+      });
     } catch {
       // Fallback: return the HTML itself as a buffer (renders in browser, useful in dev)
       return Buffer.from(html, "utf-8");

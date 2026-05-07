@@ -114,8 +114,18 @@ async def school_overview(school_id: str, db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/school/{school_id}/attendance", response_model=list[AttendanceHeatmapEntry])
-async def attendance_heatmap(school_id: str, days: int = 30, db: AsyncSession = Depends(get_db)):
-    """Daily attendance % per class for the last N days — used for heatmap charts."""
+async def attendance_heatmap(
+    school_id: str,
+    days: int = 30,
+    skip: int = 0,
+    limit: int = 200,
+    db: AsyncSession = Depends(get_db),
+):
+    """Daily attendance % per class for the last N days — used for heatmap charts.
+
+    Pagination: use `skip` + `limit` (max 500 per page).
+    """
+    limit = min(limit, 500)
     rows = await db.execute(text("""
         SELECT
             ar.date::TEXT AS date,
@@ -131,7 +141,8 @@ async def attendance_heatmap(school_id: str, days: int = 30, db: AsyncSession = 
           AND ar.date >= NOW() - CAST(:days || ' days' AS INTERVAL)
         GROUP BY ar.date, cl.name
         ORDER BY ar.date DESC, cl.name
-    """), {"school_id": school_id, "days": days})
+        LIMIT :limit OFFSET :skip
+    """), {"school_id": school_id, "days": days, "limit": limit, "skip": skip})
 
     return [
         AttendanceHeatmapEntry(
@@ -177,8 +188,17 @@ async def finance_trend(school_id: str, months: int = 12, db: AsyncSession = Dep
 
 
 @router.get("/school/{school_id}/academics", response_model=list[SubjectPerformance])
-async def subject_performance(school_id: str, db: AsyncSession = Depends(get_db)):
-    """Per-subject performance breakdown — avg/pass rate/top/bottom scores."""
+async def subject_performance(
+    school_id: str,
+    skip: int = 0,
+    limit: int = 50,
+    db: AsyncSession = Depends(get_db),
+):
+    """Per-subject performance breakdown — avg/pass rate/top/bottom scores.
+
+    Pagination: use `skip` + `limit` (max 200 per page).
+    """
+    limit = min(limit, 200)
     rows = await db.execute(text("""
         SELECT
             sub.name AS subject_name,
@@ -197,7 +217,8 @@ async def subject_performance(school_id: str, db: AsyncSession = Depends(get_db)
         WHERE s.school_id = :school_id
         GROUP BY sub.name
         ORDER BY avg_score_pct DESC
-    """), {"school_id": school_id})
+        LIMIT :limit OFFSET :skip
+    """), {"school_id": school_id, "limit": limit, "skip": skip})
 
     return [
         SubjectPerformance(

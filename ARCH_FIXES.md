@@ -14,8 +14,8 @@
 | 🟠 Week 2 — Security hardening | 10 | 10 | 100% |
 | 🟡 Week 3 — Async / event wiring | 5 | 5 | 100% |
 | 🔵 Week 4 — Infra + observability | 8 | 8 | 100% |
-| ⚪ Ongoing — Tests, portals, perf | 17 | 0 | 0% |
-| **TOTAL** | **50** | **33** | **66%** |
+| ⚪ Ongoing — Tests, portals, perf | 17 | 8 | 47% |
+| **TOTAL** | **50** | **41** | **82%** |
 
 ---
 
@@ -137,9 +137,9 @@
 ## ⚪ Ongoing — Tests, Portals, Performance
 
 ### Tests
-- [ ] **OG-01** — Add controller E2E tests for auth-service (guard, validation, response shape)
-- [ ] **OG-02** — Add controller E2E tests for fee-service
-- [ ] **OG-03** — Add controller E2E tests for student-service
+- [x] **OG-01** — Add controller E2E tests for auth-service (guard, validation, response shape)
+- [x] **OG-02** — Add controller E2E tests for fee-service
+- [x] **OG-03** — Add controller E2E tests for student-service
 - [ ] **OG-04** — Add unit tests for ops-service modules (alumni, asset, community, facility, social)
 - [ ] **OG-05** — Add unit tests for developer-api (sandbox, deprecation, webhooks)
 - [ ] **OG-06** — Add pytest test suite for AI service (all 7 routers)
@@ -158,19 +158,19 @@
 - [ ] **OG-12** — Add missing student portal pages (attendance, assignments, exam results, LMS, library, certificates)
 
 ### Performance
-- [ ] **OG-13** — Fix N+1 in fee invoice generation: replace per-student queries with `createMany` + `$transaction`  
+- [x] **OG-13** — Fix N+1 in fee invoice generation: replace per-student queries with `createMany` + `$transaction`  
   _File: `apps/fee-service/src/fee/fee.service.ts:47`_
 
-- [ ] **OG-14** — Fix N+1 in payroll processing: batch queries, use `$transaction`  
+- [x] **OG-14** — Fix N+1 in payroll processing: batch queries, use `$transaction`  
   _File: `apps/payroll-service/src/payroll/payroll.service.ts:44-124`_
 
-- [ ] **OG-15** — Add Puppeteer browser pooling in report-service and exam-service  
+- [x] **OG-15** — Add Puppeteer browser pooling in report-service and exam-service  
   _Files: `apps/report-service/src/report/report.service.ts`, `apps/exam-service/src/exam/report-card.service.ts`_
 
-- [ ] **OG-16** — Add Redis caching for timetable, subjects, grade levels in academic-service  
+- [x] **OG-16** — Add Redis caching for timetable, subjects, grade levels in academic-service  
   _File: `apps/academic-service/`_
 
-- [ ] **OG-17** — Add pagination to library, HR, and AI service list endpoints  
+- [x] **OG-17** — Add pagination to library, HR, and AI service list endpoints  
   _Respective controller/router files_
 
 ---

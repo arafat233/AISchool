@@ -45,8 +45,15 @@ export class HrController {
     @Query("departmentId") departmentId?: string,
     @Query("designationId") designationId?: string,
     @Query("status") status?: string,
+    @Query("page") page?: string,
+    @Query("limit") limit?: string,
   ) {
-    return this.staff.listStaff(req.user.schoolId!, { departmentId, designationId, status });
+    return this.staff.listStaff(
+      req.user.schoolId!,
+      { departmentId, designationId, status },
+      page ? Number(page) : 1,
+      limit ? Number(limit) : 20,
+    );
   }
 
   @Get("staff/:id")

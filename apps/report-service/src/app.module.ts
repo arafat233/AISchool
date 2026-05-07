@@ -7,6 +7,7 @@ import { PassportModule } from "@nestjs/passport";
 import { JwtStrategy } from "./guards/jwt.strategy";
 import { ReportController } from "./report/report.controller";
 import { ReportService } from "./report/report.service";
+import { BrowserPoolService } from "./browser/browser-pool.service";
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { ReportService } from "./report/report.service";
     PassportModule,
   ],
   controllers: [ReportController],
-  providers: [ReportService, JwtStrategy, { provide: APP_GUARD, useClass: ThrottlerGuard }],
+  providers: [BrowserPoolService, ReportService, JwtStrategy, { provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}

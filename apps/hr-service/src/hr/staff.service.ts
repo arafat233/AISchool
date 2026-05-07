@@ -82,17 +82,29 @@ export class StaffService {
     };
   }
 
-  async listStaff(schoolId: string, filters?: { departmentId?: string; designationId?: string; status?: string }) {
-    return this.prisma.staff.findMany({
-      where: {
-        schoolId,
-        ...(filters?.departmentId ? { departmentId: filters.departmentId } : {}),
-        ...(filters?.designationId ? { designationId: filters.designationId } : {}),
-        ...(filters?.status ? { status: filters.status as any } : {}),
-      },
-      include: { user: { include: { profile: true } }, designation: true, department: true },
-      orderBy: { joinDate: "desc" },
-    });
+  async listStaff(
+    schoolId: string,
+    filters?: { departmentId?: string; designationId?: string; status?: string },
+    page = 1,
+    limit = 20,
+  ) {
+    const take = Math.min(limit, 100);
+    const skip = (page - 1) * take;
+    const where = {
+      schoolId,
+      ...(filters?.departmentId ? { departmentId: filters.departmentId } : {}),
+      ...(filters?.designationId ? { designationId: filters.designationId } : {}),
+      ...(filters?.status ? { status: filters.status as any } : {}),
+    };
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.staff.findMany({
+        where, skip, take,
+        include: { user: { include: { profile: true } }, designation: true, department: true },
+        orderBy: { joinDate: "desc" },
+      }),
+      this.prisma.staff.count({ where }),
+    ]);
+    return { data, total, page, limit: take, totalPages: Math.ceil(total / take) };
   }
 
   // ─── Document upload ─────────────────────────────────────────────────────────

@@ -38,8 +38,32 @@ export class PayrollService {
 
     const workingDays = options.workingDays ?? 26;
     const stateCode = options.stateCode ?? "DEFAULT";
+    const staffIds = staff.map((s) => s.id);
+
+    const monthStart = new Date(run.year, run.month - 1, 1);
+    const monthEnd = new Date(run.year, run.month, 1);
+
+    // Batch-fetch LOP attendance counts for all staff (avoids N aggregate queries)
+    const lopCounts = await this.prisma.staffAttendance.groupBy({
+      by: ["staffId"],
+      where: { staffId: { in: staffIds }, date: { gte: monthStart, lt: monthEnd }, status: "ABSENT" },
+      _count: { _all: true },
+    });
+    const lopMap = new Map(lopCounts.map((r) => [r.staffId, r._count._all]));
+
+    // Batch-fetch all active salary advances for all staff
+    const allAdvances = await this.prisma.salaryAdvance.findMany({
+      where: { staffId: { in: staffIds }, status: "ACTIVE" },
+    });
+    const advancesByStaff = new Map<string, typeof allAdvances>();
+    for (const adv of allAdvances) {
+      const list = advancesByStaff.get(adv.staffId) ?? [];
+      list.push(adv);
+      advancesByStaff.set(adv.staffId, list);
+    }
 
     const payslips: any[] = [];
+    const advanceUpdates: Array<{ id: string; outstandingAmount: number; status: string }> = [];
 
     for (const s of staff) {
       try {
@@ -47,34 +71,22 @@ export class PayrollService {
         const basicComp = components.find((c: any) => c.name === "Basic");
         const basicAmount = basicComp ? +basicComp.value : 0;
 
-        // Salary components
         const salaryResult = this.structure.computeSalary(components, basicAmount);
 
-        // LOP days from attendance
-        const lopRecord = await this.prisma.staffAttendance.aggregate({
-          where: { staffId: s.id, date: { gte: new Date(run.year, run.month - 1, 1), lt: new Date(run.year, run.month, 1) }, status: "ABSENT" },
-          _count: true,
-        });
-        const lopDays = lopRecord._count;
-
+        const lopDays = lopMap.get(s.id) ?? 0;
         const lopDeduction = computeLOPDeduction(salaryResult.gross, workingDays, lopDays);
         const grossAfterLop = +(salaryResult.gross - lopDeduction).toFixed(2);
 
-        // Statutory deductions
         const pf = computePF(+(salaryResult.earnings["Basic"] ?? basicAmount));
         const esi = computeESI(grossAfterLop);
         const pt = computeProfessionalTax(grossAfterLop, stateCode);
         const tds = computeMonthlyTDS(grossAfterLop * 12);
 
-        // Salary advances EMI deduction
-        const advances = await this.prisma.salaryAdvance.findMany({
-          where: { staffId: s.id, status: "ACTIVE" },
-        });
+        const advances = advancesByStaff.get(s.id) ?? [];
         const advanceDed = advances.reduce((sum: number, a: any) => sum + (a.emiAmount ?? 0), 0);
 
         const totalDeductions = +(
-          salaryResult.totalDeductions +
-          lopDeduction +
+          salaryResult.totalDeductions + lopDeduction +
           pf.employeeContribution +
           (esi.applicable ? esi.employeeContribution : 0) +
           pt + tds + advanceDed
@@ -99,29 +111,34 @@ export class PayrollService {
           },
         };
 
-        const payslip = await this.prisma.payslip.upsert({
-          where: { payrollRunId_staffId: { payrollRunId: runId, staffId: s.id } },
-          update: { workingDays, presentDays: workingDays - lopDays, lopDays, grossSalary: grossAfterLop, deductions: totalDeductions, netSalary, breakdown },
-          create: { payrollRunId: runId, staffId: s.id, workingDays, presentDays: workingDays - lopDays, lopDays, grossSalary: grossAfterLop, deductions: totalDeductions, netSalary, breakdown },
-        });
+        payslips.push({ staffId: s.id, workingDays, presentDays: workingDays - lopDays, lopDays, grossSalary: grossAfterLop, deductions: totalDeductions, netSalary, breakdown });
 
-        payslips.push(payslip);
-
-        // Deduct advance EMIs
+        // Queue advance EMI updates for batch execution
         for (const a of advances) {
           const remaining = (a.outstandingAmount ?? 0) - (a.emiAmount ?? 0);
-          await this.prisma.salaryAdvance.update({
-            where: { id: a.id },
-            data: {
-              outstandingAmount: remaining,
-              status: remaining <= 0 ? "CLOSED" : "ACTIVE",
-            },
-          });
+          advanceUpdates.push({ id: a.id, outstandingAmount: remaining, status: remaining <= 0 ? "CLOSED" : "ACTIVE" });
         }
       } catch {
         // Skip this staff member's error, continue processing
       }
     }
+
+    // Batch upsert payslips + advance updates in a single transaction
+    await this.prisma.$transaction([
+      ...payslips.map((p) =>
+        this.prisma.payslip.upsert({
+          where: { payrollRunId_staffId: { payrollRunId: runId, staffId: p.staffId } },
+          update: { workingDays: p.workingDays, presentDays: p.presentDays, lopDays: p.lopDays, grossSalary: p.grossSalary, deductions: p.deductions, netSalary: p.netSalary, breakdown: p.breakdown },
+          create: { payrollRunId: runId, ...p },
+        }),
+      ),
+      ...advanceUpdates.map((u) =>
+        this.prisma.salaryAdvance.update({
+          where: { id: u.id },
+          data: { outstandingAmount: u.outstandingAmount, status: u.status as any },
+        }),
+      ),
+    ]);
 
     const totals = payslips.reduce((acc, p) => ({
       totalGross: acc.totalGross + +p.grossSalary,

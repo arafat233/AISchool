@@ -6,10 +6,11 @@ import { ExamService } from "./exam.service";
 import { GradingService } from "./grading.service";
 import { ReportCardService } from "./report-card.service";
 import { JwtStrategy } from "../guards/jwt.strategy";
+import { BrowserPoolService } from "../browser/browser-pool.service";
 
 @Module({
   imports: [PassportModule.register({ defaultStrategy: "jwt" }), JwtModule.register({})],
   controllers: [ExamController],
-  providers: [ExamService, GradingService, ReportCardService, JwtStrategy],
+  providers: [BrowserPoolService, ExamService, GradingService, ReportCardService, JwtStrategy],
 })
 export class ExamModule {}

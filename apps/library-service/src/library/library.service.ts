@@ -24,17 +24,21 @@ export class LibraryService {
     return this.prisma.book.update({ where: { id: bookId }, data });
   }
 
-  async searchBooks(schoolId: string, q?: string, category?: string, author?: string) {
-    return this.prisma.book.findMany({
-      where: {
-        schoolId,
-        isActive: true,
-        ...(q ? { OR: [{ title: { contains: q, mode: "insensitive" } }, { isbn: { contains: q } }, { barcode: { contains: q } }] } : {}),
-        ...(category ? { category } : {}),
-        ...(author ? { author: { contains: author, mode: "insensitive" } } : {}),
-      },
-      orderBy: { title: "asc" },
-    });
+  async searchBooks(schoolId: string, q?: string, category?: string, author?: string, page = 1, limit = 20) {
+    const take = Math.min(limit, 100);
+    const skip = (page - 1) * take;
+    const where = {
+      schoolId,
+      isActive: true,
+      ...(q ? { OR: [{ title: { contains: q, mode: "insensitive" as const } }, { isbn: { contains: q } }, { barcode: { contains: q } }] } : {}),
+      ...(category ? { category } : {}),
+      ...(author ? { author: { contains: author, mode: "insensitive" as const } } : {}),
+    };
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.book.findMany({ where, skip, take, orderBy: { title: "asc" } }),
+      this.prisma.book.count({ where }),
+    ]);
+    return { data, total, page, limit: take, totalPages: Math.ceil(total / take) };
   }
 
   // ─── [2/12] RFID/barcode issue and return ─────────────────────────────────

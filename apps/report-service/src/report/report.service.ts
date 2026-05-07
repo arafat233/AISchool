@@ -1,21 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
-
-// ─── PDF Engine ───────────────────────────────────────────────────────────────
-// Puppeteer is used in headless mode to convert HTML templates to PDF.
-// We use a thin wrapper so the actual chromium path can be injected via env.
-async function renderPdf(html: string): Promise<Buffer> {
-  // Dynamic import so build succeeds even if puppeteer-core is not installed in dev
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const puppeteer = require("puppeteer-core");
-  const executablePath = process.env.CHROMIUM_PATH ?? "/usr/bin/chromium-browser";
-  const browser = await puppeteer.launch({ executablePath, args: ["--no-sandbox", "--disable-setuid-sandbox"] });
-  const page = await browser.newPage();
-  await page.setContent(html, { waitUntil: "networkidle0" });
-  const pdf = await page.pdf({ format: "A4", printBackground: true });
-  await browser.close();
-  return Buffer.from(pdf);
-}
+import { BrowserPoolService } from "../browser/browser-pool.service";
 
 // ─── Excel Engine ─────────────────────────────────────────────────────────────
 async function buildExcel(sheetName: string, columns: string[], rows: any[][]): Promise<Buffer> {
@@ -42,7 +27,10 @@ ${rows.map((r) => `<tr>${r.map((c) => `<td>${c ?? ""}</td>`).join("")}</tr>`).jo
 
 @Injectable()
 export class ReportService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly browserPool: BrowserPoolService,
+  ) {}
 
   // ═══════════════════════════════════════════════════════════════════════════
   // [1] ATTENDANCE REPORTS
@@ -76,7 +64,7 @@ export class ReportService {
     if (format === "excel") return buildExcel("Attendance Summary", cols, dataRows);
 
     const html = wrap(`Attendance Summary (${fromDate.toDateString()} – ${toDate.toDateString()})`, table(cols, dataRows));
-    return renderPdf(html);
+    return this.browserPool.renderPdf(html);
   }
 
   async getDefaulterList(schoolId: string, threshold = 75) {
@@ -118,7 +106,7 @@ export class ReportService {
     if (format === "excel") return buildExcel("Fee Collection", cols, dataRows);
 
     const html = wrap(`Fee Collection Report (${fromDate.toDateString()} – ${toDate.toDateString()})`, table(cols, dataRows));
-    return renderPdf(html);
+    return this.browserPool.renderPdf(html);
   }
 
   async getFeeDefaulterReport(schoolId: string) {
@@ -180,7 +168,7 @@ export class ReportService {
     if (format === "excel") return buildExcel("Class Results", cols, dataRows);
 
     const html = wrap("Class Result Report", table(cols, dataRows));
-    return renderPdf(html);
+    return this.browserPool.renderPdf(html);
   }
 
   async getReportCard(studentId: string, examId: string): Promise<Buffer> {
@@ -206,7 +194,7 @@ export class ReportService {
       </table>
       <p style="margin-top:40px">Class Teacher Signature: _______________</p>
     `);
-    return renderPdf(html);
+    return this.browserPool.renderPdf(html);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -261,7 +249,7 @@ export class ReportService {
       </table>
       <p style="margin-top:40px">HR Signature: _______________ &nbsp;&nbsp; Employee Signature: _______________</p>
     `);
-    return renderPdf(html);
+    return this.browserPool.renderPdf(html);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -301,7 +289,7 @@ export class ReportService {
     if (format === "excel") return buildExcel(title ?? model, cols, rows);
 
     const html = wrap(title ?? model, table(cols, rows));
-    return renderPdf(html);
+    return this.browserPool.renderPdf(html);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -458,6 +446,6 @@ export class ReportService {
       <p>Payment Method: ${payment.paymentMethod} &nbsp;|&nbsp; Txn Ref: ${payment.txnRef ?? "N/A"}</p>
       <p style="margin-top:40px">Authorised Signatory: _______________</p>
     `);
-    return renderPdf(html);
+    return this.browserPool.renderPdf(html);
   }
 }

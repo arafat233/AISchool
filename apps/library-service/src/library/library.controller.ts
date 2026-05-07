@@ -21,8 +21,15 @@ export class LibraryController {
   }
 
   @Get(":schoolId/books")
-  searchBooks(@Param("schoolId") schoolId: string, @Query("q") q?: string, @Query("category") category?: string, @Query("author") author?: string) {
-    return this.svc.searchBooks(schoolId, q, category, author);
+  searchBooks(
+    @Param("schoolId") schoolId: string,
+    @Query("q") q?: string,
+    @Query("category") category?: string,
+    @Query("author") author?: string,
+    @Query("page") page?: string,
+    @Query("limit") limit?: string,
+  ) {
+    return this.svc.searchBooks(schoolId, q, category, author, page ? Number(page) : 1, limit ? Number(limit) : 20);
   }
 
   // ─── Issue / return ───────────────────────────────────────────────────────

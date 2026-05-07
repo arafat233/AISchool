@@ -49,34 +49,57 @@ export class FeeService {
 
   // ─── Invoice Generation ───────────────────────────────────────────────────
   async generateInvoicesForSection(schoolId: string, sectionId: string, academicYearId: string, termId?: string) {
-    const students = await this.prisma.student.findMany({ where: { schoolId, sectionId }, include: { section: { include: { gradeLevel: true } } } });
+    const students = await this.prisma.student.findMany({
+      where: { schoolId, sectionId },
+      include: { section: { include: { gradeLevel: true } } },
+    });
+    if (students.length === 0) return { generated: 0 };
+
     const feeStructures = await this.prisma.feeStructure.findMany({
-      where: { schoolId, academicYearId, gradeLevelId: students[0]?.section.gradeLevelId },
+      where: { schoolId, academicYearId, gradeLevelId: students[0].section.gradeLevelId },
       include: { feeHead: true },
     });
+    if (feeStructures.length === 0) return { generated: 0 };
 
-    const invoices = await Promise.all(
-      students.map(async (student) => {
-        const existing = await this.prisma.feeInvoice.findFirst({ where: { studentId: student.id, academicYearId, ...(termId ? { termId } : {}) } });
-        if (existing) return existing;
+    // Batch-fetch existing invoices (avoids N per-student queries)
+    const studentIds = students.map((s) => s.id);
+    const existing = await this.prisma.feeInvoice.findMany({
+      where: { studentId: { in: studentIds }, academicYearId, ...(termId ? { termId } : {}) },
+      select: { studentId: true },
+    });
+    const alreadyProvisioned = new Set(existing.map((e) => e.studentId));
+    const newStudents = students.filter((s) => !alreadyProvisioned.has(s.id));
 
-        const totalAmount = feeStructures.reduce((sum, fs) => sum + fs.amount, 0);
-        return this.prisma.feeInvoice.create({
+    if (newStudents.length === 0) return { generated: 0 };
+
+    const totalAmount = feeStructures.reduce((sum, fs) => sum + fs.amount, 0);
+    const dueDate = feeStructures[0].dueDate ?? new Date();
+
+    // Create all invoices + items in a single transaction
+    await this.prisma.$transaction(
+      newStudents.map((student) =>
+        this.prisma.feeInvoice.create({
           data: {
             schoolId,
             studentId: student.id,
             academicYearId,
             termId,
             totalAmount,
-            dueDate: feeStructures[0]?.dueDate ?? new Date(),
+            dueDate,
             items: {
-              create: feeStructures.map((fs) => ({ feeHeadId: fs.feeHeadId, amount: fs.amount, description: fs.feeHead.name })),
+              create: feeStructures.map((fs) => ({
+                feeHeadId: fs.feeHeadId,
+                amount: fs.amount,
+                description: fs.feeHead.name,
+              })),
             },
           },
-        });
-      }),
+          select: { id: true },
+        }),
+      ),
     );
-    return { generated: invoices.length };
+
+    return { generated: newStudents.length };
   }
 
   // ─── Payments ─────────────────────────────────────────────────────────────
