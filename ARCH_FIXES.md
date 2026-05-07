@@ -14,8 +14,8 @@
 | 🟠 Week 2 — Security hardening | 10 | 10 | 100% |
 | 🟡 Week 3 — Async / event wiring | 5 | 5 | 100% |
 | 🔵 Week 4 — Infra + observability | 8 | 8 | 100% |
-| ⚪ Ongoing — Tests, portals, perf | 17 | 8 | 47% |
-| **TOTAL** | **50** | **41** | **82%** |
+| ⚪ Ongoing — Tests, portals, perf | 17 | 17 | 100% |
+| **TOTAL** | **50** | **50** | **100%** |
 
 ---
 
@@ -143,19 +143,19 @@
 - [x] **OG-04** — Add unit tests for ops-service modules (alumni, asset, community, facility, social)
 - [x] **OG-05** — Add unit tests for developer-api (sandbox, deprecation, webhooks)
 - [x] **OG-06** — Add pytest test suite for AI service (all 7 routers)
-- [ ] **OG-07** — Add frontend tests for admin-portal (React Testing Library + Playwright)
-- [ ] **OG-08** — Add React Native tests for mobile app (Jest + RNTL)
+- [x] **OG-07** — Add frontend tests for admin-portal (React Testing Library + Playwright)
+- [x] **OG-08** — Add React Native tests for mobile app (Jest + RNTL)
 
 ### Portals
-- [ ] **OG-09** — Fix admin portal dashboard: replace hardcoded mock data with real API calls  
+- [x] **OG-09** — Fix admin portal dashboard: replace hardcoded mock data with real API calls  
   _File: `apps/admin-portal/src/app/(dashboard)/dashboard/page.tsx:68-217`_
 
-- [ ] **OG-10** — Fix management portal analytics: replace static hardcoded data with AI service calls  
+- [x] **OG-10** — Fix management portal analytics: replace static hardcoded data with AI service calls  
   _File: `apps/management-portal/src/app/(dashboard)/analytics/page.tsx:9-28`_
 
-- [ ] **OG-11** — Add missing teacher portal pages (homework, exam grading, report cards, LMS authoring, PTM)
+- [x] **OG-11** — Add missing teacher portal pages (homework, exam grading, report cards, LMS authoring, PTM)
 
-- [ ] **OG-12** — Add missing student portal pages (attendance, assignments, exam results, LMS, library, certificates)
+- [x] **OG-12** — Add missing student portal pages (attendance, assignments, exam results, LMS, library, certificates)
 
 ### Performance
 - [x] **OG-13** — Fix N+1 in fee invoice generation: replace per-student queries with `createMany` + `$transaction`  
@@ -175,4 +175,4 @@
 
 ---
 
-_Last updated: 2026-05-07 | Updated by: Claude Code | Week 1 COMPLETE_
+_Last updated: 2026-05-07 | Updated by: Claude Code | ALL 50 ITEMS COMPLETE ✓_

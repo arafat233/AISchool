@@ -11,7 +11,10 @@
     "build:ios": "eas build --platform ios",
     "build:preview": "eas build --profile preview",
     "update": "eas update --branch production",
-    "lint": "eslint src --ext .ts,.tsx"
+    "lint": "eslint src --ext .ts,.tsx",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
@@ -52,8 +55,24 @@
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@school-erp/tsconfig": "workspace:*",
+    "@testing-library/react-native": "^12.7.2",
+    "@types/jest": "^29.5.14",
     "@types/react": "~18.2.79",
     "@types/react-native": "~0.73.0",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-expo": "~51.0.3",
     "typescript": "^5.3.3"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "setupFilesAfterEnv": ["@testing-library/jest-native/extend-expect"],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
+    ],
+    "moduleNameMapper": {
+      "^expo-secure-store$": "<rootDir>/__mocks__/expo-secure-store.ts",
+      "^axios$": "<rootDir>/__mocks__/axios.ts"
+    }
   }
 }

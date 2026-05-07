@@ -12,6 +12,11 @@ import {
   LogOut,
   ChevronRight,
   X,
+  BookMarked,
+  ClipboardCheck,
+  Award,
+  Layers,
+  CalendarDays,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLogout } from "@/hooks/use-auth";
@@ -22,6 +27,11 @@ const NAV = [
   { label: "Attendance", href: "/attendance", icon: ClipboardList },
   { label: "Timetable", href: "/timetable", icon: Calendar },
   { label: "My Classes", href: "/classes", icon: BookOpen },
+  { label: "Homework", href: "/homework", icon: BookMarked },
+  { label: "Exam Grading", href: "/exam-grading", icon: ClipboardCheck },
+  { label: "Report Cards", href: "/report-cards", icon: Award },
+  { label: "LMS", href: "/lms", icon: Layers },
+  { label: "PTM", href: "/ptm", icon: CalendarDays },
   { label: "Leave", href: "/leave", icon: FileText },
 ];
 

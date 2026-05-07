@@ -10,7 +10,6 @@ import {
   TrendingUp,
   GraduationCap,
   ClipboardCheck,
-  AlertTriangle,
 } from "lucide-react";
 import {
   BarChart,
@@ -28,10 +27,23 @@ interface DashboardStats {
   totalStudents: number;
   activeStudents: number;
   totalStaff: number;
+  teachingStaff: number;
+  nonTeachingStaff: number;
   todayAttendance: number;
   outstandingFees: number;
   collectedThisMonth: number;
   belowThresholdCount: number;
+}
+
+interface WeeklyAttendanceEntry {
+  day: string;
+  present: number;
+  absent: number;
+}
+
+interface FeeCollectionEntry {
+  month: string;
+  collected: number;
 }
 
 type StatVariant = "default" | "success" | "warning" | "danger";
@@ -65,23 +77,6 @@ function StatItem({
   );
 }
 
-const MOCK_ATTENDANCE = [
-  { day: "Mon", present: 420, absent: 30 },
-  { day: "Tue", present: 410, absent: 40 },
-  { day: "Wed", present: 435, absent: 15 },
-  { day: "Thu", present: 405, absent: 45 },
-  { day: "Fri", present: 390, absent: 60 },
-];
-
-const MOCK_FEE_TREND = [
-  { month: "Jan", collected: 1200000 },
-  { month: "Feb", collected: 980000 },
-  { month: "Mar", collected: 1450000 },
-  { month: "Apr", collected: 1100000 },
-  { month: "May", collected: 1600000 },
-  { month: "Jun", collected: 1350000 },
-];
-
 const QUICK_ACTIONS = [
   { label: "Add Student", href: "/students/new", icon: GraduationCap },
   { label: "Mark Attendance", href: "/attendance", icon: ClipboardCheck },
@@ -97,11 +92,31 @@ export default function DashboardPage() {
       totalStudents: 450,
       activeStudents: 442,
       totalStaff: 38,
+      teachingStaff: 28,
+      nonTeachingStaff: 10,
       todayAttendance: 87,
       outstandingFees: 320000,
       collectedThisMonth: 1350000,
       belowThresholdCount: 12,
     },
+  });
+
+  const { data: weeklyAttendance = [] } = useQuery<WeeklyAttendanceEntry[]>({
+    queryKey: ["dashboard-weekly-attendance"],
+    queryFn: () => api.get("/admin/dashboard/weekly-attendance").then((r) => r.data),
+    placeholderData: [
+      { day: "Mon", present: 0, absent: 0 },
+      { day: "Tue", present: 0, absent: 0 },
+      { day: "Wed", present: 0, absent: 0 },
+      { day: "Thu", present: 0, absent: 0 },
+      { day: "Fri", present: 0, absent: 0 },
+    ],
+  });
+
+  const { data: feeTrend = [] } = useQuery<FeeCollectionEntry[]>({
+    queryKey: ["dashboard-fee-trend"],
+    queryFn: () => api.get("/admin/dashboard/fee-trend").then((r) => r.data),
+    placeholderData: [],
   });
 
   return (
@@ -140,7 +155,7 @@ export default function DashboardPage() {
           <h3 className="text-sm font-semibold text-foreground mb-4">This Week&apos;s Attendance</h3>
           <div className="h-48 md:h-52">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={MOCK_ATTENDANCE} barSize={24}>
+              <BarChart data={weeklyAttendance} barSize={24}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
                 <XAxis dataKey="day" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
@@ -156,7 +171,7 @@ export default function DashboardPage() {
           <h3 className="text-sm font-semibold text-foreground mb-4">Fee Collection Trend</h3>
           <div className="h-48 md:h-52">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={MOCK_FEE_TREND}>
+              <LineChart data={feeTrend}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
                 <XAxis dataKey="month" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis
@@ -209,11 +224,11 @@ export default function DashboardPage() {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Teachers</span>
-              <span className="font-semibold text-foreground tabular-nums">28</span>
+              <span className="font-semibold text-foreground tabular-nums">{stats?.teachingStaff ?? "—"}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Non-Teaching</span>
-              <span className="font-semibold text-foreground tabular-nums">10</span>
+              <span className="font-semibold text-foreground tabular-nums">{stats?.nonTeachingStaff ?? "—"}</span>
             </div>
           </div>
         </div>

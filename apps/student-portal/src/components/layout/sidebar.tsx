@@ -2,15 +2,35 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { GraduationCap, LayoutDashboard, Calendar, CreditCard, LogOut, ChevronRight, X } from "lucide-react";
+import {
+  GraduationCap,
+  LayoutDashboard,
+  Calendar,
+  CreditCard,
+  LogOut,
+  ChevronRight,
+  X,
+  CalendarDays,
+  ClipboardList,
+  Trophy,
+  BookOpen,
+  Library,
+  Award,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLogout } from "@/hooks/use-auth";
 import { useAuthStore } from "@/store/auth.store";
 
 const NAV = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Timetable", href: "/timetable", icon: Calendar },
-  { label: "Fees", href: "/fees", icon: CreditCard },
+  { label: "Dashboard",   href: "/dashboard",   icon: LayoutDashboard },
+  { label: "Timetable",   href: "/timetable",   icon: Calendar        },
+  { label: "Attendance",  href: "/attendance",  icon: CalendarDays    },
+  { label: "Assignments", href: "/assignments", icon: ClipboardList   },
+  { label: "Results",     href: "/results",     icon: Trophy          },
+  { label: "Courses",     href: "/lms",         icon: BookOpen        },
+  { label: "Library",     href: "/library",     icon: Library         },
+  { label: "Certificates",href: "/certificates",icon: Award           },
+  { label: "Fees",        href: "/fees",        icon: CreditCard      },
 ];
 
 interface SidebarProps {
