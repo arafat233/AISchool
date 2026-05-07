@@ -19,7 +19,8 @@
     "@school-erp/logger": "workspace:*",
     "http-proxy-middleware": "^3.0.3",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "@nestjs/throttler": "^6.2.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.8",

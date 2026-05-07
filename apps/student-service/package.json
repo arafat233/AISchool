@@ -2,7 +2,14 @@
   "name": "@school-erp/student-service",
   "version": "1.0.0",
   "private": true,
-  "scripts": { "dev": "nest start --watch", "build": "nest build", "start": "node dist/main.js", "test": "jest", "test:e2e": "jest --config test/jest-e2e.json" },
+  "scripts": {
+    "dev": "nest start --watch",
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "test": "jest",
+    "test:e2e": "jest --config test/jest-e2e.json",
+    "lint": "eslint src --ext .ts"
+  },
   "dependencies": {
     "@nestjs/common": "^10.4.7",
     "@nestjs/config": "^3.3.0",

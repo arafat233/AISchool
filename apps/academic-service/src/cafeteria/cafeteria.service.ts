@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, ConflictError } from "@school-erp/errors";
 
@@ -7,6 +7,7 @@ const ORDER_CUTOFF_HOUR = 20; // 8 PM
 
 @Injectable()
 export class CafeteriaService {
+  private readonly logger = new Logger(CafeteriaService.name);
   constructor(private readonly prisma: PrismaService) {}
 
   // ─── Menu management ──────────────────────────────────────────────────── [1/8]
@@ -111,7 +112,7 @@ export class CafeteriaService {
     // Low balance alert
     const updatedWallet = await this.prisma.studentWallet.findUnique({ where: { studentId } });
     if (updatedWallet && updatedWallet.balanceRs < updatedWallet.lowBalanceThreshold) {
-      console.log(`[WALLET ALERT] Student ${studentId} wallet low: ₹${updatedWallet.balanceRs}`);
+      this.logger.warn(`Student ${studentId} wallet low: ₹${updatedWallet.balanceRs}`);
       // Production: push to parent
     }
 

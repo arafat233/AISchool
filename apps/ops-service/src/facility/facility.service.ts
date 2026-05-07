@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError } from "@school-erp/errors";
 
@@ -14,6 +14,7 @@ const PM_FREQUENCY: Record<string, number> = {
 
 @Injectable()
 export class FacilityService {
+  private readonly logger = new Logger(FacilityService.name);
   constructor(private readonly prisma: PrismaService) {}
 
   // ─── [1] Maintenance request + auto-assign + SLA ─────────────────────────
@@ -88,7 +89,7 @@ export class FacilityService {
       data: { schoolId, inspectedBy, ...data, escalated: data.score < 60 },
     });
     if (data.score < 60) {
-      console.log(`[FACILITY] Housekeeping score ${data.score} in ${data.area} — escalated to Facility Manager`);
+      this.logger.warn(`Housekeeping score ${data.score} in ${data.area} — escalated to Facility Manager`);
     }
     return rec;
   }
@@ -166,7 +167,7 @@ export class FacilityService {
       data: { schoolId, ...data, isPoolOpen: data.isPoolOpen !== undefined ? data.isPoolOpen : isOpen },
     });
     if (!isOpen) {
-      console.log(`[FACILITY] Pool quality out of range (pH ${data.ph}, Cl ${data.chlorinePpm} ppm) — pool closed automatically`);
+      this.logger.warn(`Pool quality out of range (pH ${data.ph}, Cl ${data.chlorinePpm} ppm) — pool closed automatically`);
     }
     return rec;
   }

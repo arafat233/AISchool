@@ -20,5 +20,8 @@
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
+  },
+  "scripts": {
+    "test": "echo \"No unit tests for ui package\" && exit 0"
   }
 }

@@ -30,7 +30,7 @@ export function startPlagiarismWorker(): Worker {
     PLAGIARISM_QUEUE,
     async (job: Job<PlagiarismJob>) => {
       const data = job.data;
-      console.log(`[plagiarism-worker] Scanning submission ${data.submissionId}`);
+      this.logger.log(`Scanning submission ${data.submissionId}`);
 
       // ── 1. Call AI service ────────────────────────────────────────────────
       let result: {
@@ -76,15 +76,13 @@ export function startPlagiarismWorker(): Worker {
         await notifyTeacherReview(data, result.overall_similarity_pct, result.verdict);
       }
 
-      console.log(
-        `[plagiarism-worker] Done — ${data.submissionId}: ${result.overall_similarity_pct}% (${result.verdict})`
-      );
+      this.logger.log(`Scan done — ${data.submissionId}: ${result.overall_similarity_pct}% (${result.verdict})`);
     },
     { connection, concurrency: 5 }
   );
 
   worker.on("failed", (job, err) => {
-    console.error(`[plagiarism-worker] Job ${job?.id} failed:`, err.message);
+    this.logger.error(`Job ${job?.id} failed: ${err.message}`);
   });
 
   return worker;

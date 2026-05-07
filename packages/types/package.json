@@ -9,5 +9,8 @@
   "devDependencies": {
     "@school-erp/tsconfig": "workspace:*",
     "typescript": "^5.6.3"
+  },
+  "scripts": {
+    "test": "echo \"No unit tests for types package\" && exit 0"
   }
 }

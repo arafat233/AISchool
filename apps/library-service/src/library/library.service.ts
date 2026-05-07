@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, ConflictError } from "@school-erp/errors";
 
@@ -7,6 +7,7 @@ const HOLD_HOURS = 48;
 
 @Injectable()
 export class LibraryService {
+  private readonly logger = new Logger(LibraryService.name);
   constructor(private readonly prisma: PrismaService) {}
 
   // ─── [1/12] Book catalogue CRUD ──────────────────────────────────────────
@@ -172,7 +173,7 @@ export class LibraryService {
         where: { id: next.id },
         data: { status: "NOTIFIED", notifiedAt: new Date(), expiresAt: new Date(Date.now() + HOLD_HOURS * 3_600_000) },
       });
-      console.log(`[LIBRARY] Book ${bookId} available — notified member ${next.memberId}. Hold expires in ${HOLD_HOURS}h`);
+      this.logger.log(`Book ${bookId} available — notified member ${next.memberId}. Hold expires in ${HOLD_HOURS}h`);
       // Production: push notification to member
     }
   }

@@ -1,4 +1,4 @@
-import {
+import { Logger,
   WebSocketGateway, WebSocketServer, SubscribeMessage,
   OnGatewayConnection, OnGatewayDisconnect,
 } from "@nestjs/websockets";
@@ -6,15 +6,16 @@ import { Server, Socket } from "socket.io";
 
 @WebSocketGateway({ cors: { origin: "*" }, namespace: "/transport" })
 export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private readonly logger = new Logger(LocationGateway.name);
   @WebSocketServer()
   server!: Server;
 
   handleConnection(client: Socket) {
-    console.log(`[Transport WS] client connected: ${client.id}`);
+    this.logger.log(`Client connected: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`[Transport WS] client disconnected: ${client.id}`);
+    this.logger.log(`Client disconnected: ${client.id}`);
   }
 
   /** Parent joins a room for a specific trip */

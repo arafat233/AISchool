@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from "@nestjs/common";
+import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError } from "@school-erp/errors";
 import * as mqtt from "mqtt";
@@ -234,13 +234,13 @@ export class TransportService implements OnModuleInit {
       const dist = haversineMeters(data.lat, data.lng, stop.lat, stop.lng);
       if (dist <= GEOFENCE_STOP_METERS) {
         // Production: push notification to parents of students assigned to this stop
-        console.log(`[GEOFENCE] Bus approaching stop: ${stop.name} (${Math.round(dist)}m)`);
+        this.logger.log(`Bus approaching stop: ${stop.name} (${Math.round(dist)}m)`);
       }
     }
 
     // ── Speed alert ────────────────────────────────────────────────────────────
     if (data.speedKmh && data.speedKmh > SPEED_LIMIT_KMH) {
-      console.log(`[SPEED ALERT] Vehicle ${vehicle.regNo}: ${data.speedKmh} km/h > ${SPEED_LIMIT_KMH} km/h`);
+      this.logger.warn(`Speed alert: Vehicle ${vehicle.regNo}: ${data.speedKmh} km/h > ${SPEED_LIMIT_KMH} km/h`);
       // Production: push to Transport Manager
     }
 
@@ -252,7 +252,7 @@ export class TransportService implements OnModuleInit {
     }, Infinity);
 
     if (minDist > ROUTE_DEVIATION_METERS && stops.length > 0) {
-      console.log(`[DEVIATION] Vehicle ${vehicle.regNo} is ${Math.round(minDist)}m off route`);
+      this.logger.warn(`Route deviation: Vehicle ${vehicle.regNo} is ${Math.round(minDist)}m off route`);
       // Production: push to admin
     }
   }

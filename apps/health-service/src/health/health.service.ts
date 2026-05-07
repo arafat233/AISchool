@@ -1,9 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError } from "@school-erp/errors";
 
 @Injectable()
 export class HealthService {
+  private readonly logger = new Logger(HealthService.name);
   constructor(private readonly prisma: PrismaService) {}
 
   // ─── Medical Profile ──────────────────────────────────────────────────────────
@@ -207,7 +208,7 @@ export class HealthService {
 
     if (flagged) {
       // Production: notify counsellor without student identity
-      console.log(`[MOOD ALERT] Distress check-in received for school ${schoolId} (score: ${moodScore})`);
+      this.logger.warn(`Distress check-in received for school ${schoolId} (score: ${moodScore})`);
     }
 
     return this.prisma.moodCheckIn.create({

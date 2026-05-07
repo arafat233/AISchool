@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, ConflictError } from "@school-erp/errors";
 
@@ -6,6 +6,7 @@ const DISPOSAL_DAYS = 30;
 
 @Injectable()
 export class CommunityService {
+  private readonly logger = new Logger(CommunityService.name);
   constructor(private readonly prisma: PrismaService) {}
 
   // ─── [1] PTA / SMC management ────────────────────────────────────────────
@@ -165,7 +166,7 @@ export class CommunityService {
 
     const updated = await this.prisma.storeProduct.update({ where: { id: productId }, data: { stockQty: newStock } });
     if (updated.stockQty <= updated.reorderLevel) {
-      console.log(`[STORE] Reorder alert: ${updated.name} (${updated.stockQty} remaining, reorder at ${updated.reorderLevel})`);
+      this.logger.warn(`Reorder alert: ${updated.name} (${updated.stockQty} remaining, reorder at ${updated.reorderLevel})`);
     }
     return updated;
   }

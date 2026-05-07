@@ -41,6 +41,11 @@ jobs:
       saas-service: ${{ steps.filter.outputs.saas-service }}
       developer-api: ${{ steps.filter.outputs.developer-api }}
       ai-service: ${{ steps.filter.outputs.ai-service }}
+      admin-portal: ${{ steps.filter.outputs.admin-portal }}
+      teacher-portal: ${{ steps.filter.outputs.teacher-portal }}
+      student-portal: ${{ steps.filter.outputs.student-portal }}
+      parent-portal: ${{ steps.filter.outputs.parent-portal }}
+      management-portal: ${{ steps.filter.outputs.management-portal }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -121,6 +126,21 @@ jobs:
               - 'packages/**'
             ai-service:
               - 'apps/ai-service/**'
+            admin-portal:
+              - 'apps/admin-portal/**'
+              - 'packages/**'
+            teacher-portal:
+              - 'apps/teacher-portal/**'
+              - 'packages/**'
+            student-portal:
+              - 'apps/student-portal/**'
+              - 'packages/**'
+            parent-portal:
+              - 'apps/parent-portal/**'
+              - 'packages/**'
+            management-portal:
+              - 'apps/management-portal/**'
+              - 'packages/**'
 
   # ─── Build & push Docker images ─────────────────────────────────────────
   build-and-push:
@@ -181,6 +201,16 @@ jobs:
             changed: ${{ needs.changes.outputs.developer-api }}
           - service: ai-service
             changed: ${{ needs.changes.outputs.ai-service }}
+          - service: admin-portal
+            changed: ${{ needs.changes.outputs.admin-portal }}
+          - service: teacher-portal
+            changed: ${{ needs.changes.outputs.teacher-portal }}
+          - service: student-portal
+            changed: ${{ needs.changes.outputs.student-portal }}
+          - service: parent-portal
+            changed: ${{ needs.changes.outputs.parent-portal }}
+          - service: management-portal
+            changed: ${{ needs.changes.outputs.management-portal }}
     if: matrix.changed == 'true'
 
     permissions:

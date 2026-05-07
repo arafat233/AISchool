@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, ConflictError } from "@school-erp/errors";
 import * as crypto from "crypto";
@@ -7,6 +7,7 @@ const BLACKLIST = new Set<string>(); // Production: persistent DB table or Redis
 
 @Injectable()
 export class VisitorService {
+  private readonly logger = new Logger(VisitorService.name);
   constructor(private readonly prisma: PrismaService) {}
 
   // ─── Visitor registration ─────────────────────────────────────────────────────
@@ -42,7 +43,7 @@ export class VisitorService {
     });
 
     // Production: send push notification to host staff for approval
-    console.log(`[VISITOR] Host notification: ${data.hostName} — visitor ${data.visitorName} awaiting approval`);
+    this.logger.log(`Host notification: ${data.hostName} — visitor ${data.visitorName} awaiting approval`);
 
     return { ...visitor, qrPayload: JSON.stringify({ passNo, visitorId: visitor.id, schoolId }) };
   }

@@ -3,7 +3,7 @@
  * Seeds test data for new schools on sign-up.
  * Weekly reset via cron.
  */
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { v4 as uuidv4 } from "uuid";
 import crypto from "crypto";
@@ -11,6 +11,7 @@ import schedule from "node-schedule";
 
 @Injectable()
 export class SandboxService {
+  private readonly logger = new Logger(SandboxService.name);
   constructor(private readonly prisma: PrismaService) {
     // Reset all sandbox tenants every Sunday at midnight
     schedule.scheduleJob("0 0 * * 0", () => this.resetAllSandboxes());
@@ -55,7 +56,7 @@ export class SandboxService {
   }
 
   async resetAllSandboxes(): Promise<void> {
-    console.log("[Sandbox] Weekly reset starting…");
+    this.logger.log("Weekly sandbox reset starting…");
     const sandboxSchools = await this.prisma.$queryRaw<any[]>`
       SELECT DISTINCT school_id FROM api_keys WHERE is_sandbox = true AND is_active = true
     `;
@@ -64,6 +65,6 @@ export class SandboxService {
       await this.prisma.$executeRaw`DELETE FROM students WHERE school_id = ${school_id} AND is_sandbox = true`;
       await this.seedSandboxData(school_id);
     }
-    console.log(`[Sandbox] Reset complete — ${sandboxSchools.length} tenants`);
+    this.logger.log(`Sandbox reset complete — ${sandboxSchools.length} tenants`);
   }
 }
