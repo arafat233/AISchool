@@ -115,4 +115,9 @@ export const PROXY_ROUTES: ProxyRoute[] = [
     target: process.env['BIOMETRIC_SERVICE_URL'] ?? 'http://biometric-bridge:8080',
     pathRewrite: { '^/biometric': '' },
   },
+
+  // Developer API (external partners — webhooks, sandbox, versioned v1 routes)
+  { prefix: '/webhooks', target: process.env['DEVELOPER_API_SERVICE_URL'] ?? 'http://developer-api:3023' },
+  { prefix: '/sandbox', target: process.env['DEVELOPER_API_SERVICE_URL'] ?? 'http://developer-api:3023' },
+  { prefix: '/v1', target: process.env['DEVELOPER_API_SERVICE_URL'] ?? 'http://developer-api:3023' },
 ];

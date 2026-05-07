@@ -13,6 +13,7 @@ concurrency:
 env:
   NODE_VERSION: "20"
   PNPM_VERSION: "10.33.0"
+  PYTHON_VERSION: "3.11"
 
 jobs:
   # ─── Lint & Type-check ──────────────────────────────────────────────────
@@ -133,17 +134,59 @@ jobs:
           JWT_ACCESS_SECRET: test_access_secret_at_least_32_chars_ci
           NODE_ENV: test
 
+      - name: Run mobile tests
+        run: pnpm --filter @school-erp/mobile test --passWithNoTests
+        env:
+          NODE_ENV: test
+
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         if: always()
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
+  # ─── AI Service Tests (Python / pytest) ─────────────────────────────────
+  test-ai:
+    name: AI Service Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: school_erp_test
+          POSTGRES_USER: school_erp
+          POSTGRES_PASSWORD: test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://school_erp:test_password@localhost:5432/school_erp_test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: apps/ai-service/requirements.txt
+
+      - name: Install AI service dependencies
+        run: pip install -r apps/ai-service/requirements.txt pytest pytest-asyncio httpx
+
+      - name: Run pytest
+        working-directory: apps/ai-service
+        run: pytest tests/ -v --tb=short
+
   # ─── Build check ────────────────────────────────────────────────────────
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [lint, test]
+    needs: [lint, test, test-ai]
     steps:
       - uses: actions/checkout@v4
 

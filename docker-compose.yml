@@ -104,7 +104,7 @@ services:
       context: .
       dockerfile: apps/auth-service/Dockerfile
     container_name: erp_auth
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3001:3001"
     environment:
@@ -122,7 +122,7 @@ services:
       context: .
       dockerfile: apps/user-service/Dockerfile
     container_name: erp_user
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3002:3002"
     environment:
@@ -139,7 +139,7 @@ services:
       context: .
       dockerfile: apps/student-service/Dockerfile
     container_name: erp_student
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3003:3003"
     environment:
@@ -156,7 +156,7 @@ services:
       context: .
       dockerfile: apps/academic-service/Dockerfile
     container_name: erp_academic
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3004:3004"
     environment:
@@ -173,7 +173,7 @@ services:
       context: .
       dockerfile: apps/attendance-service/Dockerfile
     container_name: erp_attendance
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3005:3005"
     environment:
@@ -190,7 +190,7 @@ services:
       context: .
       dockerfile: apps/fee-service/Dockerfile
     container_name: erp_fee
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3006:3006"
     environment:
@@ -207,7 +207,7 @@ services:
       context: .
       dockerfile: apps/notification-service/Dockerfile
     container_name: erp_notification
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3007:3007"
     environment:
@@ -225,7 +225,7 @@ services:
       context: .
       dockerfile: apps/exam-service/Dockerfile
     container_name: erp_exam
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3008:3008"
     environment:
@@ -242,7 +242,7 @@ services:
       context: .
       dockerfile: apps/lms-service/Dockerfile
     container_name: erp_lms
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3009:3009"
     environment:
@@ -259,7 +259,7 @@ services:
       context: .
       dockerfile: apps/hr-service/Dockerfile
     container_name: erp_hr
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3010:3010"
     environment:
@@ -276,7 +276,7 @@ services:
       context: .
       dockerfile: apps/payroll-service/Dockerfile
     container_name: erp_payroll
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3011:3011"
     environment:
@@ -293,7 +293,7 @@ services:
       context: .
       dockerfile: apps/certificate-service/Dockerfile
     container_name: erp_certificate
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3012:3012"
     environment:
@@ -311,7 +311,7 @@ services:
       context: .
       dockerfile: apps/admission-service/Dockerfile
     container_name: erp_admission
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3013:3013"
     environment:
@@ -329,7 +329,7 @@ services:
       context: .
       dockerfile: apps/transport-service/Dockerfile
     container_name: erp_transport
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3014:3014"
     environment:
@@ -350,7 +350,7 @@ services:
       context: .
       dockerfile: apps/health-service/Dockerfile
     container_name: erp_health
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3015:3015"
     environment:
@@ -368,7 +368,7 @@ services:
       context: .
       dockerfile: apps/library-service/Dockerfile
     container_name: erp_library
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3016:3016"
     environment:
@@ -386,7 +386,7 @@ services:
       context: .
       dockerfile: apps/ops-service/Dockerfile
     container_name: erp_ops
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3020:3020"
     environment:
@@ -404,7 +404,7 @@ services:
       context: .
       dockerfile: apps/scholarship-service/Dockerfile
     container_name: erp_scholarship
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3019:3019"
     environment:
@@ -422,7 +422,7 @@ services:
       context: .
       dockerfile: apps/expense-service/Dockerfile
     container_name: erp_expense
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3018:3018"
     environment:
@@ -440,7 +440,7 @@ services:
       context: .
       dockerfile: apps/event-service/Dockerfile
     container_name: erp_event
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3017:3017"
     environment:
@@ -458,7 +458,7 @@ services:
       context: .
       dockerfile: apps/report-service/Dockerfile
     container_name: erp_report
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3021:3021"
     environment:
@@ -477,7 +477,7 @@ services:
       context: .
       dockerfile: apps/saas-service/Dockerfile
     container_name: erp_saas
-    <<: *service-defaults
+    <<: [*service-defaults, *backend-healthcheck]
     ports:
       - "3022:3022"
     environment:
@@ -485,6 +485,30 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
       SAAS_SERVICE_PORT: 3022
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?JWT_ACCESS_SECRET is required}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  ai-service:
+    build:
+      context: apps/ai-service
+      dockerfile: Dockerfile
+    container_name: erp_ai
+    <<: *service-defaults
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      AI_CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:4000,http://localhost:4001,http://localhost:4002,http://localhost:4003,http://localhost:4004}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     depends_on:
       postgres:
         condition: service_healthy
@@ -529,6 +553,7 @@ services:
       REPORT_SERVICE_URL: http://report-service:3021
       SAAS_SERVICE_URL: http://saas-service:3022
       AI_SERVICE_URL: http://ai-service:8000
+      DEVELOPER_API_SERVICE_URL: http://developer-api:3023
       BIOMETRIC_SERVICE_URL: http://biometric-bridge:8080
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
