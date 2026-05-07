@@ -17,7 +17,14 @@ import crypto from "crypto";
 import { Prisma } from "@prisma/client";
 import { createCipheriv, createDecipheriv, randomBytes, timingSafeEqual } from "crypto";
 
-const WEBHOOK_KEY = Buffer.from(process.env.WEBHOOK_ENCRYPTION_KEY!, "hex"); // 32-byte hex key
+function getWebhookKey(): Buffer {
+  const key = process.env.WEBHOOK_ENCRYPTION_KEY;
+  if (!key || key.length !== 64) {
+    throw new Error("WEBHOOK_ENCRYPTION_KEY must be a 64-character hex string (32 bytes)");
+  }
+  return Buffer.from(key, "hex");
+}
+const WEBHOOK_KEY = getWebhookKey();
 
 function encryptSecret(val: string): string {
   const iv = randomBytes(12);

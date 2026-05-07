@@ -73,7 +73,7 @@ async def school_overview(school_id: str, db: AsyncSession = Depends(get_db)):
             COUNT(s.id)                                                          AS total_students,
             COUNT(s.id) FILTER (WHERE s.status = 'ACTIVE')                      AS active_students,
             (SELECT COUNT(*) FROM staff WHERE school_id = :school_id)            AS total_staff,
-            (SELECT COUNT(*) FROM classes WHERE school_id = :school_id)          AS total_classes,
+            (SELECT COUNT(*) FROM sections WHERE school_id = :school_id)          AS total_classes,
             ROUND(
                 100.0 * SUM(CASE WHEN ar.status = 'PRESENT' THEN 1 ELSE 0 END)
                 / NULLIF(COUNT(ar.id), 0)
@@ -91,7 +91,7 @@ async def school_overview(school_id: str, db: AsyncSession = Depends(get_db)):
         LEFT JOIN attendance_records ar ON ar.student_id = s.id
         LEFT JOIN fee_invoices fi ON fi.student_id = s.id
         LEFT JOIN fee_payments fp ON fp.invoice_id = fi.id
-        LEFT JOIN exam_results er ON er.student_id = s.id
+        LEFT JOIN results er ON er.student_id = s.id
         WHERE s.school_id = :school_id
     """), {"school_id": school_id})
 
@@ -126,7 +126,7 @@ async def attendance_heatmap(school_id: str, days: int = 30, db: AsyncSession = 
             , 1) AS attendance_pct
         FROM attendance_records ar
         JOIN students s ON s.id = ar.student_id
-        JOIN classes cl ON cl.id = s.class_id
+        JOIN sections cl ON cl.id = s.class_id
         WHERE ar.school_id = :school_id
           AND ar.date >= NOW() - CAST(:days || ' days' AS INTERVAL)
         GROUP BY ar.date, cl.name
@@ -190,7 +190,7 @@ async def subject_performance(school_id: str, db: AsyncSession = Depends(get_db)
             ROUND(MAX(er.percentage)::NUMERIC, 1)                                    AS top_score_pct,
             ROUND(MIN(er.percentage)::NUMERIC, 1)                                    AS lowest_score_pct,
             COUNT(er.student_id)                                                     AS student_count
-        FROM exam_results er
+        FROM results er
         JOIN exams e ON e.id = er.exam_id
         JOIN subjects sub ON sub.id = e.subject_id
         JOIN students s ON s.id = er.student_id
@@ -229,10 +229,10 @@ async def class_performance(class_id: str, db: AsyncSession = Depends(get_db)):
                 100.0 * COUNT(DISTINCT er.student_id) FILTER (WHERE er.percentage >= 33)
                 / NULLIF(COUNT(DISTINCT er.student_id), 0)
             , 1) AS pass_rate_pct
-        FROM classes cl
+        FROM sections cl
         JOIN students s ON s.class_id = cl.id
         LEFT JOIN attendance_records ar ON ar.student_id = s.id
-        LEFT JOIN exam_results er ON er.student_id = s.id
+        LEFT JOIN results er ON er.student_id = s.id
         WHERE cl.id = :class_id
         GROUP BY cl.id, cl.name
     """), {"class_id": class_id})
@@ -248,7 +248,7 @@ async def class_performance(class_id: str, db: AsyncSession = Depends(get_db)):
     # Top and bottom performers
     perf = await db.execute(text("""
         SELECT s.full_name, AVG(er.percentage) AS avg_pct
-        FROM exam_results er
+        FROM results er
         JOIN students s ON s.id = er.student_id
         WHERE s.class_id = :class_id
         GROUP BY s.full_name

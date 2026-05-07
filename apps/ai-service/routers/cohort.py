@@ -37,8 +37,8 @@ async def cohort_analysis(school_id: str, db: AsyncSession = Depends(get_db)):
                 / NULLIF(COUNT(DISTINCT fi.id), 0)
             , 1) AS fee_collection_rate
         FROM students s
-        JOIN classes cl ON cl.id = s.class_id
-        LEFT JOIN exam_results er ON er.student_id = s.id
+        JOIN sections cl ON cl.id = s.class_id
+        LEFT JOIN results er ON er.student_id = s.id
         LEFT JOIN fee_invoices fi ON fi.student_id = s.id
         LEFT JOIN fee_payments fp ON fp.invoice_id = fi.id
         WHERE s.school_id = :school_id
@@ -75,7 +75,7 @@ async def dropout_journey(school_id: str, db: AsyncSession = Depends(get_db)):
             COUNT(*) FILTER (WHERE s.status = 'LEFT') AS dropped,
             COUNT(*) AS total
         FROM students s
-        JOIN classes cl ON cl.id = s.class_id
+        JOIN sections cl ON cl.id = s.class_id
         WHERE s.school_id = :school_id
         GROUP BY s.admission_year, cl.grade_level
         ORDER BY s.admission_year, cl.grade_level

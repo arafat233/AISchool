@@ -3,7 +3,14 @@ import { PrismaService } from "@school-erp/database";
 import { NotFoundError } from "@school-erp/errors";
 import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 
-const PII_KEY = Buffer.from(process.env.PII_ENCRYPTION_KEY!, "hex"); // 32-byte hex key required
+function getPiiKey(): Buffer {
+  const key = process.env.PII_ENCRYPTION_KEY;
+  if (!key || key.length !== 64) {
+    throw new Error("PII_ENCRYPTION_KEY must be a 64-character hex string (32 bytes)");
+  }
+  return Buffer.from(key, "hex");
+}
+const PII_KEY = getPiiKey();
 
 function encrypt(val: string): string {
   const iv = randomBytes(12);

@@ -7,6 +7,7 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
 import { Throttle } from "@nestjs/throttler";
@@ -69,6 +70,18 @@ export class AuthController {
     const { accessToken, refreshToken } = await this.authService.refreshTokens(rawToken, req.ip ?? "");
     res.cookie(REFRESH_COOKIE, refreshToken, COOKIE_OPTIONS);
     return { accessToken };
+  }
+
+  /** Mobile-specific refresh — accepts token in request body (no HttpOnly cookie available on native) */
+  @Public()
+  @Post("refresh/mobile")
+  @HttpCode(HttpStatus.OK)
+  async refreshMobile(@Body() body: { refreshToken: string }, @Req() req: Request) {
+    if (!body?.refreshToken) {
+      throw new UnauthorizedException("No refresh token provided");
+    }
+    const { accessToken, refreshToken } = await this.authService.refreshTokens(body.refreshToken, req.ip ?? "");
+    return { accessToken, refreshToken };
   }
 
   @UseGuards(JwtAuthGuard)

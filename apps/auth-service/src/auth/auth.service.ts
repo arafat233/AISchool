@@ -3,6 +3,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
+import { Queue } from "bullmq";
 
 import { PrismaService } from "@school-erp/database";
 import {
@@ -12,6 +13,7 @@ import {
   TwoFactorRequiredError,
 } from "@school-erp/errors";
 import { generateOtp, generateSecureToken } from "@school-erp/utils";
+import { QUEUES, DEFAULT_JOB_OPTIONS } from "@school-erp/events";
 
 import { TokenService } from "./token.service";
 import { TotpService } from "./totp.service";
@@ -20,11 +22,21 @@ import { RegisterDto } from "../dto/register.dto";
 
 @Injectable()
 export class AuthService {
+  private readonly emailQueue: Queue;
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly tokenService: TokenService,
     private readonly totpService: TotpService,
-  ) {}
+  ) {
+    this.emailQueue = new Queue(QUEUES.EMAIL, {
+      connection: {
+        host: process.env.REDIS_HOST ?? "localhost",
+        port: Number(process.env.REDIS_PORT ?? 6379),
+        password: process.env.REDIS_PASSWORD,
+      },
+    });
+  }
 
   async validateLocalUser(email: string, password: string) {
     const user = await this.prisma.user.findUnique({
@@ -150,8 +162,18 @@ export class AuthService {
       },
     });
 
-    // TODO: emit event to notification service to send reset email
-    return { token }; // returned for testing; in prod, sent via email only
+    const resetUrl = `${process.env.FRONTEND_URL ?? "http://localhost:4000"}/reset-password?token=${token}`;
+    await this.emailQueue.add(
+      "password-reset",
+      {
+        to: user.email,
+        subject: "Reset your password",
+        html: `<p>You requested a password reset. Click the link below (valid for 1 hour):</p>
+               <p><a href="${resetUrl}">${resetUrl}</a></p>
+               <p>If you did not request this, ignore this email.</p>`,
+      },
+      DEFAULT_JOB_OPTIONS,
+    );
   }
 
   async resetPassword(token: string, newPassword: string) {

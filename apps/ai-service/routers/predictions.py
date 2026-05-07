@@ -82,13 +82,13 @@ async def predict_dropout(req: DropoutInput, db: AsyncSession = Depends(get_db))
             ) AS below_pass_count
 
         FROM students s
-        JOIN classes cl ON cl.id = s.class_id
+        JOIN sections cl ON cl.id = s.class_id
         LEFT JOIN attendance_records ar ON ar.student_id = s.id
             AND ar.date >= NOW() - INTERVAL '90 days'
         LEFT JOIN fee_invoices fi ON fi.student_id = s.id
         LEFT JOIN lesson_progress lp ON lp.student_id = s.id
-        LEFT JOIN exam_results er ON er.student_id = s.id
-        JOIN academic_sessions acs ON acs.id = s.academic_session_id
+        LEFT JOIN results er ON er.student_id = s.id
+        JOIN academic_years acs ON acs.id = s.academic_session_id
             AND acs.school_id = :school_id
         WHERE {where}
         GROUP BY s.id, s.full_name, s.roll_no, cl.name
@@ -152,9 +152,9 @@ async def predict_defaulters(req: DropoutInput, db: AsyncSession = Depends(get_d
             COALESCE(SUM(fi.total_amt_rs - COALESCE(fi.paid_amt_rs, 0)), 0) AS outstanding_rs,
             COALESCE(MAX(EXTRACT(EPOCH FROM (NOW() - fi.due_date)) / 86400), 0) AS max_overdue_days
         FROM students s
-        JOIN classes cl ON cl.id = s.class_id
+        JOIN sections cl ON cl.id = s.class_id
         LEFT JOIN fee_invoices fi ON fi.student_id = s.id
-        JOIN academic_sessions acs ON acs.id = s.academic_session_id AND acs.school_id = :school_id
+        JOIN academic_years acs ON acs.id = s.academic_session_id AND acs.school_id = :school_id
         GROUP BY s.id, s.full_name, s.roll_no, cl.name
         HAVING SUM(CASE WHEN fi.status IN ('UNPAID','PARTIAL') AND fi.due_date < NOW() THEN 1 ELSE 0 END) > 0
         ORDER BY outstanding_rs DESC
@@ -185,7 +185,7 @@ async def teacher_effectiveness(school_id: str, db: AsyncSession = Depends(get_d
               / NULLIF(COUNT(ar.id) OVER (PARTITION BY ar.class_id), 0)
             ), 0) AS avg_class_attendance_pct
         FROM staff st
-        JOIN exam_results er ON er.teacher_id = st.id
+        JOIN results er ON er.teacher_id = st.id
         LEFT JOIN attendance_records ar ON ar.class_id = er.class_id
         WHERE st.school_id = :school_id
         GROUP BY st.id, st.full_name, st.employee_code, st.department
@@ -214,7 +214,7 @@ async def enrolment_forecast(school_id: str, db: AsyncSession = Depends(get_db))
             EXTRACT(YEAR FROM a.created_at) AS yr,
             COUNT(*) AS enquiries,
             SUM(CASE WHEN a.status = 'ENROLLED' THEN 1 ELSE 0 END) AS enrolled
-        FROM applications a
+        FROM admission_applications a
         WHERE a.school_id = :school_id
         GROUP BY yr ORDER BY yr
     """), {"school_id": school_id})
@@ -279,11 +279,11 @@ async def parent_engagement(school_id: str, db: AsyncSession = Depends(get_db)):
             COALESCE(SUM(CASE WHEN fi.status = 'PAID' AND fi.paid_at <= fi.due_date THEN 1 ELSE 0 END), 0) AS on_time_payments,
             COALESCE(COUNT(fi.id), 0) AS total_invoices
         FROM students s
-        JOIN classes cl ON cl.id = s.class_id
+        JOIN sections cl ON cl.id = s.class_id
         LEFT JOIN student_parents sp ON sp.student_id = s.id
         LEFT JOIN audit_logs al ON al.user_id = sp.parent_id
         LEFT JOIN fee_invoices fi ON fi.student_id = s.id
-        JOIN academic_sessions acs ON acs.id = s.academic_session_id AND acs.school_id = :school_id
+        JOIN academic_years acs ON acs.id = s.academic_session_id AND acs.school_id = :school_id
         GROUP BY s.id, s.full_name, cl.name
     """), {"school_id": school_id})
 
@@ -314,9 +314,9 @@ async def teacher_workload(school_id: str, db: AsyncSession = Depends(get_db)):
             COUNT(DISTINCT a.id) FILTER (WHERE a.due_date > NOW()) AS pending_assignments_to_grade
         FROM staff st
         LEFT JOIN timetable_slots tt ON tt.teacher_id = st.id
-        LEFT JOIN class_enrollments ce ON ce.class_id = tt.class_id
+        LEFT JOIN sections ce ON ce.class_id = tt.class_id
         LEFT JOIN students s ON s.id = ce.student_id
-        LEFT JOIN assignments a ON a.teacher_id = st.id AND a.due_date > NOW()
+        LEFT JOIN homework a ON a.teacher_id = st.id AND a.due_date > NOW()
         WHERE st.school_id = :school_id
         GROUP BY st.id, st.full_name, st.employee_code
     """), {"school_id": school_id})
@@ -325,11 +325,11 @@ async def teacher_workload(school_id: str, db: AsyncSession = Depends(get_db)):
     for r in rows.mappings():
         periods = int(r["weekly_periods"] or 0)
         students = int(r["student_count"] or 0)
-        assignments = int(r["pending_assignments_to_grade"] or 0)
-        workload = round((periods / 35 * 40) + (students / 150 * 30) + (assignments / 10 * 30), 1)
+        homework = int(r["pending_assignments_to_grade"] or 0)
+        workload = round((periods / 35 * 40) + (students / 150 * 30) + (homework / 10 * 30), 1)
         results.append({
             "staff_id": r["id"], "name": r["full_name"], "emp_code": r["employee_code"],
-            "weekly_periods": periods, "student_count": students, "pending_assignments": assignments,
+            "weekly_periods": periods, "student_count": students, "pending_assignments": homework,
             "workload_score": min(workload, 100),
             "overloaded": workload > 80,
         })

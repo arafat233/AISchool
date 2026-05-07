@@ -42,7 +42,7 @@ async def detect_anomalies(school_id: str, db: AsyncSession = Depends(get_db)):
                 ROUND(100.0 * SUM(CASE WHEN ar.status='PRESENT' THEN 1 ELSE 0 END) / NULLIF(COUNT(*),0), 1) AS pct
             FROM attendance_records ar
             JOIN students s ON s.id = ar.student_id
-            JOIN classes cl ON cl.id = s.class_id
+            JOIN sections cl ON cl.id = s.class_id
             WHERE ar.school_id = :school_id AND ar.date >= NOW() - INTERVAL '37 days'
             GROUP BY cl.name, ar.date
         )
@@ -107,7 +107,7 @@ async def detect_anomalies(school_id: str, db: AsyncSession = Depends(get_db)):
     nurse_rows = await db.execute(text("""
         WITH daily AS (
             SELECT DATE(created_at) AS d, COUNT(*) AS visits
-            FROM health_visits
+            FROM nurse_visit_logs
             WHERE school_id = :school_id AND created_at >= NOW() - INTERVAL '37 days'
             GROUP BY d
         )

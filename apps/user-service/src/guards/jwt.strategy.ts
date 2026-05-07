@@ -6,10 +6,14 @@ import type { JwtPayload, RequestUser } from "@school-erp/types";
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
   constructor() {
+    const secret = process.env.JWT_ACCESS_SECRET;
+    if (!secret || secret.length < 32) {
+      throw new Error("JWT_ACCESS_SECRET must be set and at least 32 characters long");
+    }
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_ACCESS_SECRET!,
+      secretOrKey: secret,
     });
   }
 

@@ -59,7 +59,7 @@ async def check_plagiarism(req: PlagiarismCheckRequest, db: AsyncSession = Depen
     # Fetch other submissions for same assignment
     rows = await db.execute(text("""
         SELECT asub.id, asub.student_id, s.full_name, asub.submission_text
-        FROM assignment_submissions asub
+        FROM homework asub
         JOIN students s ON s.id = asub.student_id
         WHERE asub.assignment_id = :assignment_id
           AND asub.student_id != :student_id
@@ -109,7 +109,7 @@ async def class_plagiarism_report(assignment_id: str, db: AsyncSession = Depends
     """Pairwise similarity matrix for all submissions in an assignment."""
     rows = await db.execute(text("""
         SELECT asub.student_id, s.full_name, asub.submission_text
-        FROM assignment_submissions asub
+        FROM homework asub
         JOIN students s ON s.id = asub.student_id
         WHERE asub.assignment_id = :assignment_id AND asub.submission_text IS NOT NULL
     """), {"assignment_id": assignment_id})

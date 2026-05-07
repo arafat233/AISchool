@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-figtree" });
 
@@ -19,7 +20,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className={figtree.className}>{children}</body>
+      <body className={figtree.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

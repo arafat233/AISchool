@@ -2,10 +2,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2, BarChart3 } from "lucide-react";
-import axios from "axios";
+import { api } from "@/lib/api";
+import { useAuthStore } from "@/store/auth.store";
 
 export default function LoginPage() {
   const router = useRouter();
+  const setTokens = useAuthStore((s) => s.setTokens);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -17,8 +19,8 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     try {
-      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, { email, password });
-      localStorage.setItem("mgmt_token", data.accessToken);
+      const { data } = await api.post<{ accessToken: string; user: any }>("/auth/login", { email, password });
+      setTokens(data.accessToken, data.user);
       router.push("/dashboard");
     } catch {
       setError("Invalid credentials");

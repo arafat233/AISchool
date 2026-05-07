@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3001";
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000";
 
 export const api = axios.create({ baseURL: BASE_URL, timeout: 15_000 });
 
@@ -20,7 +20,7 @@ api.interceptors.response.use(
       const refresh = await SecureStore.getItemAsync("refresh_token");
       if (refresh) {
         try {
-          const { data } = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken: refresh });
+          const { data } = await axios.post(`${BASE_URL}/auth/refresh/mobile`, { refreshToken: refresh });
           await SecureStore.setItemAsync("access_token", data.accessToken);
           error.config.headers.Authorization = `Bearer ${data.accessToken}`;
           return api(error.config);

@@ -7,10 +7,12 @@ export class RazorpayService {
   private readonly rz: Razorpay;
 
   constructor() {
-    this.rz = new Razorpay({
-      key_id: process.env.RAZORPAY_KEY_ID || "",
-      key_secret: process.env.RAZORPAY_KEY_SECRET || "",
-    });
+    const keyId = process.env.RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+    if (!keyId || !keySecret) {
+      throw new Error("RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET must be set");
+    }
+    this.rz = new Razorpay({ key_id: keyId, key_secret: keySecret });
   }
 
   async createOrder(amountInPaise: number, currency = "INR", receipt: string) {
@@ -19,7 +21,7 @@ export class RazorpayService {
 
   verifySignature(orderId: string, paymentId: string, signature: string): boolean {
     const body = `${orderId}|${paymentId}`;
-    const expected = createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "")
+    const expected = createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
       .update(body)
       .digest("hex");
     return expected === signature;

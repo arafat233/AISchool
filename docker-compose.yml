@@ -601,6 +601,50 @@ services:
       api-gateway:
         condition: service_healthy
 
+  management-portal:
+    build:
+      context: .
+      dockerfile: apps/management-portal/Dockerfile
+    container_name: erp_management_portal
+    <<: *service-defaults
+    ports:
+      - "4004:4004"
+    environment:
+      PORT: 4004
+      NEXT_PUBLIC_API_URL: http://api-gateway:3000
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+
+  developer-api:
+    build:
+      context: apps/developer-api
+      dockerfile: Dockerfile
+    container_name: erp_developer_api
+    <<: *service-defaults
+    ports:
+      - "3023:3023"
+    environment:
+      PORT: 3023
+      DEVELOPER_API_PORT: 3023
+      DATABASE_URL: postgresql://${POSTGRES_USER:-school_erp}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-school_erp}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?JWT_ACCESS_SECRET is required}
+      WEBHOOK_ENCRYPTION_KEY: ${WEBHOOK_ENCRYPTION_KEY:?WEBHOOK_ENCRYPTION_KEY is required}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3023/v1/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
   biometric-bridge:
     build:
       context: apps/biometric-bridge
