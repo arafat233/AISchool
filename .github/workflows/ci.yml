@@ -97,8 +97,41 @@ jobs:
       - name: Run migrations
         run: pnpm --filter @school-erp/database db:migrate:deploy
 
-      - name: Run tests
+      - name: Run unit tests
         run: pnpm test
+
+      - name: Run E2E tests
+        run: pnpm --filter @school-erp/auth-service test:e2e --passWithNoTests
+        env:
+          DATABASE_URL: postgresql://school_erp:test_password@localhost:5432/school_erp_test
+          REDIS_URL: redis://localhost:6379
+          REDIS_HOST: localhost
+          REDIS_PORT: "6379"
+          JWT_ACCESS_SECRET: test_access_secret_at_least_32_chars_ci
+          JWT_REFRESH_SECRET: test_refresh_secret_at_least_32_chars_ci
+          NODE_ENV: test
+
+      - name: Run fee-service E2E tests
+        run: pnpm --filter @school-erp/fee-service test:e2e --passWithNoTests
+        env:
+          DATABASE_URL: postgresql://school_erp:test_password@localhost:5432/school_erp_test
+          REDIS_URL: redis://localhost:6379
+          REDIS_HOST: localhost
+          REDIS_PORT: "6379"
+          JWT_ACCESS_SECRET: test_access_secret_at_least_32_chars_ci
+          RAZORPAY_KEY_ID: test_key_id
+          RAZORPAY_KEY_SECRET: test_key_secret_32_chars_placeholder
+          NODE_ENV: test
+
+      - name: Run student-service E2E tests
+        run: pnpm --filter @school-erp/student-service test:e2e --passWithNoTests
+        env:
+          DATABASE_URL: postgresql://school_erp:test_password@localhost:5432/school_erp_test
+          REDIS_URL: redis://localhost:6379
+          REDIS_HOST: localhost
+          REDIS_PORT: "6379"
+          JWT_ACCESS_SECRET: test_access_secret_at_least_32_chars_ci
+          NODE_ENV: test
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4

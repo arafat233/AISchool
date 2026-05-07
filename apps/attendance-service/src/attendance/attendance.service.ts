@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { Queue } from "bullmq";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError } from "@school-erp/errors";
@@ -8,12 +8,16 @@ import { BulkAttendanceDto } from "../dto/bulk-attendance.dto";
 
 @Injectable()
 export class AttendanceService {
+  private readonly logger = new Logger(AttendanceService.name);
   private notificationQueue: Queue;
 
   constructor(private readonly prisma: PrismaService) {
     this.notificationQueue = new Queue(QUEUES.ATTENDANCE_ALERT, {
       connection: { host: process.env.REDIS_HOST || "localhost", port: Number(process.env.REDIS_PORT) || 6379 },
     });
+    this.notificationQueue.on("error", (err) =>
+      this.logger.error(`Queue "${QUEUES.ATTENDANCE_ALERT}" error: ${err.message}`, err.stack),
+    );
   }
 
   async createSession(schoolId: string, data: { sectionId: string; date: string; createdById: string }) {

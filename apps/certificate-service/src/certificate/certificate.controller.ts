@@ -88,4 +88,9 @@ export class CertificateController {
   pushDigiLocker(@Param("certNo") certNo: string) {
     return this.svc.pushToDigiLocker(certNo);
   }
+
+  // ─── Health ───────────────────────────────────────────────────────────────────
+
+  @Get("health")
+  health() { return { status: "ok", service: "certificate-service" }; }
 }

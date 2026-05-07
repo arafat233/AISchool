@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { ThrottlerModule } from "@nestjs/throttler";
+import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler";
+import { APP_GUARD } from "@nestjs/core";
 import { PrismaModule } from "@school-erp/database";
 import { PassportModule } from "@nestjs/passport";
 import { JwtStrategy } from "./guards/jwt.strategy";
@@ -31,7 +32,11 @@ import { SaasMetricsController } from "./saas-metrics.controller";
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     PassportModule,
-    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 100 }]),
+    ThrottlerModule.forRoot([
+      { name: "burst",  ttl: 1_000,    limit: 10  },
+      { name: "minute", ttl: 60_000,   limit: 60  },
+      { name: "hour",   ttl: 3600_000, limit: 300 },
+    ]),
   ],
   controllers: [
     TenantController,
@@ -44,6 +49,7 @@ import { SaasMetricsController } from "./saas-metrics.controller";
     SaasMetricsController,
   ],
   providers: [
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
     JwtStrategy,
     TenantService,
     BillingService,

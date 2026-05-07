@@ -46,10 +46,165 @@ services:
       requests: { cpu: 500m, memory: 1Gi }
       limits: { cpu: 2000m, memory: 2Gi }  # ML workloads need more
 
+  user-service:
+    enabled: true
+    port: 3002
+    replicas: 2
+    resources:
+      requests: { cpu: 100m, memory: 256Mi }
+      limits: { cpu: 500m, memory: 512Mi }
+
+  student-service:
+    enabled: true
+    port: 3003
+    replicas: 2
+    resources:
+      requests: { cpu: 100m, memory: 256Mi }
+      limits: { cpu: 500m, memory: 512Mi }
+
+  academic-service:
+    enabled: true
+    port: 3004
+    replicas: 2
+    resources:
+      requests: { cpu: 100m, memory: 256Mi }
+      limits: { cpu: 500m, memory: 512Mi }
+
+  exam-service:
+    enabled: true
+    port: 3008
+    replicas: 2
+    resources:
+      requests: { cpu: 200m, memory: 512Mi }
+      limits: { cpu: 1000m, memory: 1Gi }
+
+  lms-service:
+    enabled: true
+    port: 3009
+    replicas: 2
+    resources:
+      requests: { cpu: 200m, memory: 512Mi }
+      limits: { cpu: 1000m, memory: 1Gi }
+
+  hr-service:
+    enabled: true
+    port: 3010
+    replicas: 2
+    resources:
+      requests: { cpu: 100m, memory: 256Mi }
+      limits: { cpu: 500m, memory: 512Mi }
+
+  payroll-service:
+    enabled: true
+    port: 3011
+    replicas: 2
+    resources:
+      requests: { cpu: 200m, memory: 512Mi }
+      limits: { cpu: 1000m, memory: 1Gi }
+
+  certificate-service:
+    enabled: true
+    port: 3012
+    replicas: 2
+    resources:
+      requests: { cpu: 200m, memory: 512Mi }
+      limits: { cpu: 1000m, memory: 1Gi }   # PDF generation
+
+  admission-service:
+    enabled: true
+    port: 3013
+    replicas: 2
+    resources:
+      requests: { cpu: 100m, memory: 256Mi }
+      limits: { cpu: 500m, memory: 512Mi }
+
+  transport-service:
+    enabled: true
+    port: 3014
+    replicas: 2
+    resources:
+      requests: { cpu: 100m, memory: 256Mi }
+      limits: { cpu: 500m, memory: 512Mi }
+
+  health-service:
+    enabled: true
+    port: 3015
+    replicas: 1
+    resources:
+      requests: { cpu: 50m, memory: 128Mi }
+      limits: { cpu: 200m, memory: 256Mi }
+
+  library-service:
+    enabled: true
+    port: 3016
+    replicas: 1
+    resources:
+      requests: { cpu: 100m, memory: 256Mi }
+      limits: { cpu: 500m, memory: 512Mi }
+
+  event-service:
+    enabled: true
+    port: 3017
+    replicas: 2
+    resources:
+      requests: { cpu: 100m, memory: 256Mi }
+      limits: { cpu: 500m, memory: 512Mi }
+
+  expense-service:
+    enabled: true
+    port: 3018
+    replicas: 2
+    resources:
+      requests: { cpu: 100m, memory: 256Mi }
+      limits: { cpu: 500m, memory: 512Mi }
+
+  scholarship-service:
+    enabled: true
+    port: 3019
+    replicas: 1
+    resources:
+      requests: { cpu: 50m, memory: 128Mi }
+      limits: { cpu: 200m, memory: 256Mi }
+
+  ops-service:
+    enabled: true
+    port: 3020
+    replicas: 1
+    resources:
+      requests: { cpu: 50m, memory: 128Mi }
+      limits: { cpu: 200m, memory: 256Mi }
+
+  report-service:
+    enabled: true
+    port: 3021
+    replicas: 2
+    resources:
+      requests: { cpu: 200m, memory: 512Mi }
+      limits: { cpu: 1000m, memory: 1Gi }   # PDF/report generation
+
+  saas-service:
+    enabled: true
+    port: 3022
+    replicas: 2
+    resources:
+      requests: { cpu: 100m, memory: 256Mi }
+      limits: { cpu: 500m, memory: 512Mi }
+
   developer-api:
     enabled: true
     port: 3023
     replicas: 2
+    resources:
+      requests: { cpu: 100m, memory: 256Mi }
+      limits: { cpu: 500m, memory: 512Mi }
+
+  api-gateway:
+    enabled: true
+    port: 3000
+    replicas: 3    # Front-door — needs highest availability
+    resources:
+      requests: { cpu: 200m, memory: 256Mi }
+      limits: { cpu: 1000m, memory: 512Mi }
 
 # PostgreSQL HA via CloudNativePG
 postgresql:

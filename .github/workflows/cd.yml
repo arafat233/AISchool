@@ -16,24 +16,111 @@ jobs:
     name: Detect changes
     runs-on: ubuntu-latest
     outputs:
+      api-gateway: ${{ steps.filter.outputs.api-gateway }}
       auth-service: ${{ steps.filter.outputs.auth-service }}
       user-service: ${{ steps.filter.outputs.user-service }}
-      api-gateway: ${{ steps.filter.outputs.api-gateway }}
+      student-service: ${{ steps.filter.outputs.student-service }}
+      academic-service: ${{ steps.filter.outputs.academic-service }}
+      attendance-service: ${{ steps.filter.outputs.attendance-service }}
+      fee-service: ${{ steps.filter.outputs.fee-service }}
+      notification-service: ${{ steps.filter.outputs.notification-service }}
+      exam-service: ${{ steps.filter.outputs.exam-service }}
+      lms-service: ${{ steps.filter.outputs.lms-service }}
+      hr-service: ${{ steps.filter.outputs.hr-service }}
+      payroll-service: ${{ steps.filter.outputs.payroll-service }}
+      certificate-service: ${{ steps.filter.outputs.certificate-service }}
+      admission-service: ${{ steps.filter.outputs.admission-service }}
+      transport-service: ${{ steps.filter.outputs.transport-service }}
+      health-service: ${{ steps.filter.outputs.health-service }}
+      library-service: ${{ steps.filter.outputs.library-service }}
+      event-service: ${{ steps.filter.outputs.event-service }}
+      expense-service: ${{ steps.filter.outputs.expense-service }}
+      scholarship-service: ${{ steps.filter.outputs.scholarship-service }}
+      ops-service: ${{ steps.filter.outputs.ops-service }}
+      report-service: ${{ steps.filter.outputs.report-service }}
+      saas-service: ${{ steps.filter.outputs.saas-service }}
+      developer-api: ${{ steps.filter.outputs.developer-api }}
+      ai-service: ${{ steps.filter.outputs.ai-service }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
+            api-gateway:
+              - 'apps/api-gateway/**'
+              - 'packages/**'
             auth-service:
               - 'apps/auth-service/**'
               - 'packages/**'
             user-service:
               - 'apps/user-service/**'
               - 'packages/**'
-            api-gateway:
-              - 'apps/api-gateway/**'
+            student-service:
+              - 'apps/student-service/**'
               - 'packages/**'
+            academic-service:
+              - 'apps/academic-service/**'
+              - 'packages/**'
+            attendance-service:
+              - 'apps/attendance-service/**'
+              - 'packages/**'
+            fee-service:
+              - 'apps/fee-service/**'
+              - 'packages/**'
+            notification-service:
+              - 'apps/notification-service/**'
+              - 'packages/**'
+            exam-service:
+              - 'apps/exam-service/**'
+              - 'packages/**'
+            lms-service:
+              - 'apps/lms-service/**'
+              - 'packages/**'
+            hr-service:
+              - 'apps/hr-service/**'
+              - 'packages/**'
+            payroll-service:
+              - 'apps/payroll-service/**'
+              - 'packages/**'
+            certificate-service:
+              - 'apps/certificate-service/**'
+              - 'packages/**'
+            admission-service:
+              - 'apps/admission-service/**'
+              - 'packages/**'
+            transport-service:
+              - 'apps/transport-service/**'
+              - 'packages/**'
+            health-service:
+              - 'apps/health-service/**'
+              - 'packages/**'
+            library-service:
+              - 'apps/library-service/**'
+              - 'packages/**'
+            event-service:
+              - 'apps/event-service/**'
+              - 'packages/**'
+            expense-service:
+              - 'apps/expense-service/**'
+              - 'packages/**'
+            scholarship-service:
+              - 'apps/scholarship-service/**'
+              - 'packages/**'
+            ops-service:
+              - 'apps/ops-service/**'
+              - 'packages/**'
+            report-service:
+              - 'apps/report-service/**'
+              - 'packages/**'
+            saas-service:
+              - 'apps/saas-service/**'
+              - 'packages/**'
+            developer-api:
+              - 'apps/developer-api/**'
+              - 'packages/**'
+            ai-service:
+              - 'apps/ai-service/**'
 
   # ─── Build & push Docker images ─────────────────────────────────────────
   build-and-push:
@@ -44,12 +131,56 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - service: api-gateway
+            changed: ${{ needs.changes.outputs.api-gateway }}
           - service: auth-service
             changed: ${{ needs.changes.outputs.auth-service }}
           - service: user-service
             changed: ${{ needs.changes.outputs.user-service }}
-          - service: api-gateway
-            changed: ${{ needs.changes.outputs.api-gateway }}
+          - service: student-service
+            changed: ${{ needs.changes.outputs.student-service }}
+          - service: academic-service
+            changed: ${{ needs.changes.outputs.academic-service }}
+          - service: attendance-service
+            changed: ${{ needs.changes.outputs.attendance-service }}
+          - service: fee-service
+            changed: ${{ needs.changes.outputs.fee-service }}
+          - service: notification-service
+            changed: ${{ needs.changes.outputs.notification-service }}
+          - service: exam-service
+            changed: ${{ needs.changes.outputs.exam-service }}
+          - service: lms-service
+            changed: ${{ needs.changes.outputs.lms-service }}
+          - service: hr-service
+            changed: ${{ needs.changes.outputs.hr-service }}
+          - service: payroll-service
+            changed: ${{ needs.changes.outputs.payroll-service }}
+          - service: certificate-service
+            changed: ${{ needs.changes.outputs.certificate-service }}
+          - service: admission-service
+            changed: ${{ needs.changes.outputs.admission-service }}
+          - service: transport-service
+            changed: ${{ needs.changes.outputs.transport-service }}
+          - service: health-service
+            changed: ${{ needs.changes.outputs.health-service }}
+          - service: library-service
+            changed: ${{ needs.changes.outputs.library-service }}
+          - service: event-service
+            changed: ${{ needs.changes.outputs.event-service }}
+          - service: expense-service
+            changed: ${{ needs.changes.outputs.expense-service }}
+          - service: scholarship-service
+            changed: ${{ needs.changes.outputs.scholarship-service }}
+          - service: ops-service
+            changed: ${{ needs.changes.outputs.ops-service }}
+          - service: report-service
+            changed: ${{ needs.changes.outputs.report-service }}
+          - service: saas-service
+            changed: ${{ needs.changes.outputs.saas-service }}
+          - service: developer-api
+            changed: ${{ needs.changes.outputs.developer-api }}
+          - service: ai-service
+            changed: ${{ needs.changes.outputs.ai-service }}
     if: matrix.changed == 'true'
 
     permissions:

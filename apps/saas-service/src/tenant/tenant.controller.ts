@@ -37,4 +37,7 @@ export class TenantController {
 
   @Post(":id/suspend")
   suspend(@Param("id") id: string, @Body() body: { reason?: string }) { return this.svc.suspendTenant(id, body.reason); }
+
+  @Get("health")
+  health() { return { status: "ok", service: "saas-service" }; }
 }

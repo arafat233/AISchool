@@ -35,6 +35,7 @@ async function bootstrap() {
   });
 
   const port = process.env.AUTH_SERVICE_PORT ?? 3001;
+  app.enableShutdownHooks();
   await app.listen(port);
   logger.log(`Auth service running on port ${port}`, "Bootstrap");
 }

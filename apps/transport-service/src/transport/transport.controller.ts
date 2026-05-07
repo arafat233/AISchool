@@ -134,4 +134,9 @@ export class TransportController {
   getStudentTransport(@Param("studentId") studentId: string) {
     return this.svc.getStudentAssignment(studentId);
   }
+
+  // ─── Health ───────────────────────────────────────────────────────────────────
+
+  @Get("health")
+  health() { return { status: "ok", service: "transport-service" }; }
 }

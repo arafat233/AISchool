@@ -451,4 +451,9 @@ export class HrController {
   getExternalPool(@Req() req: Request & { user: RequestUser }) {
     return this.substitute.getExternalSubstitutePool(req.user.schoolId!);
   }
+
+  // ─── Health ───────────────────────────────────────────────────────────────────
+
+  @Get("health")
+  health() { return { status: "ok", service: "hr-service" }; }
 }

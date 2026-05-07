@@ -127,4 +127,9 @@ export class AdmissionController {
   getFunnel(@Req() req: Request & { user: RequestUser }) {
     return this.svc.getFunnelReport(req.user.schoolId!);
   }
+
+  // ─── Health ───────────────────────────────────────────────────────────────────
+
+  @Get("health")
+  health() { return { status: "ok", service: "admission-service" }; }
 }

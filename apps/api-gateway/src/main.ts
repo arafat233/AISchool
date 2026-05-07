@@ -47,6 +47,7 @@ async function bootstrap(): Promise<void> {
   });
 
   const port = process.env['PORT'] ?? 3000;
+  app.enableShutdownHooks();
   await app.listen(port);
   logger.log(`API Gateway running on port ${port}`, 'Bootstrap');
 }

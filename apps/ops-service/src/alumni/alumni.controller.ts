@@ -91,4 +91,9 @@ export class AlumniController {
   getImpactReport(@Param("campaignId") campaignId: string) {
     return this.svc.getDonorImpactReport(campaignId);
   }
+
+  // ─── Health ───────────────────────────────────────────────────────────────────
+
+  @Get("health")
+  health() { return { status: "ok", service: "ops-service" }; }
 }

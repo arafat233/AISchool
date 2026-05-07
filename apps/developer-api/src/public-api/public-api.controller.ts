@@ -117,4 +117,7 @@ export class FeesApiController {
 
 // Combine into single controller file for module registration
 @Controller()
-export class PublicApiController {}
+export class PublicApiController {
+  @Get("health")
+  health() { return { status: "ok", service: "developer-api" }; }
+}

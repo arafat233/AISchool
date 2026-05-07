@@ -23,6 +23,8 @@ export class NotificationCron {
     };
     this.attendanceAlertQueue = new Queue(QUEUES.ATTENDANCE_ALERT, { connection });
     this.feeReminderQueue = new Queue(QUEUES.FEE_REMINDER, { connection });
+    this.attendanceAlertQueue.on("error", (err) => this.logger.error(`Queue error (attendance-alert): ${err.message}`, err.stack));
+    this.feeReminderQueue.on("error", (err) => this.logger.error(`Queue error (fee-reminder): ${err.message}`, err.stack));
   }
 
   /** Daily 08:00 — absent alerts for yesterday */

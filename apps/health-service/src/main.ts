@@ -7,6 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   app.useLogger(new LoggerService("HealthService"));
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.enableShutdownHooks();
   await app.listen(process.env.HEALTH_SERVICE_PORT ?? 3015);
 }
 void bootstrap();

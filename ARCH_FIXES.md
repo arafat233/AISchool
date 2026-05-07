@@ -13,9 +13,9 @@
 | 🔴 Week 1 — Critical (prod broken) | 10 | 10 | 100% |
 | 🟠 Week 2 — Security hardening | 10 | 10 | 100% |
 | 🟡 Week 3 — Async / event wiring | 5 | 5 | 100% |
-| 🔵 Week 4 — Infra + observability | 8 | 0 | 0% |
+| 🔵 Week 4 — Infra + observability | 8 | 8 | 100% |
 | ⚪ Ongoing — Tests, portals, perf | 17 | 0 | 0% |
-| **TOTAL** | **50** | **25** | **50%** |
+| **TOTAL** | **50** | **33** | **66%** |
 
 ---
 
@@ -108,28 +108,28 @@
 
 ## 🔵 Week 4 — Infra + Observability
 
-- [ ] **W4-01** — Add `app.enableShutdownHooks()` + SIGTERM handler to all 25 `main.ts` files  
+- [x] **W4-01** — Add `app.enableShutdownHooks()` + SIGTERM handler to all 25 `main.ts` files  
   _All service `src/main.ts` files_
 
-- [ ] **W4-02** — Add `/health` endpoint to 12 services missing it (admission, certificate, developer-api, event, expense, hr, lms, ops, payroll, saas, scholarship, transport)  
+- [x] **W4-02** — Add `/health` endpoint to 12 services missing it (admission, certificate, developer-api, event, expense, hr, lms, ops, payroll, saas, scholarship, transport)  
   _Respective service `src/health/` dirs_
 
-- [ ] **W4-03** — Add `ThrottlerModule` to the 21 services missing rate limiting  
+- [x] **W4-03** — Add `ThrottlerModule` to the 21 services missing rate limiting  
   _All services' `src/app.module.ts` except auth, saas, developer-api_
 
-- [ ] **W4-04** — Configure Prisma connection pool: add `connection_limit` to DATABASE_URL or `PrismaClient` options  
+- [x] **W4-04** — Configure Prisma connection pool: add `connection_limit` to DATABASE_URL or `PrismaClient` options  
   _File: `packages/database/src/prisma.service.ts`_
 
-- [ ] **W4-05** — Add Redis `.on("error")` handlers in notification-service, attendance-service, ops/feature-flags  
+- [x] **W4-05** — Add Redis `.on("error")` handlers in notification-service, attendance-service, ops/feature-flags  
   _Respective service Redis client init files_
 
-- [ ] **W4-06** — Expand CD pipeline to cover all 25 services (currently only 3)  
+- [x] **W4-06** — Expand CD pipeline to cover all 25 services (currently only 3)  
   _File: `.github/workflows/cd.yml`_
 
-- [ ] **W4-07** — Wire E2E tests into CI pipeline  
+- [x] **W4-07** — Wire E2E tests into CI pipeline  
   _File: `.github/workflows/ci.yml`_
 
-- [ ] **W4-08** — Complete Helm `values.yaml` for all 25 services (currently only 7 configured)  
+- [x] **W4-08** — Complete Helm `values.yaml` for all 25 services (currently only 7 configured)  
   _File: `infrastructure/k8s/helm/school-erp/values.yaml`_
 
 ---

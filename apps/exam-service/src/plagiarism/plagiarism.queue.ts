@@ -23,7 +23,9 @@ export function getPlagiarismQueue(): Queue {
     const connection = new Redis(process.env.REDIS_URL ?? "redis://localhost:6379", {
       maxRetriesPerRequest: null,
     });
+    connection.on("error", (err) => console.error(`[PlagiarismQueue] Redis error: ${err.message}`));
     queue = new Queue(PLAGIARISM_QUEUE, { connection });
+    queue.on("error", (err) => console.error(`[PlagiarismQueue] Queue error: ${err.message}`));
   }
   return queue;
 }

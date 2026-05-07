@@ -320,4 +320,9 @@ export class ExpenseController {
   getSchoolVendorInvoices(@Param("schoolId") schoolId: string, @Query("status") status?: string) {
     return this.svc.getSchoolVendorInvoices(schoolId, status);
   }
+
+  // ─── Health ───────────────────────────────────────────────────────────────────
+
+  @Get("health")
+  health() { return { status: "ok", service: "expense-service" }; }
 }

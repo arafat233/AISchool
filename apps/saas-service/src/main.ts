@@ -13,6 +13,7 @@ async function bootstrap() {
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   });
+  app.enableShutdownHooks();
   await app.listen(process.env.SAAS_SERVICE_PORT ?? 3022);
 }
 void bootstrap();

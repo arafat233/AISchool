@@ -234,4 +234,9 @@ export class LmsController {
   getPaceAlerts(@Req() req: Request & { user: RequestUser }) {
     return this.syllabus.getPaceAlerts(req.user.schoolId!);
   }
+
+  // ─── Health ───────────────────────────────────────────────────────────────────
+
+  @Get("health")
+  health() { return { status: "ok", service: "lms-service" }; }
 }

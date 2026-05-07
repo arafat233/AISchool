@@ -1,19 +1,25 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { Queue } from "bullmq";
 import { PrismaService } from "@school-erp/database";
 import { QUEUES, DEFAULT_JOB_OPTIONS } from "@school-erp/events";
 
+function attachQueueErrorHandler(queue: Queue, logger: Logger): Queue {
+  queue.on("error", (err) => logger.error(`Queue "${queue.name}" error: ${err.message}`, err.stack));
+  return queue;
+}
+
 @Injectable()
 export class NotificationService {
+  private readonly logger = new Logger(NotificationService.name);
   private readonly emailQueue: Queue;
   private readonly smsQueue: Queue;
   private readonly pushQueue: Queue;
 
   constructor(private readonly prisma: PrismaService) {
     const connection = { host: process.env.REDIS_HOST || "localhost", port: Number(process.env.REDIS_PORT) || 6379 };
-    this.emailQueue = new Queue(QUEUES.EMAIL, { connection });
-    this.smsQueue = new Queue(QUEUES.SMS, { connection });
-    this.pushQueue = new Queue(QUEUES.PUSH, { connection });
+    this.emailQueue = attachQueueErrorHandler(new Queue(QUEUES.EMAIL, { connection }), this.logger);
+    this.smsQueue = attachQueueErrorHandler(new Queue(QUEUES.SMS, { connection }), this.logger);
+    this.pushQueue = attachQueueErrorHandler(new Queue(QUEUES.PUSH, { connection }), this.logger);
   }
 
   async sendEmail(to: string, subject: string, html: string) {

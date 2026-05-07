@@ -351,4 +351,9 @@ export class EventController {
   getStudentEventAchievements(@Param("studentId") studentId: string) {
     return this.svc.getStudentEventAchievements(studentId);
   }
+
+  // ─── Health ───────────────────────────────────────────────────────────────────
+
+  @Get("health")
+  health() { return { status: "ok", service: "event-service" }; }
 }

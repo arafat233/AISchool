@@ -110,4 +110,9 @@ export class ScholarshipController {
   getAnalytics(@Param("schoolId") schoolId: string, @Query("academicYearId") academicYearId: string) {
     return this.svc.getScholarshipAnalytics(schoolId, academicYearId);
   }
+
+  // ─── Health ───────────────────────────────────────────────────────────────────
+
+  @Get("health")
+  health() { return { status: "ok", service: "scholarship-service" }; }
 }
