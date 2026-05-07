@@ -206,4 +206,9 @@ export class LibraryController {
   getStudentProgress(@Param("programId") programId: string, @Param("studentId") studentId: string) {
     return this.svc.getStudentReadingProgress(programId, studentId);
   }
+
+  // ─── Health ───────────────────────────────────────────────────────────────
+
+  @Get("health")
+  health() { return { status: "ok", service: "library-service" }; }
 }
