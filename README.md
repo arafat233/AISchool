@@ -1,37 +1,43 @@
 # AISchool ERP
 
-> Production-grade K-12 School Enterprise Resource Planning system — 25 microservices, 5 web portals, mobile app, AI/ML engine, IoT integration, and blockchain certificate verification.
+> Production-grade K-12 School Enterprise Resource Planning system — 25 NestJS microservices, 5 Next.js 14 portals, React Native mobile app, Python FastAPI AI engine, and full DevOps pipeline.
 
 [![CI](https://github.com/arafat233/aischool-erp/actions/workflows/ci.yml/badge.svg)](https://github.com/arafat233/aischool-erp/actions/workflows/ci.yml)
+[![CD](https://github.com/arafat233/aischool-erp/actions/workflows/cd.yml/badge.svg)](https://github.com/arafat233/aischool-erp/actions/workflows/cd.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![pnpm](https://img.shields.io/badge/maintained%20with-pnpm-cc00ff.svg)](https://pnpm.io/)
-[![Tasks](https://img.shields.io/badge/tasks-657%2F657-brightgreen)](PROGRESS.md)
 
 ---
 
 ## What is this?
 
-AISchool ERP is a **full-stack monorepo** covering every operational and academic need of a modern K-12 school — from student admission to alumni management, IoT air quality monitoring to blockchain certificate verification, AI dropout prediction to NSQF vocational education tracking.
+AISchool ERP is a **full-stack monorepo** covering every operational and academic need of a modern K-12 school — from student admission to alumni management, AI plagiarism detection to S3/R2 file storage, biometric attendance to blockchain certificate verification.
 
-Built with **NestJS microservices**, **Next.js 14 App Router**, **Expo 51** mobile, and a **Python FastAPI** AI engine — all in a single **Turborepo + pnpm workspace**.
+Built with **NestJS microservices**, **Next.js 14 App Router**, **Expo 51** mobile, and a **Python FastAPI** AI engine — all in a single **Turborepo + pnpm workspace** that runs locally with a single command.
 
 ---
 
 ## Architecture
 
 ```
-Clients (5 Next.js portals + Expo mobile)
+Clients
+  ├── Admin Portal    (Next.js 14 · :3100)
+  ├── Teacher Portal  (Next.js 14 · :3101)
+  ├── Student Portal  (Next.js 14 · :3102)
+  ├── Parent Portal   (Next.js 14 · :3103)
+  ├── Mgmt Portal     (Next.js 14 · :3104)
+  └── Mobile App      (Expo 51 · iOS + Android)
          │
-    Nginx API Gateway (TLS + rate limiting)
+    API Gateway (:3000) — JWT auth guard · ThrottlerModule rate limiting
          │
-    25 NestJS Microservices (:3001 – :3023, :8000, :8080)
+    25 NestJS Microservices (:3001 – :3023)
+    + Python AI Service (:8000)
          │
-    PostgreSQL 16 (Prisma) · Redis Cluster · Kafka · InfluxDB · MQTT
-         │
-    HashiCorp Vault · Polygon Blockchain · MinIO · Kubernetes
+    PostgreSQL 16 (Prisma ORM)
+    Redis 7 (BullMQ queues · token blacklist)
+    MQTT (Mosquitto · IoT / biometric devices)
+    InfluxDB (GPS / sensor time-series)
 ```
-
-See [BLUEPRINT.md](BLUEPRINT.md) for the full architecture diagram, schema, all endpoints, and deployment details.
 
 ---
 
@@ -39,31 +45,31 @@ See [BLUEPRINT.md](BLUEPRINT.md) for the full architecture diagram, schema, all 
 
 | Service | Port | Purpose |
 |---|---|---|
-| auth-service | 3001 | JWT, MFA, session security |
-| user-service | 3002 | User CRUD, GDPR erasure |
-| student-service | 3003 | Students, CWSN/IEP, gamification, mentoring |
-| academic-service | 3004 | Classes, timetable, LMS, vocational/NEP |
-| attendance-service | 3005 | Student + staff attendance, biometric |
-| fee-service | 3006 | Fee, Razorpay, receipts, FX payments |
-| notification-service | 3007 | FCM, SMS, email, WhatsApp |
-| exam-service | 3008 | Exams, marks, grades, CBT |
-| lms-service | 3009 | Lessons, assignments, plagiarism, live class |
-| hr-service | 3010 | Staff onboarding, leave, appraisal |
-| payroll-service | 3011 | Salary, EPF/ESI/TDS, bank NEFT |
-| certificate-service | 3012 | TC/BC/CC + Polygon blockchain hash |
-| admission-service | 3013 | Application, shortlisting, enrolment |
-| transport-service | 3014 | Routes, GPS tracking |
-| health-service | 3015 | Health visits, vaccinations, infirmary |
-| library-service | 3016 | Books, issue/return, OPAC |
-| event-service | 3017 | Events, magazine, yearbook |
-| expense-service | 3018 | Expense claims, budget |
-| scholarship-service | 3019 | Schemes, eligibility, disbursement |
-| ops-service | 3020 | Compliance, hostel, MDM, feature flags, international |
-| report-service | 3021 | Cross-service reports, PDF/Excel export |
-| saas-service | 3022 | Multi-tenant management, Stripe billing |
-| developer-api | 3023 | Third-party REST API, webhooks |
-| ai-service | 8000 | Dropout risk, timetable solver, essay grading |
-| biometric-bridge | 8080 | ZKTeco device bridge → MQTT |
+| **api-gateway** | 3000 | JWT guard, rate limiting, reverse proxy |
+| **auth-service** | 3001 | Login, JWT, OAuth (Google/Microsoft), 2FA, refresh tokens |
+| **user-service** | 3002 | User CRUD, avatar upload (S3/R2), GDPR erasure |
+| **student-service** | 3003 | Student profiles, parent contacts |
+| **academic-service** | 3004 | Timetables, homework, calendar, PTM, alerts |
+| **attendance-service** | 3005 | Student & staff attendance, biometric integration |
+| **fee-service** | 3006 | Fee structures, invoices, Stripe/Razorpay |
+| **notification-service** | 3007 | Push, SMS, email, WhatsApp (BullMQ workers) |
+| **exam-service** | 3008 | Exams, online exams, plagiarism scanning (AI) |
+| **lms-service** | 3009 | Courses, lessons, video content |
+| **hr-service** | 3010 | Staff profiles, PII encryption |
+| **payroll-service** | 3011 | Payroll runs, payslips |
+| **certificate-service** | 3012 | Certificate generation & issuance |
+| **admission-service** | 3013 | Applications, enrollment workflow |
+| **transport-service** | 3014 | Routes, vehicles, drivers, GPS trips |
+| **health-service** | 3015 | Medical records, visits, medications, incidents |
+| **library-service** | 3016 | Books, borrowing, reading programs |
+| **event-service** | 3017 | School events, registrations |
+| **expense-service** | 3018 | Expense claims, approvals |
+| **scholarship-service** | 3019 | Applications, eligibility, awards |
+| **ops-service** | 3020 | Assets, facilities, alumni, community (PTA, volunteers) |
+| **report-service** | 3021 | Custom reports, PDF/Excel export |
+| **saas-service** | 3022 | Multi-tenant school management |
+| **developer-api** | 3023 | Webhook management, sandbox, API key auth |
+| **ai-service** | 8000 | Plagiarism detection, essay scoring, recommendations |
 
 ---
 
@@ -71,97 +77,95 @@ See [BLUEPRINT.md](BLUEPRINT.md) for the full architecture diagram, schema, all 
 
 | Portal | Port | Users |
 |---|---|---|
-| Admin Portal | 4000 | School administrators, principals |
-| Teacher Portal | 4001 | Teaching staff |
-| Student Portal | 4002 | Students |
-| Parent Portal | 4003 | Parents / guardians |
-| Management Portal | 4004 | School owners, executives |
-| Mobile App | — | All roles (iOS + Android) |
+| Admin Portal | 3100 | School administrators, principals |
+| Teacher Portal | 3101 | Teaching staff |
+| Student Portal | 3102 | Students |
+| Parent Portal | 3103 | Parents / guardians |
+| Management Portal | 3104 | School owners, executives |
+| Mobile App | — | All roles (iOS + Android via Expo) |
 
 ---
 
 ## Quick Start
 
-```bash
-# Prerequisites: Node ≥ 20, pnpm ≥ 9, Docker Compose ≥ 2.24, Python ≥ 3.12
+### Prerequisites
+- Node ≥ 20, pnpm ≥ 9, Docker Compose ≥ 2.24
 
-# 1. Install dependencies
+### 1. Install dependencies
+```bash
 export PNPM_HOME="$HOME/Library/pnpm" && export PATH="$PNPM_HOME:$PATH"
 pnpm install
+```
 
-# 2. Configure environment
+### 2. Configure environment
+```bash
 cp .env.example .env
-# Fill in .env values (see BLUEPRINT.md §15 for all variables)
+# Edit .env — POSTGRES_PASSWORD is required at minimum
+```
 
-# 3. Start infrastructure
-docker compose up -d postgres redis-0 redis-1 redis-2 redis-3 redis-4 redis-5 \
-  kafka-0 kafka-1 kafka-2 zookeeper-0 zookeeper-1 zookeeper-2 \
-  influxdb mosquitto minio vault
+### 3. Start infrastructure (Docker)
+```bash
+docker compose up -d postgres redis mosquitto influxdb
+```
 
-# 4. Database setup
-pnpm --filter @aischool/prisma db:migrate
-pnpm --filter @aischool/prisma db:seed
+### 4. Build shared packages
+```bash
+pnpm --filter @school-erp/types build
+pnpm --filter @school-erp/errors build
+pnpm --filter @school-erp/events build
+pnpm --filter @school-erp/config build
+pnpm --filter @school-erp/utils build
+pnpm --filter @school-erp/logger build
+pnpm --filter @school-erp/database build
+```
 
-# 5. Start everything
-pnpm dev
+### 5. Run database migrations + seed
+```bash
+cd packages/database
+DATABASE_URL="postgresql://school_erp:<password>@localhost:5432/school_erp" \
+  npx prisma migrate deploy
+DATABASE_URL="postgresql://school_erp:<password>@localhost:5432/school_erp" \
+  npx ts-node --transpile-only prisma/seed.ts
+cd ../..
+```
 
-# AI service (separate terminal)
-cd apps/ai-service && python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt && uvicorn main:app --reload --port 8000
+### 6. Start services
+```bash
+# Load .env and start backend + frontend
+set -a && source .env && set +a
+
+# Backend (each in its own terminal or use & for background)
+pnpm --filter @school-erp/auth-service dev
+pnpm --filter @school-erp/user-service dev
+pnpm --filter @school-erp/api-gateway dev
+
+# Frontend portals
+pnpm --filter @school-erp/admin-portal dev    # http://localhost:3100
+pnpm --filter @school-erp/teacher-portal dev  # http://localhost:3101
+pnpm --filter @school-erp/student-portal dev  # http://localhost:3102
+pnpm --filter @school-erp/parent-portal dev   # http://localhost:3103
 ```
 
 ---
 
-## Key Features
+## Test Credentials
 
-### Academic
-- Timetable builder with AI optimisation (OR-Tools MILP)
-- LMS with video lessons, quizzes, plagiarism detection (BullMQ)
-- Live classes via Daily.co integration
-- CBT (Computer Based Testing) engine
-- NEP 2020 competency mapping + FLN dashboard (Grades 1–3)
-- NSQF vocational education with OJT tracking
+After running the seed, these accounts are available:
 
-### Operations
-- GPS live bus tracking with parent notifications
-- IoT air quality monitoring (CO₂, PM2.5, temp, humidity) via MQTT + InfluxDB
-- Hostel management with dual-approval leave workflow
-- MDM integration (Jamf + Microsoft Intune) with lesson-mode device lockdown
+| Role | Email | Password |
+|---|---|---|
+| Super Admin | `admin@schoolerp.local` | `Admin@123!` |
+| School Admin | `schooladmin@demo.local` | `Admin@123!` |
+| Teacher | `teacher@demo.local` | `Admin@123!` |
+| Student | `student@demo.local` | `Admin@123!` |
+| Parent | `parent@demo.local` | `Admin@123!` |
 
-### Compliance & Legal
-- POSH/POCSO complaint management with ICC register
-- RTE 25% seat lottery (seeded Fisher-Yates, deterministic + auditable)
-- EPF/ESI/TDS/PT payroll compliance + ECR 2.0 export
-- GDPR right-to-erasure (30-day pseudonymisation pipeline)
-- UDISE data package compilation
-
-### Intelligence
-- AI dropout risk prediction (Random Forest)
-- Fee defaulter risk scoring (Gradient Boosting)
-- Attendance anomaly detection (Isolation Forest)
-- AI essay grading with feedback (Anthropic API)
-- Session anomaly detection (impossible travel, new IP, brute force)
-
-### Finance
-- Multi-currency fee payments with live FX rates
-- Razorpay + Stripe integration
-- Scholarship auto-eligibility engine
-- Expense approval workflow + P&L reports
-
-### Student Engagement
-- Gamification engine: points, 15 badge rules (5 categories × 3 tiers), streaks, leaderboards
-- Digital portfolio + digital ID with QR code
-- CWSN/IEP management with exam accommodations
-- Mentoring with effectiveness tracking
-
-### Infrastructure
-- Kubernetes with HPA, PDB, cert-manager (Let's Encrypt)
-- HashiCorp Vault for secrets (sidecar injection, 30-day rotation)
-- Blockchain certificate verification on Polygon (Solidity + ethers.js)
-- ELK + Prometheus/Grafana + Jaeger distributed tracing
-- Redis-backed feature flags with deterministic hash rollout + auto-rollback
-- HMAC-SHA256 chained audit log (immutable)
-- mTLS between services (Istio service mesh)
+**Login endpoint:**
+```bash
+curl -X POST http://localhost:3001/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@schoolerp.local","password":"Admin@123!"}'
+```
 
 ---
 
@@ -170,43 +174,73 @@ pip install -r requirements.txt && uvicorn main:app --reload --port 8000
 | Layer | Technology |
 |---|---|
 | Monorepo | Turborepo + pnpm workspaces |
-| Backend | NestJS (TypeScript), Fastify adapter |
-| Frontend | Next.js 14 App Router, Tailwind CSS |
+| Backend | NestJS 10 (TypeScript), SWC compiler |
+| Frontend | Next.js 14 App Router, Tailwind CSS, shadcn/ui |
 | Mobile | Expo 51, React Native, expo-router |
-| AI/ML | Python 3.12, FastAPI, scikit-learn, OR-Tools |
-| ORM | Prisma (PostgreSQL 16) |
-| Cache | Redis Cluster (6 nodes) |
-| Queues | BullMQ (on Redis) |
-| Messaging | Apache Kafka (3 brokers) |
-| IoT | InfluxDB + Mosquitto MQTT |
-| Storage | MinIO (S3-compatible) |
-| Secrets | HashiCorp Vault |
-| Blockchain | Solidity + Polygon + ethers.js |
-| Containers | Docker + Kubernetes + Helm |
-| CI/CD | GitHub Actions → GHCR → Helm upgrade |
-| Observability | ELK + Prometheus + Grafana + Jaeger |
+| AI/ML | Python 3.12, FastAPI, scikit-learn |
+| ORM | Prisma 5 (PostgreSQL 16) |
+| Cache / Queues | Redis 7, BullMQ |
+| IoT / MQTT | Mosquitto 2, InfluxDB 2.7 |
+| Object Storage | S3 / Cloudflare R2 (AWS SDK v3) |
+| CI | GitHub Actions (lint + test + build) |
+| CD | GitHub Actions → GHCR Docker images |
+
+---
+
+## Project Structure
+
+```
+AISchool/
+├── apps/
+│   ├── api-gateway/           # NestJS reverse proxy + auth guard
+│   ├── auth-service/          # JWT, OAuth, 2FA
+│   ├── user-service/          # User management + S3 avatar upload
+│   ├── ...                    # 22 more NestJS services
+│   ├── ai-service/            # Python FastAPI AI engine
+│   ├── biometric-bridge/      # Node.js IoT bridge
+│   ├── admin-portal/          # Next.js admin dashboard
+│   ├── teacher-portal/        # Next.js teacher dashboard
+│   ├── student-portal/        # Next.js student dashboard
+│   ├── parent-portal/         # Next.js parent dashboard
+│   ├── management-portal/     # Next.js management dashboard
+│   └── mobile/                # Expo React Native app
+├── packages/
+│   ├── types/                 # Shared TypeScript types
+│   ├── utils/                 # Shared utilities (pagination, crypto, etc.)
+│   ├── config/                # Shared NestJS config factories
+│   ├── errors/                # Shared error classes
+│   ├── events/                # BullMQ queue names + job options
+│   ├── logger/                # Winston logger service
+│   ├── database/              # Prisma client + PrismaModule
+│   ├── ui/                    # Shared React component library
+│   └── tsconfig/              # Shared TypeScript configs
+├── infrastructure/
+│   ├── postgres/              # init.sql (extensions)
+│   ├── mosquitto/             # MQTT broker config
+│   └── nginx/                 # Nginx reverse proxy config
+├── .github/workflows/
+│   ├── ci.yml                 # Lint + test (NestJS, portals, Python)
+│   └── cd.yml                 # Docker build + push to GHCR
+├── docker-compose.yml         # Full stack orchestration
+├── CHANGELOG.md               # Version history
+└── PROGRESS.md                # Build task tracker
+```
+
+---
+
+## CI/CD
+
+- **CI** (`ci.yml`): runs on every PR — ESLint, Jest (NestJS + portals), pytest (AI service)
+- **CD** (`cd.yml`): runs on push to `main` — detects changed services via `dorny/paths-filter`, builds Docker images, pushes to GHCR
+
+Docker images: `ghcr.io/<owner>/school-erp-<service>:latest`
 
 ---
 
 ## Documentation
 
-- **[BLUEPRINT.md](BLUEPRINT.md)** — Complete architecture, schemas, all endpoints, deployment guide
-- **[PROGRESS.md](PROGRESS.md)** — Build checklist (657/657 tasks complete)
-
----
-
-## Progress
-
-```
-Phase 1 — Foundation           82/82   ████████████████  100%
-Phase 2 — Core Academic       130/130  ████████████████  100%
-Phase 3 — Operations          172/172  ████████████████  100%
-Phase 4 — Intelligence+Mobile  88/88   ████████████████  100%
-Phase 5 — Platform+DevOps      72/72   ████████████████  100%
-Phase 6 — Compliance+Niche    113/113  ████████████████  100%
-
-Total:                        657/657  ████████████████  100% ✅
-```
+- **[CHANGELOG.md](CHANGELOG.md)** — Full feature inventory and version history
+- **[PROGRESS.md](PROGRESS.md)** — Build checklist (all phases complete)
 
 ---
 
