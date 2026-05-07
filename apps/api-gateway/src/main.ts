@@ -38,9 +38,12 @@ async function bootstrap(): Promise<void> {
     );
   }
 
+  const defaultOrigins = 'http://localhost:4000,http://localhost:4001,http://localhost:4002,http://localhost:4003,http://localhost:4004';
+  const allowedOrigins = (process.env['CORS_ORIGINS'] ?? defaultOrigins).split(',').map((o) => o.trim()).filter(Boolean);
   app.enableCors({
-    origin: process.env['CORS_ORIGINS']?.split(',') ?? true,
+    origin: allowedOrigins,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
 
   const port = process.env['PORT'] ?? 3000;

@@ -3,6 +3,7 @@ import { AuthGuard } from "@nestjs/passport";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
 import { SurveyService } from "./survey.service";
+import { CreateSurveyDto, AddQuestionDto, UpdateQuestionDto } from "../dto/academic.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("surveys")
@@ -10,7 +11,7 @@ export class SurveyController {
   constructor(private readonly svc: SurveyService) {}
 
   @Post()
-  create(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  create(@Req() req: Request & { user: RequestUser }, @Body() body: CreateSurveyDto) {
     return this.svc.createSurvey(req.user.schoolId!, {
       ...body, createdBy: req.user.id,
       startsAt: body.startsAt ? new Date(body.startsAt) : undefined,
@@ -34,12 +35,12 @@ export class SurveyController {
   }
 
   @Post(":id/questions")
-  addQuestion(@Param("id") surveyId: string, @Body() body: any) {
+  addQuestion(@Param("id") surveyId: string, @Body() body: AddQuestionDto) {
     return this.svc.addQuestion(surveyId, body);
   }
 
   @Put("questions/:id")
-  updateQuestion(@Param("id") id: string, @Body() body: any) {
+  updateQuestion(@Param("id") id: string, @Body() body: UpdateQuestionDto) {
     return this.svc.updateQuestion(id, body);
   }
 

@@ -1,8 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, ConflictError } from "@school-erp/errors";
 import { parsePagination, buildPaginatedResult, generateAdmissionNumber } from "@school-erp/utils";
 import type { PaginationQuery } from "@school-erp/types";
+import { Queue } from "bullmq";
+import { QUEUES, DEFAULT_JOB_OPTIONS } from "@school-erp/events";
 import { CreateStudentDto } from "../dto/create-student.dto";
 import { UpdateStudentDto } from "../dto/update-student.dto";
 import { PromoteStudentDto } from "../dto/promote-student.dto";
@@ -10,7 +12,17 @@ import { parse } from "csv-parse/sync";
 
 @Injectable()
 export class StudentService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(StudentService.name);
+  private readonly enrolledQueue: Queue;
+
+  constructor(private readonly prisma: PrismaService) {
+    this.enrolledQueue = new Queue(QUEUES.STUDENT_ENROLLED, {
+      connection: {
+        host: process.env.REDIS_HOST ?? "localhost",
+        port: Number(process.env.REDIS_PORT ?? 6379),
+      },
+    });
+  }
 
   async create(schoolId: string, tenantId: string, dto: CreateStudentDto) {
     // Check duplicate admission number
@@ -41,6 +53,22 @@ export class StudentService {
       },
       include: { section: { include: { gradeLevel: true } } },
     });
+
+    // Publish enrollment event for fee + attendance services
+    await this.enrolledQueue.add(
+      "student.enrolled",
+      {
+        studentId: student.id,
+        schoolId,
+        tenantId,
+        sectionId: dto.sectionId,
+        academicYearId: dto.academicYearId,
+        admissionNo: dto.admissionNo,
+      },
+      DEFAULT_JOB_OPTIONS,
+    );
+    this.logger.log(`student.enrolled event published for ${student.id}`);
+
     return student;
   }
 

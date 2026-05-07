@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { ExpenseService } from "./expense.service";
+import { RecordExpenseDto, CreatePODto, CreateVendorDto, UpdateVendorDto, ImportBankStatementDto, RecordRevenueDto, SubmitVendorInvoiceDto } from "../dto/expense.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("expense")
@@ -49,7 +50,7 @@ export class ExpenseController {
   @Post(":schoolId/expenses")
   recordExpense(
     @Param("schoolId") schoolId: string,
-    @Body() body: any,
+    @Body() body: RecordExpenseDto,
   ) {
     return this.svc.recordExpense(schoolId, body.recordedBy, { ...body, paymentDate: new Date(body.paymentDate) });
   }
@@ -68,7 +69,7 @@ export class ExpenseController {
   // ─── [3] Purchase orders ──────────────────────────────────────────────────
 
   @Post(":schoolId/purchase-orders")
-  createPO(@Param("schoolId") schoolId: string, @Body() body: any) {
+  createPO(@Param("schoolId") schoolId: string, @Body() body: CreatePODto) {
     return this.svc.createPO(schoolId, body.createdBy, { ...body, requiredBy: body.requiredBy ? new Date(body.requiredBy) : undefined });
   }
 
@@ -115,12 +116,12 @@ export class ExpenseController {
   // ─── [4] Vendor management ────────────────────────────────────────────────
 
   @Post(":schoolId/vendors")
-  createVendor(@Param("schoolId") schoolId: string, @Body() body: any) {
+  createVendor(@Param("schoolId") schoolId: string, @Body() body: CreateVendorDto) {
     return this.svc.createVendor(schoolId, body);
   }
 
   @Patch("vendors/:vendorId")
-  updateVendor(@Param("vendorId") vendorId: string, @Body() body: any) {
+  updateVendor(@Param("vendorId") vendorId: string, @Body() body: UpdateVendorDto) {
     return this.svc.updateVendor(vendorId, body);
   }
 
@@ -210,7 +211,7 @@ export class ExpenseController {
   // ─── [9] Bank reconciliation ─────────────────────────────────────────────
 
   @Post(":schoolId/bank/import")
-  importBankStatement(@Param("schoolId") schoolId: string, @Body() body: any) {
+  importBankStatement(@Param("schoolId") schoolId: string, @Body() body: ImportBankStatementDto) {
     return this.svc.importBankStatement(schoolId, body);
   }
 
@@ -259,7 +260,7 @@ export class ExpenseController {
   // ─── [11] Revenue recognition ─────────────────────────────────────────────
 
   @Post(":schoolId/revenue")
-  recordRevenue(@Param("schoolId") schoolId: string, @Body() body: any) {
+  recordRevenue(@Param("schoolId") schoolId: string, @Body() body: RecordRevenueDto) {
     return this.svc.recordRevenue(schoolId, { ...body, recognitionDate: new Date(body.recognitionDate), deferralEndDate: body.deferralEndDate ? new Date(body.deferralEndDate) : undefined });
   }
 
@@ -281,7 +282,7 @@ export class ExpenseController {
   // ─── [12] Vendor self-service ─────────────────────────────────────────────
 
   @Post("vendor-portal/:vendorId/invoices")
-  submitVendorInvoice(@Param("vendorId") vendorId: string, @Body() body: any) {
+  submitVendorInvoice(@Param("vendorId") vendorId: string, @Body() body: SubmitVendorInvoiceDto) {
     return this.svc.submitVendorInvoice(vendorId, { ...body, invoiceDate: new Date(body.invoiceDate) });
   }
 

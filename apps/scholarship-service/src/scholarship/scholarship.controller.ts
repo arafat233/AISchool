@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { ScholarshipService } from "./scholarship.service";
+import { CreateSchemeDto, UpdateSchemeDto } from "../dto/scholarship.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("scholarships")
@@ -10,12 +11,12 @@ export class ScholarshipController {
   // ─── [1] Scheme CRUD ─────────────────────────────────────────────────────
 
   @Post(":schoolId/schemes")
-  createScheme(@Param("schoolId") schoolId: string, @Body() body: any) {
+  createScheme(@Param("schoolId") schoolId: string, @Body() body: CreateSchemeDto) {
     return this.svc.createScheme(schoolId, body);
   }
 
   @Patch("schemes/:schemeId")
-  updateScheme(@Param("schemeId") schemeId: string, @Body() body: any) {
+  updateScheme(@Param("schemeId") schemeId: string, @Body() body: UpdateSchemeDto) {
     return this.svc.updateScheme(schemeId, body);
   }
 

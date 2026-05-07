@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from "@nest
 import { AuthGuard } from "@nestjs/passport";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
+import { Roles, RolesGuard } from "@school-erp/utils";
 import { FeeService } from "./fee.service";
 
 @UseGuards(AuthGuard("jwt"))
@@ -9,10 +10,17 @@ import { FeeService } from "./fee.service";
 export class FeeController {
   constructor(private readonly svc: FeeService) {}
 
+  @Roles("ADMIN", "SUPER_ADMIN", "ACCOUNTANT")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("heads") createHead(@Req() req: Request & { user: RequestUser }, @Body() body: any) { return this.svc.createFeeHead(req.user.schoolId!, body); }
   @Get("heads") getHeads(@Req() req: Request & { user: RequestUser }) { return this.svc.getFeeHeads(req.user.schoolId!); }
+
+  @Roles("ADMIN", "SUPER_ADMIN", "ACCOUNTANT")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("structures") createStructure(@Req() req: Request & { user: RequestUser }, @Body() body: any) { return this.svc.createFeeStructure({ ...body, schoolId: req.user.schoolId! }); }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "ACCOUNTANT")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("invoices/generate")
   generate(@Req() req: Request & { user: RequestUser }, @Body() body: { sectionId: string; academicYearId: string; termId?: string }) {
     return this.svc.generateInvoicesForSection(req.user.schoolId!, body.sectionId, body.academicYearId, body.termId);
@@ -21,9 +29,14 @@ export class FeeController {
   @Get("invoices/student/:studentId") studentInvoices(@Param("studentId") id: string) { return this.svc.getStudentInvoices(id); }
   @Get("invoices/outstanding") outstanding(@Req() req: Request & { user: RequestUser }, @Query("academicYearId") ayId: string) { return this.svc.getOutstandingReport(req.user.schoolId!, ayId); }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "ACCOUNTANT")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("invoices/:id/pay-cash") payCash(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() body: any) { return this.svc.recordCashPayment(id, { ...body, receivedById: req.user.id }); }
   @Post("invoices/:id/razorpay-order") razorpayOrder(@Param("id") id: string) { return this.svc.createRazorpayOrder(id); }
   @Post("invoices/:id/verify-payment") verifyPayment(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() body: any) { return this.svc.verifyOnlinePayment(id, { ...body, receivedById: req.user.id }); }
+
+  @Roles("ADMIN", "SUPER_ADMIN", "ACCOUNTANT", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("invoices/:id/concession") applyConcession(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() body: any) { return this.svc.applyConcession({ ...body, invoiceId: id, approvedById: req.user.id }); }
 
   @Get("health") health() { return { status: "ok", service: "fee-service" }; }

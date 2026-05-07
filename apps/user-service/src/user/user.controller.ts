@@ -8,6 +8,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
 import { randomUUID } from "crypto";
+import { Roles, RolesGuard } from "@school-erp/utils";
 import { UserService } from "./user.service";
 import { UpdateUserDto } from "../dto/update-user.dto";
 import { ChangePasswordDto } from "../dto/change-password.dto";
@@ -56,6 +57,8 @@ export class UserController {
     return this.userService.update(id, req.user.tenantId, dto);
   }
 
+  @Roles("SUPER_ADMIN", "ADMIN")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Patch(":id/role")
   assignRole(
     @Param("id") id: string,
@@ -65,12 +68,16 @@ export class UserController {
     return this.userService.assignRole(id, req.user.tenantId, dto);
   }
 
+  @Roles("SUPER_ADMIN", "ADMIN")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Patch(":id/activate")
   @HttpCode(HttpStatus.NO_CONTENT)
   activate(@Param("id") id: string, @Req() req: Request & { user: RequestUser }) {
     return this.userService.setActive(id, req.user.tenantId, true);
   }
 
+  @Roles("SUPER_ADMIN", "ADMIN")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Patch(":id/deactivate")
   @HttpCode(HttpStatus.NO_CONTENT)
   deactivate(@Param("id") id: string, @Req() req: Request & { user: RequestUser }) {

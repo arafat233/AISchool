@@ -1,6 +1,8 @@
-import { Injectable, BadRequestException } from "@nestjs/common";
+import { Injectable, BadRequestException, Logger } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, ConflictError, ValidationError } from "@school-erp/errors";
+import { Queue } from "bullmq";
+import { QUEUES, DEFAULT_JOB_OPTIONS } from "@school-erp/events";
 import { GradingService } from "./grading.service";
 import { ReportCardService } from "./report-card.service";
 import JSZip from "jszip";
@@ -14,11 +16,21 @@ export type ExamType = "UNIT_TEST" | "MID_TERM" | "FINAL" | "BOARD" | "INTERNAL"
 
 @Injectable()
 export class ExamService {
+  private readonly logger = new Logger(ExamService.name);
+  private readonly resultPublishedQueue: Queue;
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly grading: GradingService,
     private readonly reportCard: ReportCardService,
-  ) {}
+  ) {
+    this.resultPublishedQueue = new Queue(QUEUES.EXAM_RESULT_PUBLISHED, {
+      connection: {
+        host: process.env.REDIS_HOST ?? "localhost",
+        port: Number(process.env.REDIS_PORT ?? 6379),
+      },
+    });
+  }
 
   async createExam(schoolId: string, data: {
     title: string; type: ExamType; academicYearId: string; term: string; description?: string;
@@ -400,6 +412,20 @@ export class ExamService {
       where: { examId },
       data: { publishedAt: new Date() },
     });
+
+    // Publish event for notification-service
+    await this.resultPublishedQueue.add(
+      "exam.result.published",
+      {
+        examId,
+        schoolId: exam.schoolId,
+        examTitle: exam.title,
+        totalStudents: results.length,
+        publishedAt: new Date().toISOString(),
+      },
+      DEFAULT_JOB_OPTIONS,
+    );
+    this.logger.log(`exam.result.published event sent for exam ${examId}`);
 
     return { message: "Results published successfully", examTitle: exam.title, totalStudents: results.length };
   }

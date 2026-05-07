@@ -13,9 +13,16 @@ export const QUEUES = {
   // Fees
   FEE_REMINDER: "queue:fee-reminder",
   PAYMENT_WEBHOOK: "queue:payment-webhook",
+  FEE_PAYMENT_RECEIVED: "queue:fee-payment-received",
 
   // Attendance
   ATTENDANCE_ALERT: "queue:attendance-alert",
+
+  // Student lifecycle
+  STUDENT_ENROLLED: "queue:student-enrolled",
+
+  // Exam
+  EXAM_RESULT_PUBLISHED: "queue:exam-result-published",
 
   // General
   BULK_IMPORT: "queue:bulk-import",

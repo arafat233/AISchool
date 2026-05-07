@@ -11,11 +11,11 @@
 | Priority | Total | Done | % |
 |---|---|---|---|
 | 🔴 Week 1 — Critical (prod broken) | 10 | 10 | 100% |
-| 🟠 Week 2 — Security hardening | 10 | 0 | 0% |
-| 🟡 Week 3 — Async / event wiring | 5 | 0 | 0% |
+| 🟠 Week 2 — Security hardening | 10 | 10 | 100% |
+| 🟡 Week 3 — Async / event wiring | 5 | 5 | 100% |
 | 🔵 Week 4 — Infra + observability | 8 | 0 | 0% |
 | ⚪ Ongoing — Tests, portals, perf | 17 | 0 | 0% |
-| **TOTAL** | **50** | **10** | **20%** |
+| **TOTAL** | **50** | **25** | **50%** |
 
 ---
 
@@ -55,53 +55,53 @@
 
 ## 🟠 Week 2 — Security Hardening
 
-- [ ] **W2-01** — Add `RolesGuard` + `@Roles()` decorator to sensitive routes in all services (payroll, fee, HR, user, student)  
+- [x] **W2-01** — Add `RolesGuard` + `@Roles()` decorator to sensitive routes in all services (payroll, fee, HR, user, student)  
   _All services — `RolesGuard` exists in auth-service but is never re-used elsewhere_
 
-- [ ] **W2-02** — Replace `@Body() body: any` with typed class-validator DTOs in `hr-service` (21 routes)  
+- [x] **W2-02** — Replace `@Body() body: any` with typed class-validator DTOs in `hr-service` (21 routes)  
   _File: `apps/hr-service/src/hr/hr.controller.ts`_
 
-- [ ] **W2-03** — Replace `@Body() body: any` with typed DTOs in `library-service` (12 routes)  
+- [x] **W2-03** — Replace `@Body() body: any` with typed DTOs in `library-service` (12 routes)  
   _File: `apps/library-service/src/library/library.controller.ts`_
 
-- [ ] **W2-04** — Replace `@Body() body: any` with typed DTOs in `academic-service` controllers (cafeteria, survey, visitor)  
+- [x] **W2-04** — Replace `@Body() body: any` with typed DTOs in `academic-service` controllers (cafeteria, survey, visitor)  
   _Dir: `apps/academic-service/src/`_
 
-- [ ] **W2-05** — Replace `@Body() body: any` with typed DTOs in `expense-service`, `scholarship-service`  
+- [x] **W2-05** — Replace `@Body() body: any` with typed DTOs in `expense-service`, `scholarship-service`  
   _Files: respective controller files_
 
-- [ ] **W2-06** — Fix AI service CORS: replace `allow_origins=["*"]` with env-configured origins  
+- [x] **W2-06** — Fix AI service CORS: replace `allow_origins=["*"]` with env-configured origins  
   _File: `apps/ai-service/main.py:31-36`_
 
-- [ ] **W2-07** — Fix API gateway CORS: change default from `true` (allow all) to empty list  
+- [x] **W2-07** — Fix API gateway CORS: change default from `true` (allow all) to empty list  
   _File: `apps/api-gateway/src/main.ts:42`_
 
-- [ ] **W2-08** — Whitelist allowed models in report service dynamic access  
+- [x] **W2-08** — Whitelist allowed models in report service dynamic access  
   _File: `apps/report-service/src/report/report.service.ts:281`_
 
-- [ ] **W2-09** — Fix `WEBHOOK_ENCRYPTION_KEY` and `PII_ENCRYPTION_KEY` non-null assertions → startup validation  
+- [x] **W2-09** — Fix `WEBHOOK_ENCRYPTION_KEY` and `PII_ENCRYPTION_KEY` non-null assertions → startup validation  
   _Files: `apps/developer-api/src/webhooks/webhook.service.ts:20`, `apps/hr-service/src/hr/staff.service.ts:6`_
 
-- [ ] **W2-10** — Fix email provisioning: replace predictable `SchoolERP@2026!` password with `crypto.randomBytes`  
+- [x] **W2-10** — Fix email provisioning: replace predictable `SchoolERP@2026!` password with `crypto.randomBytes`  
   _File: `apps/user-service/src/email-provisioning/email-provision.service.ts:93`_
 
 ---
 
 ## 🟡 Week 3 — Async / Event Wiring
 
-- [ ] **W3-01** — Wire `packages/events` with BullMQ: publish `student.enrolled` from student-service, consume in attendance-service + fee-service  
+- [x] **W3-01** — Wire `packages/events` with BullMQ: publish `student.enrolled` from student-service, consume in attendance-service + fee-service  
   _Package: `packages/events/` (exists but unused)_
 
-- [ ] **W3-02** — Wire `fee.paid` event: publish from fee-service, consume in notification-service (send receipt SMS/email)  
+- [x] **W3-02** — Wire `fee.paid` event: publish from fee-service, consume in notification-service (send receipt SMS/email)  
   _Files: `apps/fee-service/src/fee/fee.service.ts`, `apps/notification-service/`_
 
-- [ ] **W3-03** — Wire `exam.result.published` event: publish from exam-service, consume in notification-service (alert parents/students)  
+- [x] **W3-03** — Wire `exam.result.published` event: publish from exam-service, consume in notification-service (alert parents/students)  
   _Files: `apps/exam-service/`, `apps/notification-service/`_
 
-- [ ] **W3-04** — Add `@nestjs/schedule` cron jobs: daily attendance absent alerts, weekly fee reminders, sandbox reset  
+- [x] **W3-04** — Add `@nestjs/schedule` cron jobs: daily attendance absent alerts, weekly fee reminders, sandbox reset  
   _Services: `notification-service`, `fee-service`, `developer-api`_
 
-- [ ] **W3-05** — Wire webhook dispatch: call `webhookService.dispatch()` from student enrollment, fee payment, result publication  
+- [x] **W3-05** — Wire webhook dispatch: call `webhookService.dispatch()` from student enrollment, fee payment, result publication  
   _File: `apps/developer-api/src/webhooks/webhook.service.ts` (dispatch exists but never called)_
 
 ---

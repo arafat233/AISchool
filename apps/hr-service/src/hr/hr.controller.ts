@@ -5,6 +5,7 @@ import {
 import { AuthGuard } from "@nestjs/passport";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
+import { Roles, RolesGuard } from "@school-erp/utils";
 import { StaffService } from "./staff.service";
 import { RecruitmentService } from "./recruitment.service";
 import { LeaveService } from "./leave.service";
@@ -13,6 +14,7 @@ import { ExitService } from "./exit.service";
 import { GrievanceService } from "./grievance.service";
 import { AppraisalService } from "./appraisal.service";
 import { SubstituteService } from "./substitute.service";
+import { CreateStaffDto, UpdateStaffDto, AddDocumentDto, CreateVacancyDto, UpdateVacancyDto, ApplyVacancyDto, ScheduleInterviewDto, SubmitInterviewFeedbackDto, GenerateOfferDto, CreateLeavePolicyDto, UpdateLeavePolicyDto, ApplyLeaveDto, CreateTrainingDto, UpdateTrainingDto, SubmitResignationDto, AddHandoverItemDto, AddNoDueItemDto, RecordFnFDto, SubmitGrievanceDto, CreateAppraisalDto, BookSubstituteDto, AddExternalSubstituteDto } from "../dto/hr.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("hr")
@@ -30,8 +32,10 @@ export class HrController {
 
   // ─── Staff CRUD ───────────────────────────────────────────────────────────────
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("staff")
-  createStaff(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  createStaff(@Req() req: Request & { user: RequestUser }, @Body() body: CreateStaffDto) {
     return this.staff.createStaff(req.user.schoolId!, { ...body, joinDate: new Date(body.joinDate) });
   }
 
@@ -50,15 +54,19 @@ export class HrController {
     return this.staff.getStaff(id);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Put("staff/:id")
-  updateStaff(@Param("id") id: string, @Body() body: any) {
+  updateStaff(@Param("id") id: string, @Body() body: UpdateStaffDto) {
     return this.staff.updateStaff(id, body);
   }
 
   // ─── Documents ────────────────────────────────────────────────────────────────
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("staff/:id/documents")
-  addDocument(@Param("id") staffId: string, @Body() body: any) {
+  addDocument(@Param("id") staffId: string, @Body() body: AddDocumentDto) {
     return this.staff.addDocument(staffId, body);
   }
 
@@ -74,6 +82,8 @@ export class HrController {
     return this.staff.getProbationDueList(req.user.schoolId!, days ? +days : 30);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("staff/:id/confirm")
   confirmStaff(@Param("id") id: string, @Body("confirmationDate") date: string) {
     return this.staff.confirmStaff(id, new Date(date));
@@ -81,16 +91,22 @@ export class HrController {
 
   // ─── Subject/class-teacher mapping ───────────────────────────────────────────
 
+  @Roles("ADMIN", "SUPER_ADMIN", "PRINCIPAL", "VICE_PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("staff/:id/subjects")
   assignSubject(@Param("id") staffId: string, @Body() body: { subjectId: string; gradeLevelId: string; sectionId?: string }) {
     return this.staff.assignSubject(staffId, body);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "PRINCIPAL", "VICE_PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Delete("staff/:id/subjects")
   removeSubject(@Param("id") staffId: string, @Query("subjectId") subjectId: string, @Query("gradeLevelId") gradeLevelId: string) {
     return this.staff.removeSubject(staffId, subjectId, gradeLevelId);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "PRINCIPAL", "VICE_PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("staff/:id/class-teacher")
   assignClassTeacher(@Param("id") staffId: string, @Body() body: { gradeLevelId: string; sectionId: string; academicYearId: string }) {
     return this.staff.assignClassTeacher(staffId, body);
@@ -98,8 +114,10 @@ export class HrController {
 
   // ─── Recruitment ──────────────────────────────────────────────────────────────
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("vacancies")
-  createVacancy(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  createVacancy(@Req() req: Request & { user: RequestUser }, @Body() body: CreateVacancyDto) {
     return this.recruitment.createVacancy(req.user.schoolId!, { ...body, closingDate: body.closingDate ? new Date(body.closingDate) : undefined });
   }
 
@@ -108,13 +126,15 @@ export class HrController {
     return this.recruitment.getVacancies(req.user.schoolId!, status);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Put("vacancies/:id")
-  updateVacancy(@Param("id") id: string, @Body() body: any) {
+  updateVacancy(@Param("id") id: string, @Body() body: UpdateVacancyDto) {
     return this.recruitment.updateVacancy(id, body);
   }
 
   @Post("vacancies/:id/apply")
-  applyVacancy(@Param("id") vacancyId: string, @Body() body: any) {
+  applyVacancy(@Param("id") vacancyId: string, @Body() body: ApplyVacancyDto) {
     return this.recruitment.applyForVacancy(vacancyId, body);
   }
 
@@ -123,30 +143,38 @@ export class HrController {
     return this.recruitment.getApplications(vacancyId, stage);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Put("applications/:id/stage")
   updateStage(@Param("id") id: string, @Body("stage") stage: any, @Body("notes") notes?: string) {
     return this.recruitment.updateStage(id, stage, notes);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("applications/:id/interview")
-  scheduleInterview(@Param("id") id: string, @Body() body: any) {
+  scheduleInterview(@Param("id") id: string, @Body() body: ScheduleInterviewDto) {
     return this.recruitment.scheduleInterview(id, { ...body, scheduledAt: new Date(body.scheduledAt) });
   }
 
   @Post("interviews/:id/feedback")
-  submitInterviewFeedback(@Param("id") id: string, @Body() body: any) {
+  submitInterviewFeedback(@Param("id") id: string, @Body() body: SubmitInterviewFeedbackDto) {
     return this.recruitment.submitInterviewFeedback(id, body);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("applications/:id/offer")
-  generateOffer(@Param("id") id: string, @Body() body: any) {
+  generateOffer(@Param("id") id: string, @Body() body: GenerateOfferDto) {
     return this.recruitment.generateOffer(id, { ...body, joiningDate: new Date(body.joiningDate), offerExpiry: new Date(body.offerExpiry) });
   }
 
   // ─── Leave policies ───────────────────────────────────────────────────────────
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("leave-policies")
-  createLeavePolicy(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  createLeavePolicy(@Req() req: Request & { user: RequestUser }, @Body() body: CreateLeavePolicyDto) {
     return this.leave.createLeavePolicy(req.user.schoolId!, body);
   }
 
@@ -155,13 +183,17 @@ export class HrController {
     return this.leave.getLeavePolicies(req.user.schoolId!);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Put("leave-policies/:id")
-  updateLeavePolicy(@Param("id") id: string, @Body() body: any) {
+  updateLeavePolicy(@Param("id") id: string, @Body() body: UpdateLeavePolicyDto) {
     return this.leave.updateLeavePolicy(id, body);
   }
 
   // ─── Leave balances + applications ───────────────────────────────────────────
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("staff/:id/leave-balances/init")
   initLeaveBalances(@Param("id") staffId: string, @Body("academicYearId") academicYearId: string) {
     return this.leave.initLeaveBalances(staffId, academicYearId);
@@ -173,10 +205,12 @@ export class HrController {
   }
 
   @Post("leave-applications")
-  applyLeave(@Body() body: any) {
+  applyLeave(@Body() body: ApplyLeaveDto) {
     return this.leave.applyLeave({ ...body, fromDate: new Date(body.fromDate), toDate: new Date(body.toDate) });
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL", "VICE_PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Put("leave-applications/:id/process")
   processLeave(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body("action") action: any, @Body("remarks") remarks?: string) {
     return this.leave.processLeave(id, action, req.user.id, remarks);
@@ -194,8 +228,10 @@ export class HrController {
 
   // ─── Training & CPD ───────────────────────────────────────────────────────────
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("trainings")
-  createTraining(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  createTraining(@Req() req: Request & { user: RequestUser }, @Body() body: CreateTrainingDto) {
     return this.training.createTraining(req.user.schoolId!, { ...body, startDate: new Date(body.startDate), endDate: new Date(body.endDate) });
   }
 
@@ -204,11 +240,15 @@ export class HrController {
     return this.training.getTrainings(req.user.schoolId!, { status });
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Put("trainings/:id")
-  updateTraining(@Param("id") id: string, @Body() body: any) {
+  updateTraining(@Param("id") id: string, @Body() body: UpdateTrainingDto) {
     return this.training.updateTraining(id, body);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("trainings/:id/attendance")
   markTrainingAttendance(@Param("id") id: string, @Body("staffId") staffId: string, @Body("attended") attended: boolean) {
     return this.training.markAttendance(id, staffId, attended);
@@ -237,7 +277,7 @@ export class HrController {
   // ─── Exit management ─────────────────────────────────────────────────────────
 
   @Post("staff/:id/exit")
-  submitResignation(@Param("id") staffId: string, @Body() body: any) {
+  submitResignation(@Param("id") staffId: string, @Body() body: SubmitResignationDto) {
     return this.exit.submitResignation({ staffId, ...body, lastWorkingDate: new Date(body.lastWorkingDate) });
   }
 
@@ -246,13 +286,15 @@ export class HrController {
     return this.exit.getExit(staffId);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Put("exits/:id/status")
   updateExitStatus(@Param("id") id: string, @Body("status") status: string) {
     return this.exit.updateExitStatus(id, status);
   }
 
   @Post("exits/:id/handover")
-  addHandoverItem(@Param("id") exitId: string, @Body() item: any) {
+  addHandoverItem(@Param("id") exitId: string, @Body() item: AddHandoverItemDto) {
     return this.exit.addHandoverItem(exitId, item);
   }
 
@@ -266,8 +308,10 @@ export class HrController {
     return this.exit.getHandoverChecklist(exitId);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("exits/:id/no-dues")
-  updateNoDue(@Param("id") exitId: string, @Body() body: any) {
+  updateNoDue(@Param("id") exitId: string, @Body() body: AddNoDueItemDto) {
     return this.exit.addNoDueItem(exitId, body);
   }
 
@@ -276,11 +320,15 @@ export class HrController {
     return this.exit.getNoDueClearances(exitId);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "ACCOUNTANT")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("exits/:id/fnf")
-  recordFnF(@Param("id") exitId: string, @Body() body: any) {
+  recordFnF(@Param("id") exitId: string, @Body() body: RecordFnFDto) {
     return this.exit.recordFnFSettlement(exitId, { ...body, settledOn: new Date(body.settledOn) });
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("exits/:id/interview")
   scheduleExitInterview(@Param("id") exitId: string, @Body("scheduledAt") scheduledAt: string, @Body("interviewerId") interviewerId: string) {
     return this.exit.scheduleExitInterview(exitId, new Date(scheduledAt), interviewerId);
@@ -294,7 +342,7 @@ export class HrController {
   // ─── Grievances ───────────────────────────────────────────────────────────────
 
   @Post("grievances")
-  submitGrievance(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  submitGrievance(@Req() req: Request & { user: RequestUser }, @Body() body: SubmitGrievanceDto) {
     return this.grievance.submitGrievance({ schoolId: req.user.schoolId!, staffId: req.user.id, ...body });
   }
 
@@ -303,16 +351,22 @@ export class HrController {
     return this.grievance.getGrievances(req.user.schoolId!, { status, category });
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Put("grievances/:id/assign")
   assignGrievance(@Param("id") id: string, @Body("assignedTo") assignedTo: string, @Body("resolutionDeadline") deadline?: string) {
     return this.grievance.assignGrievance(id, assignedTo, deadline ? new Date(deadline) : undefined);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Put("grievances/:id/resolve")
   resolveGrievance(@Param("id") id: string, @Body("resolution") resolution: string) {
     return this.grievance.resolveGrievance(id, resolution);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("grievances/escalate")
   escalateGrievances(@Req() req: Request & { user: RequestUser }) {
     return this.grievance.checkAndEscalate(req.user.schoolId!);
@@ -320,8 +374,10 @@ export class HrController {
 
   // ─── Appraisals ───────────────────────────────────────────────────────────────
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("appraisals")
-  createAppraisal(@Body() body: any) {
+  createAppraisal(@Body() body: CreateAppraisalDto) {
     return this.appraisal.createAppraisal(body);
   }
 
@@ -335,11 +391,15 @@ export class HrController {
     return this.appraisal.submitSelfAssessment(id, scores);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "PRINCIPAL", "VICE_PRINCIPAL", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("appraisals/:id/hod-review")
   hodReview(@Req() req: Request & { user: RequestUser }, @Param("id") id: string, @Body("hodScores") scores: any, @Body("hodComments") comments?: string) {
     return this.appraisal.submitHodReview(id, req.user.id, scores, comments);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("appraisals/:id/signoff")
   principalSignOff(@Req() req: Request & { user: RequestUser }, @Param("id") id: string, @Body("finalScore") score: number, @Body("incrementEligible") inc: boolean, @Body("comments") comments?: string) {
     return this.appraisal.principalSignOff(id, req.user.id, score, inc, comments);
@@ -373,13 +433,17 @@ export class HrController {
     return this.substitute.suggestSubstitutes(absentStaffId, new Date(date), +periodNo, subjectId, req.user.schoolId!);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "PRINCIPAL", "VICE_PRINCIPAL", "CLASS_TEACHER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("substitutes/book")
-  bookSubstitute(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  bookSubstitute(@Req() req: Request & { user: RequestUser }, @Body() body: BookSubstituteDto) {
     return this.substitute.bookSubstitute({ schoolId: req.user.schoolId!, ...body, date: new Date(body.date) });
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("substitutes/external")
-  addExternal(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  addExternal(@Req() req: Request & { user: RequestUser }, @Body() body: AddExternalSubstituteDto) {
     return this.substitute.addExternalSubstitute(req.user.schoolId!, body);
   }
 

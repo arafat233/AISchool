@@ -10,6 +10,7 @@ import type { RequestUser } from "@school-erp/types";
 const CSV_MAGIC = [0xef, 0xbb, 0xbf]; // UTF-8 BOM (optional) or plain text
 const MAX_CSV_SIZE = 2 * 1024 * 1024; // 2 MB
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+import { Roles, RolesGuard } from "@school-erp/utils";
 import { StudentService } from "./student.service";
 import { CreateStudentDto } from "../dto/create-student.dto";
 import { UpdateStudentDto } from "../dto/update-student.dto";
@@ -22,6 +23,8 @@ import { ListStudentsQueryDto } from "../dto/list-students-query.dto";
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
+  @Roles("ADMIN", "SUPER_ADMIN", "RECEPTIONIST")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post()
   create(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateStudentDto) {
     return this.studentService.create(req.user.schoolId!, req.user.tenantId, dto);
@@ -37,17 +40,23 @@ export class StudentController {
     return this.studentService.findOne(id, req.user.schoolId!);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "RECEPTIONIST")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Patch(":id")
   update(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() dto: UpdateStudentDto) {
     return this.studentService.update(id, req.user.schoolId!, dto);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("promote")
   @HttpCode(HttpStatus.OK)
   promote(@Body() dto: PromoteStudentDto) {
     return this.studentService.promote(dto);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("bulk-import")
   @UseInterceptors(FileInterceptor("file", { limits: { fileSize: MAX_CSV_SIZE } }))
   bulkImport(
@@ -67,12 +76,16 @@ export class StudentController {
     return this.studentService.bulkImport(req.user.schoolId!, file.buffer, academicYearId);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "RECEPTIONIST")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post(":id/link-parent")
   @HttpCode(HttpStatus.NO_CONTENT)
   linkParent(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() dto: LinkParentDto) {
     return this.studentService.linkParent(id, dto.parentUserId, req.user.schoolId!);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "PRINCIPAL", "VICE_PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post(":id/tc")
   issueTC(@Param("id") id: string, @Req() req: Request & { user: RequestUser }) {
     return this.studentService.issueTC(id, req.user.schoolId!, req.user.id);

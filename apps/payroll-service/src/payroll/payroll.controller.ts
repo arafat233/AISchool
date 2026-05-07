@@ -4,6 +4,7 @@ import {
 import { AuthGuard } from "@nestjs/passport";
 import type { Request, Response } from "express";
 import type { RequestUser } from "@school-erp/types";
+import { Roles, RolesGuard } from "@school-erp/utils";
 import { SalaryStructureService } from "./salary-structure.service";
 import { PayrollService } from "./payroll.service";
 import { StatutoryService } from "./statutory.service";
@@ -25,6 +26,8 @@ export class PayrollController {
 
   // ─── Salary structure ─────────────────────────────────────────────────────────
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("structure/:designationId/components")
   createComponent(@Param("designationId") designationId: string, @Body() body: any) {
     return this.structure.createComponent(designationId, body);
@@ -35,6 +38,8 @@ export class PayrollController {
     return this.structure.getStructure(designationId);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Put("structure/components/:id")
   updateComponent(@Param("id") id: string, @Body() body: any) {
     return this.structure.updateComponent(id, body);
@@ -42,6 +47,8 @@ export class PayrollController {
 
   // ─── Payroll runs ─────────────────────────────────────────────────────────────
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "ACCOUNTANT")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("runs")
   createRun(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
     return this.payroll.createRun(req.user.schoolId!, body);
@@ -52,16 +59,22 @@ export class PayrollController {
     return this.payroll.getRuns(req.user.schoolId!, year ? +year : undefined);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "ACCOUNTANT")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("runs/:id/process")
   processRun(@Param("id") id: string, @Body() options: any) {
     return this.payroll.processRun(id, options);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("runs/:id/approve")
   approveRun(@Req() req: Request & { user: RequestUser }, @Param("id") id: string) {
     return this.payroll.approveRun(id, req.user.id);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "ACCOUNTANT")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("runs/:id/disburse")
   disburseRun(@Param("id") id: string) {
     return this.payroll.disburseRun(id);
@@ -111,6 +124,8 @@ export class PayrollController {
     return this.gratuity.calculateGratuity(staffId);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "ACCOUNTANT")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("gratuity/accrue")
   accrueGratuity(@Body("staffId") staffId: string, @Body("month") month: number, @Body("year") year: number) {
     return this.gratuity.accrueMonthlyProvision(staffId, month, year);
@@ -128,11 +143,15 @@ export class PayrollController {
     return this.advance.requestAdvance(body);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("advances/:id/approve")
   approveAdvance(@Req() req: Request & { user: RequestUser }, @Param("id") id: string) {
     return this.advance.approveAdvance(id, req.user.id);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("advances/:id/reject")
   rejectAdvance(@Req() req: Request & { user: RequestUser }, @Param("id") id: string, @Body("remarks") remarks?: string) {
     return this.advance.rejectAdvance(id, req.user.id, remarks);

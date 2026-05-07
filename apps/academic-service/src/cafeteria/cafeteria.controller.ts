@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Param, Query, Body, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { CafeteriaService } from "./cafeteria.service";
+import { CreateMenuItemDto, UpsertFssaiDto, AddFssaiStaffCertDto, LogFoodSampleDto } from "../dto/academic.dto";
 
 @UseGuards(JwtAuthGuard)
 @Controller("cafeteria")
@@ -10,7 +11,7 @@ export class CafeteriaController {
   // ─── Menu management ──────────────────────────────────────────────────── [1/8]
 
   @Post(":schoolId/menu-items")
-  createMenuItem(@Param("schoolId") schoolId: string, @Body() body: any) {
+  createMenuItem(@Param("schoolId") schoolId: string, @Body() body: CreateMenuItemDto) {
     return this.svc.createMenuItem(schoolId, body);
   }
 
@@ -88,7 +89,7 @@ export class CafeteriaController {
   // ─── FSSAI compliance ─────────────────────────────────────────────────── [8/8]
 
   @Post(":schoolId/fssai")
-  upsertFssai(@Param("schoolId") schoolId: string, @Body() body: any) {
+  upsertFssai(@Param("schoolId") schoolId: string, @Body() body: UpsertFssaiDto) {
     return this.svc.upsertFssai(schoolId, body);
   }
 
@@ -98,7 +99,7 @@ export class CafeteriaController {
   }
 
   @Post(":schoolId/fssai/staff-cert")
-  addStaffCert(@Param("schoolId") schoolId: string, @Body() body: any) {
+  addStaffCert(@Param("schoolId") schoolId: string, @Body() body: AddFssaiStaffCertDto) {
     return this.svc.addFssaiStaffCert(schoolId, body);
   }
 
@@ -111,7 +112,7 @@ export class CafeteriaController {
   }
 
   @Post(":schoolId/fssai/sample")
-  logSample(@Param("schoolId") schoolId: string, @Body() body: any) {
+  logSample(@Param("schoolId") schoolId: string, @Body() body: LogFoodSampleDto) {
     return this.svc.logFoodSample(schoolId, {
       ...body,
       sampleDate: new Date(body.sampleDate),

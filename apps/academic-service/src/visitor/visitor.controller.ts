@@ -3,6 +3,7 @@ import { AuthGuard } from "@nestjs/passport";
 import type { Request } from "express";
 import type { RequestUser } from "@school-erp/types";
 import { VisitorService } from "./visitor.service";
+import { RegisterVisitorDto, RequestGatePassDto, LogDeliveryDto } from "../dto/academic.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("visitors")
@@ -10,7 +11,7 @@ export class VisitorController {
   constructor(private readonly svc: VisitorService) {}
 
   @Post()
-  register(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  register(@Req() req: Request & { user: RequestUser }, @Body() body: RegisterVisitorDto) {
     return this.svc.registerVisitor(req.user.schoolId!, { ...body, createdBy: req.user.id });
   }
 
@@ -42,7 +43,7 @@ export class VisitorController {
   // ─── Gate passes ──────────────────────────────────────────────────────────────
 
   @Post("gate-passes")
-  requestGatePass(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  requestGatePass(@Req() req: Request & { user: RequestUser }, @Body() body: RequestGatePassDto) {
     return this.svc.requestGatePass(req.user.schoolId!, {
       ...body,
       issuedBy: req.user.id,
@@ -68,7 +69,7 @@ export class VisitorController {
   // ─── Deliveries ───────────────────────────────────────────────────────────────
 
   @Post("deliveries")
-  logDelivery(@Req() req: Request & { user: RequestUser }, @Body() body: any) {
+  logDelivery(@Req() req: Request & { user: RequestUser }, @Body() body: LogDeliveryDto) {
     return this.svc.logDelivery(req.user.schoolId!, { ...body, createdBy: req.user.id });
   }
 

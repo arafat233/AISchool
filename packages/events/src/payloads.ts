@@ -47,6 +47,25 @@ export interface AttendanceMarkedPayload {
   presentCount: number;
 }
 
+// ─── Students ────────────────────────────────────────────────────────────────
+export interface StudentEnrolledPayload {
+  studentId: string;
+  schoolId: string;
+  tenantId: string;
+  sectionId: string;
+  academicYearId: string;
+  admissionNo: string;
+}
+
+// ─── Exam ─────────────────────────────────────────────────────────────────────
+export interface ExamResultPublishedPayload {
+  examId: string;
+  schoolId: string;
+  examTitle: string;
+  totalStudents: number;
+  publishedAt: string;
+}
+
 // ─── Transport ───────────────────────────────────────────────────────────────
 export interface VehicleLocationPayload {
   vehicleId: string;

@@ -51,6 +51,24 @@ export class NotificationProcessor {
       // TODO: fetch parent contacts and enqueue SMS/WhatsApp jobs
     }, { connection });
 
+    new Worker(QUEUES.FEE_PAYMENT_RECEIVED, async (job: Job) => {
+      const { paymentId, invoiceId, studentId, amount, mode } = job.data;
+      this.logger.log(`Processing fee payment receipt notification for student ${studentId}, payment ${paymentId}`);
+      // Enqueue email receipt — in production fetch student email from user-service
+      await this.email.send(
+        `student-${studentId}@school.erp`,
+        "Fee Payment Received",
+        `<p>Your fee payment of ₹${(amount / 100).toFixed(2)} (${mode}) has been received. Invoice: ${invoiceId}. Payment ID: ${paymentId}.</p>`,
+      );
+    }, { connection });
+
+    new Worker(QUEUES.EXAM_RESULT_PUBLISHED, async (job: Job) => {
+      const { examId, schoolId, examTitle, totalStudents } = job.data;
+      this.logger.log(`Processing result published notification for exam ${examId} (${examTitle}), school ${schoolId}`);
+      // In production: fetch parent/student contacts and send targeted notifications
+      this.logger.log(`Result notifications queued for ${totalStudents} students`);
+    }, { connection });
+
     this.logger.log("All notification workers started");
   }
 }

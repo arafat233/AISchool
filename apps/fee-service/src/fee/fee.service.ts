@@ -1,15 +1,27 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, BusinessRuleError } from "@school-erp/errors";
 import { rupeesToPaise, paiseToRupees, formatINR, calculateLateFee } from "@school-erp/utils";
+import { Queue } from "bullmq";
+import { QUEUES, DEFAULT_JOB_OPTIONS } from "@school-erp/events";
 import { RazorpayService } from "../payment/razorpay.service";
 
 @Injectable()
 export class FeeService {
+  private readonly logger = new Logger(FeeService.name);
+  private readonly paymentQueue: Queue;
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly razorpay: RazorpayService,
-  ) {}
+  ) {
+    this.paymentQueue = new Queue(QUEUES.FEE_PAYMENT_RECEIVED, {
+      connection: {
+        host: process.env.REDIS_HOST ?? "localhost",
+        port: Number(process.env.REDIS_PORT ?? 6379),
+      },
+    });
+  }
 
   // ─── Fee Structure ────────────────────────────────────────────────────────
   async createFeeHead(schoolId: string, data: { name: string; description?: string; isOptional?: boolean }) {
@@ -84,6 +96,13 @@ export class FeeService {
     const status = newTotal >= invoice.totalAmount ? "PAID" : "PARTIALLY_PAID";
     await this.prisma.feeInvoice.update({ where: { id: invoiceId }, data: { status: status as any } });
 
+    await this.paymentQueue.add(
+      "fee.payment.received",
+      { paymentId: payment.id, invoiceId, studentId: invoice.studentId, amount: payPaise, mode: "CASH" },
+      DEFAULT_JOB_OPTIONS,
+    );
+    this.logger.log(`fee.payment.received event published for payment ${payment.id}`);
+
     return payment;
   }
 
@@ -105,10 +124,18 @@ export class FeeService {
     const paidSoFar = await this.prisma.feePayment.aggregate({ where: { invoiceId }, _sum: { amountPaid: true } });
     const outstanding = invoice.totalAmount - (paidSoFar._sum.amountPaid ?? 0);
 
-    await this.prisma.feePayment.create({
+    const onlinePayment = await this.prisma.feePayment.create({
       data: { invoiceId, amountPaid: outstanding, mode: "ONLINE", receivedById: data.receivedById, transactionId: data.razorpayPaymentId, paymentDate: new Date() },
     });
     await this.prisma.feeInvoice.update({ where: { id: invoiceId }, data: { status: "PAID" as any } });
+
+    await this.paymentQueue.add(
+      "fee.payment.received",
+      { paymentId: onlinePayment.id, invoiceId, studentId: invoice.studentId, amount: outstanding, mode: "ONLINE", transactionId: data.razorpayPaymentId },
+      DEFAULT_JOB_OPTIONS,
+    );
+    this.logger.log(`fee.payment.received event published for payment ${onlinePayment.id}`);
+
     return { success: true, paymentId: data.razorpayPaymentId };
   }
 

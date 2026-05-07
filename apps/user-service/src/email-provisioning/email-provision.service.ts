@@ -9,9 +9,16 @@
  * 7-year email archiving via Google Vault / Microsoft Purview.
  */
 import { Injectable, Logger } from "@nestjs/common";
+import { randomBytes } from "crypto";
 import { PrismaService } from "../prisma/prisma.service";
 import { google } from "googleapis";
 import axios from "axios";
+
+function generateInitialPassword(): string {
+  // 16 random bytes → base64, strip non-alphanum, take 16 chars, add symbol+digit suffix
+  const base = randomBytes(16).toString("base64").replace(/[^a-zA-Z0-9]/g, "").slice(0, 14);
+  return `${base}@1`;
+}
 
 export type EmailProvider = "GOOGLE_WORKSPACE" | "MICROSOFT_365" | "NONE";
 
@@ -90,7 +97,7 @@ export class EmailProvisionService {
       requestBody: {
         primaryEmail: email,
         name: { fullName: student.full_name, givenName: student.full_name.split(" ")[0], familyName: student.full_name.split(" ").slice(1).join(" ") },
-        password: `SchoolERP@${new Date().getFullYear()}!`,
+        password: generateInitialPassword(),
         changePasswordAtNextLogin: true,
         orgUnitPath: `/Students/${student.class_name ?? "General"}`,
       },
@@ -129,7 +136,7 @@ export class EmailProvisionService {
       displayName: student.full_name,
       mailNickname: username,
       userPrincipalName: email,
-      passwordProfile: { forceChangePasswordNextSignIn: true, password: `SchoolERP@${new Date().getFullYear()}!` },
+      passwordProfile: { forceChangePasswordNextSignIn: true, password: generateInitialPassword() },
       accountEnabled: true,
       usageLocation: "IN",
     }, { headers: { Authorization: `Bearer ${token}` } });

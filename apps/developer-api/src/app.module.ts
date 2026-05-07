@@ -5,6 +5,7 @@ import { ConfigModule } from "@nestjs/config";
 import { PrismaModule } from "./prisma/prisma.module";
 import { WebhookController } from "./webhooks/webhook.controller";
 import { WebhookService } from "./webhooks/webhook.service";
+import { WebhookProcessor } from "./webhooks/webhook.processor";
 import { UsageController } from "./usage/usage.controller";
 import { PublicApiController } from "./public-api/public-api.controller";
 import { SandboxModule } from "./sandbox/sandbox.module";
@@ -24,6 +25,7 @@ import { SandboxModule } from "./sandbox/sandbox.module";
   controllers: [WebhookController, UsageController, PublicApiController],
   providers: [
     WebhookService,
+    WebhookProcessor,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],
 })

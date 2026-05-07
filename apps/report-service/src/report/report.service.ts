@@ -268,8 +268,16 @@ export class ReportService {
   // [5] CUSTOM REPORT BUILDER
   // ═══════════════════════════════════════════════════════════════════════════
 
+  private static readonly ALLOWED_REPORT_MODELS = {
+    student: "student",
+    staff: "staff",
+    feePayment: "feePayment",
+    attendanceRecord: "attendanceRecord",
+    examResult: "result",
+  } as const;
+
   async buildCustomReport(params: {
-    model: "student" | "staff" | "feePayment" | "attendanceRecord" | "examResult";
+    model: keyof typeof ReportService.ALLOWED_REPORT_MODELS;
     filters: Record<string, any>;
     fields: string[];
     format: "json" | "excel" | "pdf";
@@ -277,8 +285,10 @@ export class ReportService {
   }) {
     const { model, filters, fields, format, title } = params;
 
-    // Execute a dynamic Prisma query
-    const data = await (this.prisma as any)[model].findMany({
+    const prismaModel = ReportService.ALLOWED_REPORT_MODELS[model];
+    if (!prismaModel) throw new Error(`Model "${model}" is not allowed for custom reports`);
+
+    const data = await (this.prisma as Record<string, any>)[prismaModel].findMany({
       where: filters,
       select: fields.reduce((acc, f) => ({ ...acc, [f]: true }), {} as Record<string, boolean>),
     });

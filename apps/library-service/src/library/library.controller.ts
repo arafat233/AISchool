@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { LibraryService } from "./library.service";
+import { CreateBookDto, UpdateBookDto, CreateEBookDto, CreatePeriodicalDto, RecordPeriodicalIssueDto, SuggestBookDto } from "../dto/library.dto";
 
 @UseGuards(AuthGuard("jwt"))
 @Controller("library")
@@ -10,12 +11,12 @@ export class LibraryController {
   // ─── Book catalogue ───────────────────────────────────────────────────────
 
   @Post(":schoolId/books")
-  createBook(@Param("schoolId") schoolId: string, @Body() body: any) {
+  createBook(@Param("schoolId") schoolId: string, @Body() body: CreateBookDto) {
     return this.svc.createBook(schoolId, body);
   }
 
   @Patch("books/:bookId")
-  updateBook(@Param("bookId") bookId: string, @Body() body: any) {
+  updateBook(@Param("bookId") bookId: string, @Body() body: UpdateBookDto) {
     return this.svc.updateBook(bookId, body);
   }
 
@@ -85,7 +86,7 @@ export class LibraryController {
   // ─── eBooks ───────────────────────────────────────────────────────────────
 
   @Post(":schoolId/ebooks")
-  createEBook(@Param("schoolId") schoolId: string, @Body() body: any) {
+  createEBook(@Param("schoolId") schoolId: string, @Body() body: CreateEBookDto) {
     return this.svc.createEBook(schoolId, body);
   }
 
@@ -107,12 +108,12 @@ export class LibraryController {
   // ─── Periodicals ──────────────────────────────────────────────────────────
 
   @Post(":schoolId/periodicals")
-  createPeriodical(@Param("schoolId") schoolId: string, @Body() body: any) {
+  createPeriodical(@Param("schoolId") schoolId: string, @Body() body: CreatePeriodicalDto) {
     return this.svc.createPeriodical(schoolId, body);
   }
 
   @Post("periodicals/:periodicalId/issues")
-  recordPeriodicalIssue(@Param("periodicalId") periodicalId: string, @Body() body: any) {
+  recordPeriodicalIssue(@Param("periodicalId") periodicalId: string, @Body() body: RecordPeriodicalIssueDto) {
     return this.svc.recordPeriodicalIssue(periodicalId, { ...body, issueDate: new Date(body.issueDate) });
   }
 
@@ -146,7 +147,7 @@ export class LibraryController {
   // ─── Recommendations ──────────────────────────────────────────────────────
 
   @Post(":schoolId/recommendations")
-  suggestBook(@Param("schoolId") schoolId: string, @Body() body: any) {
+  suggestBook(@Param("schoolId") schoolId: string, @Body() body: SuggestBookDto) {
     return this.svc.suggestBook(schoolId, body);
   }
 
