@@ -7,6 +7,7 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "ts-node prisma/seed.ts",
+    "db:seed:demo": "ts-node prisma/demo-seed.ts",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset --force",
     "postinstall": "prisma generate",
