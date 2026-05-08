@@ -1,5 +1,7 @@
-import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards, Req, ForbiddenException } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import type { Request } from "express";
+import type { RequestUser } from "@school-erp/types";
 import { ExpenseService } from "./expense.service";
 import { RecordExpenseDto, CreatePODto, CreateVendorDto, UpdateVendorDto, ImportBankStatementDto, RecordRevenueDto, SubmitVendorInvoiceDto } from "../dto/expense.dto";
 
@@ -11,7 +13,8 @@ export class ExpenseController {
   // ─── [1] Budget ───────────────────────────────────────────────────────────
 
   @Post(":schoolId/budgets")
-  createBudget(@Param("schoolId") schoolId: string, @Body() body: { createdBy: string; academicYear: string }) {
+  createBudget(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { createdBy: string; academicYear: string }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createBudget(schoolId, body.createdBy, body.academicYear);
   }
 
@@ -36,7 +39,8 @@ export class ExpenseController {
   }
 
   @Get(":schoolId/budgets")
-  getBudget(@Param("schoolId") schoolId: string, @Query("academicYear") academicYear: string, @Query("version") version?: string) {
+  getBudget(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("academicYear") academicYear: string, @Query("version") version?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getBudget(schoolId, academicYear, version ? parseInt(version) : undefined);
   }
 
@@ -50,26 +54,31 @@ export class ExpenseController {
   @Post(":schoolId/expenses")
   recordExpense(
     @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Body() body: RecordExpenseDto,
   ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.recordExpense(schoolId, body.recordedBy, { ...body, paymentDate: new Date(body.paymentDate) });
   }
 
   @Get(":schoolId/expenses")
   getExpenses(
     @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Query("type") type?: string,
     @Query("from") from?: string,
     @Query("to") to?: string,
     @Query("vendorId") vendorId?: string,
   ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getExpenses(schoolId, type, from ? new Date(from) : undefined, to ? new Date(to) : undefined, vendorId);
   }
 
   // ─── [3] Purchase orders ──────────────────────────────────────────────────
 
   @Post(":schoolId/purchase-orders")
-  createPO(@Param("schoolId") schoolId: string, @Body() body: CreatePODto) {
+  createPO(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: CreatePODto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createPO(schoolId, body.createdBy, { ...body, requiredBy: body.requiredBy ? new Date(body.requiredBy) : undefined });
   }
 
@@ -109,14 +118,16 @@ export class ExpenseController {
   }
 
   @Get(":schoolId/purchase-orders")
-  getPOs(@Param("schoolId") schoolId: string, @Query("status") status?: string, @Query("vendorId") vendorId?: string) {
+  getPOs(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("status") status?: string, @Query("vendorId") vendorId?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getPOs(schoolId, status, vendorId);
   }
 
   // ─── [4] Vendor management ────────────────────────────────────────────────
 
   @Post(":schoolId/vendors")
-  createVendor(@Param("schoolId") schoolId: string, @Body() body: CreateVendorDto) {
+  createVendor(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: CreateVendorDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createVendor(schoolId, body);
   }
 
@@ -141,26 +152,30 @@ export class ExpenseController {
   }
 
   @Get(":schoolId/vendors")
-  getVendors(@Param("schoolId") schoolId: string, @Query("category") category?: string, @Query("blacklisted") blacklisted?: string) {
+  getVendors(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("category") category?: string, @Query("blacklisted") blacklisted?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getVendors(schoolId, category, blacklisted !== undefined ? blacklisted === "true" : undefined);
   }
 
   // ─── [5] Budget vs actual ─────────────────────────────────────────────────
 
   @Get(":schoolId/reports/budget-vs-actual")
-  getBudgetVsActual(@Param("schoolId") schoolId: string, @Query("academicYear") academicYear: string) {
+  getBudgetVsActual(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("academicYear") academicYear: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getBudgetVsActual(schoolId, academicYear);
   }
 
   @Get(":schoolId/reports/monthly-spend")
-  getMonthlySpend(@Param("schoolId") schoolId: string, @Query("year") year: string) {
+  getMonthlySpend(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("year") year: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getMonthlySpend(schoolId, parseInt(year));
   }
 
   // ─── [6] GST ITC ─────────────────────────────────────────────────────────
 
   @Get(":schoolId/gst/itc-summary")
-  getITCSummary(@Param("schoolId") schoolId: string, @Query("period") period: string) {
+  getITCSummary(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("period") period: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getITCSummary(schoolId, period);
   }
 
@@ -170,26 +185,30 @@ export class ExpenseController {
   }
 
   @Get(":schoolId/gst/entries")
-  getGstEntries(@Param("schoolId") schoolId: string, @Query("period") period?: string, @Query("itcEligible") itcEligible?: string) {
+  getGstEntries(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("period") period?: string, @Query("itcEligible") itcEligible?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getGstEntries(schoolId, period, itcEligible !== undefined ? itcEligible === "true" : undefined);
   }
 
   // ─── [7] GSTR export ─────────────────────────────────────────────────────
 
   @Get(":schoolId/gst/gstr1")
-  exportGSTR1(@Param("schoolId") schoolId: string, @Query("period") period: string) {
+  exportGSTR1(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("period") period: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.exportGSTR1(schoolId, period);
   }
 
   @Get(":schoolId/gst/gstr3b")
-  exportGSTR3B(@Param("schoolId") schoolId: string, @Query("period") period: string) {
+  exportGSTR3B(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("period") period: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.exportGSTR3B(schoolId, period);
   }
 
   // ─── [8] TDS ─────────────────────────────────────────────────────────────
 
   @Get(":schoolId/tds/challans")
-  getTDSChallans(@Param("schoolId") schoolId: string, @Query("quarter") quarter?: string, @Query("fy") fy?: string) {
+  getTDSChallans(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("quarter") quarter?: string, @Query("fy") fy?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getTDSChallans(schoolId, quarter, fy);
   }
 
@@ -204,14 +223,16 @@ export class ExpenseController {
   }
 
   @Get(":schoolId/tds/summary")
-  getTDSSummaryByVendor(@Param("schoolId") schoolId: string, @Query("fy") fy: string) {
+  getTDSSummaryByVendor(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("fy") fy: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getTDSSummaryByVendor(schoolId, fy);
   }
 
   // ─── [9] Bank reconciliation ─────────────────────────────────────────────
 
   @Post(":schoolId/bank/import")
-  importBankStatement(@Param("schoolId") schoolId: string, @Body() body: ImportBankStatementDto) {
+  importBankStatement(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: ImportBankStatementDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.importBankStatement(schoolId, body);
   }
 
@@ -226,14 +247,16 @@ export class ExpenseController {
   }
 
   @Post(":schoolId/bank/statements/:statementId/sign-off")
-  signOffReconciliation(@Param("schoolId") schoolId: string, @Param("statementId") statementId: string, @Body() body: { signedOffBy: string }) {
+  signOffReconciliation(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Param("statementId") statementId: string, @Body() body: { signedOffBy: string }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.signOffReconciliation(schoolId, statementId, body.signedOffBy);
   }
 
   // ─── [10] Cash register ───────────────────────────────────────────────────
 
   @Post(":schoolId/cash/registers")
-  openCashRegister(@Param("schoolId") schoolId: string, @Body() body: { cashierId: string; openingBalRs: number; denominations: Array<{ denomination: number; count: number }> }) {
+  openCashRegister(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { cashierId: string; openingBalRs: number; denominations: Array<{ denomination: number; count: number }> }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.openCashRegister(schoolId, body.cashierId, body.openingBalRs, body.denominations);
   }
 
@@ -253,29 +276,34 @@ export class ExpenseController {
   }
 
   @Get(":schoolId/cash/registers")
-  getCashRegisters(@Param("schoolId") schoolId: string, @Query("from") from?: string, @Query("to") to?: string) {
+  getCashRegisters(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("from") from?: string, @Query("to") to?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getCashRegisters(schoolId, from ? new Date(from) : undefined, to ? new Date(to) : undefined);
   }
 
   // ─── [11] Revenue recognition ─────────────────────────────────────────────
 
   @Post(":schoolId/revenue")
-  recordRevenue(@Param("schoolId") schoolId: string, @Body() body: RecordRevenueDto) {
+  recordRevenue(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: RecordRevenueDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.recordRevenue(schoolId, { ...body, recognitionDate: new Date(body.recognitionDate), deferralEndDate: body.deferralEndDate ? new Date(body.deferralEndDate) : undefined });
   }
 
   @Post(":schoolId/revenue/recognize-deferred")
-  recognizeDeferredRevenue(@Param("schoolId") schoolId: string, @Query("period") period: string) {
+  recognizeDeferredRevenue(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("period") period: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.recognizeDeferredRevenue(schoolId, period);
   }
 
   @Post(":schoolId/month-end/close")
-  closeMonth(@Param("schoolId") schoolId: string, @Body() body: { period: string; closedBy: string; notes?: string }) {
+  closeMonth(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { period: string; closedBy: string; notes?: string }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.closeMonth(schoolId, body.period, body.closedBy, body.notes);
   }
 
   @Get(":schoolId/reports/pl")
-  getPLReport(@Param("schoolId") schoolId: string, @Query("from") from: string, @Query("to") to: string) {
+  getPLReport(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("from") from: string, @Query("to") to: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getPLReport(schoolId, from, to);
   }
 
@@ -317,7 +345,8 @@ export class ExpenseController {
   }
 
   @Get(":schoolId/vendor-portal/invoices")
-  getSchoolVendorInvoices(@Param("schoolId") schoolId: string, @Query("status") status?: string) {
+  getSchoolVendorInvoices(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("status") status?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getSchoolVendorInvoices(schoolId, status);
   }
 

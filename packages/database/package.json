@@ -9,6 +9,7 @@
     "db:seed": "ts-node prisma/seed.ts",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset --force",
+    "postinstall": "prisma generate",
     "build": "tsc",
     "clean": "rm -rf dist node_modules/.prisma",
     "test": "echo \"No unit tests for database package\" && exit 0"

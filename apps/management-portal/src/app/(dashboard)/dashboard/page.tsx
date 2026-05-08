@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 import { School, DollarSign, Users, TrendingUp, AlertTriangle, CheckCircle } from "lucide-react";
 
 interface DashboardData {
@@ -29,19 +29,15 @@ function StatCard({ title, value, sub, icon: Icon, color }: { title: string; val
 }
 
 export default function ManagementDashboard() {
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const API = process.env.NEXT_PUBLIC_REPORT_API_URL ?? "http://localhost:3021";
-  const SAAS_API = process.env.NEXT_PUBLIC_SAAS_API_URL ?? "http://localhost:3022";
-
-  useEffect(() => {
-    const token = localStorage.getItem("mgmt_token");
-    Promise.all([
-      axios.get(`${SAAS_API}/tenants/summary`, { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { totalSchools: 0, totalStudents: 0 } })),
-      axios.get(`${SAAS_API}/billing/revenue/mtd`, { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { totalRevenueMtd: 0, totalPendingFees: 0 } })),
-      axios.get(`${SAAS_API}/health/services`, { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { services: [] } })),
-    ]).then(([summary, billing, health]) => {
-      setData({
+  const { data, isLoading } = useQuery<DashboardData>({
+    queryKey: ["management-dashboard"],
+    queryFn: async () => {
+      const [summary, billing, health] = await Promise.all([
+        api.get("/tenants/summary").catch(() => ({ data: { totalSchools: 0, totalStudents: 0 } })),
+        api.get("/billing/revenue/mtd").catch(() => ({ data: { totalRevenueMtd: 0, totalPendingFees: 0 } })),
+        api.get("/health/services").catch(() => ({ data: { services: [] } })),
+      ]);
+      return {
         totalSchools: summary.data.totalSchools ?? 0,
         totalStudents: summary.data.totalStudents ?? 0,
         totalRevenueMtd: billing.data.totalRevenueMtd ?? 0,
@@ -49,11 +45,11 @@ export default function ManagementDashboard() {
         attendanceAvgPct: summary.data.attendanceAvgPct ?? 0,
         activeAdmissions: summary.data.activeAdmissions ?? 0,
         systemHealth: health.data.services ?? [],
-      });
-    }).finally(() => setLoading(false));
-  }, [API, SAAS_API]);
+      };
+    },
+  });
 
-  if (loading) return <div className="flex items-center justify-center h-full text-muted-foreground">Loading dashboard…</div>;
+  if (isLoading) return <div className="flex items-center justify-center h-full text-muted-foreground">Loading dashboard…</div>;
 
   return (
     <div className="p-8">

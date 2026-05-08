@@ -67,7 +67,9 @@ export class TestDeliveryService {
       return q;
     });
 
-    const expiresAt = new Date(now.getTime() + test.durationMinutes * 60 * 1000);
+    const rawExpiresAt = new Date(now.getTime() + test.durationMinutes * 60 * 1000);
+    // Cap per-student timer to the global test window end
+    const expiresAt = test.endAt && rawExpiresAt > test.endAt ? test.endAt : rawExpiresAt;
 
     const attempt = await this.prisma.testAttempt.create({
       data: {

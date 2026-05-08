@@ -12,6 +12,7 @@ import { AlertModule } from "./alert/alert.module";
 import { StaffCommsModule } from "./staff-comms/staff-comms.module";
 import { VisitorModule } from "./visitor/visitor.module";
 import { CafeteriaModule } from "./cafeteria/cafeteria.module";
+import { RagModule } from "./rag/rag.module";
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CafeteriaModule } from "./cafeteria/cafeteria.module";
     StaffCommsModule,
     VisitorModule,
     CafeteriaModule,
+    RagModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

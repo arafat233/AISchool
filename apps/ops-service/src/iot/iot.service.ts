@@ -11,7 +11,7 @@
  * Alerts: CO2 > 1000 ppm, PM2.5 > 25 µg/m³, abnormal energy consumption
  */
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 import { InfluxDB, Point } from "@influxdata/influxdb-client";
 import axios from "axios";
 import mqtt from "mqtt";

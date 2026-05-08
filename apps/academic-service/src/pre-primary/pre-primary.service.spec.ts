@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { PrePrimaryService, DailyActivityLog } from "./pre-primary.service";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 // Mock axios to prevent real HTTP calls
 jest.mock("axios");

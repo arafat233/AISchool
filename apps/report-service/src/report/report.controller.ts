@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Param, Query, Body, Res, UseGuards } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, Post, Param, Query, Body, Req, Res, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { Response } from "express";
+import type { Request, Response } from "express";
+import type { RequestUser } from "@school-erp/types";
 import { ReportService } from "./report.service";
 import { CustomReportDto } from "./dto/report.dto";
 
@@ -13,17 +14,24 @@ export class ReportController {
   @Get("attendance/summary/:schoolId")
   async attendanceSummary(
     @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Query("from") from: string,
     @Query("to") to: string,
     @Query("format") fmt: "json" | "pdf" | "excel" = "json",
     @Res() res: Response,
   ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     const data = await this.svc.getAttendanceSummary(schoolId, new Date(from), new Date(to), fmt);
     return this.send(res, data, fmt, "attendance-summary");
   }
 
   @Get("attendance/defaulters/:schoolId")
-  async defaulters(@Param("schoolId") schoolId: string, @Query("threshold") threshold: string) {
+  async defaulters(
+    @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
+    @Query("threshold") threshold: string,
+  ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getDefaulterList(schoolId, threshold ? Number(threshold) : 75);
   }
 
@@ -31,17 +39,23 @@ export class ReportController {
   @Get("fee/collection/:schoolId")
   async feeCollection(
     @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Query("from") from: string,
     @Query("to") to: string,
     @Query("format") fmt: "json" | "pdf" | "excel" = "json",
     @Res() res: Response,
   ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     const data = await this.svc.getFeeCollectionReport(schoolId, new Date(from), new Date(to), fmt);
     return this.send(res, data, fmt, "fee-collection");
   }
 
   @Get("fee/defaulters/:schoolId")
-  async feeDefaulters(@Param("schoolId") schoolId: string) {
+  async feeDefaulters(
+    @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
+  ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getFeeDefaulterReport(schoolId);
   }
 
@@ -75,11 +89,13 @@ export class ReportController {
   @Get("hr/staff-attendance/:schoolId")
   async staffAttendance(
     @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Query("month") month: string,
     @Query("year") year: string,
     @Query("format") fmt: "json" | "excel" = "json",
     @Res() res: Response,
   ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     const data = await this.svc.getStaffAttendanceSummary(schoolId, Number(month), Number(year), fmt);
     return this.send(res, data, fmt, "staff-attendance");
   }
@@ -100,10 +116,12 @@ export class ReportController {
   @Get("finance/budget-vs-actual/:schoolId")
   async budgetVsActual(
     @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Query("academicYear") academicYear: string,
     @Query("format") fmt: "json" | "excel" = "json",
     @Res() res: Response,
   ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     const data = await this.svc.getBudgetVsActual(schoolId, academicYear, fmt);
     return this.send(res, data, fmt, "budget-vs-actual");
   }
@@ -111,22 +129,33 @@ export class ReportController {
   @Get("finance/scholarship/:schoolId")
   async scholarshipReport(
     @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Query("format") fmt: "json" | "excel" = "json",
     @Res() res: Response,
   ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     const data = await this.svc.getScholarshipReport(schoolId, fmt);
     return this.send(res, data, fmt, "scholarships");
   }
 
   // ─── Admissions ──────────────────────────────────────────────────────────
   @Get("admissions/funnel/:schoolId")
-  async admissionFunnel(@Param("schoolId") schoolId: string, @Query("academicYear") academicYear: string) {
+  async admissionFunnel(
+    @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
+    @Query("academicYear") academicYear: string,
+  ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getAdmissionFunnel(schoolId, academicYear);
   }
 
   // ─── Ops Dashboard ────────────────────────────────────────────────────────
   @Get("dashboard/:schoolId")
-  async opsDashboard(@Param("schoolId") schoolId: string) {
+  async opsDashboard(
+    @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
+  ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getOpsDashboard(schoolId);
   }
 

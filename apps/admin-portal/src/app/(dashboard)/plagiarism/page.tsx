@@ -1,5 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
 interface TrendRow {
   class_name: string;
@@ -11,33 +13,25 @@ interface TrendRow {
   clean_count: number;
 }
 
-const VERDICT_COLOR: Record<string, string> = {
-  HIGH_PLAGIARISM: "bg-red-100 text-red-700",
-  MODERATE: "bg-orange-100 text-orange-700",
-  LOW_RISK: "bg-yellow-100 text-yellow-700",
-  CLEAN: "bg-green-100 text-green-700",
-};
-
-const MOCK_TREND: TrendRow[] = [
-  { class_name: "Grade 10-A", term_name: "Term 1 2025-26", total_submissions: 38, avg_similarity_pct: 24.3, high_plagiarism_count: 3, moderate_count: 7, clean_count: 28 },
-  { class_name: "Grade 10-B", term_name: "Term 1 2025-26", total_submissions: 35, avg_similarity_pct: 18.1, high_plagiarism_count: 1, moderate_count: 4, clean_count: 30 },
-  { class_name: "Grade 9-A", term_name: "Term 1 2025-26", total_submissions: 40, avg_similarity_pct: 31.7, high_plagiarism_count: 6, moderate_count: 9, clean_count: 25 },
-  { class_name: "Grade 8-A", term_name: "Term 1 2025-26", total_submissions: 42, avg_similarity_pct: 12.4, high_plagiarism_count: 0, moderate_count: 3, clean_count: 39 },
-];
-
 export default function PlagiarismTrendPage() {
-  const [rows, setRows] = useState<TrendRow[]>([]);
-  const [loading, setLoading] = useState(true);
   const [filterTerm, setFilterTerm] = useState("all");
 
-  useEffect(() => {
-    const schoolId = "SCHOOL_ID"; // injected from session in production
-    fetch(`/api/proxy/exam/plagiarism/trend/${schoolId}`)
-      .then((r) => r.json())
-      .then((d) => setRows(Array.isArray(d) ? d : MOCK_TREND))
-      .catch(() => setRows(MOCK_TREND))
-      .finally(() => setLoading(false));
-  }, []);
+  const { data: rows = [], isLoading, error } = useQuery<TrendRow[]>({
+    queryKey: ["plagiarism-trends"],
+    queryFn: async () => {
+      const res = await api.get("/exam/plagiarism/trends");
+      return res.data?.data ?? [];
+    },
+  });
+
+  if (isLoading) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+    </div>
+  );
+  if (error) return (
+    <div className="p-4 text-red-500">Failed to load data. Please try again.</div>
+  );
 
   const terms = Array.from(new Set(rows.map((r) => r.term_name)));
   const filtered = filterTerm === "all" ? rows : rows.filter((r) => r.term_name === filterTerm);
@@ -90,8 +84,8 @@ export default function PlagiarismTrendPage() {
         <div className="px-6 py-4 border-b">
           <h2 className="font-semibold text-foreground">By Class &amp; Term</h2>
         </div>
-        {loading ? (
-          <div className="p-8 text-center text-muted-foreground">Loading…</div>
+        {filtered.length === 0 ? (
+          <div className="p-8 text-center text-muted-foreground">No plagiarism trend data available</div>
         ) : (
           <table className="w-full text-sm">
             <thead className="bg-muted text-muted-foreground text-xs uppercase">

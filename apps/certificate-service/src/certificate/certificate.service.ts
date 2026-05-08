@@ -10,10 +10,20 @@ function generateCertNo(schoolId: string): string {
   return `${schoolId.substring(0, 4).toUpperCase()}-${ts}-${rand}`;
 }
 
+// ─── HTML escape to prevent injection in Puppeteer-rendered certificates ───────
+function esc(val: unknown): string {
+  return String(val ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
+
 // ─── Template variable injection ────────────────────────────────────────────────
 
 function injectFields(template: string, fields: Record<string, string>): string {
-  return template.replace(/\{\{(\w+)\}\}/g, (_, key) => fields[key] ?? `{{${key}}}`);
+  return template.replace(/\{\{(\w+)\}\}/g, (_, key) => esc(fields[key]) ?? `{{${key}}}`);
 }
 
 @Injectable()
@@ -223,19 +233,19 @@ body{font-family:"Times New Roman",serif;margin:40px;background:#fff}
 </style></head>
 <body>
 <div class="letterhead">
-  <div class="school-name">${fields.schoolName ?? "SCHOOL NAME"}</div>
-  <div>${fields.schoolAddress ?? ""}</div>
-  <div>Tel: ${fields.schoolPhone ?? ""} | Email: ${fields.schoolEmail ?? ""}</div>
+  <div class="school-name">${esc(fields.schoolName) || "SCHOOL NAME"}</div>
+  <div>${esc(fields.schoolAddress)}</div>
+  <div>Tel: ${esc(fields.schoolPhone)} | Email: ${esc(fields.schoolEmail)}</div>
 </div>
-<div class="cert-no">Cert No: ${cert.certNo}</div>
-<div class="cert-title">${cert.title ?? cert.certificateType}</div>
+<div class="cert-no">Cert No: ${esc(cert.certNo)}</div>
+<div class="cert-title">${esc(cert.title ?? cert.certificateType)}</div>
 <div class="content">
-  <p>This is to certify that <strong>${holderName}</strong>${fields.additionalInfo ? `, ${fields.additionalInfo}` : ""}.</p>
-  ${fields.body ? `<p>${fields.body}</p>` : ""}
+  <p>This is to certify that <strong>${esc(holderName)}</strong>${fields.additionalInfo ? `, ${esc(fields.additionalInfo)}` : ""}.</p>
+  ${fields.body ? `<p>${esc(fields.body)}</p>` : ""}
   <p>Issued on ${new Date(cert.issuedAt).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}.</p>
 </div>
 <div class="footer">
-  <div>${fields.principalName ?? "Principal"}<br/><small>${fields.schoolName ?? ""}</small></div>
+  <div>${esc(fields.principalName) || "Principal"}<br/><small>${esc(fields.schoolName)}</small></div>
   <div><img src="${qrDataUrl}" width="80"/><br/><small>Scan to verify</small></div>
 </div>
 </body></html>`;

@@ -6,7 +6,7 @@
  * Photo gallery per event, archive of past issues.
  */
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 export type PublicationStatus = "DRAFT" | "REVIEW" | "APPROVED" | "PUBLISHED";
 export type ArticleStatus = "SUBMITTED" | "EDITOR_REVIEW" | "REVISION_REQUESTED" | "APPROVED" | "REJECTED";

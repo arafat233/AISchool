@@ -4,14 +4,20 @@
   "private": true,
   "main": "./src/index.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
   },
   "dependencies": {
     "@school-erp/database": "workspace:*"
   },
   "devDependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/testing": "^10.0.0",
     "@school-erp/tsconfig": "workspace:*",
     "@types/jest": "^29.5.14",
+    "jest": "^29.0.0",
     "typescript": "^5.6.3"
   },
   "peerDependencies": {
@@ -19,6 +25,8 @@
     "jest": "^29.0.0"
   },
   "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
     "test": "echo \"No unit tests for testing package\" && exit 0"
   }
 }

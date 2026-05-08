@@ -5,6 +5,20 @@ import { NotFoundError, ConflictError } from "@school-erp/errors";
 const BORROWING_LIMITS: Record<string, number> = { STUDENT: 2, STAFF: 5 };
 const HOLD_HOURS = 48;
 
+function countWeekdaysBetween(from: Date, to: Date): number {
+  let count = 0;
+  const cursor = new Date(from);
+  cursor.setHours(0, 0, 0, 0);
+  const end = new Date(to);
+  end.setHours(0, 0, 0, 0);
+  while (cursor < end) {
+    const day = cursor.getDay();
+    if (day !== 0 && day !== 6) count++;
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return count;
+}
+
 @Injectable()
 export class LibraryService {
   private readonly logger = new Logger(LibraryService.name);
@@ -50,7 +64,6 @@ export class LibraryService {
       where: { schoolId, OR: [{ id: bookIdOrBarcode }, { barcode: bookIdOrBarcode }, { rfidTag: bookIdOrBarcode }] },
     });
     if (!book) throw new NotFoundError("Book not found");
-    if (book.availableCopies < 1) throw new ConflictError("No copies available — please reserve");
 
     // Borrowing limit check
     const activeCount = await this.prisma.bookIssue.count({
@@ -60,10 +73,16 @@ export class LibraryService {
     if (activeCount >= limit) throw new ConflictError(`Borrowing limit reached (${limit} books for ${memberRole})`);
 
     const dueDate = new Date(Date.now() + daysOnLoan * 86_400_000);
-    const [issue] = await this.prisma.$transaction([
-      this.prisma.bookIssue.create({ data: { schoolId, bookId: book.id, memberId, memberRole, dueDate } }),
-      this.prisma.book.update({ where: { id: book.id }, data: { availableCopies: { decrement: 1 } } }),
-    ]);
+
+    // Atomic check-and-decrement: prevents double-issue under concurrent requests
+    const issue = await this.prisma.$transaction(async (tx) => {
+      const decremented = await tx.book.updateMany({
+        where: { id: book.id, availableCopies: { gt: 0 } },
+        data: { availableCopies: { decrement: 1 } },
+      });
+      if (decremented.count === 0) throw new ConflictError("No copies available — please reserve");
+      return tx.bookIssue.create({ data: { schoolId, bookId: book.id, memberId, memberRole, dueDate } });
+    });
 
     // Fulfil any pending reservation
     const reservation = await this.prisma.bookReservation.findFirst({
@@ -89,7 +108,7 @@ export class LibraryService {
       const config = await this.prisma.libraryFineConfig.findUnique({ where: { schoolId: issue.schoolId } });
       const rate = config ? Number(config.dailyRateRs) : 1;
       const grace = config?.graceDays ?? 0;
-      const overdueDays = Math.max(0, Math.floor((now.getTime() - issue.dueDate.getTime()) / 86_400_000) - grace);
+      const overdueDays = Math.max(0, countWeekdaysBetween(issue.dueDate, now) - grace);
       fine = overdueDays * rate;
       if (config?.maxFineRs) fine = Math.min(fine, Number(config.maxFineRs));
     }
@@ -199,7 +218,7 @@ export class LibraryService {
     const grace = config?.graceDays ?? 0;
 
     return issues.map((i) => {
-      const overdueDays = Math.max(0, Math.floor((Date.now() - i.dueDate.getTime()) / 86_400_000) - grace);
+      const overdueDays = Math.max(0, countWeekdaysBetween(i.dueDate, new Date()) - grace);
       let fine = overdueDays * rate;
       if (config?.maxFineRs) fine = Math.min(fine, Number(config.maxFineRs));
       return { ...i, overdueDays, estimatedFineRs: fine };

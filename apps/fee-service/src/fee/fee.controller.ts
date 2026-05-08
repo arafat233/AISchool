@@ -27,18 +27,21 @@ export class FeeController {
     return this.svc.generateInvoicesForSection(req.user.schoolId!, body.sectionId, body.academicYearId, body.termId);
   }
 
-  @Get("invoices/student/:studentId") studentInvoices(@Param("studentId") id: string) { return this.svc.getStudentInvoices(id); }
+  @Roles("ADMIN", "SUPER_ADMIN", "ACCOUNTANT", "STUDENT", "PARENT")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
+  @Get("invoices/student/:studentId") studentInvoices(@Param("studentId") id: string, @Req() req: Request & { user: RequestUser }) { return this.svc.getStudentInvoices(id, req.user.schoolId!); }
   @Get("invoices/outstanding") outstanding(@Req() req: Request & { user: RequestUser }, @Query("academicYearId") ayId: string) { return this.svc.getOutstandingReport(req.user.schoolId!, ayId); }
 
   @Roles("ADMIN", "SUPER_ADMIN", "ACCOUNTANT")
   @UseGuards(AuthGuard("jwt"), RolesGuard)
-  @Post("invoices/:id/pay-cash") payCash(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() dto: RecordCashPaymentDto) { return this.svc.recordCashPayment(id, { ...dto, receivedById: req.user.id }); }
-  @Post("invoices/:id/razorpay-order") razorpayOrder(@Param("id") id: string) { return this.svc.createRazorpayOrder(id); }
-  @Post("invoices/:id/verify-payment") verifyPayment(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() dto: VerifyOnlinePaymentDto) { return this.svc.verifyOnlinePayment(id, { ...dto, receivedById: req.user.id }); }
+  @Post("invoices/:id/pay-cash") payCash(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() dto: RecordCashPaymentDto) { return this.svc.recordCashPayment(id, req.user.schoolId!, { ...dto, receivedById: req.user.id }); }
+  @UseGuards(AuthGuard("jwt"))
+  @Post("invoices/:id/razorpay-order") razorpayOrder(@Param("id") id: string, @Req() req: Request & { user: RequestUser }) { return this.svc.createRazorpayOrder(id, req.user.schoolId!); }
+  @Post("invoices/:id/verify-payment") verifyPayment(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() dto: VerifyOnlinePaymentDto) { return this.svc.verifyOnlinePayment(id, req.user.schoolId!, { ...dto, receivedById: req.user.id }); }
 
   @Roles("ADMIN", "SUPER_ADMIN", "ACCOUNTANT", "PRINCIPAL")
   @UseGuards(AuthGuard("jwt"), RolesGuard)
-  @Post("invoices/:id/concession") applyConcession(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() dto: ApplyConcessionDto) { return this.svc.applyConcession({ ...dto, invoiceId: id, approvedById: req.user.id }); }
+  @Post("invoices/:id/concession") applyConcession(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() dto: ApplyConcessionDto) { return this.svc.applyConcession({ ...dto, invoiceId: id, approvedById: req.user.id, schoolId: req.user.schoolId! }); }
 
   @Get("health") health() { return { status: "ok", service: "fee-service" }; }
 }

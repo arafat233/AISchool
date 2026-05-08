@@ -23,5 +23,7 @@ ENV NODE_ENV=production
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/academic-service/dist ./apps/academic-service/dist
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nestjs
+USER nestjs
 EXPOSE 3004
 CMD ["node", "apps/academic-service/dist/main.js"]

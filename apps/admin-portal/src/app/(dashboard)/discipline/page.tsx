@@ -2,13 +2,20 @@
 /**
  * Student Discipline Module
  */
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
-const MOCK_INCIDENTS = [
-  { id: "d1", studentName: "Karan Mehta", class: "X-A", type: "Bullying", action: "DETENTION", date: "2026-04-15", parentNotified: true, principalApproved: false, serialOffender: false },
-  { id: "d2", studentName: "Sneha Reddy", class: "IX-B", type: "Mobile Phone Usage", action: "WARNING", date: "2026-04-18", parentNotified: true, principalApproved: false, serialOffender: false },
-  { id: "d3", studentName: "Amit Sharma", class: "XI-C", type: "Absenteeism", action: "SUSPENSION", date: "2026-04-10", parentNotified: true, principalApproved: true, serialOffender: true },
-];
+interface DisciplineIncident {
+  id: string;
+  studentName: string;
+  class: string;
+  type: string;
+  action: string;
+  date: string;
+  parentNotified: boolean;
+  principalApproved: boolean;
+  serialOffender: boolean;
+}
 
 const actionColor: Record<string, string> = {
   WARNING: "bg-yellow-100 text-yellow-700",
@@ -18,7 +25,17 @@ const actionColor: Record<string, string> = {
 };
 
 export default function DisciplinePage() {
-  const [incidents] = useState(MOCK_INCIDENTS);
+  const { data: incidents = [], isLoading, error } = useQuery<DisciplineIncident[]>({
+    queryKey: ["discipline-incidents"],
+    queryFn: async () => {
+      const res = await api.get("/discipline/incidents");
+      return res.data?.data ?? [];
+    },
+  });
+
+  if (isLoading) return <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" /></div>;
+  if (error) return <div className="p-4 text-red-500">Failed to load data. Please try again.</div>;
+
   const serialOffenders = incidents.filter(i => i.serialOffender).length;
 
   return (

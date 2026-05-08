@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import Razorpay from "razorpay";
 import { createHmac } from "crypto";
 
@@ -16,7 +16,13 @@ export class RazorpayService {
   }
 
   async createOrder(amountInPaise: number, currency = "INR", receipt: string) {
-    return this.rz.orders.create({ amount: amountInPaise, currency, receipt });
+    try {
+      return await this.rz.orders.create({ amount: amountInPaise, currency, receipt });
+    } catch (err: any) {
+      throw new InternalServerErrorException(
+        `Razorpay order creation failed: ${err?.error?.description ?? err?.message ?? "unknown error"}`,
+      );
+    }
   }
 
   verifySignature(orderId: string, paymentId: string, signature: string): boolean {

@@ -5,8 +5,11 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  previewFeatures = ["fullTextSearch", "fullTextIndex", "postgresqlExtensions"]
 }
+
+// pgvector extension for semantic search
+// Run: CREATE EXTENSION IF NOT EXISTS vector; in Postgres before migration
 
 datasource db {
   provider = "postgresql"
@@ -1051,11 +1054,11 @@ model SalaryAdvance {
   id                String   @id @default(cuid())
   staffId           String
   staff             Staff    @relation(fields: [staffId], references: [id])
-  amount            Float
+  amount            Decimal  @db.Decimal(12, 2)
   reason            String
   repaymentMonths   Int
-  emiAmount         Float
-  outstandingAmount Float
+  emiAmount         Decimal  @db.Decimal(12, 2)
+  outstandingAmount Decimal  @db.Decimal(12, 2)
   status            String   @default("PENDING")  // PENDING, ACTIVE, CLOSED, REJECTED
   approvedBy        String?
   approvedAt        DateTime?
@@ -1063,6 +1066,7 @@ model SalaryAdvance {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
+  @@index([staffId, status])
   @@map("salary_advances")
 }
 
@@ -1072,9 +1076,9 @@ model GratuityProvision {
   staff            Staff    @relation(fields: [staffId], references: [id])
   month            Int
   year             Int
-  basicPlusDA      Float
+  basicPlusDA      Decimal  @db.Decimal(12, 2)
   yearsOfService   Float
-  monthlyProvision Float
+  monthlyProvision Decimal  @db.Decimal(12, 2)
   createdAt        DateTime @default(now())
 
   @@unique([staffId, month, year])
@@ -1131,6 +1135,8 @@ model LeaveApplication {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
+  @@index([staffId])
+  @@index([status])
   @@map("leave_applications")
 }
 
@@ -1155,6 +1161,7 @@ model StaffAppraisal {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
+  @@index([staffId])
   @@map("staff_appraisals")
 }
 
@@ -1300,7 +1307,7 @@ model OfferLetter {
   id            String         @id @default(cuid())
   applicationId String
   application   JobApplication @relation(fields: [applicationId], references: [id])
-  ctc           Float
+  ctc           Decimal  @db.Decimal(14, 2)
   joiningDate   DateTime
   offerExpiry   DateTime
   remarks       String?
@@ -1364,11 +1371,11 @@ model FnFSettlement {
   id              String    @id @default(cuid())
   exitId          String    @unique
   exit            StaffExit @relation(fields: [exitId], references: [id])
-  salaryDue       Float
-  leavencashment  Float     @default(0)
-  gratuity        Float?
-  otherDeductions Float     @default(0)
-  netSettlement   Float
+  salaryDue       Decimal   @db.Decimal(12, 2)
+  leavencashment  Decimal   @db.Decimal(12, 2)  @default(0)
+  gratuity        Decimal?  @db.Decimal(12, 2)
+  otherDeductions Decimal   @db.Decimal(12, 2)  @default(0)
+  netSettlement   Decimal   @db.Decimal(12, 2)
   settledOn       DateTime
   createdAt       DateTime  @default(now())
 
@@ -1446,7 +1453,7 @@ model ExternalSubstitute {
   email         String?
   subjects      String[] // subject IDs this person can teach
   qualification String?
-  dailyRate     Float?
+  dailyRate     Decimal?  @db.Decimal(10, 2)
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
 
@@ -1632,6 +1639,8 @@ model Concession {
   isActive     Boolean        @default(true)
   createdAt    DateTime       @default(now())
 
+  @@index([studentId])
+  @@index([schoolId])
   @@map("concessions")
 }
 
@@ -1751,6 +1760,7 @@ model MarksEntry {
   updatedAt      DateTime     @updatedAt
 
   @@unique([scheduleId, studentId])
+  @@index([studentId])
   @@map("marks_entries")
 }
 
@@ -1839,6 +1849,26 @@ model OnlineTestAttempt {
 
   @@unique([testId, studentId])
   @@map("online_test_attempts")
+}
+
+model PlagiarismResult {
+  id              String   @id @default(cuid())
+  submissionId    String
+  studentId       String
+  examId          String
+  similarityScore Float
+  sources         Json
+  verdict         String   // LOW, MEDIUM, HIGH
+  checkedAt       DateTime @default(now())
+  schoolId        String
+  tenantId        String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([submissionId])
+  @@index([studentId])
+  @@index([examId])
+  @@index([schoolId, tenantId])
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1941,6 +1971,7 @@ model StudentTransport {
   isActive       Boolean      @default(true)
   createdAt      DateTime     @default(now())
 
+  @@index([routeId])
   @@map("student_transport")
 }
 
@@ -2013,6 +2044,8 @@ model BookIssue {
   returnedTo   String?       // staff id
 
   @@index([memberId])
+  @@index([bookId])
+  @@index([status])
   @@map("book_issues")
 }
 
@@ -2190,6 +2223,7 @@ model Course {
   units      CourseUnit[]
   liveClasses LiveClass[]
 
+  @@index([schoolId])
   @@map("courses")
 }
 
@@ -2274,6 +2308,8 @@ model LessonDiscussion {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
+  @@index([lessonId])
+  @@index([parentId])
   @@map("lesson_discussions")
 }
 
@@ -2545,7 +2581,7 @@ model PtmEvent {
 model PtmSlot {
   id          String      @id @default(cuid())
   ptmEventId  String
-  ptmEvent    PtmEvent    @relation(fields: [ptmEventId], references: [id])
+  ptmEvent    PtmEvent    @relation(fields: [ptmEventId], references: [id], onDelete: Cascade)
   staffId     String
   staff       Staff @relation(fields: [staffId], references: [id])
   startTime   DateTime
@@ -2562,7 +2598,7 @@ model PtmSlot {
 model PtmBooking {
   id              String    @id @default(cuid())
   slotId          String    @unique
-  slot            PtmSlot   @relation(fields: [slotId], references: [id])
+  slot            PtmSlot   @relation(fields: [slotId], references: [id], onDelete: Cascade)
   parentId        String
   studentId       String
   student         Student   @relation(fields: [studentId], references: [id])
@@ -2727,6 +2763,7 @@ model ScholarshipApplication {
   reviews          ScholarshipReview[]
 
   @@unique([schemeId, studentId, academicYearId])
+  @@index([studentId])
   @@map("scholarship_applications")
 }
 
@@ -3025,7 +3062,7 @@ model VehicleMaintenanceLog {
   vehicle      Vehicle  @relation(fields: [vehicleId], references: [id])
   serviceType  String   // OIL_CHANGE | TYRE | BRAKE | GENERAL | INSURANCE | FITNESS | PUC
   description  String?
-  cost         Float?
+  cost         Decimal?  @db.Decimal(12, 2)
   serviceDate  DateTime
   nextDueDate  DateTime?
   odometer     Int?
@@ -3125,6 +3162,7 @@ model CounsellingSession {
   isConfidential Boolean @default(true)
 
   @@index([schoolId])
+  @@index([studentId])
   @@map("counselling_sessions")
 }
 
@@ -3141,6 +3179,7 @@ model DisciplineIncident {
   occurredAt      DateTime @default(now())
 
   @@index([schoolId, occurredAt])
+  @@index([studentId])
   @@map("discipline_incidents")
 }
 
@@ -3169,7 +3208,7 @@ model MenuItem {
   description      String?
   mealType         String   @default("LUNCH") // BREAKFAST | LUNCH | SNACK | DINNER
   category         String?  // VEG | NON_VEG | VEGAN | JAIN
-  priceRs          Float
+  priceRs          Decimal  @db.Decimal(10, 2)
   calories         Float?
   proteinG         Float?
   carbsG           Float?
@@ -3220,7 +3259,7 @@ model CafeteriaOrder {
   student     Student  @relation(fields: [studentId], references: [id])
   orderDate   DateTime // the date the meal is FOR
   status      String   @default("PENDING") // PENDING | CONFIRMED | PREPARED | DELIVERED | CANCELLED
-  totalAmount Float
+  totalAmount Decimal  @db.Decimal(10, 2)
   paidFromWallet Boolean @default(false)
   receiptNo   String?
   placedAt    DateTime @default(now())
@@ -3238,7 +3277,7 @@ model CafeteriaOrderItem {
   menuItemId String
   menuItem   MenuItem       @relation(fields: [menuItemId], references: [id])
   quantity   Int
-  unitPrice  Float
+  unitPrice  Decimal  @db.Decimal(10, 2)
 
   @@map("cafeteria_order_items")
 }
@@ -3247,8 +3286,8 @@ model StudentWallet {
   id            String   @id @default(cuid())
   studentId     String   @unique
   student       Student  @relation(fields: [studentId], references: [id])
-  balanceRs     Float    @default(0)
-  lowBalanceThreshold Float @default(100)
+  balanceRs     Decimal  @db.Decimal(12, 2)  @default(0)
+  lowBalanceThreshold Decimal  @db.Decimal(10, 2)  @default(100)
   updatedAt     DateTime @updatedAt
 
   transactions  WalletTransaction[]
@@ -3261,7 +3300,7 @@ model WalletTransaction {
   walletId    String
   wallet      StudentWallet @relation(fields: [walletId], references: [id])
   type        String        // CREDIT | DEBIT
-  amountRs    Float
+  amountRs    Decimal  @db.Decimal(10, 2)
   description String
   referenceId String?       // orderId or payment gateway txn id
   createdAt   DateTime      @default(now())
@@ -4962,4 +5001,86 @@ model NpsResponse {
 
   @@index([tenantId])
   @@map("nps_responses")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RAG — Knowledge Base
+// ═══════════════════════════════════════════════════════════════════════════
+
+enum KnowledgeDocType {
+  CIRCULAR
+  POLICY
+  FEE_STRUCTURE
+  SYLLABUS
+  LESSON_PLAN
+  HR_POLICY
+  EXAM_GUIDELINE
+  GENERAL
+}
+
+enum KnowledgeDocStatus {
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+}
+
+model KnowledgeDocument {
+  id          String             @id @default(cuid())
+  tenantId    String
+  schoolId    String
+  docType     KnowledgeDocType   @default(GENERAL)
+  title       String
+  fileName    String
+  fileUrl     String?            // presigned URL if stored externally; null for direct-upload flow
+  mimeType    String             @default("application/pdf")
+  fileSizeBytes Int              @default(0)
+  status      KnowledgeDocStatus @default(PENDING)
+  chunkCount  Int                @default(0)
+  uploadedBy  String             // userId
+  contentHash String?            // SHA-256 of raw file bytes — used for dedup
+  errorMsg    String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  chunks KnowledgeChunk[]
+
+  @@index([schoolId, docType])
+  @@index([tenantId, status])
+  @@index([schoolId, contentHash])  // dedup lookup
+  @@map("knowledge_documents")
+}
+
+model KnowledgeChunk {
+  id          String            @id @default(cuid())
+  documentId  String
+  document    KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  tenantId    String
+  schoolId    String
+  chunkIndex  Int
+  content     String            @db.Text
+  // embedding stored as JSON array (float[1536]) — pgvector column added via raw migration
+  embeddingJson String?         @db.Text
+  tokenCount  Int               @default(0)
+  pageNumber  Int?
+  createdAt   DateTime          @default(now())
+
+  @@index([schoolId, documentId])
+  @@index([tenantId])
+  @@map("knowledge_chunks")
+}
+
+model RagChatSession {
+  id        String   @id @default(cuid())
+  schoolId  String
+  tenantId  String
+  userId    String
+  context   String   @default("GENERAL") // FEE, CIRCULAR, HR, LESSON
+  messages  Json     @default("[]")       // [{role, content, sources?, createdAt}]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([schoolId])
+  @@map("rag_chat_sessions")
 }

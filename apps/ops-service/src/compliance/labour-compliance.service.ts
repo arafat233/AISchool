@@ -5,7 +5,7 @@
  * Modules: EPF, ESI, Professional Tax, Labour Welfare Fund, UDISE+, RTI Management.
  */
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 export interface ComplianceItem {
   id: string;

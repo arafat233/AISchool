@@ -6,7 +6,7 @@
  * Consent management: tracks consent per data category, re-consent on policy update.
  */
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 @Injectable()
 export class GdprService {

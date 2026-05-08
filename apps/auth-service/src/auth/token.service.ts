@@ -1,5 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { randomUUID } from "crypto";
+import Redis from "ioredis";
 
 import { PrismaService } from "@school-erp/database";
 import { generateSecureToken, sha256 } from "@school-erp/utils";
@@ -18,10 +20,19 @@ interface GenerateTokensInput {
 
 @Injectable()
 export class TokenService {
+  private readonly redis: Redis;
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
-  ) {}
+  ) {
+    this.redis = new Redis({
+      host: process.env.REDIS_HOST ?? "localhost",
+      port: Number(process.env.REDIS_PORT ?? 6379),
+      password: process.env.REDIS_PASSWORD,
+      lazyConnect: true,
+    });
+  }
 
   private get accessSecret() {
     const s = process.env.JWT_ACCESS_SECRET;
@@ -39,6 +50,7 @@ export class TokenService {
     accessToken: string;
     refreshToken: string;
   }> {
+    const jti = randomUUID();
     const payload: JwtPayload = {
       sub: input.userId,
       email: input.email,
@@ -46,6 +58,7 @@ export class TokenService {
       tenantId: input.tenantId,
       schoolId: input.schoolId,
       plan: input.plan,
+      jti,
     };
 
     const accessToken = this.jwtService.sign(payload, {
@@ -77,20 +90,24 @@ export class TokenService {
   }> {
     const tokenHash = sha256(rawRefreshToken);
 
+    // Atomic rotate: revoke old token in one update (prevents concurrent reuse)
+    const revoked = await this.prisma.refreshToken.updateMany({
+      where: { tokenHash, revokedAt: null, expiresAt: { gt: new Date() } },
+      data: { revokedAt: new Date() },
+    });
+
+    if (revoked.count === 0) {
+      throw new UnauthorizedException("Invalid or expired refresh token");
+    }
+
     const stored = await this.prisma.refreshToken.findUnique({
       where: { tokenHash },
       include: { user: true },
     });
 
-    if (!stored || stored.revokedAt !== null || stored.expiresAt < new Date()) {
+    if (!stored) {
       throw new UnauthorizedException("Invalid or expired refresh token");
     }
-
-    // Rotate: revoke old, issue new
-    await this.prisma.refreshToken.update({
-      where: { id: stored.id },
-      data: { revokedAt: new Date() },
-    });
 
     const tenant = await this.prisma.tenant.findUniqueOrThrow({
       where: { id: stored.user.tenantId },
@@ -129,5 +146,24 @@ export class TokenService {
 
   verifyAccessToken(token: string): JwtPayload {
     return this.jwtService.verify<JwtPayload>(token, { secret: this.accessSecret });
+  }
+
+  async blacklistAccessToken(token: string): Promise<void> {
+    let payload: JwtPayload;
+    try {
+      payload = this.jwtService.verify<JwtPayload>(token, { secret: this.accessSecret });
+    } catch {
+      return; // already expired or invalid — no need to blacklist
+    }
+    if (!payload.jti || !payload.exp) return;
+    const ttl = payload.exp - Math.floor(Date.now() / 1000);
+    if (ttl > 0) {
+      await this.redis.set(`jwt:bl:${payload.jti}`, "1", "EX", ttl);
+    }
+  }
+
+  async isAccessTokenBlacklisted(jti: string): Promise<boolean> {
+    const val = await this.redis.get(`jwt:bl:${jti}`);
+    return val !== null;
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, ForbiddenException } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError } from "@school-erp/errors";
 
@@ -39,11 +39,17 @@ export class HomeworkService {
     });
   }
 
-  async updateHomework(id: string, data: Partial<{ description: string; dueDate: Date; attachmentUrl: string; requiresAcknowledgement: boolean }>) {
+  async updateHomework(id: string, schoolId: string, data: Partial<{ description: string; dueDate: Date; attachmentUrl: string; requiresAcknowledgement: boolean }>) {
+    const hw = await this.prisma.homework.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!hw) throw new NotFoundError("Homework not found");
+    if (hw.schoolId !== schoolId) throw new ForbiddenException();
     return this.prisma.homework.update({ where: { id }, data });
   }
 
-  async deleteHomework(id: string) {
+  async deleteHomework(id: string, schoolId: string) {
+    const hw = await this.prisma.homework.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!hw) throw new NotFoundError("Homework not found");
+    if (hw.schoolId !== schoolId) throw new ForbiddenException();
     return this.prisma.homework.delete({ where: { id } });
   }
 

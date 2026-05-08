@@ -1,23 +1,78 @@
 "use client";
+
 /**
  * Vocational Education & NEP 2020 Dashboard
  */
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { Loader2 } from "lucide-react";
 
-const MOCK_SUBJECTS = [
-  { name: "Information Technology", sector: "IT-ITeS", nsqfLevel: 4, enrolledStudents: 48, ojtPartner: "Infosys BPM Ltd", ojtHrsReq: 120, avgOjtCompleted: 84 },
-  { name: "Beauty & Wellness", sector: "Beauty & Wellness", nsqfLevel: 3, enrolledStudents: 32, ojtPartner: "VLCC Institute", ojtHrsReq: 80, avgOjtCompleted: 75 },
-  { name: "Healthcare", sector: "Healthcare", nsqfLevel: 4, enrolledStudents: 24, ojtPartner: "Apollo Clinic", ojtHrsReq: 160, avgOjtCompleted: 48 },
-];
+interface VocationalSubject {
+  name: string;
+  sector: string;
+  nsqfLevel: number;
+  enrolledStudents: number;
+  ojtPartner: string;
+  ojtHrsReq: number;
+  avgOjtCompleted: number;
+}
 
-const FLN_DATA = [
-  { class: "Grade 1", total: 42, readingAtGrade: 28, readingBelow: 14, numeracyAtGrade: 32, numeracyBelow: 10 },
-  { class: "Grade 2", total: 38, readingAtGrade: 30, readingBelow: 8, numeracyAtGrade: 34, numeracyBelow: 4 },
-  { class: "Grade 3", total: 40, readingAtGrade: 36, readingBelow: 4, numeracyAtGrade: 37, numeracyBelow: 3 },
-];
+interface FLNRow {
+  class: string;
+  total: number;
+  readingAtGrade: number;
+  readingBelow: number;
+  numeracyAtGrade: number;
+  numeracyBelow: number;
+}
+
+interface VocationalData {
+  subjects: VocationalSubject[];
+  flnData: FLNRow[];
+}
+
+const PLACEHOLDER_DATA: VocationalData = {
+  subjects: [
+    { name: "Information Technology", sector: "IT-ITeS", nsqfLevel: 4, enrolledStudents: 48, ojtPartner: "Infosys BPM Ltd", ojtHrsReq: 120, avgOjtCompleted: 84 },
+    { name: "Beauty & Wellness", sector: "Beauty & Wellness", nsqfLevel: 3, enrolledStudents: 32, ojtPartner: "VLCC Institute", ojtHrsReq: 80, avgOjtCompleted: 75 },
+    { name: "Healthcare", sector: "Healthcare", nsqfLevel: 4, enrolledStudents: 24, ojtPartner: "Apollo Clinic", ojtHrsReq: 160, avgOjtCompleted: 48 },
+  ],
+  flnData: [
+    { class: "Grade 1", total: 42, readingAtGrade: 28, readingBelow: 14, numeracyAtGrade: 32, numeracyBelow: 10 },
+    { class: "Grade 2", total: 38, readingAtGrade: 30, readingBelow: 8, numeracyAtGrade: 34, numeracyBelow: 4 },
+    { class: "Grade 3", total: 40, readingAtGrade: 36, readingBelow: 4, numeracyAtGrade: 37, numeracyBelow: 3 },
+  ],
+};
 
 export default function VocationalPage() {
   const [activeTab, setActiveTab] = useState<"vocational" | "nep" | "fln">("vocational");
+
+  const { data, isLoading, isError } = useQuery<VocationalData>({
+    queryKey: ["vocational"],
+    // TODO: replace with real endpoint once /api/vocational is live
+    queryFn: () => api.get("/vocational").then((r) => r.data),
+    placeholderData: PLACEHOLDER_DATA,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6">
+        <p className="text-destructive text-sm">Failed to load vocational data. Please try again.</p>
+      </div>
+    );
+  }
+
+  const subjects = data?.subjects ?? [];
+  const flnData = data?.flnData ?? [];
 
   return (
     <div className="p-6 space-y-6">
@@ -39,7 +94,7 @@ export default function VocationalPage() {
 
       {activeTab === "vocational" && (
         <div className="space-y-4">
-          {MOCK_SUBJECTS.map(sub => (
+          {subjects.map(sub => (
             <div key={sub.name} className="bg-card border border-border rounded-xl p-5">
               <div className="flex items-start justify-between mb-4">
                 <div>
@@ -85,7 +140,7 @@ export default function VocationalPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {FLN_DATA.map(row => (
+              {flnData.map(row => (
                 <tr key={row.class} className="hover:bg-muted">
                   <td className="px-5 py-3 font-medium text-foreground">{row.class}</td>
                   <td className="px-5 py-3 text-right text-muted-foreground">{row.total}</td>
@@ -112,7 +167,7 @@ export default function VocationalPage() {
 
       {activeTab === "nep" && (
         <div className="text-center py-12 text-muted-foreground">
-          <div className="text-4xl mb-3">📊</div>
+          <div className="text-4xl mb-3">&#x1F4CA;</div>
           <div className="font-medium">NEP 2020 Competency Framework</div>
           <p className="text-sm mt-2">Map lessons to NCERT learning outcomes, track competency-based progress</p>
         </div>

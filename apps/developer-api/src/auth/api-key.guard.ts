@@ -10,7 +10,7 @@ import {
   Injectable, CanActivate, ExecutionContext,
   UnauthorizedException, ForbiddenException,
 } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 import crypto from "crypto";
 
 export interface ApiKeyContext {

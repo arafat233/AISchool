@@ -83,6 +83,17 @@ export default function AssignmentsPage() {
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file || !pendingAssignmentId.current) return;
+    const ALLOWED_TYPES = ["application/pdf", "image/png", "image/jpeg", "image/jpg", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      toast.error("Unsupported file type. Allowed: PDF, PNG, JPG, DOC, DOCX");
+      e.target.value = "";
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("File size must not exceed 10 MB");
+      e.target.value = "";
+      return;
+    }
     const formData = new FormData();
     formData.append("file", file);
     setUploading(pendingAssignmentId.current);

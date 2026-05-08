@@ -22,6 +22,8 @@
     "react-dom": ">=18"
   },
   "scripts": {
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "test": "echo \"No unit tests for ui package\" && exit 0"
   }
 }

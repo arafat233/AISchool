@@ -4,6 +4,8 @@
  * Manage which schools are enrolled in the beta program
  */
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
 interface BetaSchool {
   tenantId: string;
@@ -14,19 +16,27 @@ interface BetaSchool {
   feedback?: string;
 }
 
-const MOCK_BETA_SCHOOLS: BetaSchool[] = [
-  { tenantId: "t1", schoolName: "Delhi Public School — Noida", city: "Noida", enrolledAt: "2026-01-15", activeStudents: 3240, feedback: "Blockchain certs working well" },
-  { tenantId: "t2", schoolName: "St. Xavier's High School", city: "Mumbai", enrolledAt: "2026-02-01", activeStudents: 1820 },
-  { tenantId: "t3", schoolName: "Kendriya Vidyalaya No. 1", city: "Bangalore", enrolledAt: "2026-02-20", activeStudents: 2100 },
-];
-
 export default function BetaProgramPage() {
-  const [betaSchools, setBetaSchools] = useState<BetaSchool[]>(MOCK_BETA_SCHOOLS);
   const [search, setSearch] = useState("");
 
-  const removeBeta = (tenantId: string) => {
-    setBetaSchools(prev => prev.filter(s => s.tenantId !== tenantId));
-  };
+  const { data: betaSchools = [], isLoading, error } = useQuery<BetaSchool[]>({
+    queryKey: ["feature-flags-beta"],
+    queryFn: async () => {
+      const res = await api.get("/ops/feature-flags/beta");
+      return res.data?.data ?? [];
+    },
+  });
+
+  if (isLoading) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+    </div>
+  );
+  if (error) return (
+    <div className="p-4 text-red-500">Failed to load data. Please try again.</div>
+  );
+
+  const filtered = betaSchools.filter(s => s.schoolName.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <div className="p-6 space-y-6">
@@ -62,24 +72,23 @@ export default function BetaProgramPage() {
               <th className="px-5 py-3 text-right">Students</th>
               <th className="px-5 py-3 text-left">Enrolled</th>
               <th className="px-5 py-3 text-left">Feedback</th>
-              <th className="px-5 py-3 text-center">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {betaSchools.filter(s => s.schoolName.toLowerCase().includes(search.toLowerCase())).map(school => (
+            {filtered.map(school => (
               <tr key={school.tenantId} className="hover:bg-muted">
                 <td className="px-5 py-3 font-medium text-foreground">{school.schoolName}</td>
                 <td className="px-5 py-3 text-muted-foreground">{school.city}</td>
                 <td className="px-5 py-3 text-right text-foreground">{school.activeStudents.toLocaleString()}</td>
                 <td className="px-5 py-3 text-muted-foreground">{school.enrolledAt}</td>
                 <td className="px-5 py-3 text-muted-foreground text-xs">{school.feedback ?? "—"}</td>
-                <td className="px-5 py-3 text-center">
-                  <button onClick={() => removeBeta(school.tenantId)} className="text-xs text-red-500 hover:text-red-700 border border-red-200 px-3 py-1 rounded-md hover:bg-red-50">
-                    Remove
-                  </button>
-                </td>
               </tr>
             ))}
+            {filtered.length === 0 && (
+              <tr>
+                <td colSpan={5} className="px-5 py-8 text-center text-muted-foreground text-sm">No beta schools found</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -76,10 +76,26 @@ export class EventService {
     }
 
     const qrCode = `EVENT-${eventId}-${data.memberId}-${randomUUID().slice(0, 8).toUpperCase()}`;
-    return this.prisma.eventParticipant.upsert({
-      where: { eventId_memberId: { eventId, memberId: data.memberId } },
-      create: { eventId, ...data, qrCode },
-      update: { consentGiven: data.consentGiven, consentDocUrl: data.consentDocUrl },
+
+    return this.prisma.$transaction(async (tx) => {
+      // Re-check capacity atomically within transaction
+      if ((ev as any).maxCapacity) {
+        const existing = await tx.eventParticipant.findUnique({
+          where: { eventId_memberId: { eventId, memberId: data.memberId } },
+        });
+        if (!existing) {
+          const count = await tx.eventParticipant.count({ where: { eventId } });
+          if (count >= (ev as any).maxCapacity) {
+            throw new ConflictError("Event has reached maximum capacity");
+          }
+        }
+      }
+
+      return tx.eventParticipant.upsert({
+        where: { eventId_memberId: { eventId, memberId: data.memberId } },
+        create: { eventId, ...data, qrCode },
+        update: { consentGiven: data.consentGiven, consentDocUrl: data.consentDocUrl },
+      });
     });
   }
 

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, ConflictError } from "@school-erp/errors";
 import { SalaryStructureService } from "./salary-structure.service";
@@ -8,6 +8,8 @@ import {
 
 @Injectable()
 export class PayrollService {
+  private readonly logger = new Logger(PayrollService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly structure: SalaryStructureService,
@@ -118,12 +120,18 @@ export class PayrollService {
           const remaining = (a.outstandingAmount ?? 0) - (a.emiAmount ?? 0);
           advanceUpdates.push({ id: a.id, outstandingAmount: remaining, status: remaining <= 0 ? "CLOSED" : "ACTIVE" });
         }
-      } catch {
-        // Skip this staff member's error, continue processing
+      } catch (err) {
+        this.logger.error(`Payroll calculation failed for staff ${s.id}: ${(err as Error).message}`);
       }
     }
 
-    // Batch upsert payslips + advance updates in a single transaction
+    const totals = payslips.reduce((acc, p) => ({
+      totalGross: acc.totalGross + +p.grossSalary,
+      totalDeductions: acc.totalDeductions + +p.deductions,
+      totalNet: acc.totalNet + +p.netSalary,
+    }), { totalGross: 0, totalDeductions: 0, totalNet: 0 });
+
+    // Batch upsert payslips, advance updates, and final run status in one atomic transaction
     await this.prisma.$transaction([
       ...payslips.map((p) =>
         this.prisma.payslip.upsert({
@@ -138,19 +146,13 @@ export class PayrollService {
           data: { outstandingAmount: u.outstandingAmount, status: u.status as any },
         }),
       ),
+      this.prisma.payrollRun.update({
+        where: { id: runId },
+        data: { status: "PROCESSED", processedAt: new Date(), totalGross: totals.totalGross, totalDeductions: totals.totalDeductions, totalNet: totals.totalNet },
+      }),
     ]);
 
-    const totals = payslips.reduce((acc, p) => ({
-      totalGross: acc.totalGross + +p.grossSalary,
-      totalDeductions: acc.totalDeductions + +p.deductions,
-      totalNet: acc.totalNet + +p.netSalary,
-    }), { totalGross: 0, totalDeductions: 0, totalNet: 0 });
-
-    return this.prisma.payrollRun.update({
-      where: { id: runId },
-      data: { status: "PROCESSED", processedAt: new Date(), totalGross: totals.totalGross, totalDeductions: totals.totalDeductions, totalNet: totals.totalNet },
-      include: { payslips: true },
-    });
+    return this.prisma.payrollRun.findUnique({ where: { id: runId }, include: { payslips: true } });
   }
 
   async approveRun(runId: string, approvedBy: string) {
@@ -161,11 +163,15 @@ export class PayrollService {
     return this.prisma.payrollRun.update({ where: { id: runId }, data: { status: "DISBURSED", disbursedAt: new Date() } });
   }
 
-  async getRuns(schoolId: string, year?: number) {
-    return this.prisma.payrollRun.findMany({
-      where: { schoolId, ...(year ? { year } : {}) },
-      orderBy: [{ year: "desc" }, { month: "desc" }],
-    });
+  async getRuns(schoolId: string, year?: number, page = 1, limit = 24) {
+    const take = Math.min(limit, 120);
+    const skip = (page - 1) * take;
+    const where = { schoolId, ...(year ? { year } : {}) };
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.payrollRun.findMany({ where, orderBy: [{ year: "desc" }, { month: "desc" }], skip, take }),
+      this.prisma.payrollRun.count({ where }),
+    ]);
+    return { data, total, page, limit: take, totalPages: Math.ceil(total / take) };
   }
 
   async getPayslip(runId: string, staffId: string) {

@@ -5,7 +5,7 @@
  * Peer review scheduling, Quality improvement action plan.
  */
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 export type QualityFramework = "ISO_21001" | "NAAC" | "BOARD_QA" | "IB_EVALUATION" | "CAMBRIDGE_INSPECTION";
 

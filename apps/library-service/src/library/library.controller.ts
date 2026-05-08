@@ -1,5 +1,7 @@
-import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards, Req } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import type { Request } from "express";
+import type { RequestUser } from "@school-erp/types";
 import { LibraryService } from "./library.service";
 import { CreateBookDto, UpdateBookDto, CreateEBookDto, CreatePeriodicalDto, RecordPeriodicalIssueDto, SuggestBookDto } from "../dto/library.dto";
 import { CreateReadingProgramDto, LogReadingEntryDto } from "./dto/reading-program.dto";
@@ -11,9 +13,9 @@ export class LibraryController {
 
   // ─── Book catalogue ───────────────────────────────────────────────────────
 
-  @Post(":schoolId/books")
-  createBook(@Param("schoolId") schoolId: string, @Body() body: CreateBookDto) {
-    return this.svc.createBook(schoolId, body);
+  @Post("books")
+  createBook(@Req() req: Request & { user: RequestUser }, @Body() body: CreateBookDto) {
+    return this.svc.createBook(req.user.schoolId!, body);
   }
 
   @Patch("books/:bookId")
@@ -21,23 +23,23 @@ export class LibraryController {
     return this.svc.updateBook(bookId, body);
   }
 
-  @Get(":schoolId/books")
+  @Get("books")
   searchBooks(
-    @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Query("q") q?: string,
     @Query("category") category?: string,
     @Query("author") author?: string,
     @Query("page") page?: string,
     @Query("limit") limit?: string,
   ) {
-    return this.svc.searchBooks(schoolId, q, category, author, page ? Number(page) : 1, limit ? Number(limit) : 20);
+    return this.svc.searchBooks(req.user.schoolId!, q, category, author, page ? Number(page) : 1, limit ? Number(limit) : 20);
   }
 
   // ─── Issue / return ───────────────────────────────────────────────────────
 
-  @Post(":schoolId/issue")
-  issueBook(@Param("schoolId") schoolId: string, @Body() body: { bookIdOrBarcode: string; memberId: string; memberRole: string; daysOnLoan?: number }) {
-    return this.svc.issueBook(schoolId, body.bookIdOrBarcode, body.memberId, body.memberRole, body.daysOnLoan);
+  @Post("issue")
+  issueBook(@Req() req: Request & { user: RequestUser }, @Body() body: { bookIdOrBarcode: string; memberId: string; memberRole: string; daysOnLoan?: number }) {
+    return this.svc.issueBook(req.user.schoolId!, body.bookIdOrBarcode, body.memberId, body.memberRole, body.daysOnLoan);
   }
 
   @Post("issues/:issueId/return")
@@ -57,16 +59,16 @@ export class LibraryController {
     return this.svc.getMemberIssues(memberId, role, active !== "false");
   }
 
-  @Get(":schoolId/members/:memberId/stats")
-  getMemberStats(@Param("schoolId") schoolId: string, @Param("memberId") memberId: string, @Query("role") role: string) {
-    return this.svc.getMemberStats(schoolId, memberId, role);
+  @Get("members/:memberId/stats")
+  getMemberStats(@Req() req: Request & { user: RequestUser }, @Param("memberId") memberId: string, @Query("role") role: string) {
+    return this.svc.getMemberStats(req.user.schoolId!, memberId, role);
   }
 
   // ─── Reservations ─────────────────────────────────────────────────────────
 
-  @Post(":schoolId/reservations")
-  reserveBook(@Param("schoolId") schoolId: string, @Body() body: { bookId: string; memberId: string; memberRole: string }) {
-    return this.svc.reserveBook(schoolId, body.bookId, body.memberId, body.memberRole);
+  @Post("reservations")
+  reserveBook(@Req() req: Request & { user: RequestUser }, @Body() body: { bookId: string; memberId: string; memberRole: string }) {
+    return this.svc.reserveBook(req.user.schoolId!, body.bookId, body.memberId, body.memberRole);
   }
 
   @Patch("reservations/:id/cancel")
@@ -76,14 +78,14 @@ export class LibraryController {
 
   // ─── Fine config ──────────────────────────────────────────────────────────
 
-  @Post(":schoolId/fine-config")
-  setFineConfig(@Param("schoolId") schoolId: string, @Body() body: { dailyRateRs: number; graceDays?: number; maxFineRs?: number }) {
-    return this.svc.setFineConfig(schoolId, body.dailyRateRs, body.graceDays, body.maxFineRs);
+  @Post("fine-config")
+  setFineConfig(@Req() req: Request & { user: RequestUser }, @Body() body: { dailyRateRs: number; graceDays?: number; maxFineRs?: number }) {
+    return this.svc.setFineConfig(req.user.schoolId!, body.dailyRateRs, body.graceDays, body.maxFineRs);
   }
 
-  @Get(":schoolId/overdue")
-  getOverdueList(@Param("schoolId") schoolId: string) {
-    return this.svc.getOverdueList(schoolId);
+  @Get("overdue")
+  getOverdueList(@Req() req: Request & { user: RequestUser }) {
+    return this.svc.getOverdueList(req.user.schoolId!);
   }
 
   @Patch("issues/:issueId/fine-paid")
@@ -93,14 +95,14 @@ export class LibraryController {
 
   // ─── eBooks ───────────────────────────────────────────────────────────────
 
-  @Post(":schoolId/ebooks")
-  createEBook(@Param("schoolId") schoolId: string, @Body() body: CreateEBookDto) {
-    return this.svc.createEBook(schoolId, body);
+  @Post("ebooks")
+  createEBook(@Req() req: Request & { user: RequestUser }, @Body() body: CreateEBookDto) {
+    return this.svc.createEBook(req.user.schoolId!, body);
   }
 
-  @Get(":schoolId/ebooks")
-  getEBooks(@Param("schoolId") schoolId: string, @Query("subject") subject?: string, @Query("gradeLevel") gradeLevel?: string) {
-    return this.svc.getEBooks(schoolId, subject, gradeLevel);
+  @Get("ebooks")
+  getEBooks(@Req() req: Request & { user: RequestUser }, @Query("subject") subject?: string, @Query("gradeLevel") gradeLevel?: string) {
+    return this.svc.getEBooks(req.user.schoolId!, subject, gradeLevel);
   }
 
   @Post("ebooks/:ebookId/read-log")
@@ -108,16 +110,16 @@ export class LibraryController {
     return this.svc.logEBookRead(ebookId, body.studentId, body.minutesRead);
   }
 
-  @Get(":schoolId/ebooks/stats/:studentId")
-  getEBookStats(@Param("schoolId") schoolId: string, @Param("studentId") studentId: string) {
-    return this.svc.getEBookReadStats(studentId, schoolId);
+  @Get("ebooks/stats/:studentId")
+  getEBookStats(@Req() req: Request & { user: RequestUser }, @Param("studentId") studentId: string) {
+    return this.svc.getEBookReadStats(studentId, req.user.schoolId!);
   }
 
   // ─── Periodicals ──────────────────────────────────────────────────────────
 
-  @Post(":schoolId/periodicals")
-  createPeriodical(@Param("schoolId") schoolId: string, @Body() body: CreatePeriodicalDto) {
-    return this.svc.createPeriodical(schoolId, body);
+  @Post("periodicals")
+  createPeriodical(@Req() req: Request & { user: RequestUser }, @Body() body: CreatePeriodicalDto) {
+    return this.svc.createPeriodical(req.user.schoolId!, body);
   }
 
   @Post("periodicals/:periodicalId/issues")
@@ -125,16 +127,16 @@ export class LibraryController {
     return this.svc.recordPeriodicalIssue(periodicalId, { ...body, issueDate: new Date(body.issueDate) });
   }
 
-  @Get(":schoolId/periodicals")
-  getPeriodicals(@Param("schoolId") schoolId: string) {
-    return this.svc.getPeriodicals(schoolId);
+  @Get("periodicals")
+  getPeriodicals(@Req() req: Request & { user: RequestUser }) {
+    return this.svc.getPeriodicals(req.user.schoolId!);
   }
 
   // ─── Stock audit ──────────────────────────────────────────────────────────
 
-  @Post(":schoolId/audits")
-  startAudit(@Param("schoolId") schoolId: string, @Body() body: { conductedBy: string }) {
-    return this.svc.startStockAudit(schoolId, body.conductedBy);
+  @Post("audits")
+  startAudit(@Req() req: Request & { user: RequestUser }, @Body() body: { conductedBy: string }) {
+    return this.svc.startStockAudit(req.user.schoolId!, body.conductedBy);
   }
 
   @Post("audits/:auditId/entries")
@@ -154,9 +156,9 @@ export class LibraryController {
 
   // ─── Recommendations ──────────────────────────────────────────────────────
 
-  @Post(":schoolId/recommendations")
-  suggestBook(@Param("schoolId") schoolId: string, @Body() body: SuggestBookDto) {
-    return this.svc.suggestBook(schoolId, body);
+  @Post("recommendations")
+  suggestBook(@Req() req: Request & { user: RequestUser }, @Body() body: SuggestBookDto) {
+    return this.svc.suggestBook(req.user.schoolId!, body);
   }
 
   @Patch("recommendations/:id/review")
@@ -164,28 +166,28 @@ export class LibraryController {
     return this.svc.reviewRecommendation(id, body.action, body.approvedBy, body.purchaseOrderRef);
   }
 
-  @Get(":schoolId/recommendations")
-  getRecommendations(@Param("schoolId") schoolId: string, @Query("status") status?: string) {
-    return this.svc.getRecommendations(schoolId, status);
+  @Get("recommendations")
+  getRecommendations(@Req() req: Request & { user: RequestUser }, @Query("status") status?: string) {
+    return this.svc.getRecommendations(req.user.schoolId!, status);
   }
 
   // ─── Inter-library loan ───────────────────────────────────────────────────
 
-  @Post(":schoolId/inter-library-loans")
-  issueILL(@Param("schoolId") schoolId: string, @Body() body: { bookId: string; memberId: string; memberRole: string; partnerSchoolId: string; daysOnLoan?: number }) {
-    return this.svc.issueInterLibraryLoan(schoolId, body.bookId, body.memberId, body.memberRole, body.partnerSchoolId, body.daysOnLoan);
+  @Post("inter-library-loans")
+  issueILL(@Req() req: Request & { user: RequestUser }, @Body() body: { bookId: string; memberId: string; memberRole: string; partnerSchoolId: string; daysOnLoan?: number }) {
+    return this.svc.issueInterLibraryLoan(req.user.schoolId!, body.bookId, body.memberId, body.memberRole, body.partnerSchoolId, body.daysOnLoan);
   }
 
-  @Get(":schoolId/inter-library-loans")
-  getILLs(@Param("schoolId") schoolId: string) {
-    return this.svc.getInterLibraryLoans(schoolId);
+  @Get("inter-library-loans")
+  getILLs(@Req() req: Request & { user: RequestUser }) {
+    return this.svc.getInterLibraryLoans(req.user.schoolId!);
   }
 
   // ─── Reading program ──────────────────────────────────────────────────────
 
-  @Post(":schoolId/reading-programs")
-  createProgram(@Param("schoolId") schoolId: string, @Body() dto: CreateReadingProgramDto) {
-    return this.svc.createReadingProgram(schoolId, { ...dto, startDate: new Date(dto.startDate), endDate: new Date(dto.endDate) });
+  @Post("reading-programs")
+  createProgram(@Req() req: Request & { user: RequestUser }, @Body() dto: CreateReadingProgramDto) {
+    return this.svc.createReadingProgram(req.user.schoolId!, { ...dto, startDate: new Date(dto.startDate), endDate: new Date(dto.endDate) });
   }
 
   @Post("reading-programs/:programId/logs")

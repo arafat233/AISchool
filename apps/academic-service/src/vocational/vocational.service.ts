@@ -6,7 +6,7 @@
  * FLN (Foundational Literacy & Numeracy) dashboard for Grades 1–3.
  */
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 export type NsqfLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 

@@ -7,7 +7,7 @@
  * Anti-gaming: no repeat points for same action in 24h.
  */
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 import { createClient, RedisClientType } from "redis";
 
 export type PointAction =

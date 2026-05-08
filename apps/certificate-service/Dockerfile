@@ -16,5 +16,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/certificate-service/dist ./apps/certificate-service/dist
 COPY --from=builder /app/apps/certificate-service/package.json ./apps/certificate-service/package.json
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nestjs
+USER nestjs
 EXPOSE 3012
 CMD ["node", "apps/certificate-service/dist/main.js"]

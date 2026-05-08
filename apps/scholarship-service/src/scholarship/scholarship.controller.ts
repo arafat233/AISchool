@@ -1,5 +1,7 @@
-import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, Post, Patch, Param, Query, Body, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import type { Request } from "express";
+import type { RequestUser } from "@school-erp/types";
 import { ScholarshipService } from "./scholarship.service";
 import { CreateSchemeDto, UpdateSchemeDto } from "../dto/scholarship.dto";
 
@@ -11,7 +13,8 @@ export class ScholarshipController {
   // ─── [1] Scheme CRUD ─────────────────────────────────────────────────────
 
   @Post(":schoolId/schemes")
-  createScheme(@Param("schoolId") schoolId: string, @Body() body: CreateSchemeDto) {
+  createScheme(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: CreateSchemeDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createScheme(schoolId, body);
   }
 
@@ -21,7 +24,8 @@ export class ScholarshipController {
   }
 
   @Get(":schoolId/schemes")
-  getSchemes(@Param("schoolId") schoolId: string, @Query("type") type?: string, @Query("all") all?: string) {
+  getSchemes(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("type") type?: string, @Query("all") all?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getSchemes(schoolId, type, all !== "true");
   }
 
@@ -93,21 +97,24 @@ export class ScholarshipController {
   }
 
   @Get(":schoolId/govt-status")
-  getGovtStatus(@Param("schoolId") schoolId: string, @Query("academicYearId") academicYearId: string) {
+  getGovtStatus(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("academicYearId") academicYearId: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getGovtScholarshipStatus(schoolId, academicYearId);
   }
 
   // ─── [7] Donor fund utilisation ───────────────────────────────────────────
 
   @Get(":schoolId/donor-utilisation")
-  getDonorUtilisation(@Param("schoolId") schoolId: string, @Query("donorRef") donorRef: string, @Query("academicYear") academicYear?: string) {
+  getDonorUtilisation(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("donorRef") donorRef: string, @Query("academicYear") academicYear?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getDonorFundUtilisation(schoolId, donorRef, academicYear);
   }
 
   // ─── [8] Analytics ───────────────────────────────────────────────────────
 
   @Get(":schoolId/analytics")
-  getAnalytics(@Param("schoolId") schoolId: string, @Query("academicYearId") academicYearId: string) {
+  getAnalytics(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("academicYearId") academicYearId: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getScholarshipAnalytics(schoolId, academicYearId);
   }
 

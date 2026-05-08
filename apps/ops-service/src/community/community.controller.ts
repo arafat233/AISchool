@@ -1,5 +1,7 @@
-import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, Post, Patch, Param, Query, Body, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import type { Request } from "express";
+import type { RequestUser } from "@school-erp/types";
 import { CommunityService } from "./community.service";
 import {
   AddPtaMemberDto, CreatePtaMeetingDto, UpdatePtaMeetingDto, RecordPtaFundEntryDto,
@@ -14,17 +16,20 @@ export class CommunityController {
 
   // PTA
   @Post(":schoolId/pta/members")
-  addPtaMember(@Param("schoolId") schoolId: string, @Body() dto: AddPtaMemberDto) {
+  addPtaMember(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: AddPtaMemberDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.addPtaMember(schoolId, { ...dto, electedAt: new Date(dto.electedAt), tenureEndAt: dto.tenureEndAt ? new Date(dto.tenureEndAt) : undefined });
   }
 
   @Get(":schoolId/pta/members")
-  getPtaCommittee(@Param("schoolId") schoolId: string) {
+  getPtaCommittee(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getPtaCommittee(schoolId);
   }
 
   @Post(":schoolId/pta/meetings")
-  createMeeting(@Param("schoolId") schoolId: string, @Body() dto: CreatePtaMeetingDto) {
+  createMeeting(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: CreatePtaMeetingDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createPtaMeeting(schoolId, dto.createdBy, { ...dto, meetingDate: new Date(dto.meetingDate) });
   }
 
@@ -49,23 +54,27 @@ export class CommunityController {
   }
 
   @Post(":schoolId/pta/fund")
-  recordFundEntry(@Param("schoolId") schoolId: string, @Body() dto: RecordPtaFundEntryDto) {
+  recordFundEntry(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: RecordPtaFundEntryDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.recordPtaFundEntry(schoolId, { ...dto, entryDate: new Date(dto.entryDate) });
   }
 
   @Get(":schoolId/pta/fund/balance")
-  getFundBalance(@Param("schoolId") schoolId: string) {
+  getFundBalance(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getPtaFundBalance(schoolId);
   }
 
   @Get(":schoolId/pta/meetings")
-  getMeetings(@Param("schoolId") schoolId: string) {
+  getMeetings(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getPtaMeetings(schoolId);
   }
 
   // Volunteers
   @Post(":schoolId/volunteers/register")
-  registerVolunteer(@Param("schoolId") schoolId: string, @Body() body: { parentId: string; skills: string[] }) {
+  registerVolunteer(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { parentId: string; skills: string[] }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.registerVolunteer(schoolId, body.parentId, body.skills);
   }
 
@@ -80,7 +89,8 @@ export class CommunityController {
   }
 
   @Post(":schoolId/volunteers/opportunities")
-  createOpportunity(@Param("schoolId") schoolId: string, @Body() dto: CreateVolunteerOpportunityDto) {
+  createOpportunity(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: CreateVolunteerOpportunityDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createVolunteerOpportunity(schoolId, dto.createdBy, { ...dto, opportunityDate: new Date(dto.opportunityDate) });
   }
 
@@ -95,13 +105,15 @@ export class CommunityController {
   }
 
   @Get(":schoolId/volunteers")
-  getVolunteers(@Param("schoolId") schoolId: string) {
+  getVolunteers(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getVolunteers(schoolId);
   }
 
   // Community service
   @Post(":schoolId/community-service")
-  logService(@Param("schoolId") schoolId: string, @Body() dto: LogCommunityServiceDto) {
+  logService(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: LogCommunityServiceDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.logCommunityService(schoolId, { ...dto, activityDate: new Date(dto.activityDate) });
   }
 
@@ -111,13 +123,15 @@ export class CommunityController {
   }
 
   @Get(":schoolId/community-service/:studentId")
-  getStudentHours(@Param("schoolId") schoolId: string, @Param("studentId") studentId: string) {
+  getStudentHours(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Param("studentId") studentId: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getStudentCommunityHours(schoolId, studentId);
   }
 
   // Corporate Partners
   @Post(":schoolId/partners")
-  createPartner(@Param("schoolId") schoolId: string, @Body() dto: CreatePartnerDto) {
+  createPartner(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: CreatePartnerDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createPartner(schoolId, { ...dto, mouStartDate: dto.mouStartDate ? new Date(dto.mouStartDate) : undefined, mouEndDate: dto.mouEndDate ? new Date(dto.mouEndDate) : undefined });
   }
 
@@ -132,13 +146,15 @@ export class CommunityController {
   }
 
   @Get(":schoolId/partners")
-  getPartners(@Param("schoolId") schoolId: string) {
+  getPartners(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getPartners(schoolId);
   }
 
   // Lost & Found
   @Post(":schoolId/lost-found")
-  logFoundItem(@Param("schoolId") schoolId: string, @Body() dto: LogFoundItemDto) {
+  logFoundItem(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: LogFoundItemDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.logFoundItem(schoolId, dto.reportedBy, { ...dto, foundAt: new Date(dto.foundAt) });
   }
 
@@ -153,13 +169,15 @@ export class CommunityController {
   }
 
   @Get(":schoolId/lost-found")
-  getUnclaimed(@Param("schoolId") schoolId: string) {
+  getUnclaimed(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getUnclaimedItems(schoolId);
   }
 
   // Store
   @Post(":schoolId/store/products")
-  createProduct(@Param("schoolId") schoolId: string, @Body() dto: CreateProductDto) {
+  createProduct(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: CreateProductDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createProduct(schoolId, dto);
   }
 
@@ -169,23 +187,27 @@ export class CommunityController {
   }
 
   @Post(":schoolId/store/orders")
-  placeOrder(@Param("schoolId") schoolId: string, @Body() dto: PlaceOrderDto) {
+  placeOrder(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: PlaceOrderDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.placeOrder(schoolId, dto);
   }
 
   @Get(":schoolId/store/products")
-  getProducts(@Param("schoolId") schoolId: string, @Query("category") category?: string) {
+  getProducts(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("category") category?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getProducts(schoolId, category);
   }
 
   @Get(":schoolId/store/low-stock")
-  getLowStock(@Param("schoolId") schoolId: string) {
+  getLowStock(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getLowStockAlerts(schoolId);
   }
 
   // Robo calls
   @Post(":schoolId/robo-calls/templates")
-  createTemplate(@Param("schoolId") schoolId: string, @Body() dto: CreateCallTemplateDto) {
+  createTemplate(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: CreateCallTemplateDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createCallTemplate(schoolId, dto);
   }
 
@@ -206,17 +228,20 @@ export class CommunityController {
 
   // Digital signage
   @Post(":schoolId/signage")
-  createSignage(@Param("schoolId") schoolId: string, @Body() dto: CreateSignageContentDto) {
+  createSignage(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: CreateSignageContentDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createSignageContent(schoolId, dto.createdBy, { ...dto, startAt: new Date(dto.startAt), endAt: new Date(dto.endAt) });
   }
 
   @Post(":schoolId/signage/emergency")
-  emergencyBroadcast(@Param("schoolId") schoolId: string, @Body() body: { createdBy: string; message: string }) {
+  emergencyBroadcast(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { createdBy: string; message: string }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.emergencyOverrideAllScreens(schoolId, body.createdBy, body.message);
   }
 
   @Get(":schoolId/signage/active")
-  getActiveSignage(@Param("schoolId") schoolId: string, @Query("screenId") screenId?: string) {
+  getActiveSignage(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("screenId") screenId?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getActiveSignageContent(schoolId, screenId);
   }
 }

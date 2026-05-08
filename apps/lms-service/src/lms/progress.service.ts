@@ -18,16 +18,16 @@ export class ProgressService {
     const lesson = await this.prisma.lesson.findUnique({ where: { id: lessonId } });
     if (!lesson) return;
 
-    let isCompleted = data.isCompleted ?? false;
+    // Server determines completion — client cannot force isCompleted for measurable types
+    let isCompleted = false;
 
     if (lesson.type === "VIDEO" || lesson.type === "AUDIO") {
       if (data.watchedSeconds && lesson.durationSeconds > 0) {
-        const ratio = data.watchedSeconds / lesson.durationSeconds;
-        if (ratio >= VIDEO_COMPLETE_THRESHOLD) isCompleted = true;
+        isCompleted = (data.watchedSeconds / lesson.durationSeconds) >= VIDEO_COMPLETE_THRESHOLD;
       }
     } else if (lesson.type === "PDF") {
-      if (data.scrollPercent !== undefined && data.scrollPercent >= PDF_COMPLETE_THRESHOLD * 100) {
-        isCompleted = true;
+      if (data.scrollPercent !== undefined) {
+        isCompleted = data.scrollPercent >= PDF_COMPLETE_THRESHOLD * 100;
       }
     } else {
       // ARTICLE, LIVE_CLASS, AR_CONTENT — opening it counts as complete

@@ -1,5 +1,7 @@
-import { Controller, Get, Post, Patch, Delete, Param, Query, Body, UseGuards } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, Post, Patch, Delete, Param, Query, Body, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import type { Request } from "express";
+import type { RequestUser } from "@school-erp/types";
 import { EventService } from "./event.service";
 import { UpdateEventDto, UpdateDramaPropDto, UpdateClubDto, UpdateHouseDto } from "./dto/event.dto";
 
@@ -13,8 +15,10 @@ export class EventController {
   @Post(":schoolId")
   createEvent(
     @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Body() body: { createdBy: string; title: string; type: string; startDate: string; endDate: string; description?: string; venue?: string; budgetRs?: number },
   ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createEvent(schoolId, body.createdBy, { ...body, startDate: new Date(body.startDate), endDate: new Date(body.endDate) });
   }
 
@@ -26,11 +30,13 @@ export class EventController {
   @Get(":schoolId")
   getEvents(
     @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Query("type") type?: string,
     @Query("status") status?: string,
     @Query("from") from?: string,
     @Query("to") to?: string,
   ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getEvents(schoolId, type, status, from ? new Date(from) : undefined, to ? new Date(to) : undefined);
   }
 
@@ -94,7 +100,8 @@ export class EventController {
   }
 
   @Get(":schoolId/houses/leaderboard")
-  getHouseLeaderboard(@Param("schoolId") schoolId: string) {
+  getHouseLeaderboard(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getHouseLeaderboard(schoolId);
   }
 
@@ -195,7 +202,8 @@ export class EventController {
   // ─── [6] Club management ──────────────────────────────────────────────────
 
   @Post(":schoolId/clubs")
-  createClub(@Param("schoolId") schoolId: string, @Body() body: { name: string; description?: string; advisorId: string; meetingSchedule?: string }) {
+  createClub(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { name: string; description?: string; advisorId: string; meetingSchedule?: string }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createClub(schoolId, body);
   }
 
@@ -205,7 +213,8 @@ export class EventController {
   }
 
   @Get(":schoolId/clubs")
-  getClubs(@Param("schoolId") schoolId: string) {
+  getClubs(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getClubs(schoolId);
   }
 
@@ -237,7 +246,8 @@ export class EventController {
   // ─── [7] NCC / NSS / Scouts ───────────────────────────────────────────────
 
   @Post(":schoolId/youth-orgs")
-  createYouthUnit(@Param("schoolId") schoolId: string, @Body() body: { orgType: string; unitName: string; officerId: string }) {
+  createYouthUnit(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { orgType: string; unitName: string; officerId: string }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createYouthUnit(schoolId, body);
   }
 
@@ -257,14 +267,16 @@ export class EventController {
   }
 
   @Get(":schoolId/youth-orgs")
-  getYouthUnit(@Param("schoolId") schoolId: string) {
+  getYouthUnit(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getYouthUnit(schoolId);
   }
 
   // ─── [8] Student Council ──────────────────────────────────────────────────
 
   @Post(":schoolId/council/elections")
-  startElection(@Param("schoolId") schoolId: string, @Body() body: { academicYear: string }) {
+  startElection(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { academicYear: string }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.startElection(schoolId, body.academicYear);
   }
 
@@ -297,14 +309,16 @@ export class EventController {
   }
 
   @Get(":schoolId/council/:academicYear")
-  getElection(@Param("schoolId") schoolId: string, @Param("academicYear") academicYear: string) {
+  getElection(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Param("academicYear") academicYear: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getElection(schoolId, academicYear);
   }
 
   // ─── [9] House / Team system ──────────────────────────────────────────────
 
   @Post(":schoolId/houses")
-  createHouse(@Param("schoolId") schoolId: string, @Body() body: { name: string; colour?: string; motto?: string; houseMasterId?: string }) {
+  createHouse(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { name: string; colour?: string; motto?: string; houseMasterId?: string }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createHouse(schoolId, body);
   }
 
@@ -324,7 +338,8 @@ export class EventController {
   }
 
   @Get(":schoolId/houses")
-  getHouses(@Param("schoolId") schoolId: string) {
+  getHouses(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getHouses(schoolId);
   }
 

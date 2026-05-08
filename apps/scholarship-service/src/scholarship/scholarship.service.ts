@@ -62,6 +62,14 @@ export class ScholarshipService {
       if (approved >= scheme.maxBeneficiaries) throw new ConflictError("All scholarship seats for this scheme are filled");
     }
 
+    // Block re-application if already approved or under active review
+    const existing = await this.prisma.scholarshipApplication.findUnique({
+      where: { schemeId_studentId_academicYearId: { schemeId, studentId, academicYearId } },
+    });
+    if (existing && ["APPROVED", "UNDER_REVIEW"].includes(existing.status)) {
+      throw new ConflictError(`Application already ${existing.status.toLowerCase().replace("_", " ")} — cannot re-apply`);
+    }
+
     // Auto-run eligibility check
     const { isEligible, score } = await this._checkEligibility(schemeId, studentId, scheme.eligibilityCriteria as Record<string, unknown>);
 

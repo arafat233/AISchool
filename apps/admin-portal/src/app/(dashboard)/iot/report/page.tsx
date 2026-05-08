@@ -4,6 +4,8 @@
  * Average air quality, energy consumption trend per classroom
  */
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
 interface MonthlyReport {
   location: string;
@@ -16,16 +18,6 @@ interface MonthlyReport {
   pm25_exceedances: number;
 }
 
-const MOCK_REPORT: MonthlyReport[] = [
-  { location: "Classroom A1", month: "2026-03", avg_co2: 780, avg_pm25: 14.2, total_kwh: 312, total_liters: 0, co2_exceedances: 2, pm25_exceedances: 0 },
-  { location: "Classroom A2", month: "2026-03", avg_co2: 920, avg_pm25: 19.8, total_kwh: 298, total_liters: 0, co2_exceedances: 8, pm25_exceedances: 1 },
-  { location: "Classroom B1", month: "2026-03", avg_co2: 650, avg_pm25: 11.5, total_kwh: 285, total_liters: 0, co2_exceedances: 0, pm25_exceedances: 0 },
-  { location: "Laboratory", month: "2026-03", avg_co2: 740, avg_pm25: 16.1, total_kwh: 520, total_liters: 4800, co2_exceedances: 1, pm25_exceedances: 0 },
-  { location: "Library", month: "2026-03", avg_co2: 580, avg_pm25: 10.3, total_kwh: 180, total_liters: 0, co2_exceedances: 0, pm25_exceedances: 0 },
-  { location: "Block A", month: "2026-03", avg_co2: 0, avg_pm25: 0, total_kwh: 2840, total_liters: 28500, co2_exceedances: 0, pm25_exceedances: 0 },
-  { location: "Block B", month: "2026-03", avg_co2: 0, avg_pm25: 0, total_kwh: 3210, total_liters: 31200, co2_exceedances: 0, pm25_exceedances: 0 },
-];
-
 const co2Quality = (ppm: number) => {
   if (ppm === 0) return null;
   if (ppm < 600) return { label: "Excellent", color: "text-green-700 bg-green-50" };
@@ -35,11 +27,31 @@ const co2Quality = (ppm: number) => {
 };
 
 export default function IotReportPage() {
-  const [month, setMonth] = useState("2026-03");
+  const [month, setMonth] = useState(() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  });
 
-  const airQualityRows = MOCK_REPORT.filter(r => r.avg_co2 > 0);
-  const energyRows = MOCK_REPORT.filter(r => r.total_kwh > 0);
-  const waterRows = MOCK_REPORT.filter(r => r.total_liters > 0);
+  const { data: report = [], isLoading, error } = useQuery<MonthlyReport[]>({
+    queryKey: ["iot-reports", month],
+    queryFn: async () => {
+      const res = await api.get("/iot/reports", { params: { month } });
+      return res.data?.data ?? [];
+    },
+  });
+
+  if (isLoading) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+    </div>
+  );
+  if (error) return (
+    <div className="p-4 text-red-500">Failed to load data. Please try again.</div>
+  );
+
+  const airQualityRows = report.filter(r => r.avg_co2 > 0);
+  const energyRows = report.filter(r => r.total_kwh > 0);
+  const waterRows = report.filter(r => r.total_liters > 0);
 
   const totalKwh = energyRows.reduce((s, r) => s + r.total_kwh, 0);
   const totalLiters = waterRows.reduce((s, r) => s + r.total_liters, 0);
@@ -82,39 +94,43 @@ export default function IotReportPage() {
         <div className="px-5 py-4 border-b border-border">
           <h2 className="font-semibold text-foreground">Air Quality by Classroom</h2>
         </div>
-        <table className="w-full text-sm">
-          <thead className="bg-muted text-muted-foreground text-xs uppercase">
-            <tr>
-              <th className="px-5 py-3 text-left">Location</th>
-              <th className="px-5 py-3 text-right">Avg CO₂ (ppm)</th>
-              <th className="px-5 py-3 text-right">Avg PM2.5 (µg/m³)</th>
-              <th className="px-5 py-3 text-right">CO₂ Exceedances</th>
-              <th className="px-5 py-3 text-right">PM2.5 Exceedances</th>
-              <th className="px-5 py-3 text-center">Air Quality</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {airQualityRows.map(row => {
-              const quality = co2Quality(row.avg_co2);
-              return (
-                <tr key={row.location} className="hover:bg-muted">
-                  <td className="px-5 py-3 font-medium text-foreground">{row.location}</td>
-                  <td className="px-5 py-3 text-right text-foreground">{row.avg_co2}</td>
-                  <td className="px-5 py-3 text-right text-foreground">{row.avg_pm25}</td>
-                  <td className="px-5 py-3 text-right">
-                    <span className={row.co2_exceedances > 0 ? "text-red-600 font-medium" : "text-muted-foreground"}>{row.co2_exceedances} days</span>
-                  </td>
-                  <td className="px-5 py-3 text-right">
-                    <span className={row.pm25_exceedances > 0 ? "text-red-600 font-medium" : "text-muted-foreground"}>{row.pm25_exceedances} days</span>
-                  </td>
-                  <td className="px-5 py-3 text-center">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${quality?.color}`}>{quality?.label}</span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        {airQualityRows.length === 0 ? (
+          <div className="px-5 py-8 text-center text-muted-foreground text-sm">No air quality data for this month</div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead className="bg-muted text-muted-foreground text-xs uppercase">
+              <tr>
+                <th className="px-5 py-3 text-left">Location</th>
+                <th className="px-5 py-3 text-right">Avg CO₂ (ppm)</th>
+                <th className="px-5 py-3 text-right">Avg PM2.5 (µg/m³)</th>
+                <th className="px-5 py-3 text-right">CO₂ Exceedances</th>
+                <th className="px-5 py-3 text-right">PM2.5 Exceedances</th>
+                <th className="px-5 py-3 text-center">Air Quality</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {airQualityRows.map(row => {
+                const quality = co2Quality(row.avg_co2);
+                return (
+                  <tr key={row.location} className="hover:bg-muted">
+                    <td className="px-5 py-3 font-medium text-foreground">{row.location}</td>
+                    <td className="px-5 py-3 text-right text-foreground">{row.avg_co2}</td>
+                    <td className="px-5 py-3 text-right text-foreground">{row.avg_pm25}</td>
+                    <td className="px-5 py-3 text-right">
+                      <span className={row.co2_exceedances > 0 ? "text-red-600 font-medium" : "text-muted-foreground"}>{row.co2_exceedances} days</span>
+                    </td>
+                    <td className="px-5 py-3 text-right">
+                      <span className={row.pm25_exceedances > 0 ? "text-red-600 font-medium" : "text-muted-foreground"}>{row.pm25_exceedances} days</span>
+                    </td>
+                    <td className="px-5 py-3 text-center">
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${quality?.color}`}>{quality?.label}</span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* Energy Table */}
@@ -122,37 +138,41 @@ export default function IotReportPage() {
         <div className="px-5 py-4 border-b border-border">
           <h2 className="font-semibold text-foreground">Energy Consumption by Block</h2>
         </div>
-        <table className="w-full text-sm">
-          <thead className="bg-muted text-muted-foreground text-xs uppercase">
-            <tr>
-              <th className="px-5 py-3 text-left">Location</th>
-              <th className="px-5 py-3 text-right">Total kWh</th>
-              <th className="px-5 py-3 text-right">Est. Cost (₹)</th>
-              <th className="px-5 py-3 text-right">Daily Avg (kWh)</th>
-              <th className="px-5 py-3 text-right">Water (L)</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {energyRows.sort((a, b) => b.total_kwh - a.total_kwh).map(row => (
-              <tr key={row.location} className="hover:bg-muted">
-                <td className="px-5 py-3 font-medium text-foreground">{row.location}</td>
-                <td className="px-5 py-3 text-right text-foreground">{row.total_kwh.toLocaleString()}</td>
-                <td className="px-5 py-3 text-right text-foreground">₹{(row.total_kwh * 8).toLocaleString()}</td>
-                <td className="px-5 py-3 text-right text-muted-foreground">{(row.total_kwh / 30).toFixed(1)}</td>
-                <td className="px-5 py-3 text-right text-muted-foreground">{row.total_liters > 0 ? row.total_liters.toLocaleString() : "—"}</td>
+        {energyRows.length === 0 ? (
+          <div className="px-5 py-8 text-center text-muted-foreground text-sm">No energy data for this month</div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead className="bg-muted text-muted-foreground text-xs uppercase">
+              <tr>
+                <th className="px-5 py-3 text-left">Location</th>
+                <th className="px-5 py-3 text-right">Total kWh</th>
+                <th className="px-5 py-3 text-right">Est. Cost (₹)</th>
+                <th className="px-5 py-3 text-right">Daily Avg (kWh)</th>
+                <th className="px-5 py-3 text-right">Water (L)</th>
               </tr>
-            ))}
-          </tbody>
-          <tfoot className="bg-muted font-semibold text-foreground">
-            <tr>
-              <td className="px-5 py-3">Total</td>
-              <td className="px-5 py-3 text-right">{totalKwh.toLocaleString()}</td>
-              <td className="px-5 py-3 text-right">₹{(totalKwh * 8).toLocaleString()}</td>
-              <td className="px-5 py-3 text-right">{(totalKwh / 30).toFixed(1)}</td>
-              <td className="px-5 py-3 text-right">{totalLiters.toLocaleString()}</td>
-            </tr>
-          </tfoot>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {energyRows.sort((a, b) => b.total_kwh - a.total_kwh).map(row => (
+                <tr key={row.location} className="hover:bg-muted">
+                  <td className="px-5 py-3 font-medium text-foreground">{row.location}</td>
+                  <td className="px-5 py-3 text-right text-foreground">{row.total_kwh.toLocaleString()}</td>
+                  <td className="px-5 py-3 text-right text-foreground">₹{(row.total_kwh * 8).toLocaleString()}</td>
+                  <td className="px-5 py-3 text-right text-muted-foreground">{(row.total_kwh / 30).toFixed(1)}</td>
+                  <td className="px-5 py-3 text-right text-muted-foreground">{row.total_liters > 0 ? row.total_liters.toLocaleString() : "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot className="bg-muted font-semibold text-foreground">
+              <tr>
+                <td className="px-5 py-3">Total</td>
+                <td className="px-5 py-3 text-right">{totalKwh.toLocaleString()}</td>
+                <td className="px-5 py-3 text-right">₹{(totalKwh * 8).toLocaleString()}</td>
+                <td className="px-5 py-3 text-right">{(totalKwh / 30).toFixed(1)}</td>
+                <td className="px-5 py-3 text-right">{totalLiters.toLocaleString()}</td>
+              </tr>
+            </tfoot>
+          </table>
+        )}
       </div>
     </div>
   );

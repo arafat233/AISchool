@@ -78,20 +78,23 @@ export class PtmService {
   async bookSlot(slotId: string, data: {
     parentId: string; studentId: string; notes?: string;
   }) {
-    const slot = await this.prisma.ptmSlot.findUnique({ where: { id: slotId } });
-    if (!slot) throw new NotFoundError("Slot not found");
-    if (slot.isBooked) throw new ConflictError("Slot already booked");
-
-    const booking = await this.prisma.ptmBooking.create({
-      data: {
-        slotId, parentId: data.parentId, studentId: data.studentId,
-        notes: data.notes, status: "CONFIRMED",
-      },
+    return this.prisma.$transaction(async (tx) => {
+      const claimed = await tx.ptmSlot.updateMany({
+        where: { id: slotId, isBooked: false },
+        data: { isBooked: true },
+      });
+      if (claimed.count === 0) {
+        const exists = await tx.ptmSlot.findUnique({ where: { id: slotId } });
+        if (!exists) throw new NotFoundError("Slot not found");
+        throw new ConflictError("Slot already booked");
+      }
+      return tx.ptmBooking.create({
+        data: {
+          slotId, parentId: data.parentId, studentId: data.studentId,
+          notes: data.notes, status: "CONFIRMED",
+        },
+      });
     });
-
-    await this.prisma.ptmSlot.update({ where: { id: slotId }, data: { isBooked: true } });
-
-    return booking;
   }
 
   async cancelBooking(bookingId: string) {

@@ -252,14 +252,68 @@ jobs:
           build-args: |
             SERVICE=${{ matrix.service }}
 
-  # ─── Deploy (placeholder — wire to your infra) ──────────────────────────
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'ghcr.io/${{ github.repository_owner }}/school-erp-${{ matrix.service }}:${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '0'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # ─── Deploy to production ────────────────────────────────────────────────
   deploy:
     name: Deploy to production
     runs-on: ubuntu-latest
     needs: build-and-push
     environment: production
+    if: github.ref == 'refs/heads/main'
     steps:
-      - name: Trigger deployment
+      - uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'v3.14.0'
+
+      - name: Configure kubectl
         run: |
-          echo "Deploy step — wire this to kubectl/Helm/Fly.io/Railway/etc."
-          echo "Images pushed: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-*"
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Deploy via Helm
+        run: |
+          helm upgrade --install school-erp ./infrastructure/k8s/helm/school-erp \
+            --namespace school-erp \
+            --create-namespace \
+            --values infrastructure/k8s/helm/school-erp/values.yaml \
+            --set global.imageTag=${{ github.sha }} \
+            --set global.imageRegistry=ghcr.io/${{ github.repository_owner }} \
+            --wait \
+            --timeout 10m
+
+      - name: Verify rollout
+        run: |
+          kubectl rollout status deployment/api-gateway -n school-erp --timeout=3m
+          kubectl rollout status deployment/auth-service -n school-erp --timeout=3m
+
+      - name: Notify Slack on success
+        if: success()
+        run: |
+          curl -s -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
+            -H 'Content-type: application/json' \
+            -d "{\"text\":\"✅ AISchool ERP deployed successfully — commit ${{ github.sha }}\"}" || true
+
+      - name: Notify Slack on failure
+        if: failure()
+        run: |
+          curl -s -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
+            -H 'Content-type: application/json' \
+            -d "{\"text\":\"❌ AISchool ERP deployment FAILED — commit ${{ github.sha }}\"}" || true

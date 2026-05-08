@@ -10,7 +10,7 @@
  *  5. Records engagement metrics (likes, shares, reach) for analytics
  */
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 import axios from "axios";
 
 export type SocialPlatform = "FACEBOOK" | "INSTAGRAM" | "BOTH";

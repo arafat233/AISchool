@@ -56,8 +56,13 @@ export class PayrollController {
   }
 
   @Get("runs")
-  getRuns(@Req() req: Request & { user: RequestUser }, @Query("year") year?: string) {
-    return this.payroll.getRuns(req.user.schoolId!, year ? +year : undefined);
+  getRuns(
+    @Req() req: Request & { user: RequestUser },
+    @Query("year") year?: string,
+    @Query("page") page?: string,
+    @Query("limit") limit?: string,
+  ) {
+    return this.payroll.getRuns(req.user.schoolId!, year ? +year : undefined, page ? +page : 1, limit ? +limit : 24);
   }
 
   @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "ACCOUNTANT")
@@ -81,11 +86,15 @@ export class PayrollController {
     return this.payroll.disburseRun(id);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "ACCOUNTANT", "STAFF")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Get("runs/:runId/staff/:staffId/payslip")
   getPayslip(@Param("runId") runId: string, @Param("staffId") staffId: string) {
     return this.payroll.getPayslip(runId, staffId);
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "ACCOUNTANT", "STAFF")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Get("staff/:staffId/payslips")
   getStaffPayslips(@Param("staffId") staffId: string) {
     return this.payroll.getStaffPayslips(staffId);

@@ -1,5 +1,5 @@
 import {
-  BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus,
+  BadRequestException, Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpStatus,
   Param, Patch, Post, Query, Req, UploadedFile,
   UseGuards, UseInterceptors,
 } from "@nestjs/common";
@@ -65,6 +65,9 @@ export class UserController {
     @Req() req: Request & { user: RequestUser },
     @Body() dto: UpdateUserDto,
   ) {
+    if (id !== req.user.id && !["ADMIN", "SUPER_ADMIN"].includes(req.user.role)) {
+      throw new ForbiddenException("You can only update your own profile");
+    }
     return this.userService.update(id, req.user.tenantId, dto);
   }
 

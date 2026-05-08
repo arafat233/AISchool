@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { VocationalService, NsqfLevel } from "./vocational.service";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 const mockPrisma = {
   $executeRaw: jest.fn(),

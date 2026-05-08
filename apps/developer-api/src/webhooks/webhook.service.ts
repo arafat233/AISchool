@@ -10,12 +10,25 @@
  * Delivery: max 3 attempts, exponential backoff (5s → 25s → 125s)
  * Logs every attempt in webhook_delivery_logs.
  */
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { PrismaService } from "@school-erp/database";
 import axios from "axios";
 import crypto from "crypto";
 import { Prisma } from "@prisma/client";
 import { createCipheriv, createDecipheriv, randomBytes, timingSafeEqual } from "crypto";
+
+// SSRF guard: reject private/loopback/metadata addresses
+function validateWebhookUrl(raw: string): void {
+  let parsed: URL;
+  try { parsed = new URL(raw); } catch { throw new BadRequestException("Invalid webhook URL"); }
+  if (parsed.protocol !== "https:") throw new BadRequestException("Webhook URL must use HTTPS");
+  const host = parsed.hostname.toLowerCase();
+  const BLOCKED = [
+    /^localhost$/i, /^127\./, /^10\./, /^172\.(1[6-9]|2[0-9]|3[01])\./, /^192\.168\./,
+    /^169\.254\./, /^::1$/, /^fc00:/, /^fe80:/,
+  ];
+  if (BLOCKED.some((re) => re.test(host))) throw new BadRequestException("Webhook URL targets a private or reserved address");
+}
 
 function getWebhookKey(): Buffer {
   const key = process.env.WEBHOOK_ENCRYPTION_KEY;
@@ -60,6 +73,7 @@ export class WebhookService {
   // ── Registration ──────────────────────────────────────────────────────────
 
   async registerEndpoint(schoolId: string, url: string, events: WebhookEvent[], secret: string) {
+    validateWebhookUrl(url);
     const secretEnc = encryptSecret(secret);
     await this.prisma.$executeRaw`
       INSERT INTO webhook_endpoints (school_id, url, events, secret_hash, is_active, created_at)

@@ -143,9 +143,20 @@ export default function StudentsPage() {
   const handleBulkUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!file.name.toLowerCase().endsWith(".csv") && file.type !== "text/csv" && file.type !== "application/vnd.ms-excel") {
+      toast.error("Only CSV files are allowed");
+      e.target.value = "";
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("File size must not exceed 2 MB");
+      e.target.value = "";
+      return;
+    }
     const form = new FormData();
     form.append("file", file);
     api.post("/students/bulk-import", form).then(() => toast.success("Bulk import queued"));
+    e.target.value = "";
   };
 
   return (

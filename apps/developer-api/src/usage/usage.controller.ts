@@ -7,7 +7,7 @@
 import { Controller, Get, Req, UseGuards } from "@nestjs/common";
 import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { ApiKeyGuard, ApiKeyContext } from "../auth/api-key.guard";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 @ApiTags("Usage")
 @ApiSecurity("ApiKeyAuth")

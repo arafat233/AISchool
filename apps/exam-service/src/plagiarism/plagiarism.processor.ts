@@ -14,6 +14,10 @@ import { PrismaClient } from "@prisma/client";
 import { PLAGIARISM_QUEUE, PlagiarismJob } from "./plagiarism.queue";
 
 const prisma = new PrismaClient();
+const logger = {
+  log: (msg: string) => console.log(`[PlagiarismWorker] ${msg}`),
+  error: (msg: string) => console.error(`[PlagiarismWorker] ${msg}`),
+};
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL ?? "http://ai-service:8000";
 const NOTIFICATION_SERVICE_URL = process.env.NOTIFICATION_SERVICE_URL ?? "http://notification-service:3007";
 
@@ -30,7 +34,7 @@ export function startPlagiarismWorker(): Worker {
     PLAGIARISM_QUEUE,
     async (job: Job<PlagiarismJob>) => {
       const data = job.data;
-      this.logger.log(`Scanning submission ${data.submissionId}`);
+      logger.log(`Scanning submission ${data.submissionId}`);
 
       // ── 1. Call AI service ────────────────────────────────────────────────
       let result: {
@@ -76,13 +80,13 @@ export function startPlagiarismWorker(): Worker {
         await notifyTeacherReview(data, result.overall_similarity_pct, result.verdict);
       }
 
-      this.logger.log(`Scan done — ${data.submissionId}: ${result.overall_similarity_pct}% (${result.verdict})`);
+      logger.log(`Scan done — ${data.submissionId}: ${result.overall_similarity_pct}% (${result.verdict})`);
     },
     { connection, concurrency: 5 }
   );
 
   worker.on("failed", (job, err) => {
-    this.logger.error(`Job ${job?.id} failed: ${err.message}`);
+    logger.error(`Job ${job?.id} failed: ${err.message}`);
   });
 
   return worker;

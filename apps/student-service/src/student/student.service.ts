@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, ForbiddenException } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, ConflictError } from "@school-erp/errors";
 import { parsePagination, buildPaginatedResult, generateAdmissionNumber } from "@school-erp/utils";
@@ -132,7 +132,14 @@ export class StudentService {
     });
   }
 
-  async promote(dto: PromoteStudentDto) {
+  async promote(schoolId: string, dto: PromoteStudentDto) {
+    // Verify all students belong to the requesting school before promoting
+    const studentIds = dto.promotions.map((p) => p.studentId);
+    const count = await this.prisma.student.count({ where: { id: { in: studentIds }, schoolId } });
+    if (count !== studentIds.length) {
+      throw new ForbiddenException("One or more students do not belong to your school");
+    }
+
     // Bulk promote: move students from one section to another in new academic year
     const promotions = dto.promotions.map((p) =>
       this.prisma.student.update({

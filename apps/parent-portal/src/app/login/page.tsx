@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Link from "next/link";
 import { Eye, EyeOff, Users, Loader2 } from "lucide-react";
 import { useLogin } from "@/hooks/use-auth";
 
 const schema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(1, "Password required"),
+  totpCode: z.string().optional(),
 });
 type FormData = z.infer<typeof schema>;
 
@@ -45,9 +47,14 @@ export default function LoginPage() {
               {errors.email && <p className="err">{errors.email.message}</p>}
             </div>
             <div>
-              <label htmlFor="login-password" className="block text-sm font-medium text-foreground mb-1.5">
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label htmlFor="login-password" className="block text-sm font-medium text-foreground">
+                  Password
+                </label>
+                <Link href="/forgot-password" className="text-xs text-primary hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
               <div className="relative">
                 <input
                   id="login-password"
@@ -67,6 +74,20 @@ export default function LoginPage() {
                 </button>
               </div>
               {errors.password && <p className="err">{errors.password.message}</p>}
+            </div>
+            <div>
+              <label htmlFor="login-totp" className="block text-sm font-medium text-foreground mb-1.5">
+                2FA Code <span className="text-muted-foreground font-normal">(if enabled)</span>
+              </label>
+              <input
+                id="login-totp"
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                placeholder="000000"
+                className="input w-full tracking-widest"
+                {...register("totpCode")}
+              />
             </div>
             <button
               type="submit"

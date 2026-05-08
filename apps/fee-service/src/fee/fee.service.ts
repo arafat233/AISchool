@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, ForbiddenException } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, BusinessRuleError } from "@school-erp/errors";
 import { rupeesToPaise, paiseToRupees, formatINR, calculateLateFee } from "@school-erp/utils";
@@ -103,7 +103,14 @@ export class FeeService {
   }
 
   // ─── Payments ─────────────────────────────────────────────────────────────
-  async recordCashPayment(invoiceId: string, data: { amountPaid: number; receivedById: string; remarks?: string }) {
+  private async assertInvoiceSchool(invoiceId: string, schoolId: string) {
+    const inv = await this.prisma.feeInvoice.findUnique({ where: { id: invoiceId }, select: { schoolId: true } });
+    if (!inv) throw new NotFoundError("Invoice not found");
+    if (inv.schoolId !== schoolId) throw new ForbiddenException();
+  }
+
+  async recordCashPayment(invoiceId: string, schoolId: string, data: { amountPaid: number; receivedById: string; remarks?: string }) {
+    await this.assertInvoiceSchool(invoiceId, schoolId);
     const invoice = await this.prisma.feeInvoice.findUniqueOrThrow({ where: { id: invoiceId } });
     const paidSoFar = await this.prisma.feePayment.aggregate({ where: { invoiceId }, _sum: { amountPaid: true } });
     const alreadyPaid = paidSoFar._sum.amountPaid ?? 0;
@@ -129,7 +136,8 @@ export class FeeService {
     return payment;
   }
 
-  async createRazorpayOrder(invoiceId: string) {
+  async createRazorpayOrder(invoiceId: string, schoolId: string) {
+    await this.assertInvoiceSchool(invoiceId, schoolId);
     const invoice = await this.prisma.feeInvoice.findUniqueOrThrow({ where: { id: invoiceId } });
     const paidSoFar = await this.prisma.feePayment.aggregate({ where: { invoiceId }, _sum: { amountPaid: true } });
     const outstanding = invoice.totalAmount - (paidSoFar._sum.amountPaid ?? 0);
@@ -139,13 +147,19 @@ export class FeeService {
     return { orderId: order.id, amount: outstanding, amountFormatted: formatINR(outstanding) };
   }
 
-  async verifyOnlinePayment(invoiceId: string, data: { razorpayOrderId: string; razorpayPaymentId: string; razorpaySignature: string; receivedById: string }) {
+  async verifyOnlinePayment(invoiceId: string, schoolId: string, data: { razorpayOrderId: string; razorpayPaymentId: string; razorpaySignature: string; receivedById: string }) {
+    await this.assertInvoiceSchool(invoiceId, schoolId);
     const valid = this.razorpay.verifySignature(data.razorpayOrderId, data.razorpayPaymentId, data.razorpaySignature);
     if (!valid) throw new BusinessRuleError("INVALID_SIGNATURE", "Payment verification failed");
+
+    // Idempotency: reject duplicate payment IDs
+    const duplicate = await this.prisma.feePayment.findFirst({ where: { transactionId: data.razorpayPaymentId } });
+    if (duplicate) return { success: true, paymentId: data.razorpayPaymentId, duplicate: true };
 
     const invoice = await this.prisma.feeInvoice.findUniqueOrThrow({ where: { id: invoiceId } });
     const paidSoFar = await this.prisma.feePayment.aggregate({ where: { invoiceId }, _sum: { amountPaid: true } });
     const outstanding = invoice.totalAmount - (paidSoFar._sum.amountPaid ?? 0);
+    if (outstanding <= 0) throw new BusinessRuleError("ALREADY_PAID", "Invoice is already fully paid");
 
     const onlinePayment = await this.prisma.feePayment.create({
       data: { invoiceId, amountPaid: outstanding, mode: "ONLINE", receivedById: data.receivedById, transactionId: data.razorpayPaymentId, paymentDate: new Date() },
@@ -162,15 +176,23 @@ export class FeeService {
     return { success: true, paymentId: data.razorpayPaymentId };
   }
 
-  async applyConcession(data: { invoiceId: string; amount: number; reason: string; approvedById: string }) {
+  async applyConcession(data: { invoiceId: string; amount: number; reason: string; approvedById: string; schoolId: string }) {
+    await this.assertInvoiceSchool(data.invoiceId, data.schoolId);
+    const invoice = await this.prisma.feeInvoice.findUniqueOrThrow({ where: { id: data.invoiceId } });
+    const amountPaise = rupeesToPaise(data.amount);
+    const existingConcessions = await this.prisma.concession.aggregate({ where: { invoiceId: data.invoiceId }, _sum: { amount: true } });
+    const totalConcessions = (existingConcessions._sum.amount ?? 0) + amountPaise;
+    if (totalConcessions > invoice.totalAmount) {
+      throw new BusinessRuleError("CONCESSION_EXCEEDS_INVOICE", "Total concessions cannot exceed invoice amount");
+    }
     return this.prisma.concession.create({
-      data: { invoiceId: data.invoiceId, amount: rupeesToPaise(data.amount), reason: data.reason, approvedById: data.approvedById },
+      data: { invoiceId: data.invoiceId, amount: amountPaise, reason: data.reason, approvedById: data.approvedById },
     });
   }
 
-  async getStudentInvoices(studentId: string) {
+  async getStudentInvoices(studentId: string, schoolId: string) {
     return this.prisma.feeInvoice.findMany({
-      where: { studentId },
+      where: { studentId, schoolId },
       include: { items: { include: { feeHead: true } }, payments: true },
       orderBy: { createdAt: "desc" },
     });

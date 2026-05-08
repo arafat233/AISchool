@@ -1,5 +1,7 @@
-import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, Post, Patch, Param, Query, Body, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import type { Request } from "express";
+import type { RequestUser } from "@school-erp/types";
 import { AlumniService } from "./alumni.service";
 import { UpdateAlumniProfileDto } from "./dto/alumni.dto";
 
@@ -9,12 +11,14 @@ export class AlumniController {
   constructor(private readonly svc: AlumniService) {}
 
   @Post(":schoolId/register/:studentId")
-  register(@Param("schoolId") schoolId: string, @Param("studentId") studentId: string, @Body() body: { graduationYear: number }) {
+  register(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Param("studentId") studentId: string, @Body() body: { graduationYear: number }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.registerAlumni(schoolId, studentId, body.graduationYear);
   }
 
   @Post(":schoolId/invite/:studentId")
-  invite(@Param("schoolId") schoolId: string, @Param("studentId") studentId: string, @Body() body: { graduationYear: number }) {
+  invite(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Param("studentId") studentId: string, @Body() body: { graduationYear: number }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.inviteAlumni(schoolId, studentId, body.graduationYear);
   }
 
@@ -24,12 +28,14 @@ export class AlumniController {
   }
 
   @Get(":schoolId/directory")
-  searchDirectory(@Param("schoolId") schoolId: string, @Query("batchYear") batchYear?: string, @Query("city") city?: string, @Query("employer") employer?: string, @Query("industry") industry?: string) {
+  searchDirectory(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("batchYear") batchYear?: string, @Query("city") city?: string, @Query("employer") employer?: string, @Query("industry") industry?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.searchDirectory(schoolId, { batchYear: batchYear ? parseInt(batchYear) : undefined, city, employer, industry });
   }
 
   @Post(":schoolId/jobs")
-  postJob(@Param("schoolId") schoolId: string, @Body() body: { alumniId: string; title: string; company: string; description?: string; location?: string; salaryRange?: string }) {
+  postJob(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { alumniId: string; title: string; company: string; description?: string; location?: string; salaryRange?: string }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.postJob(schoolId, body.alumniId, body);
   }
 
@@ -44,7 +50,8 @@ export class AlumniController {
   }
 
   @Get(":schoolId/jobs")
-  getJobBoard(@Param("schoolId") schoolId: string, @Query("status") status?: string) {
+  getJobBoard(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("status") status?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getJobBoard(schoolId, status);
   }
 
@@ -54,7 +61,8 @@ export class AlumniController {
   }
 
   @Get(":schoolId/placements/analytics")
-  getPlacementAnalytics(@Param("schoolId") schoolId: string) {
+  getPlacementAnalytics(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getPlacementAnalytics(schoolId);
   }
 
@@ -69,12 +77,14 @@ export class AlumniController {
   }
 
   @Get(":schoolId/mentors")
-  getMentors(@Param("schoolId") schoolId: string) {
+  getMentors(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getMentors(schoolId);
   }
 
   @Post(":schoolId/campaigns")
-  createCampaign(@Param("schoolId") schoolId: string, @Body() body: { title: string; description?: string; targetAmtRs: number; startDate: string; endDate: string }) {
+  createCampaign(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { title: string; description?: string; targetAmtRs: number; startDate: string; endDate: string }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createCampaign(schoolId, { ...body, startDate: new Date(body.startDate), endDate: new Date(body.endDate) });
   }
 
@@ -84,7 +94,8 @@ export class AlumniController {
   }
 
   @Get(":schoolId/campaigns")
-  getCampaigns(@Param("schoolId") schoolId: string) {
+  getCampaigns(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getCampaigns(schoolId);
   }
 

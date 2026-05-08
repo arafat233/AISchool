@@ -11,6 +11,7 @@ import {
   InvalidOtpError,
   TwoFactorRequiredError,
 } from "@school-erp/errors";
+import { createMockPrismaService, UserFactory, JwtPayloadFactory } from "@school-erp/testing";
 
 // ── Mocks ──────────────────────────────────────────────────────────────────
 
@@ -19,6 +20,7 @@ jest.mock("@school-erp/utils", () => ({
   generateSecureToken: jest.fn().mockReturnValue("secure-reset-token-abc123"),
 }));
 
+// Stable mock references so tests can call .mockResolvedValue() on specific methods
 const mockPrisma = {
   user: {
     findUnique: jest.fn(),
@@ -57,16 +59,17 @@ const mockTotpService = {
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
-const makeUser = (overrides: Partial<any> = {}) => ({
-  id: "user-1",
-  email: "test@school.com",
-  passwordHash: "$2b$12$hashedpassword",
-  isActive: true,
-  role: "TEACHER",
-  tenantId: "tenant-1",
-  twoFactor: null,
-  ...overrides,
-});
+const makeUser = (overrides: Partial<any> = {}) =>
+  UserFactory.build({
+    id: "user-1",
+    email: "test@school.com",
+    passwordHash: "$2b$12$hashedpassword",
+    isActive: true,
+    role: "TEACHER",
+    tenantId: "tenant-1",
+    twoFactor: null,
+    ...overrides,
+  });
 
 // ── Tests ──────────────────────────────────────────────────────────────────
 

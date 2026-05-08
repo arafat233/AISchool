@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError } from "@school-erp/errors";
+import { encryptField, decryptField } from "@school-erp/utils";
 
 @Injectable()
 export class HealthService {
@@ -166,16 +167,23 @@ export class HealthService {
     studentId: string; caseType: string; referralSource?: string;
     notes?: string; nextSession?: Date; counsellorId: string;
   }) {
+    const notesEncrypted = data.notes ? encryptField(data.notes) : undefined;
+    const { notes: _notes, ...rest } = data;
     return this.prisma.counsellingSession.create({
-      data: { schoolId, ...data, notesEncrypted: data.notes, isConfidential: true },
+      data: { schoolId, ...rest, notesEncrypted, isConfidential: true },
     });
   }
 
   async getCounsellingSessionsForStudent(schoolId: string, studentId: string) {
-    return this.prisma.counsellingSession.findMany({
+    const sessions = await this.prisma.counsellingSession.findMany({
       where: { schoolId, studentId },
       orderBy: { sessionDate: "desc" },
     });
+    return sessions.map((s) => ({
+      ...s,
+      notes: s.notesEncrypted ? decryptField(s.notesEncrypted) : null,
+      notesEncrypted: undefined,
+    }));
   }
 
   // ─── Discipline ───────────────────────────────────────────────────────────────

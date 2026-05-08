@@ -16,14 +16,17 @@ async function buildExcel(sheetName: string, columns: string[], rows: any[][]): 
 }
 
 // ─── HTML helpers ─────────────────────────────────────────────────────────────
+const esc = (v: unknown): string =>
+  String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
 const wrap = (title: string, body: string) => `<!DOCTYPE html><html><head><meta charset="utf-8">
 <style>body{font-family:Arial,sans-serif;font-size:12px;margin:20px}h1{font-size:18px}
 table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:4px 8px}
-th{background:#f0f0f0}</style></head><body><h1>${title}</h1>${body}</body></html>`;
+th{background:#f0f0f0}</style></head><body><h1>${esc(title)}</h1>${body}</body></html>`;
 
 const table = (heads: string[], rows: any[][]) =>
-  `<table><tr>${heads.map((h) => `<th>${h}</th>`).join("")}</tr>
-${rows.map((r) => `<tr>${r.map((c) => `<td>${c ?? ""}</td>`).join("")}</tr>`).join("")}</table>`;
+  `<table><tr>${heads.map((h) => `<th>${esc(h)}</th>`).join("")}</tr>
+${rows.map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</table>`;
 
 @Injectable()
 export class ReportService {
