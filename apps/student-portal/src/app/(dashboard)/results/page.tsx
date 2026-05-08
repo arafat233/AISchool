@@ -54,10 +54,10 @@ function gradeClass(grade: string) {
 
 async function downloadReportCard(studentId: string, examId: string) {
   try {
-    const response = await api.get(`/exams/report-cards/${studentId}/${examId}/pdf`, {
-      responseType: "blob",
-    });
-    const url = window.URL.createObjectURL(new Blob([response.data as BlobPart]));
+    const response = await fetch(`/api/exams/report-cards?studentId=${studentId}&examId=${examId}`);
+    if (!response.ok) throw new Error("Failed");
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
     link.download = `report-card-${examId}.pdf`;
@@ -77,7 +77,7 @@ export default function ResultsPage() {
 
   const { data: results = [], isLoading, isError } = useQuery<ExamResult[]>({
     queryKey: ["exam-results", studentId],
-    queryFn: () => api.get(`/exams/results/student/${studentId}`).then((r) => r.data),
+    queryFn: () => fetch("/api/exams/results/student").then((r) => r.json()),
     enabled: !!studentId,
     placeholderData: [
       {

@@ -16,6 +16,7 @@ export async function GET() {
     const result = schools.map((s) => ({
       id: s.id,
       name: s.name,
+      code: s.code,
       city: s.city,
       state: s.state,
       subscriptionPlan: "ENTERPRISE",
