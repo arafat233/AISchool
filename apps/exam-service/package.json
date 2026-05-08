@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@school-erp/exam-service",
   "version": "1.0.0",
   "private": true,
@@ -44,7 +44,7 @@
     "@school-erp/tsconfig": "workspace:*",
     "@types/jszip": "^3.4.1",
     "@types/multer": "^1.4.12",
-    "@types/node": "^22.9.3",
+    "@types/node": "^20.19.40",
     "@types/passport-jwt": "^4.0.1",
     "@types/qrcode": "^1.5.5",
     "typescript": "^5.6.3",

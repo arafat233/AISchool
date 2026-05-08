@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@school-erp/certificate-service",
   "version": "1.0.0",
   "private": true,
@@ -36,7 +36,7 @@
   "devDependencies": {
     "@nestjs/cli": "^10.4.8",
     "@school-erp/tsconfig": "workspace:*",
-    "@types/node": "^22.9.3",
+    "@types/node": "^20.19.40",
     "@types/passport-jwt": "^4.0.1",
     "@types/qrcode": "^1.5.5",
     "typescript": "^5.6.3",
