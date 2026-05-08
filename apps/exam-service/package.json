@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@school-erp/exam-service",
   "version": "1.0.0",
   "private": true,
@@ -24,7 +24,7 @@
     "@school-erp/types": "workspace:*",
     "@school-erp/utils": "workspace:*",
     "@school-erp/events": "workspace:*",
-    "axios": "^1.7.9",
+    "axios": "^1.16.0",
     "bullmq": "^5.28.2",
     "ioredis": "^5.4.1",
     "class-transformer": "^0.5.1",

@@ -24,7 +24,7 @@
     "@react-navigation/native-stack": "^6.11.0",
     "@school-erp/types": "workspace:*",
     "@school-erp/utils": "workspace:*",
-    "axios": "^1.7.9",
+    "axios": "^1.16.0",
     "expo": "~51.0.28",
     "expo-barcode-scanner": "~13.0.1",
     "expo-blur": "~13.0.2",
