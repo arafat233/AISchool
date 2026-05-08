@@ -18,6 +18,8 @@ COPY package.json ./
 RUN npm install --omit=dev --frozen-lockfile
 
 COPY --from=builder /app/dist ./dist
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nestjs
+USER nestjs
 
 # Health check via the HTTP server started by HealthMonitor on :8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \

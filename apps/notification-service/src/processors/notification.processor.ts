@@ -19,34 +19,77 @@ export class NotificationProcessor {
     private readonly whatsapp: WhatsappAdapter,
   ) {}
 
+  private attachDlq(worker: Worker, dlq: Queue) {
+    worker.on("failed", (job, err) => {
+      if (!job || (job.attemptsMade < (job.opts.attempts ?? 1))) return;
+      dlq.add("dlq-job", {
+        originalQueue: worker.name,
+        jobId: job.id,
+        jobName: job.name,
+        data: job.data,
+        failedReason: err.message,
+        failedAt: new Date().toISOString(),
+      }).catch(() => { /* best-effort */ });
+      this.logger.error(`Job ${job.id} from ${worker.name} exhausted retries — moved to DLQ`);
+    });
+  }
+
   startWorker() {
     const connection = { host: process.env.REDIS_HOST || "localhost", port: Number(process.env.REDIS_PORT) || 6379 };
+    const dlq = new Queue(QUEUES.DLQ, { connection });
 
-    new Worker(QUEUES.EMAIL, async (job: Job) => {
+    const emailWorker = new Worker(QUEUES.EMAIL, async (job: Job) => {
       const { to, subject, html } = job.data;
-      await this.email.send(to, subject, html);
-      this.logger.log(`Email sent to ${to}`);
+      try {
+        await this.email.send(to, subject, html);
+        this.logger.log(`Email sent to ${to}`);
+      } catch (err) {
+        this.logger.error(`Email failed for ${to}: ${(err as Error).message}`);
+        throw err;
+      }
     }, { connection, concurrency: 5 });
+    this.attachDlq(emailWorker, dlq);
 
-    new Worker(QUEUES.SMS, async (job: Job) => {
+    const smsWorker = new Worker(QUEUES.SMS, async (job: Job) => {
       const { to, message } = job.data;
-      await this.sms.send(to, message);
-      this.logger.log(`SMS sent to ${to}`);
+      try {
+        await this.sms.send(to, message);
+        this.logger.log(`SMS sent to ${to}`);
+      } catch (err) {
+        this.logger.error(`SMS failed for ${to}: ${(err as Error).message}`);
+        throw err;
+      }
     }, { connection, concurrency: 10 });
+    this.attachDlq(smsWorker, dlq);
 
-    new Worker(QUEUES.PUSH, async (job: Job) => {
+    const pushWorker = new Worker(QUEUES.PUSH, async (job: Job) => {
       const { token, title, body, data } = job.data;
-      await this.push.send(token, title, body, data);
+      const result = await this.push.send(token, title, body, data);
+      if (result.tokenExpired) {
+        // Don't retry expired tokens — discard the job silently
+        this.logger.warn(`Discarding push job ${job.id}: FCM token expired`);
+        return;
+      }
+      if (!result.success) {
+        throw new Error(`Push delivery failed for token ${token.slice(0, 8)}...`);
+      }
       this.logger.log(`Push sent to token ${token.slice(0, 8)}...`);
     }, { connection, concurrency: 20 });
+    this.attachDlq(pushWorker, dlq);
 
-    new Worker(QUEUES.WHATSAPP, async (job: Job) => {
+    const whatsappWorker = new Worker(QUEUES.WHATSAPP, async (job: Job) => {
       const { to, templateName, params } = job.data;
-      await this.whatsapp.send(to, templateName, params);
-      this.logger.log(`WhatsApp sent to ${to}`);
+      try {
+        await this.whatsapp.send(to, templateName, params);
+        this.logger.log(`WhatsApp sent to ${to}`);
+      } catch (err) {
+        this.logger.error(`WhatsApp failed for ${to}: ${(err as Error).message}`);
+        throw err;
+      }
     }, { connection, concurrency: 5 });
+    this.attachDlq(whatsappWorker, dlq);
 
-    new Worker(QUEUES.ATTENDANCE_ALERT, async (job: Job) => {
+    const attendanceWorker = new Worker(QUEUES.ATTENDANCE_ALERT, async (job: Job) => {
       const { absentStudentIds, date } = job.data;
       this.logger.log(`Processing absent alerts for ${absentStudentIds.length} students on ${date}`);
 
@@ -78,24 +121,31 @@ export class NotificationProcessor {
         }
       }
     }, { connection });
+    this.attachDlq(attendanceWorker, dlq);
 
-    new Worker(QUEUES.FEE_PAYMENT_RECEIVED, async (job: Job) => {
+    const feeWorker = new Worker(QUEUES.FEE_PAYMENT_RECEIVED, async (job: Job) => {
       const { paymentId, invoiceId, studentId, amount, mode } = job.data;
       this.logger.log(`Processing fee payment receipt notification for student ${studentId}, payment ${paymentId}`);
-      // Enqueue email receipt — in production fetch student email from user-service
-      await this.email.send(
-        `student-${studentId}@school.erp`,
-        "Fee Payment Received",
-        `<p>Your fee payment of ₹${(amount / 100).toFixed(2)} (${mode}) has been received. Invoice: ${invoiceId}. Payment ID: ${paymentId}.</p>`,
-      );
+      try {
+        await this.email.send(
+          `student-${studentId}@school.erp`,
+          "Fee Payment Received",
+          `<p>Your fee payment of ₹${(amount / 100).toFixed(2)} (${mode}) has been received. Invoice: ${invoiceId}. Payment ID: ${paymentId}.</p>`,
+        );
+      } catch (err) {
+        this.logger.error(`Fee receipt email failed for student ${studentId}: ${(err as Error).message}`);
+        throw err;
+      }
     }, { connection });
+    this.attachDlq(feeWorker, dlq);
 
-    new Worker(QUEUES.EXAM_RESULT_PUBLISHED, async (job: Job) => {
+    const resultWorker = new Worker(QUEUES.EXAM_RESULT_PUBLISHED, async (job: Job) => {
       const { examId, schoolId, examTitle, totalStudents } = job.data;
       this.logger.log(`Processing result published notification for exam ${examId} (${examTitle}), school ${schoolId}`);
       // In production: fetch parent/student contacts and send targeted notifications
       this.logger.log(`Result notifications queued for ${totalStudents} students`);
     }, { connection });
+    this.attachDlq(resultWorker, dlq);
 
     this.logger.log("All notification workers started");
   }

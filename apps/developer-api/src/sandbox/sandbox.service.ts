@@ -4,7 +4,7 @@
  * Weekly reset via cron.
  */
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 import { v4 as uuidv4 } from "uuid";
 import crypto from "crypto";
 import schedule from "node-schedule";

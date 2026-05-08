@@ -36,13 +36,13 @@ export class ExamController {
   }
 
   @Put(":id/status")
-  updateStatus(@Param("id") id: string, @Body("status") status: ExamStatus) {
-    return this.svc.updateExamStatus(id, status);
+  updateStatus(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body("status") status: ExamStatus) {
+    return this.svc.updateExamStatus(id, status, req.user.schoolId!);
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.svc.deleteExam(id);
+  remove(@Param("id") id: string, @Req() req: Request & { user: RequestUser }) {
+    return this.svc.deleteExam(id, req.user.schoolId!);
   }
 
   // ─── Schedule ────────────────────────────────────────────────────────────────
@@ -102,13 +102,13 @@ export class ExamController {
   // ─── Grace Marks ─────────────────────────────────────────────────────────────
 
   @Post(":id/grace-marks")
-  applyGrace(@Param("id") examId: string, @Body() dto: ApplyGraceDto) {
-    return this.svc.applyGraceMarks(examId, dto);
+  applyGrace(@Param("id") examId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: ApplyGraceDto) {
+    return this.svc.applyGraceMarks(examId, req.user.schoolId!, dto);
   }
 
   @Post(":id/grace-policy")
-  upsertGracePolicy(@Param("id") examId: string, @Body() dto: UpsertGracePolicyDto) {
-    return this.svc.upsertGraceMarksPolicy(examId, dto);
+  upsertGracePolicy(@Param("id") examId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: UpsertGracePolicyDto) {
+    return this.svc.upsertGraceMarksPolicy(examId, req.user.schoolId!, dto);
   }
 
   // ─── Grading Config ──────────────────────────────────────────────────────────
@@ -131,8 +131,8 @@ export class ExamController {
   }
 
   @Post(":id/publish")
-  publishResults(@Param("id") examId: string) {
-    return this.svc.publishResults(examId);
+  publishResults(@Param("id") examId: string, @Req() req: Request & { user: RequestUser }) {
+    return this.svc.publishResults(examId, req.user.schoolId!);
   }
 
   @Get(":id/results/:studentId")

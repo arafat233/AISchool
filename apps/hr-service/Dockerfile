@@ -16,5 +16,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/hr-service/dist ./apps/hr-service/dist
 COPY --from=builder /app/apps/hr-service/package.json ./apps/hr-service/package.json
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nestjs
+USER nestjs
 EXPOSE 3010
 CMD ["node", "apps/hr-service/dist/main.js"]

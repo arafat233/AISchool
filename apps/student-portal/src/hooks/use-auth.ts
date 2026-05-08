@@ -33,3 +33,12 @@ export function useLogout() {
     onSettled: () => { logout(); router.push("/login"); },
   });
 }
+
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: (email: string) =>
+      api.post("/auth/forgot-password", { email }).then((r) => r.data),
+    onSuccess: () => toast.success("Reset link sent to your email"),
+    onError: () => toast.error("Failed to send reset link"),
+  });
+}

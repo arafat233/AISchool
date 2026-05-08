@@ -16,5 +16,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/expense-service/dist ./apps/expense-service/dist
 COPY --from=builder /app/apps/expense-service/package.json ./apps/expense-service/package.json
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nestjs
+USER nestjs
 EXPOSE 3018
 CMD ["node", "apps/expense-service/dist/main.js"]

@@ -92,9 +92,10 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const rawToken: string | undefined = req.cookies?.[REFRESH_COOKIE];
-    if (rawToken) {
-      await this.authService.logout(user.id, rawToken);
+    const rawRefresh: string | undefined = req.cookies?.[REFRESH_COOKIE];
+    const rawAccess = (req.headers["authorization"] as string | undefined)?.replace(/^Bearer\s+/i, "");
+    if (rawRefresh) {
+      await this.authService.logout(user.id, rawRefresh, rawAccess);
     }
     res.clearCookie(REFRESH_COOKIE, { path: "/auth/refresh" });
   }

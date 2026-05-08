@@ -124,8 +124,7 @@ export default function FeesPage() {
           },
           theme: { color: "#6d28d9" },
         };
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        new (window as any).Razorpay(options).open();
+        new window.Razorpay(options).open();
       };
       document.body.appendChild(script);
     },

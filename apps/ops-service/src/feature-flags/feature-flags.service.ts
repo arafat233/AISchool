@@ -10,7 +10,7 @@
  *  - Auto-rollback on error spike (monitor error rate via Prometheus)
  */
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 import { createClient, RedisClientType } from "redis";
 import crypto from "crypto";
 

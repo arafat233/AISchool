@@ -1,0 +1,14 @@
+{{- if .Values.namespaceQuota.enabled }}
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: {{ .Release.Name }}-quota
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  hard:
+    cpu: {{ .Values.namespaceQuota.cpu | quote }}
+    memory: {{ .Values.namespaceQuota.memory | quote }}
+    pods: {{ .Values.namespaceQuota.pods | quote }}
+{{- end }}

@@ -1,10 +1,12 @@
-{
+﻿{
   "name": "@school-erp/developer-api",
   "version": "1.0.0",
-  "description": "Public REST API gateway — API key auth, webhooks, rate limiting, usage analytics, sandbox",
+  "description": "Public REST API gateway \u00e2\u20ac\u201d API key auth, webhooks, rate limiting, usage analytics, sandbox",
   "scripts": {
     "build": "nest build",
-    "start": "node dist/main",
+    "start": "node dist/main.js",
+    "start:prod": "node dist/main.js",
+    "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
     "test": "jest",
     "lint": "eslint src --ext .ts"
@@ -22,7 +24,8 @@
     "ioredis": "^5.3.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "helmet": "^8.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

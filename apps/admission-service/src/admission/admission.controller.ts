@@ -30,13 +30,13 @@ export class AdmissionController {
   }
 
   @Get("enquiries/:id")
-  getEnquiry(@Param("id") id: string) {
-    return this.svc.getEnquiry(id);
+  getEnquiry(@Param("id") id: string, @Req() req: Request & { user: RequestUser }) {
+    return this.svc.getEnquiry(id, req.user.schoolId!);
   }
 
   @Patch("enquiries/:id")
-  updateEnquiry(@Param("id") id: string, @Body() dto: UpdateEnquiryDto) {
-    return this.svc.updateEnquiry(id, {
+  updateEnquiry(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() dto: UpdateEnquiryDto) {
+    return this.svc.updateEnquiry(id, req.user.schoolId!, {
       ...dto,
       nextFollowUpDate: dto.nextFollowUpDate ? new Date(dto.nextFollowUpDate) : undefined,
     });
@@ -71,13 +71,13 @@ export class AdmissionController {
   }
 
   @Get("applications/:id")
-  getApplication(@Param("id") id: string) {
-    return this.svc.getApplication(id);
+  getApplication(@Param("id") id: string, @Req() req: Request & { user: RequestUser }) {
+    return this.svc.getApplication(id, req.user.schoolId!);
   }
 
   @Patch("applications/:id/status")
   updateStatus(@Req() req: Request & { user: RequestUser }, @Param("id") id: string, @Body() dto: UpdateApplicationStatusDto) {
-    return this.svc.updateApplicationStatus(id, {
+    return this.svc.updateApplicationStatus(id, req.user.schoolId!, {
       ...dto,
       reviewedBy: req.user.id,
       interviewDate: dto.interviewDate ? new Date(dto.interviewDate) : undefined,

@@ -30,6 +30,8 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/auth-service/dist ./apps/auth-service/dist
 COPY --from=builder /app/apps/auth-service/package.json ./apps/auth-service/
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nestjs
+USER nestjs
 EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD wget -qO- http://localhost:3001/health || exit 1

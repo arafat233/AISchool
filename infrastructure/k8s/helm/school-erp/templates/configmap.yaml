@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: school-erp
+data:
+  NODE_ENV: {{ .Values.global.env | default "production" | quote }}
+  LOG_LEVEL: {{ .Values.global.logLevel | default "info" | quote }}
+  POSTGRES_HOST: {{ .Values.postgresql.host | default "postgresql" | quote }}
+  POSTGRES_PORT: {{ .Values.postgresql.port | default "5432" | quote }}
+  POSTGRES_DB: {{ .Values.postgresql.database | default "school_erp" | quote }}
+  REDIS_HOST: {{ .Values.redis.host | default "redis-master" | quote }}
+  REDIS_PORT: {{ .Values.redis.port | default "6379" | quote }}
+  CORS_ORIGINS: {{ .Values.global.corsOrigins | default "https://admin.schoolerp.app" | quote }}
+  FRONTEND_URL: {{ .Values.global.frontendUrl | default "https://schoolerp.app" | quote }}
+  AI_SERVICE_URL: {{ printf "http://ai-service.%s.svc.cluster.local:8000" .Release.Namespace | quote }}
+  NOTIFICATION_SERVICE_URL: {{ printf "http://notification-service.%s.svc.cluster.local:3007" .Release.Namespace | quote }}

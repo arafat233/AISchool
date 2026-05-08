@@ -16,5 +16,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/lms-service/dist ./apps/lms-service/dist
 COPY --from=builder /app/apps/lms-service/package.json ./apps/lms-service/package.json
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nestjs
+USER nestjs
 EXPOSE 3009
 CMD ["node", "apps/lms-service/dist/main.js"]

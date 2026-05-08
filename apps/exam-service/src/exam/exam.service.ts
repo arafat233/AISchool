@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, Logger } from "@nestjs/common";
+import { Injectable, BadRequestException, ForbiddenException, Logger } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, ConflictError, ValidationError } from "@school-erp/errors";
 import { Queue } from "bullmq";
@@ -32,6 +32,12 @@ export class ExamService {
     });
   }
 
+  private async assertExamSchool(examId: string, schoolId: string) {
+    const exam = await this.prisma.exam.findUnique({ where: { id: examId }, select: { schoolId: true } });
+    if (!exam) throw new NotFoundError("Exam not found");
+    if (exam.schoolId !== schoolId) throw new ForbiddenException();
+  }
+
   async createExam(schoolId: string, data: {
     title: string; type: ExamType; academicYearId: string; term: string; description?: string;
   }) {
@@ -57,7 +63,8 @@ export class ExamService {
     return exam;
   }
 
-  async updateExamStatus(id: string, status: ExamStatus) {
+  async updateExamStatus(id: string, status: ExamStatus, schoolId: string) {
+    await this.assertExamSchool(id, schoolId);
     const exam = await this.prisma.exam.findUnique({ where: { id } });
     if (!exam) throw new NotFoundError("Exam not found");
 
@@ -76,7 +83,8 @@ export class ExamService {
     return this.prisma.exam.update({ where: { id }, data: { status } });
   }
 
-  async deleteExam(id: string) {
+  async deleteExam(id: string, schoolId: string) {
+    await this.assertExamSchool(id, schoolId);
     const exam = await this.prisma.exam.findUnique({ where: { id } });
     if (!exam) throw new NotFoundError("Exam not found");
     if (exam.status !== "DRAFT") throw new BadRequestException("Only DRAFT exams can be deleted");
@@ -249,7 +257,12 @@ export class ExamService {
 
   // ─── Grace Marks Policy ─────────────────────────────────────────────────────
 
-  async applyGraceMarks(examId: string, data: { studentId: string; scheduleEntryId: string; graceMarks: number; reason: string; approvedBy: string }) {
+  async applyGraceMarks(examId: string, schoolId: string, data: { studentId: string; scheduleEntryId: string; graceMarks: number; reason: string; approvedBy: string }) {
+    await this.assertExamSchool(examId, schoolId);
+    const exam = await this.prisma.exam.findUnique({ where: { id: examId } });
+    if (exam?.status === "PUBLISHED" || exam?.status === "ARCHIVED") {
+      throw new BadRequestException("Grace marks cannot be applied after results are published");
+    }
     const existing = await this.prisma.studentMarks.findUnique({
       where: { scheduleEntryId_studentId: { scheduleEntryId: data.scheduleEntryId, studentId: data.studentId } },
     });
@@ -282,7 +295,8 @@ export class ExamService {
     });
   }
 
-  async upsertGraceMarksPolicy(examId: string, data: { maxGracePerSubject: number; maxGraceTotal: number; passingGraceAllowed: boolean }) {
+  async upsertGraceMarksPolicy(examId: string, schoolId: string, data: { maxGracePerSubject: number; maxGraceTotal: number; passingGraceAllowed: boolean }) {
+    await this.assertExamSchool(examId, schoolId);
     return this.prisma.graceMarksPolicy.upsert({
       where: { examId },
       update: data,
@@ -389,7 +403,8 @@ export class ExamService {
 
   // ─── Publish Results ────────────────────────────────────────────────────────
 
-  async publishResults(examId: string) {
+  async publishResults(examId: string, schoolId: string) {
+    await this.assertExamSchool(examId, schoolId);
     const { ready, missing } = await this.validateMarksCompleteness(examId);
     if (!ready) {
       throw new BadRequestException(

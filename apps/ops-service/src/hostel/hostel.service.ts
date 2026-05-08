@@ -6,7 +6,7 @@
  * visitor log, incident register, staff quarters.
  */
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 export interface RoomAllotment {
   studentId: string;

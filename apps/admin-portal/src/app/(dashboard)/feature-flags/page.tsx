@@ -4,6 +4,8 @@
  * Enable/disable features, manage rollout stages, A/B testing, beta program
  */
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
 interface FeatureFlag {
   key: string;
@@ -17,15 +19,6 @@ interface FeatureFlag {
   updatedAt: string;
 }
 
-const MOCK_FLAGS: FeatureFlag[] = [
-  { key: "BLOCKCHAIN_CERTS", name: "Blockchain Certificates", description: "Issue certificates with on-chain hash verification via Polygon", enabled: true, rolloutPct: 20, betaOnly: false, killSwitchActive: false, updatedAt: "2026-04-10" },
-  { key: "IOT_DASHBOARD", name: "IoT Sensor Dashboard", description: "Building health monitoring with air quality, energy & water sensors", enabled: true, rolloutPct: 50, betaOnly: true, killSwitchActive: false, updatedAt: "2026-04-12" },
-  { key: "AI_TIMETABLE", name: "AI-Powered Timetable", description: "Automated timetable generation using constraint-based optimization", enabled: true, rolloutPct: 100, betaOnly: false, killSwitchActive: false, updatedAt: "2026-03-28" },
-  { key: "PARENT_WALLET", name: "Parent Digital Wallet", description: "Pre-loaded wallet for canteen and activity payments", enabled: false, rolloutPct: 0, betaOnly: true, killSwitchActive: false, updatedAt: "2026-04-01" },
-  { key: "VIDEO_ASSIGNMENTS", name: "Video Assignments", description: "Students submit video answers for assignments; teacher reviews in-app", enabled: true, rolloutPct: 5, betaOnly: true, killSwitchActive: false, updatedAt: "2026-04-15" },
-  { key: "MDM_LESSON_MODE", name: "MDM Lesson Mode", description: "Lock student devices to approved apps during class", enabled: true, rolloutPct: 20, betaOnly: false, killSwitchActive: false, updatedAt: "2026-04-14" },
-];
-
 const ROLLOUT_STAGES: (0 | 5 | 20 | 50 | 100)[] = [0, 5, 20, 50, 100];
 
 const rolloutColor = (pct: number, enabled: boolean, killed: boolean) => {
@@ -37,21 +30,40 @@ const rolloutColor = (pct: number, enabled: boolean, killed: boolean) => {
 };
 
 export default function FeatureFlagsPage() {
-  const [flags, setFlags] = useState<FeatureFlag[]>(MOCK_FLAGS);
+  const [localFlags, setLocalFlags] = useState<FeatureFlag[] | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
 
+  const { data: remoteFlags = [], isLoading, error } = useQuery<FeatureFlag[]>({
+    queryKey: ["feature-flags"],
+    queryFn: async () => {
+      const res = await api.get("/ops/feature-flags");
+      return res.data?.data ?? [];
+    },
+  });
+
+  if (isLoading) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+    </div>
+  );
+  if (error) return (
+    <div className="p-4 text-red-500">Failed to load data. Please try again.</div>
+  );
+
+  const flags = localFlags ?? remoteFlags;
+
   const toggleEnabled = (key: string) => {
-    setFlags(prev => prev.map(f => f.key === key ? { ...f, enabled: !f.enabled } : f));
+    setLocalFlags(prev => (prev ?? remoteFlags).map(f => f.key === key ? { ...f, enabled: !f.enabled } : f));
   };
 
   const setRollout = (key: string, pct: 0 | 5 | 20 | 50 | 100) => {
-    setFlags(prev => prev.map(f => f.key === key ? { ...f, rolloutPct: pct } : f));
+    setLocalFlags(prev => (prev ?? remoteFlags).map(f => f.key === key ? { ...f, rolloutPct: pct } : f));
     setSaved(key);
     setTimeout(() => setSaved(null), 2000);
   };
 
   const toggleKillSwitch = (key: string) => {
-    setFlags(prev => prev.map(f => f.key === key ? { ...f, killSwitchActive: !f.killSwitchActive } : f));
+    setLocalFlags(prev => (prev ?? remoteFlags).map(f => f.key === key ? { ...f, killSwitchActive: !f.killSwitchActive } : f));
   };
 
   const totalActive = flags.filter(f => f.enabled && !f.killSwitchActive).length;

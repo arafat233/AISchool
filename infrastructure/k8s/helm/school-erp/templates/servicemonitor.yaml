@@ -1,0 +1,23 @@
+{{- if .Values.monitoring.serviceMonitor.enabled }}
+{{- $services := list "api-gateway" "auth-service" "user-service" "student-service" "academic-service" "attendance-service" "fee-service" "exam-service" "hr-service" "payroll-service" "notification-service" "lms-service" "certificate-service" "admission-service" "transport-service" "report-service" "saas-service" "developer-api" }}
+{{- range $services }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $.Release.Name }}-{{ . }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: {{ . }}
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+{{- end }}
+{{- end }}

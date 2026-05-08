@@ -11,7 +11,7 @@
  *  - Any abuse incident → DSL notified → POCSO report draft → 24-hour filing deadline
  */
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 export type ComplaintStatus = "RECEIVED" | "INQUIRY" | "PENDING_REPORT" | "CLOSED" | "APPEALED";
 export type ComplaintSeverity = "MINOR" | "MODERATE" | "SEVERE";

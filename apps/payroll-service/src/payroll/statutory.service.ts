@@ -4,7 +4,8 @@ import { Injectable } from "@nestjs/common";
 
 const PF_EMPLOYEE_RATE = 0.12;     // 12% of Basic
 const PF_EMPLOYER_RATE = 0.12;     // 12% of Basic
-const PF_WAGE_CEILING = 15000;     // PF computed on min(Basic, ₹15000)
+// PF wage ceiling: ₹15,000 (pre-2024) / ₹21,600 (FY 2024-25 proposed — use env override)
+const PF_WAGE_CEILING = Number(process.env.PF_WAGE_CEILING ?? 15000);
 
 export function computePF(basic: number) {
   const wage = Math.min(basic, PF_WAGE_CEILING);
@@ -60,10 +61,14 @@ const PT_SLABS: Record<string, Array<{ upTo: number; monthly: number }>> = {
   ],
 };
 
-export function computeProfessionalTax(gross: number, stateCode = "DEFAULT"): number {
+export function computeProfessionalTax(gross: number, stateCode = "DEFAULT", month?: number): number {
   const slabs = PT_SLABS[stateCode] ?? PT_SLABS.DEFAULT;
   for (const slab of slabs) {
-    if (gross <= slab.upTo) return slab.monthly;
+    if (gross <= slab.upTo) {
+      // Maharashtra February slab is ₹300 instead of ₹200
+      if (stateCode === "MH" && slab.upTo === Infinity && month === 2) return 300;
+      return slab.monthly;
+    }
   }
   return 0;
 }

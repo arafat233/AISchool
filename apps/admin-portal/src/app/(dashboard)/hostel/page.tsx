@@ -3,27 +3,57 @@
  * Hostel Management Dashboard
  */
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
-const MOCK_ROOMS = [
-  { id: "r1", block: "A", floor: 1, roomNo: "A101", type: "STANDARD", capacity: 4, occupied: 4, warden: "Mr. Ravi Kumar" },
-  { id: "r2", block: "A", floor: 1, roomNo: "A102", type: "STANDARD", capacity: 4, occupied: 3, warden: "Mr. Ravi Kumar" },
-  { id: "r3", block: "A", floor: 2, roomNo: "A201", type: "DELUXE", capacity: 2, occupied: 2, warden: "Mr. Ravi Kumar" },
-  { id: "r4", block: "B", floor: 1, roomNo: "B101", type: "STANDARD", capacity: 4, occupied: 1, warden: "Mrs. Sunita Devi" },
-  { id: "r5", block: "B", floor: 1, roomNo: "B102", type: "STANDARD", capacity: 4, occupied: 0, warden: "Mrs. Sunita Devi" },
-];
+interface HostelRoom {
+  id: string;
+  block: string;
+  floor: number;
+  roomNo: string;
+  type: string;
+  capacity: number;
+  occupied: number;
+  warden: string;
+}
 
-const MOCK_LEAVES = [
-  { id: "l1", studentName: "Arjun Sharma", class: "XI-A", type: "WEEKEND", from: "2026-04-19", to: "2026-04-20", status: "APPROVED", parentApproved: true, wardenApproved: true },
-  { id: "l2", studentName: "Priya Singh", class: "X-B", type: "MEDICAL", from: "2026-04-20", to: "2026-04-22", status: "PENDING", parentApproved: true, wardenApproved: false },
-  { id: "l3", studentName: "Rahul Verma", class: "XII-C", type: "HOLIDAY", from: "2026-04-25", to: "2026-04-27", status: "PENDING", parentApproved: false, wardenApproved: false },
-];
+interface HostelLeave {
+  id: string;
+  studentName: string;
+  class: string;
+  type: string;
+  from: string;
+  to: string;
+  status: string;
+  parentApproved: boolean;
+  wardenApproved: boolean;
+}
 
 export default function HostelPage() {
   const [activeTab, setActiveTab] = useState<"rooms" | "leaves" | "rollcall">("rooms");
 
-  const totalBeds = MOCK_ROOMS.reduce((s, r) => s + r.capacity, 0);
-  const occupiedBeds = MOCK_ROOMS.reduce((s, r) => s + r.occupied, 0);
-  const pendingLeaves = MOCK_LEAVES.filter(l => l.status === "PENDING").length;
+  const { data: rooms = [], isLoading: roomsLoading, error: roomsError } = useQuery<HostelRoom[]>({
+    queryKey: ["hostel-rooms"],
+    queryFn: async () => {
+      const res = await api.get("/hostel/rooms");
+      return res.data?.data ?? [];
+    },
+  });
+
+  const { data: leaves = [], isLoading: leavesLoading, error: leavesError } = useQuery<HostelLeave[]>({
+    queryKey: ["hostel-leaves"],
+    queryFn: async () => {
+      const res = await api.get("/hostel/leaves");
+      return res.data?.data ?? [];
+    },
+  });
+
+  if (roomsLoading || leavesLoading) return <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" /></div>;
+  if (roomsError || leavesError) return <div className="p-4 text-red-500">Failed to load data. Please try again.</div>;
+
+  const totalBeds = rooms.reduce((s, r) => s + r.capacity, 0);
+  const occupiedBeds = rooms.reduce((s, r) => s + r.occupied, 0);
+  const pendingLeaves = leaves.filter(l => l.status === "PENDING").length;
 
   return (
     <div className="p-6 space-y-6">
@@ -45,7 +75,7 @@ export default function HostelPage() {
           <div className="text-sm text-muted-foreground mt-1">Pending Leave Requests</div>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
-          <div className="text-2xl font-bold text-green-600">{MOCK_ROOMS.length}</div>
+          <div className="text-2xl font-bold text-green-600">{rooms.length}</div>
           <div className="text-sm text-muted-foreground mt-1">Total Rooms</div>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
@@ -65,7 +95,7 @@ export default function HostelPage() {
 
       {activeTab === "rooms" && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {MOCK_ROOMS.map(room => (
+          {rooms.map(room => (
             <div key={room.id} className="bg-card border border-border rounded-xl p-4">
               <div className="flex items-start justify-between">
                 <div>
@@ -102,7 +132,7 @@ export default function HostelPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {MOCK_LEAVES.map(leave => (
+              {leaves.map(leave => (
                 <tr key={leave.id} className="hover:bg-muted">
                   <td className="px-5 py-3">
                     <div className="font-medium text-foreground">{leave.studentName}</div>

@@ -27,6 +27,12 @@ export const QUEUES = {
   // General
   BULK_IMPORT: "queue-bulk-import",
   AUDIT_LOG: "queue-audit-log",
+
+  // RAG — Knowledge base ingestion
+  RAG_INGEST: "queue-rag-ingest",
+
+  // Dead Letter Queue — exhausted jobs land here
+  DLQ: "queue-dlq",
 } as const;
 
 export type QueueName = (typeof QUEUES)[keyof typeof QUEUES];

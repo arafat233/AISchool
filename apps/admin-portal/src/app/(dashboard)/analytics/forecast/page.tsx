@@ -1,5 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
 interface MonthForecast {
   month: string;
@@ -9,34 +11,32 @@ interface MonthForecast {
   actual_rs?: number;
 }
 
-const MOCK_FORECAST: MonthForecast[] = [
-  { month: "May 2026", base_rs: 12_50_000, best_rs: 14_00_000, worst_rs: 10_50_000 },
-  { month: "Jun 2026", base_rs: 15_80_000, best_rs: 17_50_000, worst_rs: 13_20_000 },
-  { month: "Jul 2026", base_rs: 9_20_000, best_rs: 10_40_000, worst_rs: 7_80_000 },
-  { month: "Aug 2026", base_rs: 11_40_000, best_rs: 12_90_000, worst_rs: 9_60_000 },
-  { month: "Sep 2026", base_rs: 13_10_000, best_rs: 14_80_000, worst_rs: 11_00_000 },
-  { month: "Oct 2026", base_rs: 8_90_000, best_rs: 10_20_000, worst_rs: 7_40_000 },
-];
-
 const INR = (n: number) =>
   new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n);
 
 export default function FinancialForecastPage() {
-  const [forecasts, setForecasts] = useState<MonthForecast[]>([]);
   const [scenario, setScenario] = useState<"base" | "best" | "worst">("base");
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch("/api/proxy/ai/predict/financial-forecast?school_id=SCHOOL_ID&months=6")
-      .then((r) => r.json())
-      .then((d) => setForecasts(Array.isArray(d?.forecasts) ? d.forecasts : MOCK_FORECAST))
-      .catch(() => setForecasts(MOCK_FORECAST))
-      .finally(() => setLoading(false));
-  }, []);
+  const { data: forecasts = [], isLoading, error } = useQuery<MonthForecast[]>({
+    queryKey: ["financial-forecast"],
+    queryFn: async () => {
+      const res = await api.get("/ai/predict/financial-forecast", { params: { months: 6 } });
+      return res.data?.forecasts ?? res.data?.data ?? [];
+    },
+  });
+
+  if (isLoading) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+    </div>
+  );
+  if (error) return (
+    <div className="p-4 text-red-500">Failed to load data. Please try again.</div>
+  );
 
   const key = `${scenario}_rs` as keyof MonthForecast;
   const totalForecast = forecasts.reduce((s, m) => s + ((m[key] as number) ?? 0), 0);
-  const maxVal = Math.max(...forecasts.map((m) => m.best_rs));
+  const maxVal = Math.max(...forecasts.map((m) => m.best_rs), 1);
 
   return (
     <div className="p-6 space-y-6">
@@ -73,8 +73,8 @@ export default function FinancialForecastPage() {
       {/* Bar chart */}
       <div className="bg-card border rounded-xl p-6">
         <h2 className="font-semibold text-foreground mb-4">Monthly Projection</h2>
-        {loading ? (
-          <div className="h-40 flex items-center justify-center text-muted-foreground">Loading…</div>
+        {forecasts.length === 0 ? (
+          <div className="h-40 flex items-center justify-center text-muted-foreground">No forecast data available</div>
         ) : (
           <div className="space-y-3">
             {forecasts.map((m, i) => {

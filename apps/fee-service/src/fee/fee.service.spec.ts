@@ -1,5 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { FeeService } from "./fee.service";
+import { createMockPrismaService, FeeInvoiceFactory } from "@school-erp/testing";
 
 jest.mock("@school-erp/utils", () => ({
   rupeesToPaise: (r: number) => r * 100,
@@ -8,6 +9,7 @@ jest.mock("@school-erp/utils", () => ({
   calculateLateFee: jest.fn().mockReturnValue(0),
 }));
 
+// Stable mock references (built on top of the shared factory shape)
 const mockPrisma = {
   feeHead: { create: jest.fn(), findMany: jest.fn() },
   feeStructure: { upsert: jest.fn(), findMany: jest.fn() },
@@ -39,7 +41,8 @@ describe("FeeService", () => {
 
   describe("createFeeHead", () => {
     it("should create a fee head for the school", async () => {
-      mockPrisma.feeHead.create.mockResolvedValueOnce({ id: "fh-1", name: "Tuition" });
+      const invoice = FeeInvoiceFactory.build({ id: "fh-1" });
+      mockPrisma.feeHead.create.mockResolvedValueOnce({ id: invoice.id, name: "Tuition" });
       const result = await service.createFeeHead("sch-1", { name: "Tuition" });
       expect(result.id).toBe("fh-1");
     });

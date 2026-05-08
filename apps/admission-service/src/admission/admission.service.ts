@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError, ConflictError } from "@school-erp/errors";
 
@@ -26,18 +26,22 @@ export class AdmissionService {
     });
   }
 
-  async getEnquiry(id: string) {
+  async getEnquiry(id: string, schoolId: string) {
     const e = await this.prisma.enquiry.findUnique({
       where: { id },
       include: { followUpLogs: { orderBy: { createdAt: "desc" } }, application: true },
     });
     if (!e) throw new NotFoundError("Enquiry not found");
+    if (e.schoolId !== schoolId) throw new ForbiddenException();
     return e;
   }
 
-  async updateEnquiry(id: string, data: Partial<{
+  async updateEnquiry(id: string, schoolId: string, data: Partial<{
     status: string; assignedTo: string; notes: string; nextFollowUpDate: Date;
   }>) {
+    const e = await this.prisma.enquiry.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!e) throw new NotFoundError("Enquiry not found");
+    if (e.schoolId !== schoolId) throw new ForbiddenException();
     return this.prisma.enquiry.update({ where: { id }, data });
   }
 
@@ -86,16 +90,20 @@ export class AdmissionService {
     });
   }
 
-  async getApplication(id: string) {
+  async getApplication(id: string, schoolId: string) {
     const a = await this.prisma.admissionApplication.findUnique({ where: { id } });
     if (!a) throw new NotFoundError("Application not found");
+    if (a.schoolId !== schoolId) throw new ForbiddenException();
     return a;
   }
 
-  async updateApplicationStatus(id: string, data: {
+  async updateApplicationStatus(id: string, schoolId: string, data: {
     status: string; interviewDate?: Date; offerDate?: Date;
     rejectionReason?: string; reviewedBy?: string;
   }) {
+    const a = await this.prisma.admissionApplication.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!a) throw new NotFoundError("Application not found");
+    if (a.schoolId !== schoolId) throw new ForbiddenException();
     return this.prisma.admissionApplication.update({ where: { id }, data });
   }
 

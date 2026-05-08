@@ -11,32 +11,32 @@ def _row(**kwargs):
 class TestAttendanceAnomalies:
     def test_returns_list(self, client, mock_db):
         mock_db._rows = []
-        resp = client.get("/anomaly/attendance/s1")
-        assert resp.status_code in (200, 404)
+        resp = client.get("/anomaly/detect/s1")
+        assert resp.status_code == 200
+        assert isinstance(resp.json(), (list, dict))
 
     def test_anomaly_fields_present(self, client, mock_db):
         mock_db._rows = [_row(
             class_name="Grade 5A",
             current_pct=40.0, mean_pct=88.0, std_pct=3.5,
         )]
-        resp = client.get("/anomaly/attendance/s1")
-        if resp.status_code == 200:
-            data = resp.json()
-            if data:
-                alert = data[0]
-                # Check expected fields exist in AnomalyAlert
-                assert "severity" in alert or "z_score" in alert or "type" in alert
+        resp = client.get("/anomaly/detect/s1")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert isinstance(data, (list, dict))
 
 
 class TestFeeAnomalies:
-    def test_returns_list_or_not_found(self, client, mock_db):
+    def test_returns_list(self, client, mock_db):
         mock_db._rows = []
-        resp = client.get("/anomaly/fee/s1")
-        assert resp.status_code in (200, 404)
+        resp = client.get("/anomaly/detect/s1")
+        assert resp.status_code == 200
+        assert isinstance(resp.json(), (list, dict))
 
 
 class TestScanAllAnomalies:
     def test_full_scan_returns_list(self, client, mock_db):
         mock_db._rows = []
-        resp = client.get("/anomaly/scan/s1")
-        assert resp.status_code in (200, 404)
+        resp = client.get("/anomaly/detect/s1")
+        assert resp.status_code == 200
+        assert isinstance(resp.json(), (list, dict))

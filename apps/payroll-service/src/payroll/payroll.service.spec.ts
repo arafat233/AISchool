@@ -2,7 +2,9 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { PayrollService } from "./payroll.service";
 import { SalaryStructureService } from "./salary-structure.service";
 import { ConflictError, NotFoundError } from "@school-erp/errors";
+import { createMockPrismaService, UserFactory } from "@school-erp/testing";
 
+// Stable mock references for per-test setup
 const mockPrisma = {
   payrollRun: {
     findUnique: jest.fn(),

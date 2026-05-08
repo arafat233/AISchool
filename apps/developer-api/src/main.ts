@@ -1,25 +1,30 @@
-import { NestFactory, Reflector } from "@nestjs/core";
-import { Logger } from "@nestjs/common";
+﻿import { NestFactory, Reflector } from "@nestjs/core";
+import { Logger, ValidationPipe } from "@nestjs/common";
+import helmet from "helmet";
+import { AllExceptionsFilter } from "@school-erp/utils";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(helmet());
   const logger = new Logger("DeveloperApi");
   app.enableCors({
     origin: (process.env.CORS_ORIGINS ?? "").split(",").filter(Boolean),
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   });
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
+  app.useGlobalFilters(new AllExceptionsFilter());
   app.setGlobalPrefix("v1");
 
-  // ── Swagger / OpenAPI docs ───────────────────────────────────────────────
+  // â”€â”€ Swagger / OpenAPI docs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const config = new DocumentBuilder()
     .setTitle("School ERP Developer API")
     .setDescription(
       "Public REST API for School ERP. Requires API key in `x-api-key` header.\n\n" +
-      "Rate limits: Basic 100/min · Standard 300/min · Premium 1000/min · Enterprise 3000/min\n\n" +
-      "Sandbox: use API keys prefixed with `sk_test_` — no real data modified."
+      "Rate limits: Basic 100/min Â· Standard 300/min Â· Premium 1000/min Â· Enterprise 3000/min\n\n" +
+      "Sandbox: use API keys prefixed with `sk_test_` â€” no real data modified."
     )
     .setVersion("1.0")
     .addApiKey({ type: "apiKey", in: "header", name: "x-api-key" }, "ApiKeyAuth")
@@ -36,6 +41,6 @@ async function bootstrap() {
   const port = process.env.DEVELOPER_API_PORT ?? 3023;
   app.enableShutdownHooks();
   await app.listen(port);
-  logger.log(`Listening on :${port} — docs: http://localhost:${port}/docs`);
+  logger.log(`Listening on :${port} â€” docs: http://localhost:${port}/docs`);
 }
 bootstrap();

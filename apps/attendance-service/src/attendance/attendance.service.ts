@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, ForbiddenException } from "@nestjs/common";
 import { Queue } from "bullmq";
 import { PrismaService } from "@school-erp/database";
 import { NotFoundError } from "@school-erp/errors";
@@ -31,8 +31,9 @@ export class AttendanceService {
     });
   }
 
-  async bulkMark(sessionId: string, dto: BulkAttendanceDto, markedById: string) {
+  async bulkMark(sessionId: string, dto: BulkAttendanceDto, markedById: string, schoolId: string) {
     const session = await this.prisma.attendanceSession.findUniqueOrThrow({ where: { id: sessionId }, include: { section: true } });
+    if (session.schoolId !== schoolId) throw new ForbiddenException();
 
     // Upsert all records in a transaction
     const ops = dto.records.map((r) =>
@@ -60,7 +61,10 @@ export class AttendanceService {
     return { total: dto.records.length, absent: absentIds.length, present: dto.records.length - absentIds.length };
   }
 
-  async getSessionRecords(sessionId: string) {
+  async getSessionRecords(sessionId: string, schoolId: string) {
+    const session = await this.prisma.attendanceSession.findUnique({ where: { id: sessionId }, select: { schoolId: true } });
+    if (!session) throw new NotFoundError("Session not found");
+    if (session.schoolId !== schoolId) throw new ForbiddenException();
     return this.prisma.attendanceRecord.findMany({
       where: { sessionId },
       include: { student: { select: { firstName: true, lastName: true, admissionNo: true } } },
@@ -68,11 +72,11 @@ export class AttendanceService {
     });
   }
 
-  async getStudentSummary(studentId: string, startDate: string, endDate: string) {
+  async getStudentSummary(studentId: string, startDate: string, endDate: string, schoolId: string) {
     const records = await this.prisma.attendanceRecord.findMany({
       where: {
         studentId,
-        session: { date: { gte: new Date(startDate), lte: new Date(endDate) } },
+        session: { schoolId, date: { gte: new Date(startDate), lte: new Date(endDate) } },
       },
       include: { session: { select: { date: true } } },
     });

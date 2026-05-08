@@ -4,6 +4,8 @@
  * Annual compliance calendar, POSH, RTI, EPF/ESI/PT status
  */
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
 interface ComplianceItem {
   id: string;
@@ -14,19 +16,6 @@ interface ComplianceItem {
   responsiblePerson: string;
   documentUrl?: string;
 }
-
-const MOCK_ITEMS: ComplianceItem[] = [
-  { id: "1", category: "EPF", name: "EPF ECR Monthly Filing", dueDate: "2026-04-15", status: "COMPLETED", responsiblePerson: "HR Manager", documentUrl: "epf_mar.pdf" },
-  { id: "2", category: "ESI", name: "ESI Monthly Challan", dueDate: "2026-04-21", status: "IN_PROGRESS", responsiblePerson: "HR Manager" },
-  { id: "3", category: "PT", name: "Professional Tax Remittance", dueDate: "2026-04-20", status: "OVERDUE", responsiblePerson: "Accounts" },
-  { id: "4", category: "POSH", name: "POSH Annual Report to District Officer", dueDate: "2027-01-31", status: "PENDING", responsiblePerson: "Principal" },
-  { id: "5", category: "FIRE", name: "Fire Drill (Quarterly)", dueDate: "2026-06-30", status: "PENDING", responsiblePerson: "Facility Manager" },
-  { id: "6", category: "UDISE", name: "UDISE+ Data Submission", dueDate: "2026-09-30", status: "PENDING", responsiblePerson: "Admin Head" },
-  { id: "7", category: "EPF", name: "EPF Annual Return (Form 3A)", dueDate: "2026-04-30", status: "PENDING", responsiblePerson: "HR Manager" },
-  { id: "8", category: "BUILDING", name: "Structural Audit Certificate", dueDate: "2026-07-15", status: "PENDING", responsiblePerson: "Principal" },
-  { id: "9", category: "RTI", name: "RTI Response: Application #RTI-2026-0042", dueDate: "2026-04-28", status: "IN_PROGRESS", responsiblePerson: "Admin Head" },
-  { id: "10", category: "LWF", name: "Labour Welfare Fund (June remittance)", dueDate: "2026-06-15", status: "PENDING", responsiblePerson: "HR Manager" },
-];
 
 const statusColor: Record<string, string> = {
   PENDING: "bg-muted text-muted-foreground",
@@ -48,8 +37,18 @@ const categoryColor: Record<string, string> = {
 };
 
 export default function CompliancePage() {
-  const [items] = useState<ComplianceItem[]>(MOCK_ITEMS);
   const [filter, setFilter] = useState("ALL");
+
+  const { data: items = [], isLoading, error } = useQuery<ComplianceItem[]>({
+    queryKey: ["compliance-items"],
+    queryFn: async () => {
+      const res = await api.get("/compliance/items");
+      return res.data?.data ?? [];
+    },
+  });
+
+  if (isLoading) return <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" /></div>;
+  if (error) return <div className="p-4 text-red-500">Failed to load data. Please try again.</div>;
 
   const filtered = filter === "ALL" ? items : items.filter(i => i.status === filter || i.category === filter);
   const overdue = items.filter(i => i.status === "OVERDUE").length;

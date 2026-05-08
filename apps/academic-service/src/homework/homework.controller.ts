@@ -36,13 +36,13 @@ export class HomeworkController {
   }
 
   @Put(":id")
-  update(@Param("id") id: string, @Body() dto: UpdateHomeworkDto) {
-    return this.svc.updateHomework(id, { ...dto, dueDate: dto.dueDate ? new Date(dto.dueDate) : undefined });
+  update(@Param("id") id: string, @Req() req: Request & { user: RequestUser }, @Body() dto: UpdateHomeworkDto) {
+    return this.svc.updateHomework(id, req.user.schoolId!, { ...dto, dueDate: dto.dueDate ? new Date(dto.dueDate) : undefined });
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.svc.deleteHomework(id);
+  remove(@Param("id") id: string, @Req() req: Request & { user: RequestUser }) {
+    return this.svc.deleteHomework(id, req.user.schoolId!);
   }
 
   // ─── Student/parent: today's homework checklist ──────────────────────────────

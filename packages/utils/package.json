@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "@school-erp/types": "workspace:*",
-    "date-fns": "^3.6.0"
+    "date-fns": "^3.6.0",
+    "ioredis": "^5.4.1"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.0.0",

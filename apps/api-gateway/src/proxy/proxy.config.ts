@@ -101,6 +101,7 @@ export const PROXY_ROUTES: ProxyRoute[] = [
   { prefix: '/audit', target: process.env['SAAS_SERVICE_URL'] ?? 'http://saas-service:3022' },
   { prefix: '/billing', target: process.env['SAAS_SERVICE_URL'] ?? 'http://saas-service:3022' },
   { prefix: '/onboarding', target: process.env['SAAS_SERVICE_URL'] ?? 'http://saas-service:3022' },
+  { prefix: '/tenants', target: process.env['SAAS_SERVICE_URL'] ?? 'http://saas-service:3022' },
 
   // AI service (strip prefix)
   {

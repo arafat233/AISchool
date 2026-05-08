@@ -1,0 +1,6 @@
+{
+  "network": "polygon-mumbai",
+  "rpcUrl": "${POLYGON_RPC_URL}",
+  "contractAddress": "${CERTIFICATE_CONTRACT_ADDRESS}",
+  "abi": []
+}

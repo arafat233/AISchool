@@ -1,26 +1,57 @@
 "use client";
+
 /**
  * Student Insurance Management
  */
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { Loader2 } from "lucide-react";
 
-const MOCK_POLICY = {
-  insurer: "New India Assurance Co.",
-  policyNumber: "NIA-GRP-2025-8842",
-  sumAssuredRs: 100000,
-  premiumPerStudentRs: 280,
-  coverageStart: "2025-06-01",
-  coverageEnd: "2026-05-31",
-  coverageDetails: "Personal accident + hospitalisation cover for all enrolled students",
-  daysToExpiry: 41,
-  totalStudentsCovered: 1240,
+interface InsurancePolicy {
+  insurer: string;
+  policyNumber: string;
+  sumAssuredRs: number;
+  premiumPerStudentRs: number;
+  coverageStart: string;
+  coverageEnd: string;
+  coverageDetails: string;
+  daysToExpiry: number;
+  totalStudentsCovered: number;
+}
+
+interface InsuranceClaim {
+  ref: string;
+  studentName: string;
+  class: string;
+  accidentDate: string;
+  claimAmountRs: number;
+  status: string;
+  settlementRs: number | null;
+}
+
+interface InsuranceData {
+  policy: InsurancePolicy;
+  claims: InsuranceClaim[];
+}
+
+const PLACEHOLDER_DATA: InsuranceData = {
+  policy: {
+    insurer: "New India Assurance Co.",
+    policyNumber: "NIA-GRP-2025-8842",
+    sumAssuredRs: 100000,
+    premiumPerStudentRs: 280,
+    coverageStart: "2025-06-01",
+    coverageEnd: "2026-05-31",
+    coverageDetails: "Personal accident + hospitalisation cover for all enrolled students",
+    daysToExpiry: 41,
+    totalStudentsCovered: 1240,
+  },
+  claims: [
+    { ref: "CLAIM-1001", studentName: "Rohit Saha", class: "VIII-A", accidentDate: "2026-02-10", claimAmountRs: 45000, status: "SETTLED", settlementRs: 42000 },
+    { ref: "CLAIM-1002", studentName: "Ananya Bose", class: "X-B", accidentDate: "2026-03-22", claimAmountRs: 18000, status: "UNDER_REVIEW", settlementRs: null },
+    { ref: "CLAIM-1003", studentName: "Vijay Kumar", class: "XII-A", accidentDate: "2026-04-01", claimAmountRs: 32000, status: "FILED", settlementRs: null },
+  ],
 };
-
-const MOCK_CLAIMS = [
-  { ref: "CLAIM-1001", studentName: "Rohit Saha", class: "VIII-A", accidentDate: "2026-02-10", claimAmountRs: 45000, status: "SETTLED", settlementRs: 42000 },
-  { ref: "CLAIM-1002", studentName: "Ananya Bose", class: "X-B", accidentDate: "2026-03-22", claimAmountRs: 18000, status: "UNDER_REVIEW", settlementRs: null },
-  { ref: "CLAIM-1003", studentName: "Vijay Kumar", class: "XII-A", accidentDate: "2026-04-01", claimAmountRs: 32000, status: "FILED", settlementRs: null },
-];
 
 const statusColor: Record<string, string> = {
   FILED: "bg-blue-100 text-blue-700",
@@ -31,7 +62,31 @@ const statusColor: Record<string, string> = {
 };
 
 export default function InsurancePage() {
-  const [claims] = useState(MOCK_CLAIMS);
+  const { data, isLoading, isError } = useQuery<InsuranceData>({
+    queryKey: ["insurance"],
+    // TODO: replace with real endpoint once /api/insurance is live
+    queryFn: () => api.get("/insurance").then((r) => r.data),
+    placeholderData: PLACEHOLDER_DATA,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6">
+        <p className="text-destructive text-sm">Failed to load insurance data. Please try again.</p>
+      </div>
+    );
+  }
+
+  const policy = data?.policy ?? PLACEHOLDER_DATA.policy;
+  const claims = data?.claims ?? [];
 
   return (
     <div className="p-6 space-y-6">
@@ -44,17 +99,17 @@ export default function InsurancePage() {
       </div>
 
       {/* Policy Card */}
-      <div className={`border rounded-xl p-5 ${MOCK_POLICY.daysToExpiry <= 60 ? "bg-orange-50 border-orange-200" : "bg-card border-border"}`}>
+      <div className={`border rounded-xl p-5 ${policy.daysToExpiry <= 60 ? "bg-orange-50 border-orange-200" : "bg-card border-border"}`}>
         <div className="flex items-start justify-between">
           <div>
-            <div className="font-semibold text-foreground text-lg">{MOCK_POLICY.insurer}</div>
-            <div className="text-sm text-muted-foreground mt-0.5">Policy No: {MOCK_POLICY.policyNumber}</div>
-            <div className="text-sm text-muted-foreground mt-2">{MOCK_POLICY.coverageDetails}</div>
+            <div className="font-semibold text-foreground text-lg">{policy.insurer}</div>
+            <div className="text-sm text-muted-foreground mt-0.5">Policy No: {policy.policyNumber}</div>
+            <div className="text-sm text-muted-foreground mt-2">{policy.coverageDetails}</div>
           </div>
           <div className="text-right">
-            {MOCK_POLICY.daysToExpiry <= 60 && (
+            {policy.daysToExpiry <= 60 && (
               <div className="bg-orange-100 text-orange-700 text-sm px-3 py-1 rounded-lg font-medium mb-2">
-                ⚠️ Expires in {MOCK_POLICY.daysToExpiry} days
+                Expires in {policy.daysToExpiry} days
               </div>
             )}
           </div>
@@ -62,19 +117,19 @@ export default function InsurancePage() {
         <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t border-border">
           <div>
             <div className="text-xs text-muted-foreground">Sum Assured</div>
-            <div className="font-bold text-foreground">₹{MOCK_POLICY.sumAssuredRs.toLocaleString()}</div>
+            <div className="font-bold text-foreground">&#x20B9;{policy.sumAssuredRs.toLocaleString()}</div>
           </div>
           <div>
             <div className="text-xs text-muted-foreground">Premium/Student</div>
-            <div className="font-bold text-foreground">₹{MOCK_POLICY.premiumPerStudentRs}</div>
+            <div className="font-bold text-foreground">&#x20B9;{policy.premiumPerStudentRs}</div>
           </div>
           <div>
             <div className="text-xs text-muted-foreground">Coverage Period</div>
-            <div className="font-bold text-foreground">{MOCK_POLICY.coverageStart} → {MOCK_POLICY.coverageEnd}</div>
+            <div className="font-bold text-foreground">{policy.coverageStart} &#x2192; {policy.coverageEnd}</div>
           </div>
           <div>
             <div className="text-xs text-muted-foreground">Students Covered</div>
-            <div className="font-bold text-foreground">{MOCK_POLICY.totalStudentsCovered.toLocaleString()}</div>
+            <div className="font-bold text-foreground">{policy.totalStudentsCovered.toLocaleString()}</div>
           </div>
         </div>
       </div>
@@ -90,8 +145,8 @@ export default function InsurancePage() {
               <th className="px-5 py-3 text-left">Reference</th>
               <th className="px-5 py-3 text-left">Student</th>
               <th className="px-5 py-3 text-left">Accident Date</th>
-              <th className="px-5 py-3 text-right">Claimed (₹)</th>
-              <th className="px-5 py-3 text-right">Settlement (₹)</th>
+              <th className="px-5 py-3 text-right">Claimed (&#x20B9;)</th>
+              <th className="px-5 py-3 text-right">Settlement (&#x20B9;)</th>
               <th className="px-5 py-3 text-center">Status</th>
             </tr>
           </thead>
@@ -104,10 +159,12 @@ export default function InsurancePage() {
                   <div className="text-xs text-muted-foreground">{claim.class}</div>
                 </td>
                 <td className="px-5 py-3 text-muted-foreground">{claim.accidentDate}</td>
-                <td className="px-5 py-3 text-right font-medium text-foreground">₹{claim.claimAmountRs.toLocaleString()}</td>
-                <td className="px-5 py-3 text-right text-muted-foreground">{claim.settlementRs ? `₹${claim.settlementRs.toLocaleString()}` : "—"}</td>
+                <td className="px-5 py-3 text-right font-medium text-foreground">&#x20B9;{claim.claimAmountRs.toLocaleString()}</td>
+                <td className="px-5 py-3 text-right text-muted-foreground">{claim.settlementRs ? `&#x20B9;${claim.settlementRs.toLocaleString()}` : "—"}</td>
                 <td className="px-5 py-3 text-center">
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColor[claim.status]}`}>{claim.status.replace("_", " ")}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColor[claim.status] ?? "bg-muted text-foreground"}`}>
+                    {claim.status.replace("_", " ")}
+                  </span>
                 </td>
               </tr>
             ))}

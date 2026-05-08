@@ -6,7 +6,7 @@
  * Apostille workflow, international staff, multi-currency reporting.
  */
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 import axios from "axios";
 
 export type IbProgramme = "PYP" | "MYP" | "DP";

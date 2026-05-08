@@ -1,5 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { Loader2 } from "lucide-react";
 
 interface LessonDropoff {
   lesson_title: string;
@@ -18,25 +21,51 @@ interface CourseProgress {
   total_time_hours: number;
 }
 
-const MOCK_COURSES: CourseProgress[] = [
-  { course_name: "Mathematics — Algebra", class_name: "Grade 9-A", avg_progress_pct: 72, completed_students: 18, total_students: 38, total_time_hours: 142 },
-  { course_name: "Science — Periodic Table", class_name: "Grade 9-A", avg_progress_pct: 85, completed_students: 28, total_students: 38, total_time_hours: 98 },
-  { course_name: "English — Poetry", class_name: "Grade 10-B", avg_progress_pct: 41, completed_students: 8, total_students: 35, total_time_hours: 67 },
-  { course_name: "History — World War II", class_name: "Grade 10-A", avg_progress_pct: 93, completed_students: 34, total_students: 36, total_time_hours: 180 },
-];
-
-const MOCK_LESSONS: LessonDropoff[] = [
-  { lesson_title: "Introduction to Algebra", started: 38, completed: 37, avg_time_min: 22, completion_pct: 97 },
-  { lesson_title: "Linear Equations", started: 36, completed: 30, avg_time_min: 35, completion_pct: 83 },
-  { lesson_title: "Quadratic Equations", started: 32, completed: 21, avg_time_min: 48, completion_pct: 66 },
-  { lesson_title: "Polynomials", started: 25, completed: 14, avg_time_min: 52, completion_pct: 56 },
-  { lesson_title: "Coordinate Geometry", started: 18, completed: 9, avg_time_min: 41, completion_pct: 50 },
-];
+interface LearningAnalyticsData {
+  courses: CourseProgress[];
+  lessons: LessonDropoff[];
+}
 
 export default function LearningAnalyticsPage() {
-  const [courses, setCourses] = useState<CourseProgress[]>(MOCK_COURSES);
-  const [lessons, setLessons] = useState<LessonDropoff[]>(MOCK_LESSONS);
-  const [loading, setLoading] = useState(false);
+  const { data, isLoading, isError } = useQuery<LearningAnalyticsData>({
+    queryKey: ["lms-analytics"],
+    // TODO: replace with real endpoint once /api/lms/analytics is live
+    queryFn: () => api.get("/lms/analytics").then((r) => r.data),
+    placeholderData: {
+      courses: [
+        { course_name: "Mathematics — Algebra", class_name: "Grade 9-A", avg_progress_pct: 72, completed_students: 18, total_students: 38, total_time_hours: 142 },
+        { course_name: "Science — Periodic Table", class_name: "Grade 9-A", avg_progress_pct: 85, completed_students: 28, total_students: 38, total_time_hours: 98 },
+        { course_name: "English — Poetry", class_name: "Grade 10-B", avg_progress_pct: 41, completed_students: 8, total_students: 35, total_time_hours: 67 },
+        { course_name: "History — World War II", class_name: "Grade 10-A", avg_progress_pct: 93, completed_students: 34, total_students: 36, total_time_hours: 180 },
+      ],
+      lessons: [
+        { lesson_title: "Introduction to Algebra", started: 38, completed: 37, avg_time_min: 22, completion_pct: 97 },
+        { lesson_title: "Linear Equations", started: 36, completed: 30, avg_time_min: 35, completion_pct: 83 },
+        { lesson_title: "Quadratic Equations", started: 32, completed: 21, avg_time_min: 48, completion_pct: 66 },
+        { lesson_title: "Polynomials", started: 25, completed: 14, avg_time_min: 52, completion_pct: 56 },
+        { lesson_title: "Coordinate Geometry", started: 18, completed: 9, avg_time_min: 41, completion_pct: 50 },
+      ],
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6">
+        <p className="text-destructive text-sm">Failed to load learning analytics. Please try again.</p>
+      </div>
+    );
+  }
+
+  const courses = data?.courses ?? [];
+  const lessons = data?.lessons ?? [];
 
   return (
     <div className="p-6 space-y-6">
@@ -80,7 +109,7 @@ export default function LearningAnalyticsPage() {
 
       {/* Lesson Drop-off Funnel */}
       <div className="bg-card border rounded-xl overflow-hidden">
-        <div className="px-6 py-4 border-b font-semibold text-foreground">Lesson-Level Drop-off (Mathematics — Algebra, Grade 9-A)</div>
+        <div className="px-6 py-4 border-b font-semibold text-foreground">Lesson-Level Drop-off</div>
         <div className="p-6 space-y-3">
           {lessons.map((l, i) => {
             const dropPct = 100 - l.completion_pct;
@@ -103,7 +132,7 @@ export default function LearningAnalyticsPage() {
                   </div>
                 </div>
                 {dropPct > 25 && (
-                  <span className="text-xs text-orange-600 flex-shrink-0">▼ {dropPct}% drop</span>
+                  <span className="text-xs text-orange-600 flex-shrink-0">&#9660; {dropPct}% drop</span>
                 )}
               </div>
             );

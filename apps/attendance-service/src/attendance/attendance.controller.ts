@@ -18,15 +18,17 @@ export class AttendanceController {
 
   @Post("sessions/:id/mark")
   bulkMark(@Param("id") sessionId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: BulkAttendanceDto) {
-    return this.svc.bulkMark(sessionId, dto, req.user.id);
+    return this.svc.bulkMark(sessionId, dto, req.user.id, req.user.schoolId!);
   }
 
   @Get("sessions/:id/records")
-  getRecords(@Param("id") sessionId: string) { return this.svc.getSessionRecords(sessionId); }
+  getRecords(@Param("id") sessionId: string, @Req() req: Request & { user: RequestUser }) {
+    return this.svc.getSessionRecords(sessionId, req.user.schoolId!);
+  }
 
   @Get("students/:id/summary")
-  studentSummary(@Param("id") studentId: string, @Query("from") from: string, @Query("to") to: string) {
-    return this.svc.getStudentSummary(studentId, from, to);
+  studentSummary(@Param("id") studentId: string, @Req() req: Request & { user: RequestUser }, @Query("from") from: string, @Query("to") to: string) {
+    return this.svc.getStudentSummary(studentId, from, to, req.user.schoolId!);
   }
 
   @Get("class-summary")

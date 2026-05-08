@@ -1,22 +1,26 @@
 "use client";
-import { useLocale } from "next-intl";
-import { useRouter, usePathname } from "next/navigation";
+
 import { useState, useRef, useEffect } from "react";
 import { Globe } from "lucide-react";
 
 const LANGUAGES = [
-  { code: "en", label: "English",    native: "English"    },
-  { code: "hi", label: "Hindi",      native: "हिंदी"       },
-  { code: "te", label: "Telugu",     native: "తెలుగు"     },
-  { code: "ta", label: "Tamil",      native: "தமிழ்"      },
-  { code: "kn", label: "Kannada",    native: "ಕನ್ನಡ"      },
-  { code: "ml", label: "Malayalam",  native: "മലയാളം"     },
+  { code: "en", label: "English",   native: "English"   },
+  { code: "hi", label: "Hindi",     native: "हिंदी"      },
+  { code: "te", label: "Telugu",    native: "తెలుగు"    },
+  { code: "ta", label: "Tamil",     native: "தமிழ்"     },
+  { code: "kn", label: "Kannada",   native: "ಕನ್ನಡ"     },
+  { code: "ml", label: "Malayalam", native: "മലയാളം"    },
 ];
 
+const STORAGE_KEY = "preferred-language";
+
 export function LanguageSwitcher() {
-  const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
+  const [locale, setLocale] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(STORAGE_KEY) ?? "en";
+    }
+    return "en";
+  });
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -30,11 +34,9 @@ export function LanguageSwitcher() {
 
   const switchLocale = async (newLocale: string) => {
     setOpen(false);
-    // Strip current locale prefix from path, add new one
-    const stripped = pathname.replace(/^\/(en|hi|te|ta|kn|ml)/, "");
-    const newPath = newLocale === "en" ? stripped || "/" : `/${newLocale}${stripped || "/"}`;
-    router.replace(newPath);
-    // Persist preference
+    setLocale(newLocale);
+    localStorage.setItem(STORAGE_KEY, newLocale);
+    // Persist preference to backend when available
     await fetch("/api/user/language", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -53,7 +55,12 @@ export function LanguageSwitcher() {
       >
         <Globe className="w-4 h-4 text-gray-500" />
         <span>{current.native}</span>
-        <svg className={`w-3 h-3 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg
+          className={`w-3 h-3 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>

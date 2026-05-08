@@ -23,6 +23,8 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/api-gateway/dist ./apps/api-gateway/dist
 COPY --from=builder /app/apps/api-gateway/package.json ./apps/api-gateway/
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nestjs
+USER nestjs
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD wget -qO- http://localhost:3000/health || exit 1

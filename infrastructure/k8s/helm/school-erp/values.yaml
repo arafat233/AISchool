@@ -18,11 +18,6 @@ services:
       requests: { cpu: 100m, memory: 256Mi }
       limits: { cpu: 500m, memory: 512Mi }
 
-  student-service:
-    enabled: true
-    port: 3003
-    replicas: 2
-
   fee-service:
     enabled: true
     port: 3006
@@ -268,3 +263,15 @@ ingress:
   certManager:
     enabled: true
     clusterIssuer: letsencrypt-prod
+
+# Namespace Resource Quota
+namespaceQuota:
+  enabled: true
+  cpu: "50"
+  memory: "100Gi"
+  pods: "300"
+
+# Monitoring
+monitoring:
+  serviceMonitor:
+    enabled: true

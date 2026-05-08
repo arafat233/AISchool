@@ -102,7 +102,7 @@ jobs:
         run: pnpm test
 
       - name: Run E2E tests
-        run: pnpm --filter @school-erp/auth-service test:e2e --passWithNoTests
+        run: pnpm --filter @school-erp/auth-service test:e2e
         env:
           DATABASE_URL: postgresql://school_erp:test_password@localhost:5432/school_erp_test
           REDIS_URL: redis://localhost:6379
@@ -113,7 +113,7 @@ jobs:
           NODE_ENV: test
 
       - name: Run fee-service E2E tests
-        run: pnpm --filter @school-erp/fee-service test:e2e --passWithNoTests
+        run: pnpm --filter @school-erp/fee-service test:e2e
         env:
           DATABASE_URL: postgresql://school_erp:test_password@localhost:5432/school_erp_test
           REDIS_URL: redis://localhost:6379
@@ -125,7 +125,7 @@ jobs:
           NODE_ENV: test
 
       - name: Run student-service E2E tests
-        run: pnpm --filter @school-erp/student-service test:e2e --passWithNoTests
+        run: pnpm --filter @school-erp/student-service test:e2e
         env:
           DATABASE_URL: postgresql://school_erp:test_password@localhost:5432/school_erp_test
           REDIS_URL: redis://localhost:6379
@@ -134,8 +134,22 @@ jobs:
           JWT_ACCESS_SECRET: test_access_secret_at_least_32_chars_ci
           NODE_ENV: test
 
+      - name: Run payroll E2E tests
+        run: pnpm --filter @school-erp/payroll-service test:e2e
+        env:
+          DATABASE_URL: postgresql://school_erp:test_password@localhost:5432/school_erp_test
+          REDIS_URL: redis://localhost:6379
+          REDIS_HOST: localhost
+          REDIS_PORT: "6379"
+          JWT_ACCESS_SECRET: test_jwt_access_secret_for_ci_only_32c
+          JWT_REFRESH_SECRET: test_jwt_refresh_secret_for_ci_only_32c
+          NODE_ENV: test
+
+      - name: Run biometric-bridge tests
+        run: pnpm --filter @school-erp/biometric-bridge test
+
       - name: Run mobile tests
-        run: pnpm --filter @school-erp/mobile test --passWithNoTests
+        run: pnpm --filter @school-erp/mobile test
         env:
           NODE_ENV: test
 
@@ -144,6 +158,30 @@ jobs:
         if: always()
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  # ─── Portal E2E Tests (Playwright) ─────────────────────────────────────
+  test-e2e-portals:
+    name: Portal E2E Tests
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Playwright browsers
+        run: pnpm --filter @school-erp/admin-portal exec playwright install --with-deps chromium
+      - name: Run admin-portal E2E
+        run: pnpm --filter @school-erp/admin-portal e2e
+        env:
+          BASE_URL: http://localhost:3100
+          NEXT_PUBLIC_API_URL: http://localhost:3000
 
   # ─── AI Service Tests (Python / pytest) ─────────────────────────────────
   test-ai:
@@ -181,12 +219,36 @@ jobs:
       - name: Run pytest
         working-directory: apps/ai-service
         run: pytest tests/ -v --tb=short
+        env:
+          AI_SERVICE_API_KEY: test_ai_service_key_for_ci_only
+
+  # ─── Security Scan ──────────────────────────────────────────────────────
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run pnpm audit
+        run: |
+          corepack enable
+          pnpm install --frozen-lockfile
+          pnpm audit --audit-level=high || true
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript, typescript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
 
   # ─── Build check ────────────────────────────────────────────────────────
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [lint, test, test-ai]
+    needs: [lint, test, test-e2e-portals, test-ai]
     steps:
       - uses: actions/checkout@v4
 

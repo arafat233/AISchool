@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: school-erp-sa
+  namespace: school-erp
+  labels:
+    app.kubernetes.io/name: school-erp
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: school-erp-role
+  namespace: school-erp
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["services", "endpoints"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: school-erp-rolebinding
+  namespace: school-erp
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: school-erp-role
+subjects:
+  - kind: ServiceAccount
+    name: school-erp-sa
+    namespace: school-erp

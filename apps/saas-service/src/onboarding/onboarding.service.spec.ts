@@ -1,6 +1,9 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { OnboardingService } from "./onboarding.service";
+import { SaasNotificationService } from "../notification/saas-notification.service";
 import { NotFoundException } from "@nestjs/common";
+
+const mockNotify = { send: jest.fn().mockResolvedValue(undefined) };
 
 const STEPS = [
   "school_profile", "academic_structure", "grading_scale", "fee_structure",
@@ -16,6 +19,7 @@ const twoCompleted = {
 
 const mockPrisma = {
   onboardingChecklist: { findFirst: jest.fn(), create: jest.fn(), update: jest.fn() },
+  tenant: { update: jest.fn() },
 };
 
 describe("OnboardingService", () => {
@@ -24,7 +28,11 @@ describe("OnboardingService", () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
-      providers: [OnboardingService, { provide: require("@school-erp/database").PrismaService, useValue: mockPrisma }],
+      providers: [
+        OnboardingService,
+        { provide: require("@school-erp/database").PrismaService, useValue: mockPrisma },
+        { provide: SaasNotificationService, useValue: mockNotify },
+      ],
     }).compile();
     service = module.get<OnboardingService>(OnboardingService);
   });
@@ -78,6 +86,33 @@ describe("OnboardingService", () => {
       });
       await service.completeStep("t-1", "school_profile");
       expect(mockPrisma.onboardingChecklist.update).toHaveBeenCalled();
+    });
+
+    it("should activate tenant and send GO_LIVE notification on go_live step", async () => {
+      const allExceptGoLive = STEPS.reduce(
+        (acc, s) => ({ ...acc, [s]: { completed: s !== "go_live" } }),
+        {} as Record<string, any>
+      );
+      mockPrisma.onboardingChecklist.findFirst.mockResolvedValueOnce({
+        id: "cl-1", tenantId: "t-1", steps: allExceptGoLive, currentStep: "go_live",
+      });
+      mockPrisma.onboardingChecklist.update.mockResolvedValueOnce({
+        steps: { ...allExceptGoLive, go_live: { completed: true } },
+        currentStep: "complete",
+      });
+      mockPrisma.tenant.update.mockResolvedValueOnce({
+        id: "t-1", name: "Test School", status: "ACTIVE", plan: "BASIC",
+        contactEmail: "admin@test.com",
+      });
+
+      const result = await service.completeStep("t-1", "go_live");
+      expect(result.goLive).toBe(true);
+      expect(mockPrisma.tenant.update).toHaveBeenCalledWith(
+        expect.objectContaining({ data: { status: "ACTIVE" } })
+      );
+      expect(mockNotify.send).toHaveBeenCalledWith(
+        expect.objectContaining({ eventType: "GO_LIVE", to: "admin@test.com" })
+      );
     });
   });
 });

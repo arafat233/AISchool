@@ -3,11 +3,13 @@ Bus Route Optimisation using Google OR-Tools VRP.
 Input: all student home addresses (lat/lng), school location, vehicle capacities, max ride time.
 Output: optimal routes with assigned students per vehicle, total distance savings.
 """
-from fastapi import APIRouter
+import logging
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 import math
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
@@ -79,68 +81,74 @@ async def optimise_routes(req: RouteOptimisationRequest):
     Uses nearest-neighbour VRP heuristic (OR-Tools CP-SAT in production).
     Splits students across vehicles respecting capacity constraints.
     """
-    # Chunk students into vehicle-sized groups
-    all_students = list(req.students)
-    routes = []
-    total_distance_before = 0.0
-    total_distance_after = 0.0
+    try:
+        # Chunk students into vehicle-sized groups
+        all_students = list(req.students)
+        routes = []
+        total_distance_before = 0.0
+        total_distance_after = 0.0
 
-    # Baseline: direct home→school for each student
-    for s in all_students:
-        total_distance_before += haversine(s.lat, s.lng, req.school_lat, req.school_lng) * 2
+        # Baseline: direct home→school for each student
+        for s in all_students:
+            total_distance_before += haversine(s.lat, s.lng, req.school_lat, req.school_lng) * 2
 
-    student_idx = 0
-    for vehicle in req.vehicles:
-        if student_idx >= len(all_students):
-            break
-        batch = all_students[student_idx: student_idx + vehicle.capacity]
-        student_idx += vehicle.capacity
+        student_idx = 0
+        for vehicle in req.vehicles:
+            if student_idx >= len(all_students):
+                break
+            batch = all_students[student_idx: student_idx + vehicle.capacity]
+            student_idx += vehicle.capacity
 
-        ordered = nearest_neighbor_route(batch, req.school_lat, req.school_lng, vehicle.capacity)
+            ordered = nearest_neighbor_route(batch, req.school_lat, req.school_lng, vehicle.capacity)
 
-        # Compute route distance
-        dist = 0.0
-        prev_lat, prev_lng = req.school_lat, req.school_lng
-        for s in ordered:
-            dist += haversine(prev_lat, prev_lng, s.lat, s.lng)
-            prev_lat, prev_lng = s.lat, s.lng
-        dist += haversine(prev_lat, prev_lng, req.school_lat, req.school_lng)
-        total_distance_after += dist
+            # Compute route distance
+            dist = 0.0
+            prev_lat, prev_lng = req.school_lat, req.school_lng
+            for s in ordered:
+                dist += haversine(prev_lat, prev_lng, s.lat, s.lng)
+                prev_lat, prev_lng = s.lat, s.lng
+            dist += haversine(prev_lat, prev_lng, req.school_lat, req.school_lng)
+            total_distance_after += dist
 
-        avg_speed_kmh = 30
-        total_time = int(dist / avg_speed_kmh * 60)
+            avg_speed_kmh = 30
+            total_time = int(dist / avg_speed_kmh * 60)
 
-        stops = [
-            RouteStop(
-                student_id=s.student_id,
-                name=s.name,
-                lat=s.lat,
-                lng=s.lng,
-                pickup_order=i + 1,
-                estimated_pickup_time=f"07:{30 + i * 5:02d}",
-            )
-            for i, s in enumerate(ordered)
-        ]
-        routes.append(OptimisedRoute(
-            vehicle_id=vehicle.vehicle_id,
-            vehicle_no=vehicle.vehicle_no,
-            stops=stops,
-            total_distance_km=round(dist, 2),
-            total_time_minutes=total_time,
-            student_count=len(ordered),
-        ))
+            stops = [
+                RouteStop(
+                    student_id=s.student_id,
+                    name=s.name,
+                    lat=s.lat,
+                    lng=s.lng,
+                    pickup_order=i + 1,
+                    estimated_pickup_time=f"07:{30 + i * 5:02d}",
+                )
+                for i, s in enumerate(ordered)
+            ]
+            routes.append(OptimisedRoute(
+                vehicle_id=vehicle.vehicle_id,
+                vehicle_no=vehicle.vehicle_no,
+                stops=stops,
+                total_distance_km=round(dist, 2),
+                total_time_minutes=total_time,
+                student_count=len(ordered),
+            ))
 
-    savings_km = round(total_distance_before - total_distance_after, 2)
-    savings_pct = round(savings_km / total_distance_before * 100, 1) if total_distance_before > 0 else 0
+        savings_km = round(total_distance_before - total_distance_after, 2)
+        savings_pct = round(savings_km / total_distance_before * 100, 1) if total_distance_before > 0 else 0
 
-    return {
-        "routes": [r.model_dump() for r in routes],
-        "summary": {
-            "total_students": len(req.students),
-            "vehicles_used": len(routes),
-            "total_distance_before_km": round(total_distance_before, 2),
-            "total_distance_after_km": round(total_distance_after, 2),
-            "savings_km": savings_km,
-            "savings_pct": savings_pct,
-        },
-    }
+        return {
+            "routes": [r.model_dump() for r in routes],
+            "summary": {
+                "total_students": len(req.students),
+                "vehicles_used": len(routes),
+                "total_distance_before_km": round(total_distance_before, 2),
+                "total_distance_after_km": round(total_distance_after, 2),
+                "savings_km": savings_km,
+                "savings_pct": savings_pct,
+            },
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.error("Route optimisation failed: %s", exc, exc_info=True)
+        raise HTTPException(status_code=500, detail="Internal server error") from exc

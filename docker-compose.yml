@@ -24,6 +24,11 @@ services:
     image: postgres:16-alpine
     container_name: erp_postgres
     <<: *service-defaults
+    command: >
+      postgres
+      -c log_min_duration_statement=1000
+      -c log_connections=on
+      -c max_connections=200
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-school_erp}
       POSTGRES_USER: ${POSTGRES_USER:-school_erp}
@@ -43,13 +48,15 @@ services:
     image: redis:7-alpine
     container_name: erp_redis
     <<: *service-defaults
-    command: redis-server --appendonly yes
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-devpassword123}
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-devpassword123}
     ports:
       - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-devpassword123}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -65,6 +72,12 @@ services:
       - ./infrastructure/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - mosquitto_data:/mosquitto/data
       - mosquitto_log:/mosquitto/log
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-u", "health", "-P", "health", "-W", "3"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   influxdb:
     image: influxdb:2.7-alpine
@@ -80,6 +93,12 @@ services:
       DOCKER_INFLUXDB_INIT_BUCKET: gps_logs
     volumes:
       - influxdb_data:/var/lib/influxdb2
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   # DB migrations (runs once then exits)
   migrate:

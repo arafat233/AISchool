@@ -30,14 +30,21 @@
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "helmet": "^8.0.0",
+    "bullmq": "^5.13.2",
+    "ioredis": "^5.4.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.8",
+    "@nestjs/testing": "^10.4.7",
     "@school-erp/tsconfig": "workspace:*",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.9.3",
     "@types/passport-jwt": "^4.0.1",
     "@types/uuid": "^9.0.8",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
     "typescript": "^5.6.3",
     "@swc/cli": "^0.4.0",
     "@swc/core": "^1.7.0"

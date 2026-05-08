@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { StudentService } from "./student.service";
 import { ConflictError, NotFoundError } from "@school-erp/errors";
+import { createMockPrismaService, StudentFactory } from "@school-erp/testing";
 
 jest.mock("@school-erp/utils", () => ({
   parsePagination: jest.fn().mockReturnValue({ skip: 0, take: 20, page: 1, limit: 20 }),
@@ -8,6 +9,7 @@ jest.mock("@school-erp/utils", () => ({
   generateAdmissionNumber: jest.fn().mockReturnValue("ADM-2026-001"),
 }));
 
+// Stable mock references for per-test setup
 const mockPrisma = {
   student: {
     findFirst: jest.fn(),
@@ -19,15 +21,16 @@ const mockPrisma = {
   },
 };
 
-const mockStudent = {
+const mockStudent = StudentFactory.build({
   id: "stu-1",
   schoolId: "sch-1",
   admissionNo: "ADM-001",
-  firstName: "Ravi",
-  lastName: "Kumar",
+  fullName: "Ravi Kumar",
+  status: "ACTIVE",
+  // extra fields used in tests
   isActive: true,
   section: { gradeLevel: { name: "Grade 5" } },
-};
+}) as any;
 
 describe("StudentService", () => {
   let service: StudentService;

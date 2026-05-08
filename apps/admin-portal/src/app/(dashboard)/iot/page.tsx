@@ -4,6 +4,8 @@
  * Facility manager view: all sensors, all alerts, live status
  */
 import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
 interface SensorStatus {
   deviceId: string;
@@ -32,21 +34,6 @@ interface IoTAlert {
   acknowledged: boolean;
 }
 
-const MOCK_SENSORS: SensorStatus[] = [
-  { deviceId: "AQ-001", location: "Classroom A1", sensorType: "AIR_QUALITY", lastReading: { co2_ppm: 850, pm25_ugm3: 18, temperature_c: 24.5, humidity_pct: 58 }, lastSeen: new Date().toISOString(), status: "OK" },
-  { deviceId: "AQ-002", location: "Classroom B3", sensorType: "AIR_QUALITY", lastReading: { co2_ppm: 1120, pm25_ugm3: 22, temperature_c: 26.1, humidity_pct: 65 }, lastSeen: new Date().toISOString(), status: "ALERT" },
-  { deviceId: "AQ-003", location: "Library", sensorType: "AIR_QUALITY", lastReading: { co2_ppm: 620, pm25_ugm3: 12, temperature_c: 22.0, humidity_pct: 50 }, lastSeen: new Date().toISOString(), status: "OK" },
-  { deviceId: "EM-001", location: "Block A - Floor 1", sensorType: "ELECTRICITY", lastReading: { kwh: 142.5 }, lastSeen: new Date().toISOString(), status: "OK" },
-  { deviceId: "EM-002", location: "Block B - Floor 2", sensorType: "ELECTRICITY", lastReading: { kwh: 287.3 }, lastSeen: new Date().toISOString(), status: "WARNING" },
-  { deviceId: "WM-001", location: "Block A", sensorType: "WATER", lastReading: { liters: 1840 }, lastSeen: new Date().toISOString(), status: "OK" },
-  { deviceId: "OC-001", location: "Classroom A1", sensorType: "OCCUPANCY", lastReading: { occupied: true }, lastSeen: new Date().toISOString(), status: "OK" },
-  { deviceId: "OC-002", location: "Lab-1", sensorType: "OCCUPANCY", lastReading: { occupied: false }, lastSeen: new Date(Date.now() - 3600000 * 2).toISOString(), status: "OFFLINE" },
-];
-
-const MOCK_ALERTS: IoTAlert[] = [
-  { id: "a1", location: "Classroom B3", type: "AIR_QUALITY_CO2", message: "CO2 level: 1120 ppm (limit: 1000 ppm)", severity: "HIGH", triggeredAt: new Date(Date.now() - 300000).toISOString(), acknowledged: false },
-  { id: "a2", location: "Block B - Floor 2", type: "ENERGY_SPIKE", message: "Energy consumption 287 kWh — 45% above baseline", severity: "MEDIUM", triggeredAt: new Date(Date.now() - 1800000).toISOString(), acknowledged: false },
-];
 
 const statusColor: Record<string, string> = {
   OK: "bg-green-100 text-green-800",
@@ -62,20 +49,47 @@ const severityColor: Record<string, string> = {
 };
 
 export default function IotDashboardPage() {
-  const [sensors] = useState<SensorStatus[]>(MOCK_SENSORS);
-  const [alerts, setAlerts] = useState<IoTAlert[]>(MOCK_ALERTS);
+  const qc = useQueryClient();
   const [filter, setFilter] = useState<string>("ALL");
   const [lastRefresh, setLastRefresh] = useState(new Date());
 
+  const { data: sensors = [], isLoading: sensorsLoading, error: sensorsError } = useQuery<SensorStatus[]>({
+    queryKey: ["iot-sensors"],
+    queryFn: async () => {
+      const res = await api.get("/iot/sensors");
+      return res.data?.data ?? [];
+    },
+    refetchInterval: 30000,
+  });
+
+  const { data: alerts = [], isLoading: alertsLoading, error: alertsError } = useQuery<IoTAlert[]>({
+    queryKey: ["iot-alerts"],
+    queryFn: async () => {
+      const res = await api.get("/iot/alerts");
+      return res.data?.data ?? [];
+    },
+    refetchInterval: 30000,
+  });
+
   useEffect(() => {
-    const interval = setInterval(() => setLastRefresh(new Date()), 30000);
+    const interval = setInterval(() => {
+      setLastRefresh(new Date());
+      qc.invalidateQueries({ queryKey: ["iot-sensors"] });
+      qc.invalidateQueries({ queryKey: ["iot-alerts"] });
+    }, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [qc]);
+
+  if (sensorsLoading || alertsLoading) return <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" /></div>;
+  if (sensorsError || alertsError) return <div className="p-4 text-red-500">Failed to load data. Please try again.</div>;
 
   const filtered = filter === "ALL" ? sensors : sensors.filter(s => s.sensorType === filter || s.status === filter);
   const counts = { OK: sensors.filter(s => s.status === "OK").length, WARNING: sensors.filter(s => s.status === "WARNING").length, ALERT: sensors.filter(s => s.status === "ALERT").length, OFFLINE: sensors.filter(s => s.status === "OFFLINE").length };
 
-  const acknowledgeAlert = (id: string) => setAlerts(prev => prev.map(a => a.id === id ? { ...a, acknowledged: true } : a));
+  const acknowledgeAlert = async (id: string) => {
+    await api.patch(`/iot/alerts/${id}/acknowledge`);
+    qc.invalidateQueries({ queryKey: ["iot-alerts"] });
+  };
 
   return (
     <div className="p-6 space-y-6">

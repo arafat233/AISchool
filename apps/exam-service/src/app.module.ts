@@ -5,6 +5,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { PrismaModule } from "@school-erp/database";
 import { ExamModule } from "./exam/exam.module";
 import { OnlineExamModule } from "./online-exam/online-exam.module";
+import { PlagiarismModule } from "./plagiarism/plagiarism.module";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { OnlineExamModule } from "./online-exam/online-exam.module";
     PrismaModule,
     ExamModule,
     OnlineExamModule,
+    PlagiarismModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

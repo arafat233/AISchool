@@ -51,8 +51,8 @@ export class StudentController {
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Post("promote")
   @HttpCode(HttpStatus.OK)
-  promote(@Body() dto: PromoteStudentDto) {
-    return this.studentService.promote(dto);
+  promote(@Req() req: Request & { user: RequestUser }, @Body() dto: PromoteStudentDto) {
+    return this.studentService.promote(req.user.schoolId!, dto);
   }
 
   @Roles("ADMIN", "SUPER_ADMIN")

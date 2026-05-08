@@ -10,7 +10,7 @@ import {
 } from "@nestjs/swagger";
 import { Prisma } from "@prisma/client";
 import { ApiKeyGuard, ApiKeyContext } from "../auth/api-key.guard";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 @ApiTags("Students")
 @ApiSecurity("ApiKeyAuth")

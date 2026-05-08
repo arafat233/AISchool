@@ -16,5 +16,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/scholarship-service/dist ./apps/scholarship-service/dist
 COPY --from=builder /app/apps/scholarship-service/package.json ./apps/scholarship-service/package.json
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nestjs
+USER nestjs
 EXPOSE 3019
 CMD ["node", "apps/scholarship-service/dist/main.js"]

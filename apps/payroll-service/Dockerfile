@@ -16,5 +16,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/payroll-service/dist ./apps/payroll-service/dist
 COPY --from=builder /app/apps/payroll-service/package.json ./apps/payroll-service/package.json
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nestjs
+USER nestjs
 EXPOSE 3011
 CMD ["node", "apps/payroll-service/dist/main.js"]

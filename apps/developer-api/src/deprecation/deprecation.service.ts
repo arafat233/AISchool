@@ -11,7 +11,7 @@
  *  4. 30-day reminder and 7-day final warning auto-sent
  */
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 import axios from "axios";
 
 export interface DeprecationNotice {
@@ -73,6 +73,40 @@ export class DeprecationService {
       }
     }
     return {};
+  }
+
+  /**
+   * Returns a structured deprecation status for a given endpoint.
+   * Suitable for returning directly from a status endpoint.
+   */
+  async checkDeprecation(
+    method: string,
+    path: string,
+  ): Promise<{ deprecated: boolean; message: string; sunsetDate: string | null; replacedBy: string | null }> {
+    const notices = await this.prisma.$queryRaw<any[]>`
+      SELECT endpoint_pattern, sunset_date, replaced_by
+      FROM api_deprecation_notices
+      WHERE sunset_date > NOW()
+    `;
+
+    for (const n of notices) {
+      const pattern = n.endpoint_pattern.replace(/:[\w]+/g, "[^/]+");
+      if (new RegExp(`^${pattern}$`).test(`${method} ${path}`)) {
+        return {
+          deprecated: true,
+          message: `This endpoint is deprecated and will be removed on ${new Date(n.sunset_date).toDateString()}.${n.replaced_by ? ` Please migrate to: ${n.replaced_by}` : ""}`,
+          sunsetDate: new Date(n.sunset_date).toISOString(),
+          replacedBy: n.replaced_by ?? null,
+        };
+      }
+    }
+
+    return {
+      deprecated: false,
+      message: "This endpoint is not deprecated.",
+      sunsetDate: null,
+      replacedBy: null,
+    };
   }
 
   async listDeprecations() {

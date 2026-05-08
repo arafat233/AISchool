@@ -8,10 +8,12 @@ export class EmailAdapter {
   private transporter: nodemailer.Transporter;
 
   constructor() {
+    const apiKey = process.env.SENDGRID_API_KEY;
+    if (!apiKey) throw new Error("SENDGRID_API_KEY environment variable is not set");
     this.transporter = nodemailer.createTransport({
       host: "smtp.sendgrid.net",
       port: 587,
-      auth: { user: "apikey", pass: process.env.SENDGRID_API_KEY },
+      auth: { user: "apikey", pass: apiKey },
     });
   }
 

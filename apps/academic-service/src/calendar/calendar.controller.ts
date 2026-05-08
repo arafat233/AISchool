@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, ForbiddenException, Get, Param, Patch, Post, Query, Req, Res, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import type { Request, Response } from "express";
 import type { RequestUser } from "@school-erp/types";
@@ -20,15 +20,17 @@ export class CalendarController {
     });
   }
 
+  @UseGuards(AuthGuard("jwt"))
   @Get("events")
   getEvents(
+    @Req() req: Request & { user: RequestUser },
     @Query("schoolId") schoolId: string,
     @Query("from") from?: string,
     @Query("to") to?: string,
     @Query("type") type?: string,
   ) {
     return this.svc.getEvents(
-      schoolId,
+      req.user.schoolId!,
       from ? new Date(from) : undefined,
       to ? new Date(to) : undefined,
       type,
@@ -47,8 +49,10 @@ export class CalendarController {
     return this.svc.deleteEvent(id);
   }
 
+  @UseGuards(AuthGuard("jwt"))
   @Get("ical/:schoolId")
-  async getICal(@Param("schoolId") schoolId: string, @Res() res: Response) {
+  async getICal(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Res() res: Response) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     const ical = await this.svc.generateICal(schoolId);
     res.setHeader("Content-Type", "text/calendar; charset=utf-8");
     res.setHeader("Content-Disposition", "attachment; filename=school-calendar.ics");

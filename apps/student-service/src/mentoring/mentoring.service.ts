@@ -5,7 +5,7 @@
  * Meeting logs, effectiveness tracking, mentor recognition.
  */
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 @Injectable()
 export class MentoringService {

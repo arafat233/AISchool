@@ -6,7 +6,7 @@
  * government compliance reports.
  */
 import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 
 export type DisabilityType = "VISUAL_IMPAIRMENT" | "HEARING_IMPAIRMENT" | "LOCOMOTOR_DISABILITY"
   | "INTELLECTUAL_DISABILITY" | "AUTISM_SPECTRUM" | "LEARNING_DISABILITY"

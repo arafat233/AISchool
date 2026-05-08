@@ -10,7 +10,7 @@
  */
 import { Injectable, Logger } from "@nestjs/common";
 import { randomBytes } from "crypto";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 import { google } from "googleapis";
 import axios from "axios";
 

@@ -15,6 +15,14 @@ const config: Config = {
   testMatch: ["**/__tests__/**/*.{ts,tsx}", "**/*.{spec,test}.{ts,tsx}"],
   collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/*.d.ts"],
   moduleDirectories: ["node_modules", "<rootDir>/src"],
+  coverageThreshold: {
+    global: {
+      branches: 40,
+      functions: 50,
+      lines: 50,
+      statements: 50,
+    },
+  },
 };
 
 export default config;

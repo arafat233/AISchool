@@ -1,5 +1,7 @@
-import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, Post, Patch, Param, Query, Body, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import type { Request } from "express";
+import type { RequestUser } from "@school-erp/types";
 import { AssetService } from "./asset.service";
 import { RegisterAssetDto, UpdateAssetDto, LogAssetMaintenanceDto, CreateInsurancePolicyDto } from "./dto/asset.dto";
 
@@ -9,7 +11,8 @@ export class AssetController {
   constructor(private readonly svc: AssetService) {}
 
   @Post(":schoolId")
-  registerAsset(@Param("schoolId") schoolId: string, @Body() dto: RegisterAssetDto) {
+  registerAsset(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: RegisterAssetDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.registerAsset(schoolId, { ...dto, purchaseDate: new Date(dto.purchaseDate) });
   }
 
@@ -19,12 +22,14 @@ export class AssetController {
   }
 
   @Get(":schoolId")
-  getAssets(@Param("schoolId") schoolId: string, @Query("category") category?: string, @Query("condition") condition?: string) {
+  getAssets(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("category") category?: string, @Query("condition") condition?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getAssets(schoolId, category, condition);
   }
 
   @Post(":schoolId/depreciate")
-  runDepreciation(@Param("schoolId") schoolId: string) {
+  runDepreciation(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.runDepreciation(schoolId);
   }
 
@@ -54,17 +59,20 @@ export class AssetController {
   }
 
   @Get(":schoolId/maintenance/due")
-  getAssetsDueService(@Param("schoolId") schoolId: string) {
+  getAssetsDueService(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getAssetsDueService(schoolId);
   }
 
   @Post(":schoolId/insurance")
-  createPolicy(@Param("schoolId") schoolId: string, @Body() dto: CreateInsurancePolicyDto) {
+  createPolicy(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() dto: CreateInsurancePolicyDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createInsurancePolicy(schoolId, { ...dto, startDate: new Date(dto.startDate), endDate: new Date(dto.endDate) });
   }
 
   @Get(":schoolId/insurance/expiring")
-  getExpiring(@Param("schoolId") schoolId: string, @Query("daysAhead") daysAhead?: string) {
+  getExpiring(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("daysAhead") daysAhead?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getExpiringPolicies(schoolId, daysAhead ? parseInt(daysAhead) : undefined);
   }
 
@@ -79,12 +87,14 @@ export class AssetController {
   }
 
   @Get(":schoolId/insurance")
-  getPolicies(@Param("schoolId") schoolId: string) {
+  getPolicies(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getPolicies(schoolId);
   }
 
   @Post(":schoolId/verification/start")
-  startVerification(@Param("schoolId") schoolId: string, @Body() body: { conductedBy: string }) {
+  startVerification(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { conductedBy: string }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.startVerification(schoolId, body.conductedBy);
   }
 
@@ -94,7 +104,8 @@ export class AssetController {
   }
 
   @Get(":schoolId/verifications")
-  getVerifications(@Param("schoolId") schoolId: string) {
+  getVerifications(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getVerifications(schoolId);
   }
 }

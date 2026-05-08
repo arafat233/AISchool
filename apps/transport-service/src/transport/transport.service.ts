@@ -208,6 +208,10 @@ export class TransportService implements OnModuleInit {
   async ingestGpsLocation(gpsDeviceId: string, data: {
     lat: number; lng: number; speedKmh?: number; heading?: number;
   }) {
+    // Validate coordinate bounds
+    if (typeof data.lat !== "number" || data.lat < -90 || data.lat > 90) return;
+    if (typeof data.lng !== "number" || data.lng < -180 || data.lng > 180) return;
+
     const vehicle = await this.prisma.vehicle.findFirst({ where: { gpsDeviceId } });
     if (!vehicle) return;
 

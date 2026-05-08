@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler";
 import { APP_GUARD } from "@nestjs/core";
 import { ConfigModule } from "@nestjs/config";
-import { PrismaModule } from "./prisma/prisma.module";
+import { PrismaModule } from "@school-erp/database";
 import { WebhookController } from "./webhooks/webhook.controller";
 import { WebhookService } from "./webhooks/webhook.service";
 import { WebhookProcessor } from "./webhooks/webhook.processor";

@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Param, Query, Body, UseGuards } from "@nestjs/common";
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { Controller, ForbiddenException, Get, Post, Param, Query, Body, Req, UseGuards } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import type { Request } from "express";
+import type { RequestUser } from "@school-erp/types";
 import { CafeteriaService } from "./cafeteria.service";
 import { CreateMenuItemDto, UpsertFssaiDto, AddFssaiStaffCertDto, LogFoodSampleDto } from "../dto/academic.dto";
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(AuthGuard("jwt"))
 @Controller("cafeteria")
 export class CafeteriaController {
   constructor(private readonly svc: CafeteriaService) {}
@@ -11,29 +13,34 @@ export class CafeteriaController {
   // ─── Menu management ──────────────────────────────────────────────────── [1/8]
 
   @Post(":schoolId/menu-items")
-  createMenuItem(@Param("schoolId") schoolId: string, @Body() body: CreateMenuItemDto) {
+  createMenuItem(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: CreateMenuItemDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.createMenuItem(schoolId, body);
   }
 
   @Get(":schoolId/menu-items")
-  getMenuItems(@Param("schoolId") schoolId: string, @Query("mealType") mealType?: string) {
+  getMenuItems(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("mealType") mealType?: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getMenuItems(schoolId, mealType);
   }
 
   @Post(":schoolId/menu/day")
-  publishDayMenu(@Param("schoolId") schoolId: string, @Body() body: { date: string; items: any[]; createdBy: string }) {
+  publishDayMenu(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { date: string; items: any[]; createdBy: string }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.publishDayMenu(schoolId, new Date(body.date), body.items, body.createdBy);
   }
 
   @Get(":schoolId/menu/day")
-  getDayMenu(@Param("schoolId") schoolId: string, @Query("date") date: string) {
+  getDayMenu(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("date") date: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getDayMenu(schoolId, new Date(date));
   }
 
   // ─── Pre-order system ─────────────────────────────────────────────────── [2/8]
 
   @Post(":schoolId/orders")
-  placeOrder(@Param("schoolId") schoolId: string, @Body() body: { studentId: string; orderDate: string; items: any[] }) {
+  placeOrder(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { studentId: string; orderDate: string; items: any[] }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.placeOrder(schoolId, body.studentId, new Date(body.orderDate), body.items);
   }
 
@@ -64,14 +71,16 @@ export class CafeteriaController {
   // ─── POS billing ─────────────────────────────────────────────────────── [5/8]
 
   @Post(":schoolId/pos/bill")
-  posBill(@Param("schoolId") schoolId: string, @Body() body: { studentId: string; items: any[] }) {
+  posBill(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: { studentId: string; items: any[] }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.posBill(schoolId, body.studentId, body.items);
   }
 
   // ─── Kitchen order summary ────────────────────────────────────────────── [6/8]
 
   @Get(":schoolId/kitchen-summary")
-  getKitchenSummary(@Param("schoolId") schoolId: string, @Query("date") date: string) {
+  getKitchenSummary(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Query("date") date: string) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getKitchenSummary(schoolId, new Date(date));
   }
 
@@ -80,39 +89,47 @@ export class CafeteriaController {
   @Get(":schoolId/nutrition/:studentId")
   getNutrition(
     @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Param("studentId") studentId: string,
     @Query("month") month: string,
   ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getNutritionalAnalysis(schoolId, studentId, month);
   }
 
   // ─── FSSAI compliance ─────────────────────────────────────────────────── [8/8]
 
   @Post(":schoolId/fssai")
-  upsertFssai(@Param("schoolId") schoolId: string, @Body() body: UpsertFssaiDto) {
+  upsertFssai(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: UpsertFssaiDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.upsertFssai(schoolId, body);
   }
 
   @Get(":schoolId/fssai")
-  getFssai(@Param("schoolId") schoolId: string) {
+  getFssai(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getFssai(schoolId);
   }
 
   @Post(":schoolId/fssai/staff-cert")
-  addStaffCert(@Param("schoolId") schoolId: string, @Body() body: AddFssaiStaffCertDto) {
+  addStaffCert(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: AddFssaiStaffCertDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.addFssaiStaffCert(schoolId, body);
   }
 
   @Post(":schoolId/fssai/checklist")
   submitChecklist(
     @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Body() body: { month: string; items: any[]; completedBy: string },
   ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.submitSafetyChecklist(schoolId, body.month, body.items, body.completedBy);
   }
 
   @Post(":schoolId/fssai/sample")
-  logSample(@Param("schoolId") schoolId: string, @Body() body: LogFoodSampleDto) {
+  logSample(@Param("schoolId") schoolId: string, @Req() req: Request & { user: RequestUser }, @Body() body: LogFoodSampleDto) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.logFoodSample(schoolId, {
       ...body,
       sampleDate: new Date(body.sampleDate),

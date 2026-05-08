@@ -63,7 +63,7 @@ export class AuthService {
       if (!dto.totpCode) {
         throw new TwoFactorRequiredError();
       }
-      const valid = this.totpService.verify(user.twoFactorAuth.secret!, dto.totpCode);
+      const valid = await this.totpService.verifyWithReplayProtection(user.id, user.twoFactorAuth.secret!, dto.totpCode);
       if (!valid) throw new InvalidOtpError();
     }
 
@@ -135,8 +135,11 @@ export class AuthService {
     return this.tokenService.refreshAccessToken(refreshToken, ipAddress);
   }
 
-  async logout(userId: string, refreshToken: string) {
+  async logout(userId: string, refreshToken: string, accessToken?: string) {
     await this.tokenService.revokeRefreshToken(refreshToken);
+    if (accessToken) {
+      await this.tokenService.blacklistAccessToken(accessToken);
+    }
     await this.prisma.auditLog.create({
       data: {
         tenantId: (await this.prisma.user.findUniqueOrThrow({ where: { id: userId } })).tenantId,
@@ -213,7 +216,7 @@ export class AuthService {
 
   async verifyAndEnableTotp(userId: string, code: string) {
     const twoFactor = await this.prisma.twoFactorAuth.findUniqueOrThrow({ where: { userId } });
-    const valid = this.totpService.verify(twoFactor.secret!, code);
+    const valid = await this.totpService.verifyWithReplayProtection(userId, twoFactor.secret!, code);
     if (!valid) throw new InvalidOtpError();
 
     await this.prisma.twoFactorAuth.update({

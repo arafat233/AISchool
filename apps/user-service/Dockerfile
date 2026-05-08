@@ -24,6 +24,8 @@ ENV NODE_ENV=production
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/apps/user-service/dist ./apps/user-service/dist
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nestjs
+USER nestjs
 EXPOSE 3002
 HEALTHCHECK --interval=30s --timeout=5s CMD wget -qO- http://localhost:3002/users/health || exit 1
 CMD ["node", "apps/user-service/dist/main.js"]

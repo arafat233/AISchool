@@ -5,6 +5,7 @@ export interface JwtPayload {
   tenantId: string;
   schoolId?: string;
   plan: string;
+  jti?: string;
   iat?: number;
   exp?: number;
 }

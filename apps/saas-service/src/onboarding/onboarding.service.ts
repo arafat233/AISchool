@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
+import { SaasNotificationService } from "../notification/saas-notification.service";
 
 /**
  * Onboarding wizard — 8 steps for a new school going live:
@@ -27,7 +28,10 @@ type Step = typeof STEPS[number];
 
 @Injectable()
 export class OnboardingService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notify: SaasNotificationService,
+  ) {}
 
   async getChecklist(tenantId: string) {
     let checklist = await this.prisma.onboardingChecklist.findFirst({ where: { tenantId } });
@@ -71,9 +75,22 @@ export class OnboardingService {
       },
     });
 
-    // On go_live completion — activate tenant
+    // On go_live completion — activate tenant and notify
     if (step === "go_live" && allDone) {
-      await this.prisma.tenant.update({ where: { id: tenantId }, data: { status: "ACTIVE" } });
+      const tenant = await this.prisma.tenant.update({ where: { id: tenantId }, data: { status: "ACTIVE" } });
+      if (tenant.contactEmail) {
+        await this.notify.send({
+          to: tenant.contactEmail,
+          tenantId,
+          eventType: "GO_LIVE",
+          vars: {
+            school_name: tenant.name,
+            contact_name: tenant.contactEmail,
+            plan: tenant.plan,
+            portal_url: process.env.PORTAL_URL ?? "https://app.aischool.in",
+          },
+        });
+      }
     }
 
     const completedCount = Object.values(steps).filter((s) => s.completed).length;

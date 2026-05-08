@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
+import { SaasNotificationService } from "../notification/saas-notification.service";
 import { CreateTenantDto, UpdateTenantDto, ChangePlanDto, UpdateStatusDto, SubscriptionPlan } from "./tenant.dto";
 import { v4 as uuidv4 } from "uuid";
 
@@ -21,7 +22,10 @@ const PLAN_FEATURES: Record<string, string[]> = {
 
 @Injectable()
 export class TenantService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notify: SaasNotificationService,
+  ) {}
 
   async createTenant(dto: CreateTenantDto) {
     const tenant = await this.prisma.tenant.create({
@@ -93,11 +97,32 @@ export class TenantService {
   }
 
   async activateTenant(id: string) {
+    const paidInvoices = await this.prisma.saasInvoice.count({
+      where: { tenantId: id, status: "PAID" },
+    });
+    if (paidInvoices === 0) {
+      throw new BadRequestException("Cannot activate tenant: no paid invoice on record");
+    }
     return this.updateStatus(id, { status: "ACTIVE" as any });
   }
 
   async suspendTenant(id: string, reason?: string) {
-    return this.updateStatus(id, { status: "SUSPENDED" as any, reason });
+    const tenant = await this.getTenant(id);
+    const updated = await this.updateStatus(id, { status: "SUSPENDED" as any, reason });
+    if (tenant.contactEmail) {
+      await this.notify.send({
+        to: tenant.contactEmail,
+        tenantId: id,
+        eventType: "SUSPENSION_NOTICE",
+        vars: {
+          school_name: tenant.name,
+          contact_name: tenant.contactEmail,
+          reason: reason ?? "Policy violation or overdue payment",
+          billing_url: process.env.BILLING_URL ?? "https://app.aischool.in/subscription",
+        },
+      });
+    }
+    return updated;
   }
 
   async getSummary() {

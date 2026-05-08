@@ -2,7 +2,7 @@
  * Plagiarism service — wraps queue enqueuing and result retrieval.
  */
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "@school-erp/database";
 import { enqueuePlagiarismScan, PlagiarismJob } from "./plagiarism.queue";
 
 @Injectable()

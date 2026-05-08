@@ -39,6 +39,8 @@ export class HrController {
     return this.staff.createStaff(req.user.schoolId!, { ...body, joinDate: new Date(body.joinDate) });
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL", "VICE_PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Get("staff")
   listStaff(
     @Req() req: Request & { user: RequestUser },
@@ -56,6 +58,8 @@ export class HrController {
     );
   }
 
+  @Roles("ADMIN", "SUPER_ADMIN", "HR_MANAGER", "PRINCIPAL", "VICE_PRINCIPAL")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Get("staff/:id")
   getStaff(@Param("id") id: string) {
     return this.staff.getStaff(id);

@@ -2,7 +2,7 @@ import { IsString, IsOptional, IsNumber, IsArray, IsDateString, IsBoolean, Min }
 
 export class RecordExpenseDto {
   @IsString() recordedBy: string;
-  @IsString() expenseType: string;
+  @IsString() type: string;
   @IsString() description: string;
   @IsNumber() @Min(0) amountRs: number;
   @IsDateString() paymentDate: string;

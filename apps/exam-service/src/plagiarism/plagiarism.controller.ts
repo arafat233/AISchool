@@ -6,10 +6,12 @@
  *  - Admin portal (GET /plagiarism/report/:schoolId — trend across classes/terms)
  */
 import {
-  Controller, Get, Post, Body, Param, Query, UseGuards,
+  Controller, ForbiddenException, Get, Post, Body, Param, Query, Req, UseGuards,
 } from "@nestjs/common";
+import type { Request } from "express";
+import type { RequestUser } from "@school-erp/types";
 import { PlagiarismService } from "./plagiarism.service";
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 
 class TriggerScanDto {
   submissionId!: string;
@@ -54,9 +56,11 @@ export class PlagiarismController {
   @Get("trend/:schoolId")
   async trendReport(
     @Param("schoolId") schoolId: string,
+    @Req() req: Request & { user: RequestUser },
     @Query("classId") classId?: string,
     @Query("termId") termId?: string,
   ) {
+    if (schoolId !== req.user.schoolId) throw new ForbiddenException();
     return this.svc.getTrendReport({ schoolId, classId, termId });
   }
 }
