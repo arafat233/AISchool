@@ -26,7 +26,8 @@ class TestCohortAnalysis:
         resp = client.get("/cohort/s1")
         assert resp.status_code == 200
         data = resp.json()
-        if data:
-            item = data[0]
-            assert "cohort_year" in item
-            assert "progression_rate_pct" in item
+        assert isinstance(data, list)
+        assert len(data) > 0
+        item = data[0]
+        assert "cohort_year" in item
+        assert "progression_rate_pct" in item

@@ -1,9 +1,14 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { TenantService } from "./tenant.service";
+import { SaasNotificationService } from "../notification/saas-notification.service";
 import { NotFoundException } from "@nestjs/common";
 
+const mockNotify = { send: jest.fn().mockResolvedValue(undefined) };
+
 const mockPrisma = {
-  tenant: { create: jest.fn(), findMany: jest.fn(), findUnique: jest.fn(), update: jest.fn() },
+  saasInvoice: { count: jest.fn() },
+  tenant: { create: jest.fn(), findMany: jest.fn(), findUnique: jest.fn(), update: jest.fn(), count: jest.fn() },
+  school: { findMany: jest.fn() },
 };
 
 describe("TenantService", () => {
@@ -12,7 +17,11 @@ describe("TenantService", () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TenantService, { provide: require("@school-erp/database").PrismaService, useValue: mockPrisma }],
+      providers: [
+        TenantService,
+        { provide: require("@school-erp/database").PrismaService, useValue: mockPrisma },
+        { provide: SaasNotificationService, useValue: mockNotify },
+      ],
     }).compile();
     service = module.get<TenantService>(TenantService);
   });
@@ -73,6 +82,23 @@ describe("TenantService", () => {
       await service.listTenants("ACTIVE");
       expect(mockPrisma.tenant.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: { status: "ACTIVE" } })
+      );
+    });
+  });
+
+  describe("suspendTenant", () => {
+    it("should suspend tenant and send SUSPENSION_NOTICE notification", async () => {
+      mockPrisma.tenant.findUnique
+        .mockResolvedValueOnce({ id: "t-1", name: "School A", contactEmail: "admin@school.in" }) // getTenant in suspendTenant
+        .mockResolvedValueOnce({ id: "t-1", name: "School A" }); // getTenant inside updateStatus
+      mockPrisma.tenant.update.mockResolvedValueOnce({ id: "t-1", status: "SUSPENDED" });
+
+      await service.suspendTenant("t-1", "Overdue payment");
+      expect(mockPrisma.tenant.update).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ status: "SUSPENDED" }) })
+      );
+      expect(mockNotify.send).toHaveBeenCalledWith(
+        expect.objectContaining({ eventType: "SUSPENSION_NOTICE", to: "admin@school.in" })
       );
     });
   });

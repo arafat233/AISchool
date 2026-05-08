@@ -1,9 +1,11 @@
-import { ValidationPipe } from "@nestjs/common";
+﻿import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import helmet from "helmet";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const cookieParser = require("cookie-parser");
 
 import { LoggerService } from "@school-erp/logger";
+import { AllExceptionsFilter } from "@school-erp/utils";
 
 import { AppModule } from "./app.module";
 
@@ -12,6 +14,7 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
+  app.use(helmet());
   const logger = new LoggerService("AuthService");
   app.useLogger(logger);
 
@@ -27,8 +30,9 @@ async function bootstrap() {
       transformOptions: { enableImplicitConversion: true },
     }),
   );
+  app.useGlobalFilters(new AllExceptionsFilter());
 
-  // CORS — only allow configured frontend origin
+  // CORS â€” only allow configured frontend origin
   app.enableCors({
     origin: process.env.FRONTEND_URL || "http://localhost:3100",
     credentials: true,

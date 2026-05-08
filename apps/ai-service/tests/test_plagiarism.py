@@ -13,10 +13,9 @@ class TestPlagiarismDetect:
             ],
         }
         resp = client.post("/plagiarism/detect", json=payload)
-        assert resp.status_code in (200, 422)
-        if resp.status_code == 200:
-            data = resp.json()
-            assert "similarity_score" in data or "results" in data or isinstance(data, list)
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "similarity_score" in data or "results" in data or isinstance(data, list)
 
     def test_identical_text_gets_high_score(self, client, mock_db):
         mock_db._rows = []
@@ -28,12 +27,12 @@ class TestPlagiarismDetect:
             "compare_against": [{"id": "ref1", "text": text}],
         }
         resp = client.post("/plagiarism/detect", json=payload)
-        if resp.status_code == 200:
-            data = resp.json()
-            # Score for identical text should be near 1.0 (or 100%)
-            score = data.get("similarity_score") or (data[0].get("similarity") if isinstance(data, list) else None)
-            if score is not None:
-                assert float(score) >= 0.9
+        assert resp.status_code == 200
+        data = resp.json()
+        # Score for identical text should be near 1.0 (or 100%)
+        score = data.get("similarity_score") or (data[0].get("similarity") if isinstance(data, list) else None)
+        assert score is not None
+        assert float(score) >= 0.9
 
 
 class TestPlagiarismReport:

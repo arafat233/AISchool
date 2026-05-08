@@ -84,6 +84,14 @@
       "^@react-navigation/native-stack$": "<rootDir>/__mocks__/@react-navigation/native-stack.ts",
       "^@react-navigation/bottom-tabs$": "<rootDir>/__mocks__/@react-navigation/bottom-tabs.ts",
       "^axios$": "<rootDir>/__mocks__/axios.ts"
+    },
+    "coverageThreshold": {
+      "global": {
+        "branches": 40,
+        "functions": 50,
+        "lines": 50,
+        "statements": 50
+      }
     }
   }
 }

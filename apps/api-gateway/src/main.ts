@@ -1,7 +1,9 @@
 import { NestFactory } from '@nestjs/core';
+import helmet from '@nestjs/helmet';
 import { AppModule } from './app.module';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { LoggerService } from '@school-erp/logger';
+import { AllExceptionsFilter } from '@school-erp/utils';
 import { PROXY_ROUTES } from './proxy/proxy.config';
 
 async function bootstrap(): Promise<void> {
@@ -11,8 +13,10 @@ async function bootstrap(): Promise<void> {
     bufferLogs: true,
   });
 
+  app.use(helmet());
   const logger = new LoggerService('ApiGateway');
   app.useLogger(logger);
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   const expressApp = app.getHttpAdapter().getInstance();
 

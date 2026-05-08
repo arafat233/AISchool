@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole, UserStatus } from "@prisma/client";
+import { PrismaClient, UserRole, UserStatus, NotificationChannel } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -38,6 +38,69 @@ async function main() {
     });
     console.log(`Seeded: ${u.email} (${u.role})`);
   }
+  // ── Notification Templates ──────────────────────────────────────────────────
+  const templates = [
+    {
+      id: "tpl-go-live",
+      eventType: "GO_LIVE",
+      channel: NotificationChannel.EMAIL,
+      language: "en",
+      subject: "🎉 {{school_name}} is now live on AISchool!",
+      body: `Dear {{contact_name}},\n\nCongratulations! Your school "{{school_name}}" has successfully completed onboarding and is now live.\n\nYou are on the {{plan}} plan. Log in at {{portal_url}}.\n\nWelcome aboard!\nThe AISchool Team`,
+      variables: ["school_name", "contact_name", "plan", "portal_url"],
+      isActive: true,
+    },
+    {
+      id: "tpl-trial-expiry",
+      eventType: "TRIAL_EXPIRY_WARNING",
+      channel: NotificationChannel.EMAIL,
+      language: "en",
+      subject: "⚠️ Your AISchool trial ends in {{days_left}} days",
+      body: `Dear {{contact_name}},\n\nYour trial for "{{school_name}}" expires on {{expiry_date}}.\n\nUpgrade at {{billing_url}} to continue without interruption.\n\nThe AISchool Team`,
+      variables: ["contact_name", "school_name", "days_left", "expiry_date", "billing_url"],
+      isActive: true,
+    },
+    {
+      id: "tpl-monthly-invoice",
+      eventType: "MONTHLY_INVOICE",
+      channel: NotificationChannel.EMAIL,
+      language: "en",
+      subject: "Invoice #{{invoice_number}} for {{month_year}} — ₹{{total_amount}}",
+      body: `Dear {{contact_name}},\n\nYour invoice for {{month_year}}:\n  Invoice #: {{invoice_number}}\n  Students: {{student_count}}\n  Total Due: ₹{{total_amount}}\n  Due Date: {{due_date}}\n\nPay at {{billing_url}}.\n\nThe AISchool Team`,
+      variables: ["contact_name", "invoice_number", "month_year", "student_count", "total_amount", "due_date", "billing_url"],
+      isActive: true,
+    },
+    {
+      id: "tpl-payment-confirmation",
+      eventType: "PAYMENT_CONFIRMATION",
+      channel: NotificationChannel.EMAIL,
+      language: "en",
+      subject: "✅ Payment Confirmed — Invoice #{{invoice_number}}",
+      body: `Dear {{contact_name}},\n\nPayment of ₹{{total_amount}} received via {{payment_method}} (Txn: {{txn_ref}}) on {{payment_date}}.\n\nThank you!\nThe AISchool Team`,
+      variables: ["contact_name", "invoice_number", "total_amount", "payment_method", "txn_ref", "payment_date"],
+      isActive: true,
+    },
+    {
+      id: "tpl-suspension-notice",
+      eventType: "SUSPENSION_NOTICE",
+      channel: NotificationChannel.EMAIL,
+      language: "en",
+      subject: "🔴 Your AISchool account has been suspended",
+      body: `Dear {{contact_name}},\n\nYour account for "{{school_name}}" has been suspended.\n\nReason: {{reason}}\n\nContact billing@aischool.in or visit {{billing_url}} to reactivate.\n\nThe AISchool Team`,
+      variables: ["contact_name", "school_name", "reason", "billing_url"],
+      isActive: true,
+    },
+  ];
+
+  for (const tpl of templates) {
+    await (prisma as any).notificationTemplate.upsert({
+      where: { id: tpl.id },
+      update: {},
+      create: { ...tpl, schoolId: null },
+    });
+    console.log(`Seeded template: ${tpl.eventType}`);
+  }
+
   console.log("\nDone. Password for all: Admin@123!");
 }
 

@@ -13,3 +13,11 @@ ortools==9.11.4210
 anthropic==0.34.2
 python-multipart==0.0.12
 scipy==1.14.1
+# RAG dependencies
+fastembed==0.4.2          # local embeddings — replaces OpenAI, zero API cost
+openai==1.51.2            # retained; not used for RAG embeddings
+pypdf==4.3.1
+python-docx==1.1.2
+tiktoken==0.7.0
+redis==5.1.1
+aiofiles==24.1.0

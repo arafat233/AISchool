@@ -1,6 +1,9 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { BillingService } from "./billing.service";
+import { SaasNotificationService } from "../notification/saas-notification.service";
 import { NotFoundException } from "@nestjs/common";
+
+const mockNotify = { send: jest.fn().mockResolvedValue(undefined) };
 
 const mockPrisma = {
   tenant: { findUnique: jest.fn(), update: jest.fn() },
@@ -13,7 +16,11 @@ describe("BillingService", () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
-      providers: [BillingService, { provide: require("@school-erp/database").PrismaService, useValue: mockPrisma }],
+      providers: [
+        BillingService,
+        { provide: require("@school-erp/database").PrismaService, useValue: mockPrisma },
+        { provide: SaasNotificationService, useValue: mockNotify },
+      ],
     }).compile();
     service = module.get<BillingService>(BillingService);
   });
@@ -23,7 +30,7 @@ describe("BillingService", () => {
       // BASIC plan: ≤300 students → Rs 55/student
       // 200 × 55 = 11,000 base; GST 18% = 1,980; total = 12,980
       mockPrisma.tenant.findUnique.mockResolvedValueOnce({
-        id: "t-1", plan: "BASIC", subscriptionPlan: "BASIC",
+        id: "t-1", plan: "BASIC", subscriptionPlan: "BASIC", contactEmail: null,
         schools: [{ _count: { students: 200 } }],
       });
       mockPrisma.saasInvoice.create.mockResolvedValueOnce({
@@ -42,11 +49,11 @@ describe("BillingService", () => {
 
     it("should aggregate student count across multiple schools", async () => {
       mockPrisma.tenant.findUnique.mockResolvedValueOnce({
-        id: "t-1", plan: "STANDARD", subscriptionPlan: "STANDARD",
+        id: "t-1", plan: "STANDARD", subscriptionPlan: "STANDARD", contactEmail: null,
         schools: [{ _count: { students: 150 } }, { _count: { students: 200 } }],
       });
       mockPrisma.saasInvoice.create.mockResolvedValueOnce({ id: "inv-2", studentCount: 350 });
-      const result = await service.generateMonthlyInvoice("t-1", 4, 2026);
+      await service.generateMonthlyInvoice("t-1", 4, 2026);
       const createCall = mockPrisma.saasInvoice.create.mock.calls[0][0];
       expect(createCall.data.studentCount).toBe(350);
     });
@@ -54,14 +61,17 @@ describe("BillingService", () => {
 
   describe("recordPayment", () => {
     it("should mark invoice as PAID and activate tenant", async () => {
-      mockPrisma.saasInvoice.findUnique.mockResolvedValueOnce({ id: "inv-1", tenantId: "t-1" });
+      mockPrisma.saasInvoice.findUnique.mockResolvedValueOnce({ id: "inv-1", tenantId: "t-1", totalAmtRs: 12980 });
       mockPrisma.saasInvoice.update.mockResolvedValueOnce({ id: "inv-1", status: "PAID" });
-      mockPrisma.tenant.update.mockResolvedValueOnce({ id: "t-1", status: "ACTIVE" });
+      mockPrisma.tenant.update.mockResolvedValueOnce({ id: "t-1", status: "ACTIVE", contactEmail: "admin@school.in", name: "School A" });
 
       const result = await service.recordPayment("inv-1", "UPI", "UPI-TXN-123");
       expect(result.success).toBe(true);
       expect(mockPrisma.tenant.update).toHaveBeenCalledWith(
         expect.objectContaining({ data: { status: "ACTIVE" } })
+      );
+      expect(mockNotify.send).toHaveBeenCalledWith(
+        expect.objectContaining({ eventType: "PAYMENT_CONFIRMATION" })
       );
     });
 

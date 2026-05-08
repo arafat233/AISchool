@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "@school-erp/database";
+import { SaasNotificationService } from "../notification/saas-notification.service";
 
 // ─── Pricing config ─────────────────────────────────────────────────────────
 // Tiered slabs: { upTo: number (inclusive), pricePerStudent: number }
@@ -24,7 +25,10 @@ function computeMonthlyBill(plan: string, studentCount: number, isAnnual = false
 
 @Injectable()
 export class BillingService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notify: SaasNotificationService,
+  ) {}
 
   async generateMonthlyInvoice(tenantId: string, month: number, year: number) {
     const tenant = await this.prisma.tenant.findUnique({ where: { id: tenantId }, include: { schools: { select: { _count: { select: { students: true } } } } } });
@@ -39,7 +43,7 @@ export class BillingService {
         month,
         year,
         studentCount,
-        plan: tenant.subscriptionPlan,
+        plan: tenant.plan,
         baseAmtRs: bill.base,
         gstAmtRs: bill.gst,
         totalAmtRs: bill.total,
@@ -47,6 +51,29 @@ export class BillingService {
         dueDate: new Date(year, month, 10), // due on 10th of next month
       },
     });
+
+    if (tenant.contactEmail) {
+      const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      await this.notify.send({
+        to: tenant.contactEmail,
+        tenantId,
+        eventType: "MONTHLY_INVOICE",
+        vars: {
+          school_name: tenant.name,
+          contact_name: tenant.contactEmail,
+          invoice_number: invoice.id.slice(0, 8).toUpperCase(),
+          month_year: `${MONTHS[month - 1]} ${year}`,
+          student_count: studentCount,
+          plan: tenant.plan,
+          base_amount: bill.base,
+          gst_amount: bill.gst,
+          total_amount: bill.total,
+          due_date: new Date(year, month, 10).toLocaleDateString("en-IN"),
+          billing_url: process.env.BILLING_URL ?? "https://app.aischool.in/subscription",
+        },
+      });
+    }
+
     return invoice;
   }
 
@@ -66,11 +93,26 @@ export class BillingService {
       data: { status: "PAID", paidAt: new Date(), paymentMethod: method, txnRef },
     });
 
-    // Activate tenant if was trial/pending
-    await this.prisma.tenant.update({
+    const tenant = await this.prisma.tenant.update({
       where: { id: invoice.tenantId },
       data: { status: "ACTIVE" },
     });
+
+    if (tenant.contactEmail) {
+      await this.notify.send({
+        to: tenant.contactEmail,
+        tenantId: invoice.tenantId,
+        eventType: "PAYMENT_CONFIRMATION",
+        vars: {
+          contact_name: tenant.contactEmail,
+          invoice_number: invoiceId.slice(0, 8).toUpperCase(),
+          total_amount: Number(invoice.totalAmtRs),
+          payment_method: method,
+          txn_ref: txnRef,
+          payment_date: new Date().toLocaleDateString("en-IN"),
+        },
+      });
+    }
 
     return { success: true, invoiceId, method, txnRef };
   }

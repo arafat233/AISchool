@@ -11,10 +11,9 @@ class TestGradeSubjective:
             "max_marks": 5,
         }
         resp = client.post("/grading/subjective", json=payload)
-        assert resp.status_code in (200, 422)
-        if resp.status_code == 200:
-            data = resp.json()
-            assert "score" in data or "marks" in data or "feedback" in data
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "score" in data or "marks" in data or "feedback" in data
 
     def test_empty_answer_returns_low_score(self, client, mock_db):
         mock_db._rows = []
@@ -25,14 +24,15 @@ class TestGradeSubjective:
             "max_marks": 5,
         }
         resp = client.post("/grading/subjective", json=payload)
-        if resp.status_code == 200:
-            data = resp.json()
-            score = data.get("score") or data.get("marks") or 0
-            assert float(score) <= 2  # very low score expected
+        assert resp.status_code == 200
+        data = resp.json()
+        score = data.get("score") or data.get("marks") or 0
+        assert float(score) <= 2  # very low score expected
 
 
 class TestBatchGrade:
     def test_batch_endpoint_exists(self, client, mock_db):
         mock_db._rows = []
         resp = client.post("/grading/batch", json={"submissions": [], "exam_id": "e1"})
-        assert resp.status_code in (200, 404, 422)
+        assert resp.status_code == 200
+        assert isinstance(resp.json(), (list, dict))

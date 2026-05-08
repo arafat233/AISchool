@@ -26,6 +26,7 @@ import { ApiKeyService } from "./apikey/apikey.service";
 
 import { AuditController } from "./audit.controller";
 import { SaasMetricsController } from "./saas-metrics.controller";
+import { SaasNotificationService } from "./notification/saas-notification.service";
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { SaasMetricsController } from "./saas-metrics.controller";
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     JwtStrategy,
+    SaasNotificationService,
     TenantService,
     BillingService,
     HealthScoreService,
