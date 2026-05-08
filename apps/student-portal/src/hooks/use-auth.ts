@@ -24,7 +24,7 @@ export function useLogin() {
   const router = useRouter();
   const { setTokens } = useAuthStore();
   return useMutation({
-    mutationFn: (p: LoginPayload) => api.post<LoginResponse>("/auth/login", p).then((r) => r.data),
+    mutationFn: (p: LoginPayload) => { const body = { ...p }; if (!body.totpCode) delete body.totpCode; return api.post<LoginResponse>("/auth/login", body).then((r) => r.data); },
     onSuccess: (data) => {
       if (data.requiresTwoFactor) { router.push(`/verify-2fa?userId=${data.userId}`); return; }
       if (data.accessToken) {
