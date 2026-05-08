@@ -1,6 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth.store";
+import { useChildStore } from "@/store/child.store";
 import { api } from "@/lib/api";
 import toast from "react-hot-toast";
 
@@ -23,14 +24,23 @@ function decodeUser(token: string) {
 export function useLogin() {
   const router = useRouter();
   const { setTokens } = useAuthStore();
+  const { setChildren } = useChildStore();
   return useMutation({
     mutationFn: (p: LoginPayload) => { const body = { ...p }; if (!body.totpCode) delete body.totpCode; return api.post<LoginResponse>("/auth/login", body).then((r) => r.data); },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (data.requiresTwoFactor) { router.push(`/verify-2fa?userId=${data.userId}`); return; }
       if (data.accessToken) {
         const user = decodeUser(data.accessToken);
         setTokens(data.accessToken, user);
-        fetch("/api/set-token", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token: data.accessToken }) });
+        await fetch("/api/set-token", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token: data.accessToken }) });
+        // Load children linked to this parent account
+        try {
+          const res = await fetch("/api/parent/children");
+          if (res.ok) {
+            const children = await res.json();
+            setChildren(children);
+          }
+        } catch { /* non-fatal */ }
         router.push("/dashboard");
       }
     },

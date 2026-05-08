@@ -7,6 +7,10 @@ import { PrismaModule } from "@school-erp/database";
 
 import { AuthModule } from "./auth/auth.module";
 import { HealthController } from "./health/health.controller";
+import { JwtAuthGuard } from "./guards/jwt-auth.guard";
+import { RolesGuard } from "./guards/roles.guard";
+import { APP_INTERCEPTOR } from "@nestjs/core";
+import { TenantScopeInterceptor } from "./interceptors/tenant-scope.interceptor";
 
 @Module({
   imports: [
@@ -28,10 +32,10 @@ import { HealthController } from "./health/health.controller";
   ],
   controllers: [HealthController],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_INTERCEPTOR, useClass: TenantScopeInterceptor },
   ],
 })
 export class AppModule {}
