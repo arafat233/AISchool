@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import helmet from '@nestjs/helmet';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { LoggerService } from '@school-erp/logger';
