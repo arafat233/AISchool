@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "@school-erp/developer-api",
   "version": "1.0.0",
   "description": "Public REST API gateway \u00e2\u20ac\u201d API key auth, webhooks, rate limiting, usage analytics, sandbox",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
-    "@types/node": "^20.0.0",
+    "@types/node": "^20.19.40",
     "typescript": "^5.3.0",
     "@swc/cli": "^0.4.0",
     "@swc/core": "^1.7.0"
