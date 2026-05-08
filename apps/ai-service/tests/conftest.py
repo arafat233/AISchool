@@ -77,7 +77,10 @@ sys.modules["services.embedder"] = embedder_module
 
 # Stub services.cache — prevents Redis connection during tests
 cache_module = types.ModuleType("services.cache")
-cache_module.get_redis = MagicMock(return_value=AsyncMock())
+_fake_redis = AsyncMock()
+_fake_redis.get = AsyncMock(return_value=None)
+_fake_redis.setex = AsyncMock(return_value=True)
+cache_module.get_redis = MagicMock(return_value=_fake_redis)
 
 async def _noop_get_cached(*args, **kwargs):
     return None
