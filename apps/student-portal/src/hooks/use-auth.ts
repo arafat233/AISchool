@@ -5,11 +5,19 @@ import { api } from "@/lib/api";
 import toast from "react-hot-toast";
 
 interface LoginPayload { email: string; password: string; totpCode?: string }
-interface LoginResponse {
-  accessToken?: string;
-  requiresTwoFactor?: boolean;
-  userId?: string;
-  user?: { id: string; email: string; firstName: string; lastName: string; role: string; avatarUrl?: string; schoolId?: string; tenantId: string };
+interface LoginResponse { accessToken?: string; requiresTwoFactor?: boolean; userId?: string }
+
+function decodeUser(token: string) {
+  const payload = JSON.parse(atob(token.split(".")[1]));
+  return {
+    id: payload.sub as string,
+    email: payload.email as string,
+    firstName: (payload.email as string)?.split("@")[0] ?? "",
+    lastName: "",
+    role: payload.role as string,
+    tenantId: payload.tenantId as string,
+    schoolId: payload.schoolId as string | undefined,
+  };
 }
 
 export function useLogin() {
@@ -19,7 +27,12 @@ export function useLogin() {
     mutationFn: (p: LoginPayload) => api.post<LoginResponse>("/auth/login", p).then((r) => r.data),
     onSuccess: (data) => {
       if (data.requiresTwoFactor) { router.push(`/verify-2fa?userId=${data.userId}`); return; }
-      if (data.accessToken && data.user) { setTokens(data.accessToken, data.user); router.push("/dashboard"); }
+      if (data.accessToken) {
+        const user = decodeUser(data.accessToken);
+        setTokens(data.accessToken, user);
+        document.cookie = `access_token=${data.accessToken}; path=/; SameSite=Lax`;
+        router.push("/dashboard");
+      }
     },
     onError: () => toast.error("Invalid credentials"),
   });
@@ -30,7 +43,11 @@ export function useLogout() {
   const { logout } = useAuthStore();
   return useMutation({
     mutationFn: () => api.post("/auth/logout").then((r) => r.data),
-    onSettled: () => { logout(); router.push("/login"); },
+    onSettled: () => {
+      logout();
+      document.cookie = "access_token=; path=/; max-age=0";
+      router.push("/login");
+    },
   });
 }
 

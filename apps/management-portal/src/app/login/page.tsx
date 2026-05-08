@@ -19,9 +19,23 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     try {
-      const { data } = await api.post<{ accessToken: string; user: any }>("/auth/login", { email, password });
-      setTokens(data.accessToken, data.user);
-      router.push("/dashboard");
+      const { data } = await api.post<{ accessToken: string }>("/auth/login", { email, password });
+      // Decode JWT payload (base64) to extract user fields
+      const payload = JSON.parse(atob(data.accessToken.split(".")[1]));
+      const user = {
+        id: payload.sub,
+        email: payload.email,
+        firstName: payload.email?.split("@")[0] ?? "",
+        lastName: "",
+        role: payload.role,
+        tenantId: payload.tenantId,
+        schoolId: payload.schoolId,
+      };
+      setTokens(data.accessToken, user);
+      // Set cookie so middleware can read it server-side
+      document.cookie = `access_token=${data.accessToken}; path=/; SameSite=Lax`;
+      const params = new URLSearchParams(window.location.search);
+      router.push(params.get("from") ?? "/dashboard");
     } catch {
       setError("Invalid credentials");
     } finally {
