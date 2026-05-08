@@ -64,7 +64,7 @@ export class AuthController {
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const rawToken: string | undefined = req.cookies?.[REFRESH_COOKIE];
     if (!rawToken) {
-      return res.status(HttpStatus.UNAUTHORIZED).json({ message: "No refresh token" });
+      throw new UnauthorizedException("No refresh token");
     }
 
     const { accessToken, refreshToken } = await this.authService.refreshTokens(rawToken, req.ip ?? "");

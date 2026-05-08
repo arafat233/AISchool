@@ -32,11 +32,20 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  // CORS â€” only allow configured frontend origin
+  const devOrigins = [
+    'http://localhost:3100',
+    'http://localhost:3101',
+    'http://localhost:3102',
+    'http://localhost:3103',
+    'http://localhost:3104',
+  ];
+  const allowedOrigins = process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',').map((o) => o.trim())
+    : devOrigins;
   app.enableCors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3100",
+    origin: allowedOrigins,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
 
   const port = process.env.AUTH_SERVICE_PORT ?? 3001;
