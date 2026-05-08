@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { api } from "@/lib/api";
 import { School, MapPin, Users, CheckCircle, XCircle } from "lucide-react";
 
 interface SchoolTenant {
@@ -19,15 +19,13 @@ interface SchoolTenant {
 export default function SchoolsPage() {
   const [schools, setSchools] = useState<SchoolTenant[]>([]);
   const [loading, setLoading] = useState(true);
-  const API = process.env.NEXT_PUBLIC_SAAS_API_URL ?? "http://localhost:3022";
 
   useEffect(() => {
-    const token = localStorage.getItem("mgmt_token");
-    axios.get(`${API}/tenants`, { headers: { Authorization: `Bearer ${token}` } })
+    api.get("/tenants")
       .then((r) => setSchools(r.data))
       .catch(() => setSchools([]))
       .finally(() => setLoading(false));
-  }, [API]);
+  }, []);
 
   if (loading) return <div className="p-8 text-muted-foreground">Loading schools…</div>;
 
