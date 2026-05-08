@@ -1,4 +1,4 @@
-﻿/** @type {import('next').NextConfig} */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
   images: {
@@ -9,8 +9,7 @@ const nextConfig = {
   },
   async rewrites() {
     return [
-      { source: "/api/auth/:path*", destination: "/api/auth/:path*" },
-      { source: "/api/:path*", destination: `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/api/:path*` },
+      { source: "/api/:path*", destination: `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/:path*` },
     ];
   },
 };
