@@ -36,6 +36,7 @@ api.interceptors.response.use(
       queue.forEach((p) => p.reject(e));
       queue = [];
       useAuthStore.getState().logout();
+      fetch("/api/clear-token", { method: "POST" });
       window.location.href = "/login";
       return Promise.reject(e);
     } finally {

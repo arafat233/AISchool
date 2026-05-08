@@ -55,6 +55,7 @@ export function useLogout() {
     mutationFn: () => api.post("/auth/logout").then((r) => r.data),
     onSettled: () => {
       logout();
+      fetch("/api/clear-token", { method: "POST" });
       router.push("/login");
     },
   });

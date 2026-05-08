@@ -30,7 +30,7 @@ export function useLogin() {
       if (data.accessToken) {
         const user = decodeUser(data.accessToken);
         setTokens(data.accessToken, user);
-        document.cookie = `access_token=${data.accessToken}; path=/; SameSite=Lax`;
+        fetch("/api/set-token", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token: data.accessToken }) });
         router.push("/dashboard");
       }
     },
@@ -45,7 +45,7 @@ export function useLogout() {
     mutationFn: () => api.post("/auth/logout").then((r) => r.data),
     onSettled: () => {
       logout();
-      document.cookie = "access_token=; path=/; max-age=0";
+      fetch("/api/clear-token", { method: "POST" });
       router.push("/login");
     },
   });

@@ -12,11 +12,16 @@ import { HealthController } from "./health/health.controller";
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
 
-    ThrottlerModule.forRoot([
-      { name: "burst",  ttl: 1_000,    limit: 3   }, // 3 req/s  — burst protection
-      { name: "minute", ttl: 60_000,   limit: 20  }, // 20 req/min
-      { name: "hour",   ttl: 3600_000, limit: 100 }, // 100 req/hr — brute-force ceiling
-    ]),
+    ThrottlerModule.forRootAsync({
+      useFactory: () => {
+        const isProd = process.env.NODE_ENV === 'production';
+        return [
+          { name: 'burst',  ttl: 1_000,     limit: isProd ? 3   : 30  },
+          { name: 'minute', ttl: 60_000,    limit: isProd ? 20  : 120 },
+          { name: 'hour',   ttl: 3_600_000, limit: isProd ? 100 : 600 },
+        ];
+      },
+    }),
 
     PrismaModule,
     AuthModule,

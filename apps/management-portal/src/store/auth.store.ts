@@ -33,7 +33,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "mgmt-auth-storage",
-      partialize: (state) => ({ user: state.user }),
+      partialize: (state) => ({ accessToken: state.accessToken, user: state.user }),
     }
   )
 );

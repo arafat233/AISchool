@@ -25,6 +25,18 @@ import { Public } from "../decorators/public.decorator";
 import { CurrentUser } from "../decorators/current-user.decorator";
 import type { RequestUser } from "@school-erp/types";
 
+const IS_PROD = process.env.NODE_ENV === 'production';
+const LOGIN_THROTTLE = {
+  burst:  { limit: IS_PROD ? 1  : 10,  ttl: 1_000     },
+  minute: { limit: IS_PROD ? 5  : 30,  ttl: 60_000    },
+  hour:   { limit: IS_PROD ? 20 : 200, ttl: 3_600_000 },
+};
+const FORGOT_THROTTLE = {
+  burst:  { limit: IS_PROD ? 1  : 5,  ttl: 1_000     },
+  minute: { limit: IS_PROD ? 3  : 20, ttl: 60_000    },
+  hour:   { limit: IS_PROD ? 10 : 100, ttl: 3_600_000 },
+};
+
 const REFRESH_COOKIE = "erp_refresh";
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -39,7 +51,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Throttle({ burst: { limit: 1, ttl: 1_000 }, minute: { limit: 5, ttl: 60_000 }, hour: { limit: 20, ttl: 3600_000 } })
+  @Throttle(LOGIN_THROTTLE)
   @Post("login")
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
@@ -101,7 +113,7 @@ export class AuthController {
   }
 
   @Public()
-  @Throttle({ burst: { limit: 1, ttl: 1_000 }, minute: { limit: 3, ttl: 60_000 }, hour: { limit: 10, ttl: 3600_000 } })
+  @Throttle(FORGOT_THROTTLE)
   @Post("forgot-password")
   @HttpCode(HttpStatus.ACCEPTED)
   async forgotPassword(@Body() dto: ForgotPasswordDto) {

@@ -44,12 +44,14 @@ api.interceptors.response.use(
         { withCredentials: true }
       );
       useAuthStore.getState().setAccessToken(data.accessToken);
+      fetch("/api/set-token", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token: data.accessToken }) });
       processQueue(null, data.accessToken);
       original.headers.Authorization = `Bearer ${data.accessToken}`;
       return api(original);
     } catch (err) {
       processQueue(err);
       useAuthStore.getState().logout();
+      fetch("/api/clear-token", { method: "POST" });
       window.location.href = "/login";
       return Promise.reject(err);
     } finally {

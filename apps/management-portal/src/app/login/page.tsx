@@ -32,8 +32,12 @@ export default function LoginPage() {
         schoolId: payload.schoolId,
       };
       setTokens(data.accessToken, user);
-      // Set cookie so middleware can read it server-side
-      document.cookie = `access_token=${data.accessToken}; path=/; SameSite=Lax`;
+      // Set HttpOnly cookie via server-side API route
+      await fetch("/api/set-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: data.accessToken }),
+      });
       const params = new URLSearchParams(window.location.search);
       router.push(params.get("from") ?? "/dashboard");
     } catch {
