@@ -4,15 +4,13 @@ import { generateSecureToken } from "@school-erp/utils";
 
 export async function createTestTenant(
   prisma: PrismaClient,
-  override: Partial<{ name: string; subdomain: string; plan: SubscriptionPlan }> = {},
+  override: Partial<{ name: string; plan: SubscriptionPlan }> = {},
 ) {
   return prisma.tenant.create({
     data: {
       name: override.name ?? `Test Tenant ${generateSecureToken(4)}`,
-      subdomain: override.subdomain ?? `test-${generateSecureToken(4)}`,
-      type: TenantType.SCHOOL,
+      type: TenantType.COMPANY,
       plan: override.plan ?? SubscriptionPlan.STANDARD,
-      isActive: true,
     },
   });
 }
@@ -27,9 +25,7 @@ export async function createTestUser(
       tenantId,
       email: override.email ?? `test+${generateSecureToken(4)}@example.com`,
       passwordHash: override.passwordHash ?? "$2b$12$testhashtesthashhashhhh", // not a real hash
-      role: override.role ?? UserRole.TEACHER,
-      isActive: true,
-      isEmailVerified: true,
+      role: override.role ?? UserRole.SUBJECT_TEACHER,
       profile: {
         create: {
           firstName: "Test",
@@ -45,15 +41,13 @@ export async function createTestSchool(prisma: PrismaClient, tenantId: string) {
     data: {
       tenantId,
       name: "Test School",
+      code: "TEST-01",
       address: "1 Test Street",
       city: "Test City",
       state: "Test State",
-      country: "India",
       pincode: "000000",
       phone: "+910000000000",
       email: "test@testschool.edu",
-      establishedYear: 2020,
-      affiliationBoard: "CBSE",
     },
   });
 }
