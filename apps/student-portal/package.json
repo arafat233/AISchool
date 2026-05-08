@@ -18,6 +18,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.1",
     "@prisma/client": "^5.22.0",
+    "pdfkit": "^0.15.0",
     "@school-erp/database": "workspace:*",
     "@school-erp/types": "workspace:*",
     "@school-erp/ui": "workspace:*",

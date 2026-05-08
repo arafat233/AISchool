@@ -21,9 +21,11 @@ async function bootstrap(): Promise<void> {
   const expressApp = app.getHttpAdapter().getInstance();
 
   for (const route of PROXY_ROUTES) {
+    // Use pathFilter at root level so Express does NOT strip the prefix before forwarding.
+    // expressApp.use(prefix, ...) strips the prefix; pathFilter preserves it.
     expressApp.use(
-      route.prefix,
       createProxyMiddleware({
+        pathFilter: route.prefix,
         target: route.target,
         changeOrigin: true,
         ...(route.pathRewrite ? { pathRewrite: route.pathRewrite } : {}),
