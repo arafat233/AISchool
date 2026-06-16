@@ -48,7 +48,7 @@ jobs:
       management-portal: ${{ steps.filter.outputs.management-portal }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
+      - uses: dorny/paths-filter@v4
         id: filter
         with:
           filters: |
