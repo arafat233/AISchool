@@ -10,7 +10,7 @@ pandas==2.2.3
 numpy==1.26.4
 scikit-learn==1.5.2
 ortools==9.11.4210
-anthropic==0.34.2
+anthropic==0.100.0
 python-multipart==0.0.12
 scipy==1.14.1
 # RAG dependencies
